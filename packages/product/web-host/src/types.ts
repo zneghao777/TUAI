@@ -1,4 +1,15 @@
 /** Public, credential-free facts of this P2 Host. */
+export type {
+  ModelProviderDraft,
+  ManagedModel,
+  ModelProviderInfo,
+  ModelProvidersState,
+  SaveModelProvider,
+  RemoveModelProvider,
+  ModelConnectionTest,
+  ModelConnectionResult,
+} from '@tianzhiai/agent-runtime/types'
+
 export interface HostStatus {
   /** Stable Host identity. */
   id: string

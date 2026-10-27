@@ -8,6 +8,7 @@ import {
   type EnvironmentCredentials,
   type HostPaths,
   type HostSettings,
+  SecretStore,
 } from '@tianzhiai/host-config'
 
 declare module '@deepseek-ai/cordis' {
@@ -16,11 +17,15 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
-/** Host configuration is the sole reference allowlist. Secrets never enter plugin config. */
+/** Managed model secrets precede explicitly allowed environment references. */
 export class HostCredentials extends CredentialProvider {
   static inject = ['tianzhiaiHost']
 
   async resolve(ref: CredentialRef) {
+    if (this.managed(ref)) {
+      const value = await this.store().get(ref)
+      if (value) return { value, source: 'host-encrypted' }
+    }
     const reference = this.ctx.tianzhiaiHost.settings.credentialReferences[ref]
     if (!reference) return undefined
     const result = await this.ctx.tianzhiaiHost.credentials.resolve(reference)
@@ -31,16 +36,28 @@ export class HostCredentials extends CredentialProvider {
     const result = await this.resolve(ref)
     return {
       configured: result !== undefined,
-      writable: false,
+      writable: this.managed(ref),
       ...(result ? { source: result.source } : {}),
     }
   }
 
-  async set(): Promise<never> {
-    throw new Error('请通过 Host 显式环境引用配置凭据')
+  private managed(ref: CredentialRef) {
+    return ref === 'deepseek' || /^model_[a-f0-9]{32}$/.test(ref)
   }
-  async unset(): Promise<never> {
-    throw new Error('请通过 Host 配置撤销凭据引用')
+  private store() {
+    return new SecretStore(this.ctx.tianzhiaiHost.paths.config)
+  }
+  async set(ref: CredentialRef, value: string) {
+    if (!this.managed(ref)) throw new Error('只允许管理模型凭据')
+    const clean = value.trim()
+    if (!/^[\x21-\x7e]{1,4096}$/.test(clean)) throw new Error('API Key 格式无效，请粘贴完整密钥')
+    await this.store().set(ref, clean)
+    this.notifyUpdated(ref)
+  }
+  async unset(ref: CredentialRef) {
+    if (!this.managed(ref)) throw new Error('只允许管理模型凭据')
+    await this.store().set(ref, undefined)
+    this.notifyUpdated(ref)
   }
   private recordPath(key: CredentialKey) {
     if (key !== 'client-connection/browser-session')

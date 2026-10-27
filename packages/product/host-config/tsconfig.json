@@ -1,6 +1,16 @@
 {
   "extends": "../../../tsconfig.base.json",
-  "compilerOptions": { "rootDir": "src", "outDir": "lib/types" },
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
   "include": ["src"],
-  "references": [{ "path": "../platform" }]
+  "references": [
+    {
+      "path": "../platform"
+    },
+    {
+      "path": "../../util/atomic-write"
+    }
+  ]
 }

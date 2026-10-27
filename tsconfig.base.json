@@ -504,7 +504,8 @@
       ],
       "@deepseek-ai/dsh-session-turn-outline/src/*": [
         "./packages/session/session-turn-outline/src/*"
-      ]
+      ],
+      "@tianzhiai/agent-runtime/types": ["./packages/product/agent-runtime/src/model-types.ts"]
     }
   }
 }

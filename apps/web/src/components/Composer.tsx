@@ -9,6 +9,7 @@ import { brandString } from '@deepseek-ai/dsh-brand'
 import { useSource } from '../bindings'
 import { AppClient, describe, unwrap } from '../model/client'
 import { Button, Icon } from './kit'
+import { Select } from './Select'
 import s from '../App.module.css'
 import { queuedItems } from './Interactions'
 interface Attachment {
@@ -21,6 +22,7 @@ interface Attachment {
   progress?: number
   abort: AbortController
 }
+const effortNames: Record<string, string> = { off: '关闭推理', low: '低', high: '高', max: '最高' }
 interface Pending {
   id: SessionRequestId
   text: string
@@ -91,7 +93,15 @@ function restoreAttachments(key: string): Attachment[] {
     return []
   }
 }
-export function Composer({ client, binding }: { client: AppClient; binding: SessionBinding }) {
+export function Composer({
+  client,
+  binding,
+  onModels,
+}: {
+  client: AppClient
+  binding: SessionBinding
+  onModels(): void
+}) {
   const facts = useSource(client.facts),
     state = useSource(binding.session),
     connection = useSource(client.connection.state)
@@ -223,6 +233,7 @@ export function Composer({ client, binding }: { client: AppClient; binding: Sess
   const send = async (mode: 'queue' | 'steer') => {
     if (
       busy ||
+      !available.some((m) => `${m.provider}/${m.id}` === selected) ||
       connection !== 'connected' ||
       files.some((f) => f.status !== 'ready') ||
       (!draft.text.trim() && !files.length && !draft.pending)
@@ -399,56 +410,51 @@ export function Composer({ client, binding }: { client: AppClient; binding: Sess
           >
             <Icon name="paperclip" />
           </Button>
-          <label className={s.selectWrap}>
-            <span className={s.srOnly}>模型</span>
-            <select
-              aria-label="模型"
-              value={selected}
-              disabled={connection !== 'connected' || busy}
-              onChange={(e) => {
-                const [provider, ...rest] = e.target.value.split('/')
-                void client.ctx.remote.session
-                  .selectModel({ sessionId: binding.sessionId, provider, model: rest.join('/') })
-                  .then(unwrap)
-                  .catch((error) => setMessage(describe(error)))
-              }}
-            >
-              {!available.length ? (
-                <option value={selected}>暂无可用模型</option>
-              ) : (
-                available.map((m) => (
-                  <option key={`${m.provider}/${m.id}`} value={`${m.provider}/${m.id}`}>
-                    {m.name}
-                  </option>
-                ))
-              )}
-            </select>
-          </label>
+          <Select
+            label="模型"
+            value={selected}
+            disabled={connection !== 'connected' || busy}
+            placeholder={available.length ? '选择模型' : '配置模型'}
+            onManage={onModels}
+            options={available.map((m) => ({
+              value: `${m.provider}/${m.id}`,
+              label: m.name,
+              detail: catalog?.groups.find((g) => g.id === m.provider)?.name,
+            }))}
+            onChange={(value) => {
+              const [provider, ...rest] = value.split('/')
+              void client.ctx.remote.session
+                .selectModel({ sessionId: binding.sessionId, provider, model: rest.join('/') })
+                .then(unwrap)
+                .catch((error) => setMessage(describe(error)))
+            }}
+          />
+          {!available.length ? <Button onClick={onModels}>添加模型</Button> : null}
           {reasoning ? (
-            <select
-              aria-label="推理强度"
+            <Select
+              label="推理强度"
               value={effort}
-              disabled={connection !== 'connected'}
-              onChange={(e) => {
+              disabled={connection !== 'connected' || busy}
+              options={[
+                { value: '', label: '默认推理' },
+                ...reasoning.efforts.map((o) => ({
+                  value: o.id,
+                  label: effortNames[o.id] ?? o.name,
+                })),
+              ]}
+              onChange={(value) => {
                 const [provider, ...rest] = selected.split('/')
                 void client.ctx.remote.session
                   .selectModel({
                     sessionId: binding.sessionId,
                     provider,
                     model: rest.join('/'),
-                    ...(e.target.value ? { reasoningEffort: e.target.value } : {}),
+                    ...(value ? { reasoningEffort: value } : {}),
                   })
                   .then(unwrap)
                   .catch((error) => setMessage(describe(error)))
               }}
-            >
-              <option value="">默认推理</option>
-              {reasoning.efforts.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
+            />
           ) : null}
           <span className={s.permission} title={facts.permissions?.options[0]?.description}>
             {facts.permissions?.options.find((p) => p.value === facts.permissions?.defaultPreset)
@@ -474,7 +480,7 @@ export function Composer({ client, binding }: { client: AppClient; binding: Sess
               busy={busy}
               disabled={
                 connection !== 'connected' ||
-                !available.length ||
+                !available.some((m) => `${m.provider}/${m.id}` === selected) ||
                 (!draft.text.trim() && !files.length) ||
                 files.some((f) => f.status !== 'ready')
               }
@@ -489,6 +495,10 @@ export function Composer({ client, binding }: { client: AppClient; binding: Sess
       </div>
       <div className={s.composerHint} role="status">
         {message ||
+          catalog?.failures.map((f) => `${f.name}：${f.message}`).join('；') ||
+          (available.length && !available.some((m) => `${m.provider}/${m.id}` === selected)
+            ? '当前模型不可用，请选择模型后发送'
+            : '') ||
           (draft.pending
             ? '上次提交结果待核对，可用同一请求重试'
             : connection !== 'connected'

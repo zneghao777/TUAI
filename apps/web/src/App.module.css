@@ -349,12 +349,101 @@
   gap: 5px;
   flex-wrap: wrap;
 }
-.selectWrap select {
+.selectRoot {
+  position: relative;
+  min-width: 0;
+}
+.selectTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 220px;
+  min-height: 34px;
   font-size: 12px;
-  max-width: 160px;
-  border-radius: 20px;
-  padding: 6px 22px 6px 9px;
-  min-height: 30px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--glass);
+  text-align: left;
+}
+.selectTrigger > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.selectTrigger svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--muted);
+}
+.selectTrigger:hover:not(:disabled),
+.selectTrigger[aria-expanded='true'] {
+  background: var(--mist);
+}
+.selectMenu {
+  position: fixed;
+  z-index: 100;
+  overflow: auto;
+  padding: 6px;
+  border-radius: 14px;
+  margin: 0;
+  border: 0;
+  right: auto;
+  bottom: auto;
+  background: #fcfcfd;
+  box-shadow: 0 12px 40px #23364b24;
+  text-align: left;
+  font-size: 13px;
+  color: var(--ink);
+}
+.selectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 42px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.selectOption span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.selectOption small {
+  display: block;
+}
+.selectOption svg {
+  flex: none;
+  color: var(--accent);
+}
+.optionActive {
+  background: var(--mist);
+}
+.selectOption[aria-selected='true'] {
+  color: var(--accent-pressed);
+}
+.selectEmpty {
+  padding: 14px 12px;
+  color: var(--muted);
+}
+.selectManage {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  margin-top: 5px;
+}
+.selectManage:hover {
+  background: var(--mist);
+  border-radius: 9px;
 }
 .permission {
   border: 1px solid var(--line);
@@ -923,7 +1012,7 @@
     max-width: 105px;
     padding: 5px 6px;
   }
-  .selectWrap select {
+  .selectTrigger {
     max-width: 130px;
     font-size: 11px;
   }
@@ -1007,6 +1096,262 @@
     transform: none;
   }
   .messageActions .button {
+    min-height: 40px;
+  }
+}
+
+.settingsModal {
+  width: min(940px, calc(100vw - 32px));
+  padding: 26px;
+}
+.settingsModal .modalHead {
+  margin-bottom: 24px;
+}
+.settingsLayout {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 36px;
+  min-height: 400px;
+}
+.settingsNav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+.settingsNav .button {
+  justify-content: flex-start;
+  font-size: 14px;
+  min-height: 44px;
+  padding: 12px;
+}
+.settingsNav .settingsSelected {
+  background: var(--mist);
+  color: var(--accent-pressed);
+}
+.settingsContent {
+  min-width: 0;
+  padding: 0 4px 12px 0;
+}
+.settingsHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  min-height: 36px;
+}
+.settingsHeading h3 {
+  margin: 0;
+  font-size: 19px;
+}
+.providerList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.providerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--glass);
+}
+.providerIdentity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.providerIdentity strong {
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+.providerState {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.inactiveDot {
+  width: 6px;
+  height: 6px;
+  background: #8993a0;
+  border-radius: 50%;
+}
+.providerActions {
+  display: flex;
+  gap: 4px;
+  flex: none;
+}
+.providerActions .button {
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.settingsContent .addProvider {
+  width: 100%;
+  justify-content: center;
+  border: 1px dashed #aab2be;
+  margin-top: 18px;
+  min-height: 48px;
+}
+.settingsModal .providerForm {
+  gap: 18px;
+}
+.editorTitle {
+  font-size: 15px;
+  margin: 0;
+  color: var(--ink);
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  font-size: 13px;
+}
+.settingsModal .field input {
+  margin: 0;
+  min-height: 42px;
+}
+.field input:disabled {
+  color: var(--muted);
+  background: var(--mist);
+}
+.fieldGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+.keyField {
+  display: flex;
+  gap: 8px;
+}
+.keyField input {
+  flex: 1;
+}
+.keyField .button {
+  flex: none;
+}
+.modelsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+.modelsHead h4 {
+  font-size: 13px;
+  margin: 0;
+  color: var(--ink);
+}
+.modelEntry {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.modelFields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+.modelFields > .button {
+  margin-bottom: 2px;
+}
+.builtinModel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.modelAdvanced {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.modelAdvanced summary {
+  cursor: pointer;
+  padding: 4px 0;
+}
+.modelAdvanced .fieldGrid {
+  margin-top: 10px;
+}
+.editorFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 10px;
+}
+.editorFooter > div {
+  display: flex;
+  gap: 8px;
+}
+.testSuccess {
+  color: #247460;
+}
+.removeProvider {
+  padding: 12px 0;
+}
+.removeProvider .button {
+  margin-right: 8px;
+}
+@media (max-width: 760px) {
+  .settingsModal {
+    padding: 18px;
+    max-height: 92dvh;
+  }
+  .settingsModal .modalHead {
+    margin-bottom: 16px;
+  }
+  .settingsLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    min-height: 350px;
+  }
+  .settingsNav {
+    flex-direction: row;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 10px;
+  }
+  .settingsNav .button {
+    font-size: 13px;
+    padding: 10px;
+  }
+  .settingsHeading {
+    margin-bottom: 16px;
+  }
+  .settingsContent {
+    padding: 0;
+  }
+  .providerRow {
+    padding: 14px 12px;
+    gap: 8px;
+  }
+  .providerIdentity {
+    gap: 7px;
+  }
+  .fieldGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .modelFields {
+    grid-template-columns: minmax(0, 1fr) 38px;
+  }
+  .modelFields .field {
+    grid-column: 1;
+  }
+  .modelFields > .button {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: center;
+  }
+  .selectTrigger,
+  .selectOption {
     min-height: 40px;
   }
 }

@@ -12,6 +12,7 @@ import * as Retry from '@deepseek-ai/dsh-llm-retry'
 import TokenMeter from '@deepseek-ai/dsh-token-meter'
 import * as Jsonl from '@deepseek-ai/dsh-session-persistence-jsonl'
 import { HostCredentials } from './credentials.ts'
+import { ModelManager } from './models.ts'
 import { MockAdapter, textResponse, toolCallResponse } from './fixture-model.ts'
 import { mountHostTools } from './host-tools.ts'
 import { mountContext } from './context.ts'
@@ -34,7 +35,12 @@ export async function apply(ctx: Context) {
   await ctx.plugin(NativeExecutor)
   await ctx.plugin(AgentRegistry)
   await ctx.plugin(HostCredentials)
-  await ctx.plugin(DeepSeek, { apiKeyEnv: 'deepseek', streamIdleTimeoutMs: 60000 })
+  await ctx.plugin(DeepSeek, {
+    apiKeyEnv: 'deepseek',
+    baseURL: 'https://api.deepseek.com/anthropic',
+    streamIdleTimeoutMs: 60000,
+  })
+  await ctx.plugin(ModelManager)
   await ctx.plugin(Retry)
   await ctx.plugin(TokenMeter)
   await mountHostTools(ctx)

@@ -34,8 +34,15 @@ import type {} from '@tianzhiai/agent-runtime'
 
 import { entries, download } from './artifacts.ts'
 import type { SessionId } from '@deepseek-ai/dsh-session'
-import type { ArtifactInfo, HostStatus } from './types.ts'
-import { credentialRef } from '@deepseek-ai/dsh-credentials'
+import type {
+  ArtifactInfo,
+  HostStatus,
+  ModelProvidersState,
+  SaveModelProvider,
+  RemoveModelProvider,
+  ModelConnectionTest,
+  ModelConnectionResult,
+} from './types.ts'
 declare module '@deepseek-ai/cordis' {
   interface Context {
     tianzhiaiPlatform: PlatformService
@@ -44,9 +51,25 @@ declare module '@deepseek-ai/cordis' {
 
 /** Product public status; every call passes the same Gateway admission. */
 export class PlatformService extends TypertRemoteService {
-  static inject = ['tianzhiaiHost', 'credentials', 'sessionQuery', 'attachments']
+  static inject = ['tianzhiaiHost', 'credentials', 'sessionQuery', 'attachments', 'modelManager']
   constructor(ctx: Context) {
     super(ctx, 'tianzhiaiPlatform', { namespace: 'platform' })
+  }
+  @Remote
+  modelProviders(): Promise<ModelProvidersState> {
+    return this.ctx.modelManager.snapshot()
+  }
+  @Remote
+  saveModelProvider(request: SaveModelProvider): Promise<ModelProvidersState> {
+    return this.ctx.modelManager.save(request)
+  }
+  @Remote
+  removeModelProvider(request: RemoveModelProvider): Promise<ModelProvidersState> {
+    return this.ctx.modelManager.remove(request)
+  }
+  @Remote
+  testModelProvider(request: ModelConnectionTest): Promise<ModelConnectionResult> {
+    return this.ctx.modelManager.test(request)
   }
   /** List durable references and session-scoped tool output files. */
   @Remote
@@ -61,7 +84,7 @@ export class PlatformService extends TypertRemoteService {
       protocolVersion: 1,
       os: process.platform,
       workspace: process.cwd(),
-      modelConfigured: (await this.ctx.credentials.describe(credentialRef('deepseek'))).configured,
+      modelConfigured: (await this.ctx.modelManager.snapshot()).providers.some((p) => p.configured),
     }
   }
 }

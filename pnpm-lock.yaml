@@ -2258,6 +2258,9 @@ importers:
       '@deepseek-ai/dsh-llm':
         specifier: workspace:*
         version: link:../../llm/llm
+      '@deepseek-ai/dsh-llm-deepseek':
+        specifier: workspace:*
+        version: link:../../llm/llm-deepseek
       '@deepseek-ai/dsh-llm-deepseek-api-key':
         specifier: workspace:*
         version: link:../../llm/llm-deepseek-api-key
@@ -2339,9 +2342,15 @@ importers:
       '@tianzhiai/host-config':
         specifier: workspace:*
         version: link:../host-config
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
 
   packages/product/host-config:
     dependencies:
+      '@deepseek-ai/dsh-atomic-write':
+        specifier: workspace:*
+        version: link:../../util/atomic-write
       '@tianzhiai/platform':
         specifier: workspace:*
         version: link:../platform

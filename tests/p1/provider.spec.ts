@@ -1,4 +1,7 @@
 import { afterEach, expect, it } from 'vitest'
+import { mkdtemp, rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
 import LlmRuntime, { createUserMessage } from '@deepseek-ai/dsh-llm'
 import * as DeepSeek from '@deepseek-ai/dsh-llm-deepseek-api-key'
@@ -16,8 +19,9 @@ afterEach(closeMockServers)
 it('TZ-008 Host 引用控制模型凭据，受控 HTTP 请求不携带上游匿名身份', async () => {
   const server = await mockServer([{ kind: 'sse', events: textEvents }])
   const ctx = new Context()
+  const home = await mkdtemp(join(tmpdir(), 'tianzhiai-provider-'))
   ctx.provide('tianzhiaiHost', {
-    paths: resolveHostPaths(),
+    paths: resolveHostPaths({ env: { TIANZHIAI_HOME: home } }),
     settings: {
       version: 1,
       hostId: 'fixture-host',
@@ -65,5 +69,6 @@ it('TZ-008 Host 引用控制模型凭据，受控 HTTP 请求不携带上游匿�
     )
   } finally {
     await ctx.fiber.dispose()
+    await rm(home, { recursive: true, force: true })
   }
 })

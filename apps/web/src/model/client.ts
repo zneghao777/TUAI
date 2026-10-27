@@ -94,6 +94,13 @@ export class AppClient {
         void this.load()
       }),
     )
+    this.ctx.effect(() => {
+      const refresh = () => {
+        void this.load()
+      }
+      window.addEventListener('focus', refresh)
+      return () => window.removeEventListener('focus', refresh)
+    })
     await this.load()
   }
   private wait<T extends ApprovalOutcome | AskUserQuestionAnswer>(
@@ -180,7 +187,10 @@ export class AppClient {
   }
 }
 export function describe(error: unknown) {
-  return error instanceof Error ? error.message : String(error)
+  if (error instanceof Error) return error.message
+  if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string')
+    return error.message
+  return typeof error === 'string' ? error : '操作未完成，请重试'
 }
 export function unwrap<T>(
   result: { ok: true; value: T } | { ok: false; error: { code: string; message: string } },

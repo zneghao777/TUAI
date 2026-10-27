@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+} from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import s from '../App.module.css'
@@ -33,6 +40,9 @@ export function Icon({
     | 'chevron'
     | 'download'
     | 'copy'
+    | 'check'
+    | 'settings'
+    | 'model'
 }) {
   const paths = {
     plus: 'M12 5v14M5 12h14',
@@ -46,6 +56,9 @@ export function Icon({
     chevron: 'M6 9l6 6 6-6',
     download: 'M12 3v12M7 10l5 5 5-5M4 17v4h16v-4',
     copy: 'M8 8h12v12H8zM16 8V4H4v12h4',
+    check: 'M5 12l4 4L19 6',
+    settings: 'M4 7h16M4 17h16M8 4v6M16 14v6',
+    model: 'M4 7c0-5 16-5 16 0s-16 5-16 0v10c0 5 16 5 16 0V7M4 12c0 5 16 5 16 0',
   }
   return (
     <svg
@@ -67,12 +80,17 @@ export function Modal({
   title,
   onClose,
   children,
+  className,
+  busy = false,
 }: {
   title: string
   onClose: () => void
   children: ReactNode
+  className?: string
+  busy?: boolean
 }) {
   const ref = useRef<HTMLDialogElement>(null)
+  const titleId = useId()
   useEffect(() => {
     const el = ref.current!
     const before = document.activeElement
@@ -87,15 +105,28 @@ export function Modal({
   return (
     <dialog
       ref={ref}
-      className={s.modal}
-      onCancel={onClose}
+      className={`${s.modal} ${className ?? ''}`}
+      aria-labelledby={titleId}
+      onCancel={(e) => {
+        e.preventDefault()
+        if (!busy) onClose()
+      }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        const rect = e.currentTarget.getBoundingClientRect()
+        if (
+          !busy &&
+          e.target === e.currentTarget &&
+          (e.clientX < rect.left ||
+            e.clientX > rect.right ||
+            e.clientY < rect.top ||
+            e.clientY > rect.bottom)
+        )
+          onClose()
       }}
     >
       <div className={s.modalHead}>
-        <h2>{title}</h2>
-        <Button aria-label="关闭" onClick={onClose}>
+        <h2 id={titleId}>{title}</h2>
+        <Button aria-label="关闭" onClick={onClose} disabled={busy}>
           <Icon name="close" />
         </Button>
       </div>

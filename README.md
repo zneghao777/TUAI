@@ -43,8 +43,10 @@ TIANZHIAI_HOME="$PWD/.runtime" node --expose-internals apps/cli/lib/index.js --d
 node --expose-internals apps/cli/lib/index.js --prompt '你好' --session chat-001
 ```
 
-模型协议已使用本机受控 HTTP 服务验证；本次没有调用真实外部模型。
-Keychain 和加密磁盘凭据库尚未实现。
+也可以启动下方 Web 工作区，在**模型**中填写并保存 API Key。
+模型凭据保存在 Host 的独立加密文件中，优先于显式环境引用；网页不会回读密钥。
+此本机存储使用 AES-256-GCM，包装密钥和密文文件均为当前系统用户私有，
+不是系统 Keychain；Windows ACL 和其他平台实机保护仍待对应阶段验收。
 
 ## Web 工作区
 
@@ -58,7 +60,12 @@ npx --yes pnpm@11.28.5 run start:web
 
 默认监听 `127.0.0.1:3100`。打开终端输出的登录入口，完成一次交换后访问
 `http://127.0.0.1:3100/`。登录链接含凭证，不要提交或转发；网页不保存模型密钥。
-生产入口只使用 Host 配置的 DeepSeek 环境引用，没有凭据不会切换到测试模型。
+侧栏**模型**提供添加、编辑、测试连接和移除；也可从输入区模型菜单进入。
+DeepSeek 官方路由固定到官方地址，自定义 API 当前支持 DeepSeek Messages 兼容协议。
+配置保存后立即刷新模型目录；编辑已有配置时，API Key 留空表示保留。
+修改自定义地址必须重新填写密钥，避免把旧密钥发送到新地址。
+没有凭据不会切换到测试模型。真实调用与审查结果见
+[P2 复核记录](docs/verification/P2复核与真实模型验收.md)。
 
 ```sh
 # 显式受控模型演示：真实 Host/上传/工具/审批，临时数据退出后清理

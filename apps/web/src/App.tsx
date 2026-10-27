@@ -7,6 +7,7 @@ import { SessionId } from '@deepseek-ai/dsh-session/types'
 import { AppClient, describe, unwrap } from './model/client'
 import { useSource, useMediaQuery } from './bindings'
 import { Button, Icon, Glow, Modal } from './components/kit'
+import { ModelSettings } from './components/ModelSettings'
 import { Composer } from './components/Composer'
 import { Conversation } from './components/Conversation'
 import { Queue, Waiting } from './components/Interactions'
@@ -21,7 +22,7 @@ export function App({ client }: { client: AppClient }) {
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false)
   const [sidebar, setSidebar] = useState(false),
-    [panel, setPanel] = useState<'host' | 'rename' | 'artifacts' | 'actions'>(),
+    [panel, setPanel] = useState<'host' | 'rename' | 'artifacts' | 'actions' | 'models'>(),
     [rename, setRename] = useState(''),
     [hostUrl, setHostUrl] = useState(''),
     [platformMessage, setPlatformMessage] = useState('')
@@ -200,8 +201,10 @@ export function App({ client }: { client: AppClient }) {
           ) : null}
         </nav>
         <div className={s.sidebarFoot}>
-          <Icon name="star" />
-          <span>个人助理</span>
+          <Button onClick={() => setPanel('models')} aria-label="模型管理">
+            <Icon name="model" />
+            模型
+          </Button>
           <button onClick={() => setPanel('host')}>连接与工作区</button>
         </div>
       </aside>
@@ -276,6 +279,7 @@ export function App({ client }: { client: AppClient }) {
             key={`${facts.host?.id}:${binding.sessionId}`}
             client={client}
             binding={binding}
+            onModels={() => setPanel('models')}
           />
         ) : (
           <div className={s.loading}>
@@ -284,6 +288,13 @@ export function App({ client }: { client: AppClient }) {
           </div>
         )}
       </main>
+      {panel === 'models' ? (
+        <ModelSettings
+          client={client}
+          onClose={() => setPanel(undefined)}
+          onHost={() => setPanel('host')}
+        />
+      ) : null}
       {panel === 'actions' && binding ? (
         <Modal title="会话操作" onClose={() => setPanel(undefined)}>
           <Button
@@ -343,9 +354,8 @@ export function App({ client }: { client: AppClient }) {
             <dd>{facts.host?.workspace ?? '尚未连接'}</dd>
             <dt>模型凭据</dt>
             <dd>
-              {facts.host?.modelConfigured
-                ? 'Host 已配置'
-                : '未配置。请在 Host 的 host.json 中声明 deepseek 环境引用，再启动 Host；密钥不填写到网页。'}
+              {facts.host?.modelConfigured ? '已配置' : '未配置'}
+              <Button onClick={() => setPanel('models')}>管理模型</Button>
             </dd>
             <dt>当前平台</dt>
             <dd>Web · 文件选择来自当前设备；上传后由 Host 接收。</dd>
@@ -400,7 +410,15 @@ export function App({ client }: { client: AppClient }) {
     </div>
   )
 }
-function Workspace({ client, binding }: { client: AppClient; binding: SessionBinding }) {
+function Workspace({
+  client,
+  binding,
+  onModels,
+}: {
+  client: AppClient
+  binding: SessionBinding
+  onModels(): void
+}) {
   const state = useSource(binding.session)
   return (
     <>
@@ -410,7 +428,6 @@ function Workspace({ client, binding }: { client: AppClient; binding: SessionBin
             <Icon name="star" />
           </div>
           <h2>今天，想一起完成什么？</h2>
-          <p>说说你的目标，或上传资料开始对话。</p>
         </div>
       ) : (
         <Conversation client={client} binding={binding} />
@@ -418,7 +435,7 @@ function Workspace({ client, binding }: { client: AppClient; binding: SessionBin
       <div className={`${s.dock} ${state.blank ? s.homeDock : ''}`}>
         <Waiting client={client} binding={binding} />
         <Queue binding={binding} />
-        <Composer client={client} binding={binding} />
+        <Composer client={client} binding={binding} onModels={onModels} />
       </div>
     </>
   )

@@ -5,6 +5,7 @@ import type { HostIdentity } from '@tianzhiai/platform'
 import { ensureHostDirectories, type HostPaths } from './paths.ts'
 
 export * from './paths.ts'
+export { SecretStore } from './secret-store.ts'
 
 const credentialRefSchema = z.strictObject({
   source: z.literal('environment'),
