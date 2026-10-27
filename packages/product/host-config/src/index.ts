@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { readFile, writeFile } from 'node:fs/promises'
+import { link, readFile, rm, writeFile } from 'node:fs/promises'
 import { z } from 'zod'
 import type { HostIdentity } from '@tianzhiai/platform'
 import { ensureHostDirectories, type HostPaths } from './paths.ts'
@@ -73,13 +73,22 @@ export async function loadHostSettings(paths: HostPaths): Promise<HostSettings> 
       profile: 'production',
       credentialReferences: {},
     }
+    const temporary = `${paths.hostConfig}.${randomUUID()}.tmp`
     try {
-      await writeFile(paths.hostConfig, JSON.stringify(defaults, null, 2) + '\n', {
+      // Publish only after the private file has been completely written and closed.
+      // link() is atomic and never replaces another process's winning Host identity.
+      await writeFile(temporary, JSON.stringify(defaults, null, 2) + '\n', {
         flag: 'wx',
         mode: 0o600,
+        flush: true,
       })
-    } catch (writeError) {
-      if (!hasCode(writeError, 'EEXIST')) throw writeError
+      try {
+        await link(temporary, paths.hostConfig)
+      } catch (publishError) {
+        if (!hasCode(publishError, 'EEXIST')) throw publishError
+      }
+    } finally {
+      await rm(temporary, { force: true })
     }
     content = await readFile(paths.hostConfig, 'utf8')
   }

@@ -7,7 +7,7 @@
 import { readFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { Context, FiberState } from '@deepseek-ai/cordis'
+import { Context, FiberState, Logger, type Exporter } from '@deepseek-ai/cordis'
 import Loader, { type EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
 import Include, { entryListSchema, type PatchOptions } from '@deepseek-ai/cordis-plugin-include'
 import Group from '@deepseek-ai/cordis-plugin-group'
@@ -26,7 +26,7 @@ export interface BootOptions {
   patches?: readonly string[]
   args?: readonly string[]
   timeoutMs?: number
-  prepare?: (ctx: Context) => void | Promise<void>
+  prepare?: (ctx: Context, signal: AbortSignal) => void | Promise<void>
   exit?: (code: number) => void
 }
 
@@ -86,6 +86,41 @@ export async function bootProfile(manifestPath: string, options: BootOptions = {
   }
   const ctx = new Context()
   const limit = options.timeoutMs ?? 5000
+  const startup = new AbortController()
+  const logger = ctx.logger
+  let cleanupErrors: string[] | undefined
+  // Host-owned diagnostics must outlive the root fiber's own exporter effects.
+  // Use the public exporter registry and release this sink after teardown settles.
+  let exporterId = -1
+  while (logger.exporters.has(exporterId)) exporterId--
+  const diagnostics: Exporter = {
+    colors: false,
+    maxLength: 2048,
+    export(message) {
+      if (message.type !== 'error' || !cleanupErrors || cleanupErrors.length >= 20) return
+      try {
+        cleanupErrors.push(Logger.format(diagnostics, message))
+      } catch {
+        cleanupErrors.push('插件清理报告错误，诊断格式化失败')
+      }
+    },
+  }
+  logger.exporters.set(exporterId, diagnostics)
+  let disposing: Promise<void> | undefined
+  const dispose = (label: string) => {
+    if (disposing) return disposing
+    const errors: string[] = []
+    cleanupErrors = errors
+    disposing = (async () => {
+      try {
+        await bounded(ctx.fiber.dispose(), label, limit)
+        if (errors.length) throw new Error(`${label}失败：${errors.join('; ')}`)
+      } finally {
+        logger.exporters.delete(exporterId)
+      }
+    })()
+    return disposing
+  }
   try {
     ctx.baseUrl = pathToFileURL(dirname(configPath) + '/').href
     await ctx.plugin(Loader)
@@ -94,14 +129,17 @@ export async function bootProfile(manifestPath: string, options: BootOptions = {
     provideCmdline(ctx, { args: options.args ?? [], exit: options.exit ?? (() => {}) })
     await bounded(
       (async () => {
-        await options.prepare?.(ctx)
+        await options.prepare?.(ctx, startup.signal)
+        startup.signal.throwIfAborted()
         const rootInclude: EntryOptions = {
           id: 'include',
           name: 'cordis:include',
           config: { path: pathToFileURL(configPath).href, patches },
         }
         await ctx.loader.create(rootInclude)
+        startup.signal.throwIfAborted()
         await ctx.loader.await()
+        startup.signal.throwIfAborted()
         const failures = [...ctx.loader.entries()].filter(
           (entry) => !entry.disabled && entry.fiber?.state !== FiberState.ACTIVE,
         )
@@ -136,10 +174,20 @@ export async function bootProfile(manifestPath: string, options: BootOptions = {
       configuration: configPath,
       patchPaths,
       entries,
-      dispose: () => bounded(ctx.fiber.dispose(), 'Profile 退出', limit),
+      dispose: () => dispose('Profile 退出'),
     }
   } catch (error) {
-    await bounded(ctx.fiber.dispose(), '启动失败清理', limit)
+    startup.abort(error)
+    try {
+      await dispose('启动失败清理')
+    } catch (cleanupError) {
+      const describe = (reason: unknown) =>
+        reason instanceof Error ? reason.message : String(reason)
+      throw new AggregateError(
+        [error, cleanupError],
+        `${describe(error)}；${describe(cleanupError)}`,
+      )
+    }
     throw error
   }
 }

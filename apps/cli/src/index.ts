@@ -123,4 +123,7 @@ main().catch((error) => {
     ),
   )
   process.exitCode = 1
+  // Cleanup has already had its bounded attempt. A failed plugin may still own
+  // handles; give stderr time to drain, then force a failed CLI process to exit.
+  setTimeout(() => process.exit(1), 250).unref()
 })

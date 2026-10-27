@@ -520,10 +520,11 @@
       "使用显式产品 Profile 清单和 insert Patch，暂不支持完整动态 Bundle 管理",
       "裁掉 DSH_HOME、模型/账户/遥测/更新与 Native helper 安装",
       "全部启用插件要求就绪，提供有界启动与失败清理；输出配置来源、插件和错误",
-      "使用原样迁入 cmdline 提供不可变参数和退出请求"
+      "使用原样迁入 cmdline 提供不可变参数和退出请求",
+      "P0 复核修复：产品层捕获清理错误并保持幂等；失败时取消 prepare 后续启动，合并启动与清理原因；CLI 有界失败退出；不修改 Cordis 核心"
     ],
-    "targetSha256": "971c64213135363080748b04b0544825d5eecbfa13fd07e57d09a981b68b37d4",
-    "verification": "tests/boot.test.mjs：重复启动、配置错误、缺失插件、等待服务、参数、check、SIGTERM 通过"
+    "targetSha256": "3ef4dbf234c276bbeda1685c3e3497afbd4784bfcaaf25c3c12a3bbc3518e77f",
+    "verification": "tests/boot.test.mjs 与 tests/p0-regressions.test.mjs：基础启动、同步/异步清理失败、CLI 非零退出与脱敏、卡住插件的最终退出、迟到 prepare 取消"
   },
   "enabled": [
     "Loader",
@@ -592,9 +593,11 @@
     "upstream brand/Typert/cmdline: 58 passed; 6 files",
     "P0 complete gate passed; 8 product + 58 upstream tests",
     "clean isolated checkout: empty npm cache, empty pnpm store; 58 downloaded, 0 reused; install/build/check passed",
-    "project links/task state counts and 62 license entries checked"
+    "project links/task state counts and 62 license entries checked",
+    "P0 复核新增 6 项回归；包含 960 次同进程并发创建与 4 进程 128 次竞争创建，完成后核验单一 Host 身份、权限与临时文件清理",
+    "RUN-20261027-P0-08：隔离 P0 基线加修复的完整门禁通过，14 产品 + 58 上游 = 72 项；空缓存下载 58、复用 0，再次完整通过"
   ],
-  "acceptanceScope": "仅 P0 Loader/Profile 与底座；不是完整 Agent 核心或独立安装包",
+  "acceptanceScope": "仅 P0 Loader/Profile 与底座；含 RUN-20261027-P0-08 隔离基线复核修复；不是当前 P1 工作区的完整核心或独立安装包验收",
   "buildAdaptation": {
     "script": "scripts/build.mjs",
     "description": "类型解析与打包解析分离，禁用打包 TS paths，包间 external；构建输入只能来自当前包；根清单提供唯一 Cordis/Loader/Include Peer",
