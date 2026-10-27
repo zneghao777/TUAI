@@ -514,8 +514,16 @@
     "source": "packages/boot/app-boot/src/index.ts",
     "sourceSha256": "17923804b20a771b8e0fd3636769494735c53a9f5014ad69807635466fb1efa4",
     "target": "apps/cli/src/boot.ts",
-    "status": "planned",
-    "scope": "仅 Loader → Include → Patch → 服务树与失败清理；不迁动态插件安装或 DSH_HOME"
+    "status": "adapted",
+    "scope": "仅 Loader → Include → Patch → 服务树与失败清理；不迁动态插件安装或 DSH_HOME",
+    "localPatches": [
+      "使用显式产品 Profile 清单和 insert Patch，暂不支持完整动态 Bundle 管理",
+      "裁掉 DSH_HOME、模型/账户/遥测/更新与 Native helper 安装",
+      "全部启用插件要求就绪，提供有界启动与失败清理；输出配置来源、插件和错误",
+      "使用原样迁入 cmdline 提供不可变参数和退出请求"
+    ],
+    "targetSha256": "db70e754f7fad3b004ed81e13a5306e00b6d30bafd994b7cb397ac24158fb0e1",
+    "verification": "tests/boot.test.mjs：重复启动、配置错误、缺失插件、等待服务、参数、check、SIGTERM 通过"
   },
   "enabled": [
     "Loader",

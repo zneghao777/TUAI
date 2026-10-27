@@ -1,0 +1,5 @@
+- insert:
+    - id: p0-probe
+      name: ../apps/cli/lib/probe.js
+      config:
+        label: TIanZhiAi P0

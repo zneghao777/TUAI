@@ -1,0 +1,1 @@
+{ "version": 1, "name": "production", "config": "./cordis.yml", "patches": [] }

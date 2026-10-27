@@ -13,7 +13,8 @@
     "start": "node --expose-internals apps/cli/lib/index.js",
     "audit:upstream": "node scripts/audit-upstream.mjs",
     "test:loader": "node --expose-internals --test tests/loader.test.mjs",
-    "test:upstream": "vitest run packages/util/brand/tests/brand.spec.ts packages/typert/protocol/tests/protocol.spec.ts packages/typert/protocol/tests/owned-value.spec.ts packages/typert/protocol/tests/remote-access.spec.ts packages/typert/protocol/tests/remote-info.spec.ts packages/boot/cmdline/tests/cmdline.spec.ts"
+    "test:upstream": "vitest run packages/util/brand/tests/brand.spec.ts packages/typert/protocol/tests/protocol.spec.ts packages/typert/protocol/tests/owned-value.spec.ts packages/typert/protocol/tests/remote-access.spec.ts packages/typert/protocol/tests/remote-info.spec.ts packages/boot/cmdline/tests/cmdline.spec.ts",
+    "test:boot": "node --expose-internals --test tests/boot.test.mjs"
   },
   "devDependencies": {
     "@types/node": "22.20.1",
