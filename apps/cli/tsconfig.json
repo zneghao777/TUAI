@@ -22,6 +22,9 @@
     },
     {
       "path": "../../packages/boot/cmdline"
+    },
+    {
+      "path": "../../packages/product/host-config"
     }
   ]
 }

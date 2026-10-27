@@ -2,6 +2,16 @@ import { parseArgs } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { bootProfile } from './boot.ts'
+import { EnvironmentCredentials, loadHostSettings, publicHostIdentity, redactDiagnostic, resolveHostPaths,
+  type HostPaths, type HostSettings } from '@tianzhiai/host-config'
+
+declare module '@deepseek-ai/cordis' {
+  interface Context {
+    tianzhiaiHost: { paths: HostPaths; settings: HostSettings; credentials: EnvironmentCredentials }
+  }
+}
+
+let activeSettings: HostSettings | undefined
 
 async function main() {
   const { values, positionals } = parseArgs({ allowPositionals: true, options: {
@@ -13,15 +23,20 @@ async function main() {
     console.log('TIanZhiAi --profile production|development|<manifest.json> [--patch <file>] [--check] [-- <app args>]')
     return
   }
-  const selected = values.profile ?? process.env.TIANZHIAI_PROFILE ?? 'production'
+  const paths = resolveHostPaths()
+  const settings = await loadHostSettings(paths)
+  activeSettings = settings
+  const selected = values.profile ?? process.env.TIANZHIAI_PROFILE ?? settings.profile
   const manifest = ['production', 'development'].includes(selected)
     ? fileURLToPath(new URL(`../../../profiles/${selected}.json`, import.meta.url)) : resolve(selected)
   let exitRequested: number | undefined
   let requestExit = (code: number) => { exitRequested = code }
   const runtime = await bootProfile(manifest, {
     patches: values.patch ?? [], args: positionals, exit: code => { requestExit(code) },
+    prepare(ctx) { ctx.provide('tianzhiaiHost', { paths, settings, credentials: new EnvironmentCredentials() }) },
   })
   console.log(JSON.stringify({ product: 'TIanZhiAi', profile: runtime.profile,
+    host: publicHostIdentity(settings, paths.platform, 'local'),
     configuration: runtime.configuration, patches: runtime.patchPaths, entries: runtime.entries }))
   if (values.check || exitRequested !== undefined) {
     await runtime.dispose()
@@ -52,6 +67,6 @@ async function main() {
 }
 
 main().catch(error => {
-  console.error(`TIanZhiAi：${error instanceof Error ? error.message : '启动失败'}`)
+  console.error(redactDiagnostic(`TIanZhiAi：${error instanceof Error ? error.message : '启动失败'}`, activeSettings))
   process.exitCode = 1
 })

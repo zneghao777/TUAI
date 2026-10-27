@@ -50,13 +50,16 @@ test('invalid manifests, YAML, missing imports and pending services reject start
   await assert.rejects(bootProfile(manifest), /invalid|Invalid/)
 })
 
-test('CLI check exits, unknown flags fail and SIGTERM releases a running profile', { timeout: 8000 }, async () => {
-  const checked = spawnSync(process.execPath, ['--expose-internals', cli, '--profile', 'development', '--check'], { encoding: 'utf8', timeout: 5000 })
+test('CLI check exits, unknown flags fail and SIGTERM releases a running profile', { timeout: 8000 }, async t => {
+  const directory = await mkdtemp(join(tmpdir(), '天质 CLI '))
+  t.after(() => rm(directory, { recursive: true, force: true }))
+  const env = { ...process.env, TIANZHIAI_HOME: directory }
+  const checked = spawnSync(process.execPath, ['--expose-internals', cli, '--profile', 'development', '--check'], { env, encoding: 'utf8', timeout: 5000 })
   assert.equal(checked.status, 0, checked.stderr)
   assert.equal(JSON.parse(checked.stdout).profile, 'development')
   const invalid = spawnSync(process.execPath, [cli, '--not-an-option'], { encoding: 'utf8', timeout: 5000 })
   assert.equal(invalid.status, 1)
-  const child = spawn(process.execPath, ['--expose-internals', cli, '--profile', 'development'], { stdio: ['ignore', 'pipe', 'pipe'] })
+  const child = spawn(process.execPath, ['--expose-internals', cli, '--profile', 'development'], { env, stdio: ['ignore', 'pipe', 'pipe'] })
   const closed = once(child, 'close')
   try {
     await once(child.stdout, 'data')

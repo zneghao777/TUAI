@@ -44,6 +44,9 @@ importers:
       '@deepseek-ai/dsh-cmdline':
         specifier: workspace:*
         version: link:../../packages/boot/cmdline
+      '@tianzhiai/host-config':
+        specifier: workspace:*
+        version: link:../../packages/product/host-config
       js-yaml:
         specifier: 4.3.2
         version: 4.3.2
@@ -65,6 +68,15 @@ importers:
       commander:
         specifier: ^15.0.0
         version: 15.0.0
+
+  packages/product/host-config:
+    dependencies:
+      '@tianzhiai/platform':
+        specifier: workspace:*
+        version: link:../platform
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
 
   packages/product/platform: {}
 

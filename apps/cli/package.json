@@ -13,6 +13,7 @@
     "@deepseek-ai/cordis-plugin-group": "workspace:*",
     "@deepseek-ai/dsh-cmdline": "workspace:*",
     "js-yaml": "4.3.2",
-    "zod": "4.4.3"
+    "zod": "4.4.3",
+    "@tianzhiai/host-config": "workspace:*"
   }
 }

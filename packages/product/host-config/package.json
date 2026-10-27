@@ -1,0 +1,9 @@
+{
+  "name": "@tianzhiai/host-config",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "types": "./lib/types/index.d.ts",
+  "exports": { ".": { "types": "./lib/types/index.d.ts", "default": "./lib/index.js" } },
+  "dependencies": { "zod": "4.4.3", "@tianzhiai/platform": "workspace:*" }
+}

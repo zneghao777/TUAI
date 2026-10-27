@@ -31,5 +31,17 @@ Profile 与 Patch 是本机用户维护的可信代码配置，不能接受网�
 来源维护命令 `node scripts/audit-upstream.mjs` 需要显式可用的只读参考仓库；
 构建和运行不使用参考仓库。
 
+首次启动创建独立产品目录和无密钥的 `config/host.json`，保持 Host 身份不变。
+可以在启动环境中设置 `TIANZHIAI_HOME` 进行隔离，例如：
+
+```sh
+TIANZHIAI_HOME="$PWD/.runtime" node --expose-internals apps/cli/lib/index.js --profile development --check
+```
+
+默认目录与分域规则见 [ADR-003](docs/adr/ADR-003-平台契约与前端暂缓.md)。
+`config/host.example.json` 只演示凭据引用，密钥由显式环境变量解析，
+不会写入配置或客户端投影；当前尚无实际模型 Provider。
+本阶段未实现 Keychain、加密磁盘凭据库、目录选择桥接或系统通知。
+
 任务与验收见[总开发计划](总开发计划与进度记录.md)，
 来源与本地适配见[迁移登记](docs/migration/M0-迁移登记.json)。

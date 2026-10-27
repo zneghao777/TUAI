@@ -47,6 +47,12 @@
       ],
       "@deepseek-ai/dsh-cmdline": [
         "./packages/boot/cmdline/src/index.ts"
+      ],
+      "@tianzhiai/platform": [
+        "./packages/product/platform/src/index.ts"
+      ],
+      "@tianzhiai/host-config": [
+        "./packages/product/host-config/src/index.ts"
       ]
     }
   }
