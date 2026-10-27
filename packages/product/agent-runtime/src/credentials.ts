@@ -1,4 +1,8 @@
 import type {} from '@deepseek-ai/cordis'
+import { readFile, stat } from 'node:fs/promises'
+import { join } from 'node:path'
+import { withFileLock, writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
+import type { CredentialKey, CredentialRecord } from '@deepseek-ai/dsh-credentials'
 import CredentialProvider, { type CredentialRef } from '@deepseek-ai/dsh-credentials'
 import {
   type EnvironmentCredentials,
@@ -38,19 +42,58 @@ export class HostCredentials extends CredentialProvider {
   async unset(): Promise<never> {
     throw new Error('请通过 Host 配置撤销凭据引用')
   }
-  async readRecord() {
-    return undefined
+  private recordPath(key: CredentialKey) {
+    if (key !== 'client-connection/browser-session')
+      throw new Error('当前 Host 只支持浏览器认证签名记录')
+    return join(this.ctx.tianzhiaiHost.paths.config, 'browser-session.json')
   }
-  async describeRecord() {
-    return { configured: false, writable: false }
+  async readRecord(key: CredentialKey): Promise<CredentialRecord | undefined> {
+    if (key !== 'client-connection/browser-session') return undefined
+    const path = this.recordPath(key)
+    try {
+      const info = await stat(path)
+      if (process.platform !== 'win32' && (info.mode & 0o077) !== 0)
+        throw new Error('浏览器认证签名文件必须仅当前用户可读写')
+      const raw: unknown = JSON.parse(await readFile(path, 'utf8'))
+      if (
+        typeof raw !== 'object' ||
+        raw === null ||
+        !('kind' in raw) ||
+        raw.kind !== 'grant' ||
+        !('payload' in raw)
+      )
+        throw new Error('浏览器认证签名记录格式不合法')
+      return { kind: 'grant', payload: raw.payload }
+    } catch (error) {
+      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return undefined
+      throw error
+    }
+  }
+  async describeRecord(key: CredentialKey) {
+    return {
+      configured: (await this.readRecord(key)) !== undefined,
+      writable: key === 'client-connection/browser-session',
+    }
   }
   async listRecords() {
     return []
   }
-  async modifyRecord(): Promise<never> {
-    throw new Error('当前 Host 未启用凭据记录存储')
+  async modifyRecord(
+    key: CredentialKey,
+    mutate: (current: CredentialRecord | undefined) => Promise<CredentialRecord | undefined>,
+  ) {
+    const path = this.recordPath(key)
+    return withFileLock(path, async () => {
+      const current = await this.readRecord(key)
+      const updated = await mutate(current)
+      if (updated === undefined) return current
+      if (updated.kind !== 'grant') throw new Error('浏览器认证只能保存签名记录')
+      await writeFileAtomic(path, JSON.stringify(updated), { mode: 0o600 })
+      this.notifyRecordUpdated(key)
+      return updated
+    })
   }
   async deleteRecord(): Promise<never> {
-    throw new Error('当前 Host 未启用凭据记录存储')
+    throw new Error('浏览器认证撤销需要通过 Host 显式维护')
   }
 }

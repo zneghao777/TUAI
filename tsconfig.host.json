@@ -1,41 +1,75 @@
 {
+  "extends": "./tsconfig.base.json",
   "files": [],
   "references": [
     {
-      "path": "packages/product/host-config"
+      "path": "apps/cli"
     },
     {
-      "path": "vendor/cosmokit"
+      "path": "packages/api/gateway/tsconfig.host.json"
     },
     {
-      "path": "vendor/schemastery"
+      "path": "packages/api/remote-access/tsconfig.host.json"
     },
     {
-      "path": "vendor/cordis"
+      "path": "packages/api/remotes/tsconfig.host.json"
     },
     {
-      "path": "vendor/loader"
+      "path": "packages/api/session-controller/tsconfig.host.json"
     },
     {
-      "path": "vendor/include"
+      "path": "packages/attachment/attachment-local"
     },
     {
-      "path": "vendor/group"
+      "path": "packages/attachment/attachment"
     },
     {
-      "path": "packages/util/brand"
-    },
-    {
-      "path": "packages/typert/protocol"
+      "path": "packages/boot/app-boot"
     },
     {
       "path": "packages/boot/cmdline"
     },
     {
-      "path": "apps/cli"
+      "path": "packages/boot/config-editor"
     },
     {
-      "path": "packages/attachment/attachment"
+      "path": "packages/boot/hmr"
+    },
+    {
+      "path": "packages/client/connection/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/file-upload/tsconfig.host.json"
+    },
+    {
+      "path": "packages/compaction/compaction-basic"
+    },
+    {
+      "path": "packages/compaction/compaction-image-offload"
+    },
+    {
+      "path": "packages/compaction/compaction-tool-result-pruner"
+    },
+    {
+      "path": "packages/compaction/compaction"
+    },
+    {
+      "path": "packages/context/agent-instructions"
+    },
+    {
+      "path": "packages/context/file-reference-local"
+    },
+    {
+      "path": "packages/context/file-reference"
+    },
+    {
+      "path": "packages/context/time-context"
+    },
+    {
+      "path": "packages/core/agent-default-model"
+    },
+    {
+      "path": "packages/core/agent-loop"
     },
     {
       "path": "packages/core/agent"
@@ -50,67 +84,67 @@
       "path": "packages/core/system-prompt"
     },
     {
+      "path": "packages/core/tool-executor-native"
+    },
+    {
+      "path": "packages/core/tool-executor-ptc"
+    },
+    {
       "path": "packages/core/tools"
     },
     {
-      "path": "packages/interaction/user-approval"
-    },
-    {
-      "path": "packages/llm/llm"
-    },
-    {
-      "path": "packages/product/platform"
-    },
-    {
-      "path": "packages/session/session-persistence"
-    },
-    {
-      "path": "packages/session/session-projection"
-    },
-    {
-      "path": "packages/storage/storage-domain"
-    },
-    {
-      "path": "packages/storage/storage"
-    },
-    {
-      "path": "packages/util/crypto"
-    },
-    {
-      "path": "packages/util/timeout"
-    },
-    {
-      "path": "packages/util/values"
-    },
-    {
-      "path": "packages/workspace/workspace"
-    },
-    {
-      "path": "packages/boot/app-boot"
-    },
-    {
-      "path": "packages/boot/config-editor"
-    },
-    {
-      "path": "packages/boot/hmr"
-    },
-    {
-      "path": "packages/compaction/compaction-image-offload"
-    },
-    {
-      "path": "packages/compaction/compaction"
+      "path": "packages/credentials/credentials-local"
     },
     {
       "path": "packages/credentials/credentials"
     },
     {
+      "path": "packages/fs/fs-local"
+    },
+    {
+      "path": "packages/fs/fs-observation-policy"
+    },
+    {
+      "path": "packages/fs/fs-sandbox"
+    },
+    {
       "path": "packages/fs/fs"
+    },
+    {
+      "path": "packages/fs/tool-fs"
+    },
+    {
+      "path": "packages/guard/repeat-tool-reminder"
+    },
+    {
+      "path": "packages/guard/timeout-policy"
+    },
+    {
+      "path": "packages/host/frontend-static"
+    },
+    {
+      "path": "packages/host/webserver"
     },
     {
       "path": "packages/identity/anonymous-user-id"
     },
     {
       "path": "packages/interaction/commands"
+    },
+    {
+      "path": "packages/interaction/permission-presets"
+    },
+    {
+      "path": "packages/interaction/tool-ask-user"
+    },
+    {
+      "path": "packages/interaction/user-approval"
+    },
+    {
+      "path": "packages/interaction/user-questions"
+    },
+    {
+      "path": "packages/jobs/jobs"
     },
     {
       "path": "packages/llm/deepseek-llm-api-extensions"
@@ -125,43 +159,46 @@
       "path": "packages/llm/llm-retry"
     },
     {
+      "path": "packages/llm/llm"
+    },
+    {
       "path": "packages/llm/token-meter"
+    },
+    {
+      "path": "packages/preset/agent-preset-registry"
+    },
+    {
+      "path": "packages/product/agent-runtime"
+    },
+    {
+      "path": "packages/product/host-config"
+    },
+    {
+      "path": "packages/product/platform"
+    },
+    {
+      "path": "packages/product/web-host"
+    },
+    {
+      "path": "packages/ptc-runtime/ptc-runtime"
+    },
+    {
+      "path": "packages/sandbox/sandbox-local"
+    },
+    {
+      "path": "packages/sandbox/sandbox-policy"
+    },
+    {
+      "path": "packages/sandbox/sandbox-windows-acl"
     },
     {
       "path": "packages/sandbox/sandbox"
     },
     {
-      "path": "packages/settings/settings"
+      "path": "packages/session-query/session-query-sqlite"
     },
     {
-      "path": "packages/util/atomic-write"
-    },
-    {
-      "path": "packages/util/home-paths"
-    },
-    {
-      "path": "packages/util/launch-environment"
-    },
-    {
-      "path": "packages/util/official-bundles"
-    },
-    {
-      "path": "packages/util/package-manifest"
-    },
-    {
-      "path": "vendor/timer"
-    },
-    {
-      "path": "packages/core/agent-loop"
-    },
-    {
-      "path": "packages/core/tool-executor-native"
-    },
-    {
-      "path": "packages/test-support/tool-testkit"
-    },
-    {
-      "path": "packages/product/agent-runtime"
+      "path": "packages/session-query/session-query"
     },
     {
       "path": "packages/session/session-format-catalog"
@@ -185,37 +222,31 @@
       "path": "packages/session/session-persistence-jsonl"
     },
     {
-      "path": "packages/util/time"
+      "path": "packages/session/session-persistence"
     },
     {
-      "path": "packages/compaction/compaction-tool-result-pruner"
+      "path": "packages/session/session-projection-cache"
     },
     {
-      "path": "packages/attachment/attachment-local"
+      "path": "packages/session/session-projection"
     },
     {
-      "path": "packages/fs/fs-local"
+      "path": "packages/session/session-stats"
     },
     {
-      "path": "packages/fs/tool-fs"
+      "path": "packages/session/session-title"
     },
     {
-      "path": "packages/jobs/jobs"
-    },
-    {
-      "path": "packages/sandbox/sandbox-local"
-    },
-    {
-      "path": "packages/sandbox/sandbox-policy"
-    },
-    {
-      "path": "packages/sandbox/sandbox-windows-acl"
+      "path": "packages/session/session-turn-outline"
     },
     {
       "path": "packages/session/tool-working-directory"
     },
     {
       "path": "packages/session/working-directory"
+    },
+    {
+      "path": "packages/settings/settings"
     },
     {
       "path": "packages/shell/bash-local"
@@ -236,57 +267,6 @@
       "path": "packages/skill/skill"
     },
     {
-      "path": "packages/subprocess/subprocess-local"
-    },
-    {
-      "path": "packages/subprocess/subprocess"
-    },
-    {
-      "path": "packages/subprocess/win32-process"
-    },
-    {
-      "path": "packages/util/code-language"
-    },
-    {
-      "path": "packages/util/http-proxy"
-    },
-    {
-      "path": "packages/util/lazy-require"
-    },
-    {
-      "path": "packages/fs/fs-sandbox"
-    },
-    {
-      "path": "packages/compaction/compaction-basic"
-    },
-    {
-      "path": "packages/context/agent-instructions"
-    },
-    {
-      "path": "packages/context/file-reference-local"
-    },
-    {
-      "path": "packages/context/file-reference"
-    },
-    {
-      "path": "packages/context/time-context"
-    },
-    {
-      "path": "packages/core/tool-executor-ptc"
-    },
-    {
-      "path": "packages/guard/repeat-tool-reminder"
-    },
-    {
-      "path": "packages/guard/timeout-policy"
-    },
-    {
-      "path": "packages/interaction/permission-presets"
-    },
-    {
-      "path": "packages/ptc-runtime/ptc-runtime"
-    },
-    {
       "path": "packages/spill/spill-local"
     },
     {
@@ -296,22 +276,130 @@
       "path": "packages/spill/spill"
     },
     {
-      "path": "packages/util/output-retention"
+      "path": "packages/storage/storage-domain"
+    },
+    {
+      "path": "packages/storage/storage-json"
+    },
+    {
+      "path": "packages/storage/storage"
+    },
+    {
+      "path": "packages/subagent/subagent"
+    },
+    {
+      "path": "packages/subprocess/subprocess-local"
+    },
+    {
+      "path": "packages/subprocess/subprocess"
+    },
+    {
+      "path": "packages/subprocess/win32-process"
     },
     {
       "path": "packages/test-support/agent-loop-testkit"
     },
     {
-      "path": "packages/interaction/tool-ask-user"
-    },
-    {
-      "path": "packages/interaction/user-questions"
-    },
-    {
-      "path": "packages/fs/fs-observation-policy"
-    },
-    {
       "path": "packages/test-support/llm-mock-server"
+    },
+    {
+      "path": "packages/test-support/remote-mock"
+    },
+    {
+      "path": "packages/test-support/tool-testkit"
+    },
+    {
+      "path": "packages/todo/tool-todo"
+    },
+    {
+      "path": "packages/typert/generator"
+    },
+    {
+      "path": "packages/typert/loader"
+    },
+    {
+      "path": "packages/typert/protocol"
+    },
+    {
+      "path": "packages/typert/registry"
+    },
+    {
+      "path": "packages/util/atomic-write"
+    },
+    {
+      "path": "packages/util/brand"
+    },
+    {
+      "path": "packages/util/chunked-list"
+    },
+    {
+      "path": "packages/util/code-language"
+    },
+    {
+      "path": "packages/util/crypto"
+    },
+    {
+      "path": "packages/util/deque"
+    },
+    {
+      "path": "packages/util/home-paths"
+    },
+    {
+      "path": "packages/util/http-proxy"
+    },
+    {
+      "path": "packages/util/launch-environment"
+    },
+    {
+      "path": "packages/util/lazy-require"
+    },
+    {
+      "path": "packages/util/native-command"
+    },
+    {
+      "path": "packages/util/official-bundles"
+    },
+    {
+      "path": "packages/util/output-retention"
+    },
+    {
+      "path": "packages/util/package-manifest"
+    },
+    {
+      "path": "packages/util/time"
+    },
+    {
+      "path": "packages/util/timeout"
+    },
+    {
+      "path": "packages/util/values"
+    },
+    {
+      "path": "packages/util/workspace-path"
+    },
+    {
+      "path": "packages/workspace/workspace"
+    },
+    {
+      "path": "vendor/cordis"
+    },
+    {
+      "path": "vendor/cosmokit"
+    },
+    {
+      "path": "vendor/group"
+    },
+    {
+      "path": "vendor/include"
+    },
+    {
+      "path": "vendor/loader"
+    },
+    {
+      "path": "vendor/schemastery"
+    },
+    {
+      "path": "vendor/timer"
     }
   ]
 }

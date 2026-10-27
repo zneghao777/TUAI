@@ -8,16 +8,19 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, join, relative } from 'node:path'
 
 const original = process.cwd()
-const temporary = mkdtempSync(join(tmpdir(), 'tianzhiai-p1-'))
+const stage = process.argv[2] ?? 'P2'
+assert.ok(['P1', 'P2'].includes(stage), 'Expected P1 or P2')
+const temporary = mkdtempSync(join(tmpdir(), `tianzhiai-${stage.toLowerCase()}-`))
 const checkout = join(temporary, '天质 clean workspace')
 const report = {
-  stage: 'P1',
+  stage,
   platform: process.platform,
   arch: process.arch,
   node: process.version,
@@ -38,7 +41,9 @@ const excluded = new Set([
   '.DS_Store',
 ])
 const runtimeFiles = globSync([
-  'apps/*/src/**/*.ts',
+  'apps/*/src/**/*',
+  'apps/*/index.html',
+  'apps/*/vite.config.ts',
   'packages/*/*/src/**/*.ts',
   'scripts/*.mjs',
   'profiles/*',
@@ -53,7 +58,9 @@ const runtimeFiles = globSync([
   'native/system/packages/*/package.json',
   'native/system/packages/*/src/**/*',
   'native/system/scripts/*',
-]).sort()
+])
+  .filter((path) => statSync(path).isFile())
+  .sort()
 report.runtimeFingerprint = createHash('sha256')
   .update(
     runtimeFiles
@@ -139,7 +146,12 @@ try {
   process.exitCode = 1
 } finally {
   mkdirSync(join(original, 'reports'), { recursive: true })
-  writeFileSync(join(original, 'reports/p1-clean.json'), JSON.stringify(report, null, 2) + '\n')
+  writeFileSync(
+    join(original, `reports/${stage.toLowerCase()}-clean.json`),
+    JSON.stringify(report, null, 2) + '\n',
+  )
   rmSync(temporary, { recursive: true, force: true })
 }
-console.log(`Clean-cache P1 acceptance: ${report.result}; reports/p1-clean.json`)
+console.log(
+  `Clean-cache ${stage} acceptance: ${report.result}; reports/${stage.toLowerCase()}-clean.json`,
+)

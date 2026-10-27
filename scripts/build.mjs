@@ -10,38 +10,37 @@ execFileSync(process.execPath, ['native/system/scripts/build.ts', '--host-addon-
 
 for (const pkg of workspacePackages()) {
   // The Node-API entry has its own emitted subpath modules and platform binaries.
-  if (pkg.dir.startsWith('native/')) continue
+  if (pkg.dir.startsWith('native/') || pkg.name === '@tianzhiai/web') continue
   const dual = pkg.name === '@deepseek-ai/schemastery'
   const exportedEntries = new Set(['index'])
-  if (pkg.name === '@deepseek-ai/dsh-sandbox-windows-acl') exportedEntries.add('runner')
-  for (const entry of Object.values(pkg.exports ?? {})) {
-    const file = typeof entry === 'object' && entry !== null ? entry.default : undefined
-    if (typeof file === 'string' && /^\.\/lib\/[^/]+\.js$/.test(file)) {
+  const entrySources = new Map([['index', `${pkg.dir}/src/index.ts`]])
+  if (pkg.name === '@deepseek-ai/dsh-sandbox-windows-acl') {
+    exportedEntries.add('runner')
+    entrySources.set('runner', `${pkg.dir}/src/runner.ts`)
+  }
+  for (const [key, entry] of Object.entries(pkg.exports ?? {})) {
+    if (typeof entry !== 'object' || entry === null || key === './src/*') continue
+    for (const file of new Set([entry.default, entry.node, entry.browser])) {
+      if (typeof file !== 'string' || !file.endsWith('.js') || !file.startsWith('./lib/')) continue
       const name = file.slice('./lib/'.length, -3)
-      // Generated Remote surfaces belong to P2; P1 does not load those exports.
-      if (name.startsWith('typert.')) continue
-      if (pkg.name === '@deepseek-ai/dsh-subprocess-local' && name === 'runner') {
-        exportedEntries.add('bin')
-        continue
-      }
-      if (!existsSync(`${pkg.dir}/src/${name}.ts`))
-        throw new Error(`Missing build entry: ${pkg.name}/${name}`)
+      if (name.startsWith('typert.') || name.includes('/')) continue
+      const source =
+        key === './client'
+          ? `${pkg.dir}/src/client/index.ts`
+          : pkg.name === '@deepseek-ai/dsh-subprocess-local' && name === 'runner'
+            ? `${pkg.dir}/src/bin.ts`
+            : `${pkg.dir}/src/${name}.ts`
+      if (!existsSync(source)) throw new Error(`Missing build entry: ${pkg.name}/${name}`)
       exportedEntries.add(name)
+      entrySources.set(name, source)
     }
   }
   for (const format of dual ? ['esm', 'cjs'] : ['esm']) {
     const result = await build({
       entryPoints:
         pkg.name === '@tianzhiai/cli'
-          ? ['index', 'boot', 'probe'].map((name) => `${pkg.dir}/src/${name}.ts`)
-          : Object.fromEntries(
-              [...exportedEntries].map((name) => [
-                pkg.name === '@deepseek-ai/dsh-subprocess-local' && name === 'bin'
-                  ? 'runner'
-                  : name,
-                `${pkg.dir}/src/${name}.ts`,
-              ]),
-            ),
+          ? ['index', 'boot', 'probe', 'web'].map((name) => `${pkg.dir}/src/${name}.ts`)
+          : Object.fromEntries(entrySources),
       outdir: `${pkg.dir}/lib`,
       outExtension: { '.js': dual ? (format === 'esm' ? '.mjs' : '.cjs') : '.js' },
       bundle: true,

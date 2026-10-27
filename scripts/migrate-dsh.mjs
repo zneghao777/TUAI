@@ -29,15 +29,16 @@ const candidates = globSync(
   { cwd: source },
 ).map((path) => ({ dir: dirname(path), ...json(resolve(source, path)) }))
 const byName = new Map(candidates.map((pkg) => [pkg.name, pkg]))
-const registryPath = 'docs/migration/M1-迁移登记.json'
+const p2 = Number(task.slice(3)) >= 15
+const registryPath = p2 ? 'docs/migration/M3-迁移登记.json' : 'docs/migration/M1-迁移登记.json'
 const registry = existsSync(registryPath)
   ? json(registryPath)
   : {
       schemaVersion: 1,
-      batchId: 'M1-M2',
+      batchId: p2 ? 'M3' : 'M1-M2',
       upstreamCommit: commit,
       status: 'in_progress',
-      scope: 'P1 实际启用能力及其运行、类型和资源闭包；未注册插件不表示能力已启用',
+      scope: `${p2 ? 'P2' : 'P1'} 实际启用能力及其运行、类型和资源闭包；未注册插件不表示能力已启用`,
       rollbackRevision: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
       packages: [],
       checks: [],
@@ -78,6 +79,10 @@ function select(name) {
   for (const dep of names) if (byName.has(dep)) select(dep)
 }
 roots.forEach(select)
+if (process.env.TIANZHI_MIGRATION_DRY_RUN === '1') {
+  console.log([...selected.keys()].join('\n'))
+  process.exit(0)
+}
 for (const [name, pkg] of selected) {
   assert.ok(!existsSync(pkg.dir), `Refusing to overwrite ${pkg.dir}`)
   const files = git('ls-files', '--', pkg.dir).split('\n').filter(Boolean)
@@ -132,9 +137,10 @@ for (const [name, pkg] of selected) {
     const config = json(`${pkg.dir}/tsconfig.json`)
     config.references = (config.references ?? []).filter(
       (ref) =>
-        existsSync(resolve(source, pkg.dir, ref.path, 'package.json')) &&
-        (local.has(json(resolve(source, pkg.dir, ref.path, 'package.json')).name) ||
-          selected.has(json(resolve(source, pkg.dir, ref.path, 'package.json')).name)),
+        (ref.path.endsWith('.json') && existsSync(resolve(source, pkg.dir, ref.path))) ||
+        (existsSync(resolve(source, pkg.dir, ref.path, 'package.json')) &&
+          (local.has(json(resolve(source, pkg.dir, ref.path, 'package.json')).name) ||
+            selected.has(json(resolve(source, pkg.dir, ref.path, 'package.json')).name))),
     )
     save(`${pkg.dir}/tsconfig.json`, config)
   }

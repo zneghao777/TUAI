@@ -44,3 +44,14 @@ snapshots/
 scripts/snapshot-workspace-parent.ts
 packages/product/agent-runtime/src/fixture-model.ts
 tests/fixtures/scripted-model.ts
+
+# Locked upstream sources and approved design deliverables retain original formatting.
+packages/api/
+packages/client/
+packages/host/
+packages/preset/
+packages/session-query/
+packages/subagent/
+packages/todo/
+scripts/types/
+docs/design/

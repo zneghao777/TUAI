@@ -13,6 +13,13 @@ const packages = workspacePackages()
 const byName = new Map(packages.map((pkg) => [pkg.name, pkg]))
 assert.equal(byName.size, packages.length, 'Duplicate package identity')
 const cordis = realpathSync('vendor/cordis/lib/index.js')
+const clientRequire = createRequire(resolve('apps/web/package.json'))
+const sharedClient = [
+  'react',
+  'react-dom',
+  '@deepseek-ai/dsh-typert-protocol',
+  '@deepseek-ai/dsh-typert-registry',
+]
 const references = JSON.parse(read('docs/migration/M0-迁移登记.json'))
 for (const snapshot of references.snapshots)
   assert.equal(hash(snapshot.path), snapshot.sha256, snapshot.path)
@@ -30,21 +37,23 @@ for (const pkg of references.packages) {
 assert.equal(references.unresolvedReferences.length, 0)
 assert.equal(hash(references.startupAdaptation.target), references.startupAdaptation.targetSha256)
 for (const file of references.testSupport) assert.equal(hash(file.target), file.sha256)
-const core = JSON.parse(read('docs/migration/M1-迁移登记.json'))
-for (const pkg of core.packages) {
-  assert.ok(byName.has(pkg.name), `Missing migrated package: ${pkg.name}`)
-  for (const file of pkg.upstreamFiles) {
-    const patch = pkg.localPatches.find((patch) => patch.path === file.path)
-    assert.equal(
-      hash(file.path),
-      patch?.sha256 ?? file.sha256,
-      `Undocumented source change: ${file.path}`,
-    )
+for (const registryPath of ['docs/migration/M1-迁移登记.json', 'docs/migration/M3-迁移登记.json']) {
+  const core = JSON.parse(read(registryPath))
+  for (const pkg of core.packages) {
+    assert.ok(byName.has(pkg.name), `Missing migrated package: ${pkg.name}`)
+    for (const file of pkg.upstreamFiles) {
+      const patch = pkg.localPatches.find((patch) => patch.path === file.path)
+      assert.equal(
+        hash(file.path),
+        patch?.sha256 ?? file.sha256,
+        `Undocumented source change: ${file.path}`,
+      )
+    }
+    for (const file of pkg.additionalFiles) assert.equal(hash(file.path), file.sha256, file.path)
   }
-  for (const file of pkg.additionalFiles) assert.equal(hash(file.path), file.sha256, file.path)
+  for (const file of core.support ?? [])
+    assert.equal(hash(file.path), file.localSha256 ?? file.sha256, file.path)
 }
-for (const file of core.support)
-  assert.equal(hash(file.path), file.localSha256 ?? file.sha256, file.path)
 
 const forbiddenRoots = [
   root,
@@ -56,6 +65,13 @@ let imports = 0
 for (const pkg of packages) {
   const declared = { ...pkg.dependencies, ...pkg.peerDependencies, ...pkg.optionalDependencies }
   const req = createRequire(resolve(pkg.dir, 'package.json'))
+  for (const name of sharedClient)
+    if (declared[name])
+      assert.equal(
+        realpathSync(req.resolve(name)),
+        realpathSync(clientRequire.resolve(name)),
+        `${pkg.name}: duplicate ${name}`,
+      )
   if (declared['@deepseek-ai/cordis'])
     assert.equal(realpathSync(req.resolve('@deepseek-ai/cordis')), cordis, pkg.name)
   for (const [name, version] of Object.entries(declared)) {
@@ -73,7 +89,7 @@ for (const pkg of packages) {
       }
     }
   }
-  for (const file of globSync(`${pkg.dir}/src/**/*.ts`)) {
+  for (const file of globSync([`${pkg.dir}/src/**/*.ts`, `${pkg.dir}/src/**/*.tsx`])) {
     const source = read(file)
     const tree = ts.createSourceFile(file, source, ts.ScriptTarget.Latest)
     for (const node of tree.statements) {
@@ -90,7 +106,9 @@ for (const pkg of packages) {
         : name.split('/')[0]
       const typeOnly = node.isTypeOnly || node.importClause?.isTypeOnly
       assert.ok(
-        owner in declared || (typeOnly && owner in (pkg.devDependencies ?? {})),
+        owner === pkg.name ||
+          owner in declared ||
+          (typeOnly && owner in (pkg.devDependencies ?? {})),
         `${file}: undeclared import ${name}`,
       )
       imports++
@@ -107,8 +125,24 @@ for (const pkg of packages) {
   for (const [subpath, definition] of Object.entries(pkg.exports ?? {})) {
     if (subpath.includes('*') || subpath === './package.json' || typeof definition !== 'object')
       continue
-    // Remote code generation and transport are explicitly deferred to TZ-015/016.
-    if (definition?.default?.includes('/typert.')) continue
+    // Only the selected P2 Remote contributions are generated; later-phase declarations remain dormant.
+    if (
+      definition?.default?.includes('/typert.') &&
+      !globSync(`${pkg.dir}/${definition.default}`).length &&
+      ![
+        '@deepseek-ai/dsh-api-session-controller',
+        '@deepseek-ai/dsh-api-remote-access',
+        '@deepseek-ai/dsh-commands',
+        '@deepseek-ai/dsh-client-file-upload',
+        '@deepseek-ai/dsh-permission-presets',
+        '@deepseek-ai/dsh-user-questions',
+        '@deepseek-ai/dsh-llm',
+        '@deepseek-ai/dsh-agent-preset-registry',
+        '@deepseek-ai/dsh-subagent',
+        '@tianzhiai/web-host',
+      ].includes(pkg.name)
+    )
+      continue
     if (definition?.default)
       assert.ok(
         globSync(`${pkg.dir}/${definition.default}`).length,
