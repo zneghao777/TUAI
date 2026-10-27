@@ -534,7 +534,7 @@
   ],
   "excluded": [
     "Agent Loop/Session（P1）",
-    "Gateway/React/UI（P2，前端选型暂缓）",
+    "Gateway/React/UI（P2，尚未实现）",
     "DS-Bot/OpenMausBot 独立执行引擎",
     "模型/账户/遥测/更新/全权限默认配置",
     "Native、浏览器、终端与文件工具 Provider（本阶段不启用）"
