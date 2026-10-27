@@ -43,5 +43,19 @@ TIANZHIAI_HOME="$PWD/.runtime" node --expose-internals apps/cli/lib/index.js --p
 不会写入配置或客户端投影；当前尚无实际模型 Provider。
 本阶段未实现 Keychain、加密磁盘凭据库、目录选择桥接或系统通知。
 
+P0 质量门禁与空缓存复现命令如下：
+
+```sh
+npx --yes pnpm@11.28.5 run check
+npx --yes pnpm@11.28.5 run verify:clean
+```
+
+`check` 包括格式、类型与构建、文档链接和进度、来源与依赖身份、许可及行为测试。
+构建将包间依赖保留为外部引用，检查输入防止重复打包 Cordis；根清单提供唯一基础 Peer。
+`verify:clean` 复制到临时工作区，使用空缓存安装、验证，随后清理临时目录。
+来源、原样迁入文档和历史总计划不做自动排版改写。
+GitLab CI 配置已提供，尚未推送或远程执行。
+结果与限制见 [P0 验收记录](docs/verification/P0验收记录.md)。
+
 任务与验收见[总开发计划](总开发计划与进度记录.md)，
 来源与本地适配见[迁移登记](docs/migration/M0-迁移登记.json)。

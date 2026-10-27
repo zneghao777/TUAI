@@ -1,0 +1,17 @@
+node_modules/
+**/lib/
+**/*.tsbuildinfo
+provenance/
+reports/
+.cache/
+.runtime/
+pnpm-lock.yaml
+vendor/
+packages/boot/
+packages/typert/
+packages/util/
+vitest.shared.ts
+docs/specs/
+docs/migration/
+总开发计划与进度记录.md
+AGENTS.md

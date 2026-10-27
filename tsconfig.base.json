@@ -17,43 +17,19 @@
     "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "paths": {
-      "@deepseek-ai/cosmokit": [
-        "./vendor/cosmokit/src/index.ts"
-      ],
-      "@deepseek-ai/schemastery": [
-        "./vendor/schemastery/src/index.ts"
-      ],
-      "@deepseek-ai/cordis": [
-        "./vendor/cordis/src/index.ts"
-      ],
-      "@deepseek-ai/cordis-plugin-loader": [
-        "./vendor/loader/src/index.ts"
-      ],
-      "@deepseek-ai/cordis-plugin-include": [
-        "./vendor/include/src/index.ts"
-      ],
-      "@deepseek-ai/cordis-plugin-group": [
-        "./vendor/group/src/index.ts"
-      ],
-      "@deepseek-ai/dsh-brand": [
-        "./packages/util/brand/src/index.ts"
-      ],
-      "@deepseek-ai/dsh-typert-protocol": [
-        "./packages/typert/protocol/src/index.ts"
-      ],
-      "@deepseek-ai/dsh-cmdline": [
-        "./packages/boot/cmdline/src/index.ts"
-      ],
-      "@tianzhiai/platform": [
-        "./packages/product/platform/src/index.ts"
-      ],
-      "@tianzhiai/host-config": [
-        "./packages/product/host-config/src/index.ts"
-      ]
+      "@deepseek-ai/cosmokit": ["./vendor/cosmokit/src/index.ts"],
+      "@deepseek-ai/schemastery": ["./vendor/schemastery/src/index.ts"],
+      "@deepseek-ai/cordis": ["./vendor/cordis/src/index.ts"],
+      "@deepseek-ai/cordis-plugin-loader": ["./vendor/loader/src/index.ts"],
+      "@deepseek-ai/cordis-plugin-include": ["./vendor/include/src/index.ts"],
+      "@deepseek-ai/cordis-plugin-group": ["./vendor/group/src/index.ts"],
+      "@deepseek-ai/dsh-brand": ["./packages/util/brand/src/index.ts"],
+      "@deepseek-ai/dsh-typert-protocol": ["./packages/typert/protocol/src/index.ts"],
+      "@deepseek-ai/dsh-cmdline": ["./packages/boot/cmdline/src/index.ts"],
+      "@tianzhiai/platform": ["./packages/product/platform/src/index.ts"],
+      "@tianzhiai/host-config": ["./packages/product/host-config/src/index.ts"]
     }
   }
 }

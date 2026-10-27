@@ -1,0 +1,38 @@
+{
+  "stage": "P0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "node": "v26.8.1",
+  "packageManager": "pnpm@11.28.5",
+  "result": "passed",
+  "runtimeFingerprint": "fdd90f2e9ca09dee3ac8eb8aa186671fd4c0341fc35d6a30beccc7b87bcd40e8",
+  "verifiedAt": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "installation": {
+    "downloaded": 58,
+    "reused": 0,
+    "workspacePackages": 12
+  },
+  "tests": {
+    "product": 8,
+    "upstream": 58,
+    "skipped": 0
+  },
+  "steps": [
+    {
+      "command": "pnpm install --frozen-lockfile --store-dir <empty-temporary-store>",
+      "exitCode": 0,
+      "elapsedMs": 3608
+    },
+    {
+      "command": "pnpm run check",
+      "exitCode": 0,
+      "elapsedMs": 7506
+    }
+  ],
+  "limitations": [
+    "本地 macOS arm64 验收，非跨平台安装验收",
+    "未推送、未触发远程 CI",
+    "前端选型暂缓；P1 核心尚未迁入"
+  ]
+}

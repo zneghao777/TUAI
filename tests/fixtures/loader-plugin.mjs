@@ -8,7 +8,7 @@ export default class Probe extends Service {
     super(ctx, 'migrationProbe')
     this.value = config.value
     lifecycle.created++
-    ctx.on('migration/ping', value => lifecycle.events.push(value))
+    ctx.on('migration/ping', (value) => lifecycle.events.push(value))
     ctx.effect(() => {
       const timer = setInterval(() => lifecycle.ticks++, 10)
       return () => {
