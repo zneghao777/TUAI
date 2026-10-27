@@ -23,6 +23,9 @@
     },
     {
       "path": "../../packages/product/host-config"
+    },
+    {
+      "path": "../../packages/product/agent-runtime"
     }
   ]
 }

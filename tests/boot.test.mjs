@@ -7,14 +7,25 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { bootProfile } from '../apps/cli/lib/boot.js'
+import {
+  EnvironmentCredentials,
+  loadHostSettings,
+  resolveHostPaths,
+} from '../packages/product/host-config/lib/index.js'
 
 const cli = fileURLToPath(new URL('../apps/cli/lib/index.js', import.meta.url))
 const development = fileURLToPath(new URL('../profiles/development.json', import.meta.url))
 const production = fileURLToPath(new URL('../profiles/production.json', import.meta.url))
 
-test('product profiles boot repeatedly, inject immutable arguments and dispose', async () => {
+test('product profiles boot repeatedly, inject immutable arguments and dispose', async (t) => {
+  const directory = await mkdtemp(join(tmpdir(), '天质 Profile 生命周期 '))
+  t.after(() => rm(directory, { recursive: true, force: true }))
+  const paths = resolveHostPaths({ env: { TIANZHIAI_HOME: directory } })
+  const settings = await loadHostSettings(paths)
+  const prepare = (ctx) =>
+    ctx.provide('tianzhiaiHost', { paths, settings, credentials: new EnvironmentCredentials({}) })
   for (let round = 0; round < 3; round++) {
-    const runtime = await bootProfile(development, { args: ['中文', '--dry-run'] })
+    const runtime = await bootProfile(development, { args: ['中文', '--dry-run'], prepare })
     const probe = runtime.ctx.get('tianzhiaiProbe')
     assert.equal(probe.label, 'TIanZhiAi P0')
     assert.deepEqual(probe.args, ['中文', '--dry-run'])
@@ -26,9 +37,15 @@ test('product profiles boot repeatedly, inject immutable arguments and dispose',
     assert.equal(probe.events, 1)
     assert.equal(probe.disposed, true)
   }
-  const runtime = await bootProfile(production)
+  const runtime = await bootProfile(production, { prepare })
   assert.equal(runtime.ctx.get('tianzhiaiProbe'), undefined)
-  assert.equal(runtime.entries.length, 1)
+  assert.ok(
+    runtime.entries.some(
+      (entry) => entry.id === 'include:tianzhiai-agent-runtime' && entry.enabled,
+    ),
+  )
+  assert.ok(runtime.ctx.get('agents'))
+  assert.ok(runtime.ctx.get('sessions'))
   await runtime.dispose()
 })
 

@@ -1,2 +1,2 @@
-# Empty product tree: P1 will migrate the actual Agent/Session providers.
-[]
+- id: tianzhiai-agent-runtime
+  name: ../packages/product/agent-runtime/lib/index.js

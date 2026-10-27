@@ -10,3 +10,5 @@ coverage/
 .runtime/
 .cache/
 reports/
+native/system/packages/*/bin/
+native/system/.release/

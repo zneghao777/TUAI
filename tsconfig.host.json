@@ -33,6 +33,285 @@
     },
     {
       "path": "apps/cli"
+    },
+    {
+      "path": "packages/attachment/attachment"
+    },
+    {
+      "path": "packages/core/agent"
+    },
+    {
+      "path": "packages/core/scope"
+    },
+    {
+      "path": "packages/core/session"
+    },
+    {
+      "path": "packages/core/system-prompt"
+    },
+    {
+      "path": "packages/core/tools"
+    },
+    {
+      "path": "packages/interaction/user-approval"
+    },
+    {
+      "path": "packages/llm/llm"
+    },
+    {
+      "path": "packages/product/platform"
+    },
+    {
+      "path": "packages/session/session-persistence"
+    },
+    {
+      "path": "packages/session/session-projection"
+    },
+    {
+      "path": "packages/storage/storage-domain"
+    },
+    {
+      "path": "packages/storage/storage"
+    },
+    {
+      "path": "packages/util/crypto"
+    },
+    {
+      "path": "packages/util/timeout"
+    },
+    {
+      "path": "packages/util/values"
+    },
+    {
+      "path": "packages/workspace/workspace"
+    },
+    {
+      "path": "packages/boot/app-boot"
+    },
+    {
+      "path": "packages/boot/config-editor"
+    },
+    {
+      "path": "packages/boot/hmr"
+    },
+    {
+      "path": "packages/compaction/compaction-image-offload"
+    },
+    {
+      "path": "packages/compaction/compaction"
+    },
+    {
+      "path": "packages/credentials/credentials"
+    },
+    {
+      "path": "packages/fs/fs"
+    },
+    {
+      "path": "packages/identity/anonymous-user-id"
+    },
+    {
+      "path": "packages/interaction/commands"
+    },
+    {
+      "path": "packages/llm/deepseek-llm-api-extensions"
+    },
+    {
+      "path": "packages/llm/llm-deepseek-api-key"
+    },
+    {
+      "path": "packages/llm/llm-deepseek"
+    },
+    {
+      "path": "packages/llm/llm-retry"
+    },
+    {
+      "path": "packages/llm/token-meter"
+    },
+    {
+      "path": "packages/sandbox/sandbox"
+    },
+    {
+      "path": "packages/settings/settings"
+    },
+    {
+      "path": "packages/util/atomic-write"
+    },
+    {
+      "path": "packages/util/home-paths"
+    },
+    {
+      "path": "packages/util/launch-environment"
+    },
+    {
+      "path": "packages/util/official-bundles"
+    },
+    {
+      "path": "packages/util/package-manifest"
+    },
+    {
+      "path": "vendor/timer"
+    },
+    {
+      "path": "packages/core/agent-loop"
+    },
+    {
+      "path": "packages/core/tool-executor-native"
+    },
+    {
+      "path": "packages/test-support/tool-testkit"
+    },
+    {
+      "path": "packages/product/agent-runtime"
+    },
+    {
+      "path": "packages/session/session-format-catalog"
+    },
+    {
+      "path": "packages/session/session-format-v0-to-v1"
+    },
+    {
+      "path": "packages/session/session-format-v1-to-v2"
+    },
+    {
+      "path": "packages/session/session-format-v2-to-v3"
+    },
+    {
+      "path": "packages/session/session-format-v3-to-v4"
+    },
+    {
+      "path": "packages/session/session-format"
+    },
+    {
+      "path": "packages/session/session-persistence-jsonl"
+    },
+    {
+      "path": "packages/util/time"
+    },
+    {
+      "path": "packages/compaction/compaction-tool-result-pruner"
+    },
+    {
+      "path": "packages/attachment/attachment-local"
+    },
+    {
+      "path": "packages/fs/fs-local"
+    },
+    {
+      "path": "packages/fs/tool-fs"
+    },
+    {
+      "path": "packages/jobs/jobs"
+    },
+    {
+      "path": "packages/sandbox/sandbox-local"
+    },
+    {
+      "path": "packages/sandbox/sandbox-policy"
+    },
+    {
+      "path": "packages/sandbox/sandbox-windows-acl"
+    },
+    {
+      "path": "packages/session/tool-working-directory"
+    },
+    {
+      "path": "packages/session/working-directory"
+    },
+    {
+      "path": "packages/shell/bash-local"
+    },
+    {
+      "path": "packages/shell/bash-sandbox"
+    },
+    {
+      "path": "packages/shell/shell-env"
+    },
+    {
+      "path": "packages/shell/shell"
+    },
+    {
+      "path": "packages/shell/tool-bash"
+    },
+    {
+      "path": "packages/skill/skill"
+    },
+    {
+      "path": "packages/subprocess/subprocess-local"
+    },
+    {
+      "path": "packages/subprocess/subprocess"
+    },
+    {
+      "path": "packages/subprocess/win32-process"
+    },
+    {
+      "path": "packages/util/code-language"
+    },
+    {
+      "path": "packages/util/http-proxy"
+    },
+    {
+      "path": "packages/util/lazy-require"
+    },
+    {
+      "path": "packages/fs/fs-sandbox"
+    },
+    {
+      "path": "packages/compaction/compaction-basic"
+    },
+    {
+      "path": "packages/context/agent-instructions"
+    },
+    {
+      "path": "packages/context/file-reference-local"
+    },
+    {
+      "path": "packages/context/file-reference"
+    },
+    {
+      "path": "packages/context/time-context"
+    },
+    {
+      "path": "packages/core/tool-executor-ptc"
+    },
+    {
+      "path": "packages/guard/repeat-tool-reminder"
+    },
+    {
+      "path": "packages/guard/timeout-policy"
+    },
+    {
+      "path": "packages/interaction/permission-presets"
+    },
+    {
+      "path": "packages/ptc-runtime/ptc-runtime"
+    },
+    {
+      "path": "packages/spill/spill-local"
+    },
+    {
+      "path": "packages/spill/spill-policy"
+    },
+    {
+      "path": "packages/spill/spill"
+    },
+    {
+      "path": "packages/util/output-retention"
+    },
+    {
+      "path": "packages/test-support/agent-loop-testkit"
+    },
+    {
+      "path": "packages/interaction/tool-ask-user"
+    },
+    {
+      "path": "packages/interaction/user-questions"
+    },
+    {
+      "path": "packages/fs/fs-observation-policy"
+    },
+    {
+      "path": "packages/test-support/llm-mock-server"
     }
   ]
 }

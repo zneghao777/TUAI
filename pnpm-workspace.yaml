@@ -2,10 +2,13 @@ packages:
   - vendor/*
   - packages/*/*
   - apps/*
+  - native/system/packages/*
 
-# esbuild is the only reviewed dependency installation script in P0.
+# Reviewed native installation hooks; source and licenses are checked separately.
 allowBuilds:
   esbuild: true
+  koffi: true
+  node-pty: true
 
 autoInstallPeers: false
 strictPeerDependencies: true

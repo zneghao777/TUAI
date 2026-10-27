@@ -23,8 +23,14 @@ for (const [license, packages] of Object.entries(listing)) {
   }
 }
 for (const pkg of workspacePackages().filter((pkg) => pkg.name.startsWith('@deepseek-ai/'))) {
-  assert.equal(pkg.license, 'MIT', pkg.name)
-  assert.ok(readFileSync(`${pkg.dir}/LICENSE`, 'utf8').includes('MIT License'), pkg.name)
+  const native = pkg.dir.startsWith('native/system/')
+  assert.equal(pkg.license, native ? 'BSD-3-Clause' : 'MIT', pkg.name)
+  assert.ok(
+    readFileSync(`${pkg.dir}/LICENSE`, 'utf8').includes(
+      native ? 'Redistribution and use' : 'MIT License',
+    ),
+    pkg.name,
+  )
   notices.push({
     name: pkg.name,
     versions: [pkg.version],

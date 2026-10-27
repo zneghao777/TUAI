@@ -8,21 +8,23 @@
     "node": ">=26.8.1 <27"
   },
   "scripts": {
-    "typecheck": "tsc -b tsconfig.host.json tsconfig.client.json",
+    "typecheck": "tsc -b native/system/packages/entry tsconfig.host.json tsconfig.client.json",
     "build": "pnpm run typecheck && node scripts/build.mjs",
     "start": "node --expose-internals apps/cli/lib/index.js",
     "audit:upstream": "node scripts/audit-upstream.mjs",
     "test:loader": "node --expose-internals --test tests/loader.test.mjs",
-    "test:upstream": "vitest run packages/util/brand/tests/brand.spec.ts packages/typert/protocol/tests/protocol.spec.ts packages/typert/protocol/tests/owned-value.spec.ts packages/typert/protocol/tests/remote-access.spec.ts packages/typert/protocol/tests/remote-info.spec.ts packages/boot/cmdline/tests/cmdline.spec.ts",
+    "test:upstream": "vitest run --config vitest.p0.config.ts",
     "test:boot": "node --expose-internals --test tests/boot.test.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:docs": "node scripts/check-docs.mjs",
     "check:workspace": "node scripts/check-workspace.mjs",
     "check:licenses": "node scripts/check-licenses.mjs",
-    "test": "node --expose-internals --test tests/*.test.mjs && pnpm run test:upstream",
+    "test": "node --expose-internals --test tests/*.test.mjs && pnpm run test:upstream && pnpm run test:p1",
     "check": "pnpm run format:check && pnpm run build && pnpm run check:docs && pnpm run check:workspace && pnpm run check:licenses && pnpm test",
-    "verify:clean": "node scripts/verify-clean.mjs"
+    "verify:clean": "node scripts/verify-clean.mjs",
+    "test:p1": "vitest run --config vitest.config.ts && node --expose-internals --test-timeout=15000 --test tests/p1/*.test.mjs",
+    "verify:replay": "node scripts/verify-replay.mjs"
   },
   "devDependencies": {
     "@types/js-yaml": "4.0.9",
@@ -31,7 +33,9 @@
     "prettier": "3.8.2",
     "tsx": "4.23.13",
     "typescript": "6.0.3",
-    "vitest": "4.1.11"
+    "vitest": "4.1.11",
+    "execa": "10.0.1",
+    "fast-check": "4.9.0"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

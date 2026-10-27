@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { spawnSync } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import {
   cpSync,
@@ -14,10 +14,10 @@ import { tmpdir } from 'node:os'
 import { basename, join, relative } from 'node:path'
 
 const original = process.cwd()
-const temporary = mkdtempSync(join(tmpdir(), 'tianzhiai-p0-'))
+const temporary = mkdtempSync(join(tmpdir(), 'tianzhiai-p1-'))
 const checkout = join(temporary, '天质 clean workspace')
 const report = {
-  stage: 'P0',
+  stage: 'P1',
   platform: process.platform,
   arch: process.arch,
   node: process.version,
@@ -34,6 +34,7 @@ const excluded = new Set([
   'reports',
   'coverage',
   'dist',
+  '.release',
   '.DS_Store',
 ])
 const runtimeFiles = globSync([
@@ -49,6 +50,9 @@ const runtimeFiles = globSync([
   'packages/*/*/package.json',
   'vendor/*/package.json',
   'vendor/*/src/**/*.ts',
+  'native/system/packages/*/package.json',
+  'native/system/packages/*/src/**/*',
+  'native/system/scripts/*',
 ]).sort()
 report.runtimeFingerprint = createHash('sha256')
   .update(
@@ -57,30 +61,62 @@ report.runtimeFingerprint = createHash('sha256')
       .join('\n'),
   )
   .digest('hex')
-function run(args) {
+async function run(args) {
   const started = Date.now()
-  const result = spawnSync('npx', ['--yes', 'pnpm@11.28.5', ...args], {
+  const child = spawn('npx', ['--yes', 'pnpm@11.28.5', ...args], {
     cwd: checkout,
-    encoding: 'utf8',
-    timeout: 180_000,
-    maxBuffer: 4 * 1024 * 1024,
+    detached: process.platform !== 'win32',
+    stdio: ['ignore', 'pipe', 'pipe'],
     env: {
       ...process.env,
       npm_config_cache: join(temporary, 'npm-cache'),
       TIANZHIAI_HOME: join(temporary, 'host-data'),
     },
   })
+  let stdout = '',
+    stderr = '',
+    failure
+  child.stdout.on('data', (chunk) => {
+    stdout += chunk
+    process.stdout.write(chunk)
+  })
+  child.stderr.on('data', (chunk) => {
+    stderr += chunk
+    process.stderr.write(chunk)
+  })
+  const terminate = (signal) => {
+    try {
+      if (process.platform === 'win32') child.kill(signal)
+      else process.kill(-child.pid, signal)
+    } catch (error) {
+      if (error.code !== 'ESRCH') throw error
+    }
+  }
+  let force
+  const timer = setTimeout(() => {
+    failure = 'Independent acceptance exceeded 180 seconds'
+    terminate('SIGTERM')
+    force = setTimeout(() => terminate('SIGKILL'), 1000)
+  }, 180_000)
+  let status
+  try {
+    status = await new Promise((resolve, reject) => {
+      child.once('error', reject)
+      child.once('close', resolve)
+    })
+  } finally {
+    clearTimeout(timer)
+    clearTimeout(force)
+  }
   report.steps.push({
     command: `pnpm ${args.join(' ')}`,
-    exitCode: result.status,
+    exitCode: status,
     elapsedMs: Date.now() - started,
-    stdout: result.stdout,
-    stderr: result.stderr,
-    error: result.error?.message,
+    stdout,
+    stderr,
+    error: failure,
   })
-  if (result.stdout) process.stdout.write(result.stdout)
-  if (result.stderr) process.stderr.write(result.stderr)
-  assert.equal(result.status, 0, result.error?.message ?? `Clean checkout failed: pnpm ${args[0]}`)
+  assert.equal(status, 0, failure ?? `Clean checkout failed: pnpm ${args[0]}`)
 }
 try {
   cpSync(original, checkout, {
@@ -90,11 +126,12 @@ try {
         .split(/[\\/]/)
         .some((part) => excluded.has(part)) &&
       !basename(source).endsWith('.tsbuildinfo') &&
+      !/^native\/system\/packages\/[^/]+\/bin(?:\/|$)/.test(relative(original, source)) &&
       !/^\.env(?:\.|$)/.test(basename(source)),
   })
   // Both npm's package-manager cache and pnpm's content store start empty.
-  run(['install', '--frozen-lockfile', '--store-dir', join(temporary, 'empty-pnpm-store')])
-  run(['run', 'check'])
+  await run(['install', '--frozen-lockfile', '--store-dir', join(temporary, 'empty-pnpm-store')])
+  await run(['run', 'check'])
   report.result = 'passed'
 } catch (error) {
   report.result = 'failed'
@@ -102,7 +139,7 @@ try {
   process.exitCode = 1
 } finally {
   mkdirSync(join(original, 'reports'), { recursive: true })
-  writeFileSync(join(original, 'reports/p0-clean.json'), JSON.stringify(report, null, 2) + '\n')
+  writeFileSync(join(original, 'reports/p1-clean.json'), JSON.stringify(report, null, 2) + '\n')
   rmSync(temporary, { recursive: true, force: true })
 }
-console.log(`Clean-cache P0 acceptance: ${report.result}; reports/p0-clean.json`)
+console.log(`Clean-cache P1 acceptance: ${report.result}; reports/p1-clean.json`)

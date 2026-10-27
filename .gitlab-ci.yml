@@ -3,7 +3,7 @@ image: node:26.8.1
 stages:
   - verify
 
-p0-quality:
+core-quality:
   stage: verify
   script:
     - npx --yes pnpm@11.28.5 install --frozen-lockfile

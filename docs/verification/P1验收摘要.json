@@ -1,0 +1,77 @@
+{
+  "stage": "P1",
+  "result": "passed",
+  "acceptedOn": "2026-10-27",
+  "baseRevision": "156569a32bca30055faff609958a611ca6285317",
+  "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
+  "environment": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "node": "v26.8.1",
+    "packageManager": "pnpm@11.28.5"
+  },
+  "workspace": {
+    "packages": 109,
+    "migratedThisBatch": 96,
+    "declaredSourceImports": 1162,
+    "licenseEntries": 179
+  },
+  "tests": {
+    "P0Product": 14,
+    "P0Upstream": 58,
+    "P1Vitest": {
+      "files": 163,
+      "passed": 4670,
+      "skipped": 1
+    },
+    "P1Product": 10,
+    "totalPassed": 4752,
+    "totalSkipped": 1
+  },
+  "clean": {
+    "result": "passed",
+    "runtimeFingerprint": "417e3617d64a109b3d839fa9278e6e954c979428ddcd3ee7b8d20023650c342e",
+    "installProgress": "Progress: resolved 113, reused 0, downloaded 113, added 113, done",
+    "steps": [
+      {
+        "command": "pnpm install --frozen-lockfile --store-dir <isolated-empty-store>",
+        "exitCode": 0,
+        "elapsedMs": 11440
+      },
+      {
+        "command": "pnpm run check",
+        "exitCode": 0,
+        "elapsedMs": 47047
+      }
+    ],
+    "scope": "Git index snapshot; includes independently committed P0 repair; no developer checkout outputs or sibling source; temporary store path normalized"
+  },
+  "replay": {
+    "stage": "P1",
+    "result": "passed",
+    "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
+    "normalization": [
+      "wall-clock time/createdAt/elapsedMs",
+      "UUID identities preserving relationships",
+      "one-file package-version lookup"
+    ],
+    "cases": [
+      "text",
+      "two tools and model-visible results",
+      "invalid tool arguments",
+      "partial-stream cancellation"
+    ],
+    "sourceFiles": 85,
+    "digest": "4407c69095b1eabfcd81a478ef3afc760af5c0f069fa400f7e1292977e39b209"
+  },
+  "limitations": [
+    "真实外部模型与计费账户",
+    "Typert 生成导出、Gateway、Connection 与真实 UI",
+    "跨会话查询、子 Agent、PTC、MCP 与 Skill 产品能力",
+    "Windows/Linux/移动端安装与发行包"
+  ],
+  "notes": [
+    "保留来源测试中的 process exit listener 警告；产品真实启停、取消和清理行为已验证",
+    "未运行远程 CI，未推送"
+  ]
+}

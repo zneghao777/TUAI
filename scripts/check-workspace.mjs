@@ -30,6 +30,21 @@ for (const pkg of references.packages) {
 assert.equal(references.unresolvedReferences.length, 0)
 assert.equal(hash(references.startupAdaptation.target), references.startupAdaptation.targetSha256)
 for (const file of references.testSupport) assert.equal(hash(file.target), file.sha256)
+const core = JSON.parse(read('docs/migration/M1-迁移登记.json'))
+for (const pkg of core.packages) {
+  assert.ok(byName.has(pkg.name), `Missing migrated package: ${pkg.name}`)
+  for (const file of pkg.upstreamFiles) {
+    const patch = pkg.localPatches.find((patch) => patch.path === file.path)
+    assert.equal(
+      hash(file.path),
+      patch?.sha256 ?? file.sha256,
+      `Undocumented source change: ${file.path}`,
+    )
+  }
+  for (const file of pkg.additionalFiles) assert.equal(hash(file.path), file.sha256, file.path)
+}
+for (const file of core.support)
+  assert.equal(hash(file.path), file.localSha256 ?? file.sha256, file.path)
 
 const forbiddenRoots = [
   root,
@@ -51,6 +66,12 @@ for (const pkg of packages) {
     if (version.startsWith('workspace:'))
       assert.ok(byName.has(name), `${pkg.name}: unresolved workspace ${name}`)
     else if (!pkg.peerDependenciesMeta?.[name]?.optional) req.resolve(name)
+    if (version.startsWith('workspace:') && !pkg.peerDependenciesMeta?.[name]?.optional) {
+      const dependency = byName.get(name)
+      if (!dependency.os || dependency.os.includes(process.platform)) {
+        req.resolve(dependency.exports?.['.'] ? name : `${name}/package.json`)
+      }
+    }
   }
   for (const file of globSync(`${pkg.dir}/src/**/*.ts`)) {
     const source = read(file)
@@ -82,6 +103,22 @@ for (const pkg of packages) {
   for (const file of globSync(`${pkg.dir}/lib/**/*.js`)) {
     for (const path of forbiddenRoots)
       assert.ok(!read(file).includes(path), `${file}: absolute build dependency`)
+  }
+  for (const [subpath, definition] of Object.entries(pkg.exports ?? {})) {
+    if (subpath.includes('*') || subpath === './package.json' || typeof definition !== 'object')
+      continue
+    // Remote code generation and transport are explicitly deferred to TZ-015/016.
+    if (definition?.default?.includes('/typert.')) continue
+    if (definition?.default)
+      assert.ok(
+        globSync(`${pkg.dir}/${definition.default}`).length,
+        `${pkg.name}${subpath}: missing runtime export`,
+      )
+    if (definition?.types)
+      assert.ok(
+        globSync(`${pkg.dir}/${definition.types}`).length,
+        `${pkg.name}${subpath}: missing type export`,
+      )
   }
 }
 console.log(

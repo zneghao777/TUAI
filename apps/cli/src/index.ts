@@ -1,6 +1,8 @@
 import { parseArgs } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
+import { randomUUID } from 'node:crypto'
+import { registerDemo, runPrompt } from '@tianzhiai/agent-runtime'
 import { bootProfile } from './boot.ts'
 import {
   EnvironmentCredentials,
@@ -29,6 +31,11 @@ async function main() {
       check: { type: 'boolean' },
       profile: { type: 'string' },
       patch: { type: 'string', multiple: true },
+      prompt: { type: 'string' },
+      session: { type: 'string' },
+      resume: { type: 'boolean' },
+      demo: { type: 'boolean' },
+      model: { type: 'string' },
     },
   })
   if (values.version) {
@@ -37,7 +44,7 @@ async function main() {
   }
   if (values.help) {
     console.log(
-      'TIanZhiAi --profile production|development|<manifest.json> [--patch <file>] [--check] [-- <app args>]',
+      'TIanZhiAi [--profile production|development|<manifest.json>] [--check] [--prompt <输入> --session <标识> --resume --model <模型>] [--demo] [--patch <file>]',
     )
     return
   }
@@ -62,6 +69,33 @@ async function main() {
       ctx.provide('tianzhiaiHost', { paths, settings, credentials: new EnvironmentCredentials() })
     },
   })
+  if (values.prompt !== undefined || values.demo) {
+    const cancellation = new AbortController()
+    const cancel = () => cancellation.abort(new Error('用户取消'))
+    process.once('SIGINT', cancel)
+    process.once('SIGTERM', cancel)
+    try {
+      if (values.demo) registerDemo(runtime.ctx)
+      const result = await runPrompt(runtime.ctx, {
+        sessionId: values.session ?? randomUUID(),
+        text: values.prompt ?? '运行离线核心演示',
+        ...(values.resume ? { resume: true } : {}),
+        ...(values.demo
+          ? { provider: 'fixture', model: 'fixture' }
+          : values.model
+            ? { model: values.model }
+            : {}),
+        signal: AbortSignal.any([cancellation.signal, AbortSignal.timeout(120000)]),
+      })
+      console.log(JSON.stringify(result))
+      if (result.turnEndReason?.kind !== 'completed') process.exitCode = 1
+    } finally {
+      process.off('SIGINT', cancel)
+      process.off('SIGTERM', cancel)
+      await runtime.dispose()
+    }
+    return
+  }
   console.log(
     JSON.stringify({
       product: 'TIanZhiAi',

@@ -1,0 +1,133 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../../vendor/cordis"
+    },
+    {
+      "path": "../../credentials/credentials"
+    },
+    {
+      "path": "../host-config"
+    },
+    {
+      "path": "../../llm/llm"
+    },
+    {
+      "path": "../../core/session"
+    },
+    {
+      "path": "../../session/session-projection"
+    },
+    {
+      "path": "../../core/system-prompt"
+    },
+    {
+      "path": "../../core/tools"
+    },
+    {
+      "path": "../../core/tool-executor-native"
+    },
+    {
+      "path": "../../core/agent"
+    },
+    {
+      "path": "../../core/agent-loop"
+    },
+    {
+      "path": "../../llm/llm-deepseek-api-key"
+    },
+    {
+      "path": "../../llm/llm-retry"
+    },
+    {
+      "path": "../../llm/token-meter"
+    },
+    {
+      "path": "../../session/session-persistence-jsonl"
+    },
+    {
+      "path": "../../fs/fs-sandbox"
+    },
+    {
+      "path": "../../fs/fs"
+    },
+    {
+      "path": "../../attachment/attachment-local"
+    },
+    {
+      "path": "../../subprocess/subprocess-local"
+    },
+    {
+      "path": "../../sandbox/sandbox-local"
+    },
+    {
+      "path": "../../sandbox/sandbox-policy"
+    },
+    {
+      "path": "../../fs/tool-fs"
+    },
+    {
+      "path": "../../session/working-directory"
+    },
+    {
+      "path": "../../session/tool-working-directory"
+    },
+    {
+      "path": "../../shell/bash-sandbox"
+    },
+    {
+      "path": "../../shell/tool-bash"
+    },
+    {
+      "path": "../../shell/shell-env"
+    },
+    {
+      "path": "../../compaction/compaction-basic"
+    },
+    {
+      "path": "../../compaction/compaction-image-offload"
+    },
+    {
+      "path": "../../compaction/compaction-tool-result-pruner"
+    },
+    {
+      "path": "../../context/agent-instructions"
+    },
+    {
+      "path": "../../context/file-reference-local"
+    },
+    {
+      "path": "../../context/time-context"
+    },
+    {
+      "path": "../../guard/repeat-tool-reminder"
+    },
+    {
+      "path": "../../guard/timeout-policy"
+    },
+    {
+      "path": "../../spill/spill-local"
+    },
+    {
+      "path": "../../spill/spill-policy"
+    },
+    {
+      "path": "../../interaction/user-approval"
+    },
+    {
+      "path": "../../interaction/user-questions"
+    },
+    {
+      "path": "../../interaction/tool-ask-user"
+    },
+    {
+      "path": "../../interaction/permission-presets"
+    }
+  ]
+}

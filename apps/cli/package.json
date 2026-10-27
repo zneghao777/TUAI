@@ -14,6 +14,7 @@
     "@deepseek-ai/dsh-cmdline": "workspace:*",
     "js-yaml": "4.3.2",
     "zod": "4.4.3",
-    "@tianzhiai/host-config": "workspace:*"
+    "@tianzhiai/host-config": "workspace:*",
+    "@tianzhiai/agent-runtime": "workspace:*"
   }
 }
