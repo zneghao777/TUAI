@@ -1,0 +1,11 @@
+packages:
+  - vendor/*
+  - packages/*/*
+  - apps/*
+
+# esbuild is the only reviewed dependency installation script in P0.
+allowBuilds:
+  esbuild: true
+
+autoInstallPeers: false
+strictPeerDependencies: true

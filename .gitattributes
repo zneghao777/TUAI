@@ -1,0 +1,2 @@
+provenance/*.patch -whitespace
+provenance/*.tar.gz binary
