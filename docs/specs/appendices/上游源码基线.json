@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "capturedForDate": "2026-10-26",
+  "timezone": "Asia/Shanghai",
+  "purpose": "Read-only upstream evidence for a proposed development specification. No source migration has been performed.",
+  "sources": {
+    "deepseekHarness": {
+      "localReferencePath": "/Users/zenghao/杭州天智项目/deepseek-harness",
+      "commit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
+      "worktreeStatus": [],
+      "selectedFileHashes": [
+        {
+          "path": "package.json",
+          "sha256": "66198aca0bdd771b052545470137723bcf30a53fb92a1da611d9bb2f490952ff"
+        },
+        {
+          "path": "pnpm-workspace.yaml",
+          "sha256": "de115ba271b69d90470791124529424c88ebf2c13049f8946dd44ec5aed8fd4a"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "de5ef69ab7f418a6b7e97e83943bdc7b04e943a59c798a1a97aaf3a244c80d73"
+        },
+        {
+          "path": "packages/core/agent-loop/src/index.ts",
+          "sha256": "6e345c62324e9c48e3e9509d68780c003b8c6f9f2df209107664ed7b175594b8"
+        },
+        {
+          "path": "packages/api/session-controller/src/types.ts",
+          "sha256": "15bdc2c4241fe0a6621410d90c87ccf2536853d3dbd9128307855ad048a8876e"
+        },
+        {
+          "path": "packages/api/gateway/src/stream-protocol.ts",
+          "sha256": "c0d26dd8d3be737cbb9ae8ecf4e7084d1fb31b37693e94d7e79263c4aa8ce040"
+        },
+        {
+          "path": "packages/client/connection/src/connect-protocol.ts",
+          "sha256": "ebae51ec20464a50fdd5a840bda57e5660fa3f2ffbc027a93f3e96ea39f784cc"
+        },
+        {
+          "path": "packages/bundle/sdk-minimal/cordis.patch.yml",
+          "sha256": "e4d4af718a8876ab280df474b5902aaf2fb47a899301962a6ff919f7f2beabd5"
+        },
+        {
+          "path": "apps/desktop/package.json",
+          "sha256": "6c5019eb72f5493178c21ba0da6ea36e81b2b90111530462cb068e9ddeac9e84"
+        },
+        {
+          "path": "apps/desktop/src/host-protocol.ts",
+          "sha256": "3ac3b9c5416144de212ed2e1fae3ae17a12dedd9389df99f07283012df5d77b9"
+        }
+      ]
+    },
+    "openMuse": {
+      "localReferencePath": "/Users/zenghao/杭州天智项目/OpenMuse",
+      "commit": "4d275e6b2c4b7dadd5ad14d0399313423d5cae33",
+      "worktreeStatus": [
+        " M apps/worker/src/browser.ts",
+        " M apps/worker/tests/lifecycle.test.ts"
+      ],
+      "selectedFileHashes": [
+        {
+          "path": "apps/worker/src/browser.ts",
+          "sha256": "d06cc76dc00fc9b4f40e1b32dd5a9968786281d799091e098935bcb220cb31cb"
+        },
+        {
+          "path": "apps/worker/src/browser-agent.ts",
+          "sha256": "e5620f1b6075d5afdd6bac3957c427067b49cc96a318b122e7b7918f678cda40"
+        },
+        {
+          "path": "apps/worker/src/page-dom.ts",
+          "sha256": "d6c7c75d1f97ff416fc76c3325de2ba9e1d0e5cf920a82b7e97fe394233774c7"
+        },
+        {
+          "path": "apps/worker/src/server.ts",
+          "sha256": "cf311955a7e661909517ba2f7385a03b9273ccd4ac4c8559fe66d9344d4bd1f6"
+        },
+        {
+          "path": "apps/worker/src/network.ts",
+          "sha256": "f3c53c9bdff2e04da2dff86b478b00ad4fa3a9d39858891c89a5f831cfc1f7e9"
+        },
+        {
+          "path": "apps/worker/src/proxy.ts",
+          "sha256": "f9fda3a89382d3b04e2d629018d0b72a00c3220f8b14dde46ef77b7c518c617d"
+        },
+        {
+          "path": "apps/worker/tests/lifecycle.test.ts",
+          "sha256": "58e6778201f77f86d5bba1c1733df5f17e4b9a38df086ea98713377dc964b950"
+        },
+        {
+          "path": "apps/server/src/browser.ts",
+          "sha256": "cf6b18f9afde66a6ec2f9550a8541f9cb724aff46b557af389fb95d94fb89c21"
+        },
+        {
+          "path": "apps/server/src/browser-console.ts",
+          "sha256": "77358bcab287d0070c994c4d26096219a877fe944a76ad06fb2c1ad8e59f2538"
+        },
+        {
+          "path": "apps/server/src/booking/service.ts",
+          "sha256": "d456df274a841eaa7219a433701ae2337442e1de7b80cf07505db96dd0a6e6b4"
+        },
+        {
+          "path": "apps/server/src/booking/reviewer.ts",
+          "sha256": "209c330e4dd998b25dcc231c2fd84a3778417ed48151b4d3d35c074a857a775a"
+        },
+        {
+          "path": "apps/server/src/booking/tools.ts",
+          "sha256": "cdd53d038e74f2a3f4fe852c66c8af981a759f1978c7b8403788b48b0e5d8c5b"
+        },
+        {
+          "path": "apps/server/src/booking/routes.ts",
+          "sha256": "ae3fd18e044b3c2e4419d8d4e601406a5efa852e8c801bc0d031c79b75b7a3aa"
+        },
+        {
+          "path": "packages/domain/src/booking.ts",
+          "sha256": "3a305969b55464c73ce312962384f2153a45df920300f94aae98e2b4ce7d0b59"
+        }
+      ]
+    },
+    "dsBot": {
+      "repository": "https://github.com/Fei2411/DS-Bot",
+      "commit": "de55888a93983fc51c94f7d22bc94b4f8293205d",
+      "version": "0.2.2",
+      "retrieval": "GitHub connected source",
+      "usage": "Design reference and selectively reviewed source, not installed as a second runtime."
+    },
+    "openMausBot": {
+      "repository": "https://github.com/milind-soni/OpenMausBot",
+      "commit": "0d8eacc65cd3b783a0d28d019d39e6367780b911",
+      "retrieval": "GitHub connected source",
+      "usage": "Persistent task and inbox design reference; no CLI engine migration required."
+    }
+  },
+  "toolchain": {
+    "dshVersion": "0.2.1-rc.3",
+    "packageManager": "pnpm@11.28.5",
+    "engines": {
+      "node": ">=24.9.0"
+    }
+  },
+  "limitations": [
+    "Hashes describe selected current working-tree files; OpenMuse has uncommitted changes and is not fully represented by its commit.",
+    "Only selected files have hashes. The complete directory has not been archived.",
+    "Dependency closures are static candidates, not a verified minimum runnable or redistributable package set.",
+    "No credentials, environment values, user browser profiles or cookies are included."
+  ]
+}

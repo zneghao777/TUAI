@@ -1,0 +1,531 @@
+{
+  "schemaVersion": 1,
+  "batchId": "M0",
+  "verifiedAt": "2026-10-27",
+  "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
+  "status": "planned",
+  "auditInput": {
+    "packageCount": 386,
+    "sourceSnapshot": "docs/specs/appendices/DSH包元数据清单.json",
+    "candidateClosures": "仅作审计输入，不作为首批安装集合"
+  },
+  "packages": [
+    {
+      "path": "vendor/cosmokit",
+      "name": "@deepseek-ai/cosmokit",
+      "version": "1.8.6",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "vendor/cosmokit/LICENSE",
+          "sha256": "034fb52b1d57360ecbae6cb1632a88f86fd7c3d3f5631a5f082710203dda0be7"
+        },
+        {
+          "path": "vendor/cosmokit/README.md",
+          "sha256": "fa0a17f50f83cda52ce623c9d42afb4eec1b33689285a0b9d2f655acbca13286"
+        },
+        {
+          "path": "vendor/cosmokit/package.json",
+          "sha256": "ccd99887312b5c025651dfa8ab113f627770be4f631f5f13b9cdfbdcbf511ddb"
+        },
+        {
+          "path": "vendor/cosmokit/src/array.ts",
+          "sha256": "cf4de899ecffd66a90d8cef6f4c7d127d31f77f776d8e173d41c30d2d7632cf7"
+        },
+        {
+          "path": "vendor/cosmokit/src/index.ts",
+          "sha256": "1087da74b9c461984e547d524ee766eebcf329a78e4720bff5b60a004ccf6e8c"
+        },
+        {
+          "path": "vendor/cosmokit/src/misc.ts",
+          "sha256": "117617943074ea57c15f216905dacd2f6d1c4c2ff16586f97a7a7a87dbf2141f"
+        },
+        {
+          "path": "vendor/cosmokit/src/string.ts",
+          "sha256": "5564272b3e15e49235cbe3a8b453f27306baf282d23a893982841670f65d3c04"
+        },
+        {
+          "path": "vendor/cosmokit/src/time.ts",
+          "sha256": "49957c4608465a1fbd738186a92c47fffcd1fc4ba59dbf89524f8a773fe16fe2"
+        },
+        {
+          "path": "vendor/cosmokit/src/types.ts",
+          "sha256": "cc49c12e4a637f7b0754ff78a8299e9c42fa40ee8c678550af0c538a80146a92"
+        },
+        {
+          "path": "vendor/cosmokit/src/volatile.ts",
+          "sha256": "937433215595f89da249ec7cabb89e331ff4135a40c6686a95666d2095315e55"
+        },
+        {
+          "path": "vendor/cosmokit/tsconfig.json",
+          "sha256": "a747d0d38c24a5efc4d4db7750e62c0d10f62ee951b5b8cde156ca50cdbbc402"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    },
+    {
+      "path": "vendor/schemastery",
+      "name": "@deepseek-ai/schemastery",
+      "version": "3.18.5",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "vendor/schemastery/LICENSE",
+          "sha256": "034fb52b1d57360ecbae6cb1632a88f86fd7c3d3f5631a5f082710203dda0be7"
+        },
+        {
+          "path": "vendor/schemastery/README.md",
+          "sha256": "cdd54eece79b14c3672dfe94abb38b8d01c6ced57fb9975c4147fa17f81512d4"
+        },
+        {
+          "path": "vendor/schemastery/package.json",
+          "sha256": "177eab1c24ff0941c0bdc13ecdedd341fd344e027c7db2daf0a89b7011efd2f5"
+        },
+        {
+          "path": "vendor/schemastery/src/index.ts",
+          "sha256": "a6647b515659cf439b701fa9f9574c9c310ce3872d26a13a81e9fa4d02ba10ad"
+        },
+        {
+          "path": "vendor/schemastery/tsconfig.json",
+          "sha256": "502837186bc6a4781ef5e994b70ffd00e6cce62113271114affd5638fca0d61a"
+        },
+        {
+          "path": "vendor/schemastery/tsdown.config.ts",
+          "sha256": "a65d7256a0f131c8ab1e63326860efd15ee033b546926f6cc1ccc1dad2d6d635"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    },
+    {
+      "path": "vendor/cordis",
+      "name": "@deepseek-ai/cordis",
+      "version": "4.0.5",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "vendor/cordis/LICENSE",
+          "sha256": "034fb52b1d57360ecbae6cb1632a88f86fd7c3d3f5631a5f082710203dda0be7"
+        },
+        {
+          "path": "vendor/cordis/README.md",
+          "sha256": "b195616f6c2fd04ed7ce8b525ebab3b0f5f358e55e1fef94d950f3e5ab1d5011"
+        },
+        {
+          "path": "vendor/cordis/bin.js",
+          "sha256": "cf84978c7e4165bf090b0d50c34c1986d06577f2ada27c902660783a142c3f81"
+        },
+        {
+          "path": "vendor/cordis/package.json",
+          "sha256": "b2426a9e1970d1b4a1702544e74d23a750fbebcfa132fbb8980549d2f484eee8"
+        },
+        {
+          "path": "vendor/cordis/src/context.ts",
+          "sha256": "96b388162d6013c1898de61e35f28917abb93809de24174980f2a1a348d0b115"
+        },
+        {
+          "path": "vendor/cordis/src/events.ts",
+          "sha256": "9aff93dcfcad98aebb692c19c36d3bf034a96f9085bc66900a997cda3f79e6fe"
+        },
+        {
+          "path": "vendor/cordis/src/fiber.ts",
+          "sha256": "c0728ad4fac2c19aa0df64acfb6f742f143090f85c35a10f4594266bbaf3b589"
+        },
+        {
+          "path": "vendor/cordis/src/index.ts",
+          "sha256": "071fb226e9a21556625e4391b28e6641b9b34b1cd402155246e0437993d8b740"
+        },
+        {
+          "path": "vendor/cordis/src/logger.ts",
+          "sha256": "05cb6be3e4cf8d078185b5d10c87e536c7d2b2b3ad43c270a0dbafaa28f41fef"
+        },
+        {
+          "path": "vendor/cordis/src/reflect.ts",
+          "sha256": "6847b9781044023d65aebb5896a873b9f0a3d777eaf7fa0dd2a7a408eb6b74a6"
+        },
+        {
+          "path": "vendor/cordis/src/registry.ts",
+          "sha256": "34bbd60ae502b4f85201c204afb52a9acabde6878d9278493478c1b2183debd3"
+        },
+        {
+          "path": "vendor/cordis/src/service.ts",
+          "sha256": "614205c6ce7cf1a057b8b352e96aa4fcd734c967a3d2283a126c9c61f268e3be"
+        },
+        {
+          "path": "vendor/cordis/src/utils.ts",
+          "sha256": "8fe273424583d21267ef13f248840e97454d09d836a0ac08323a9482c2069263"
+        },
+        {
+          "path": "vendor/cordis/tsconfig.json",
+          "sha256": "ca3c3312e5e28d31777f8863037da2e342b587f524aed8a376d2f096dbda57a9"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    },
+    {
+      "path": "vendor/loader",
+      "name": "@deepseek-ai/cordis-plugin-loader",
+      "version": "1.0.6",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "vendor/loader/LICENSE",
+          "sha256": "034fb52b1d57360ecbae6cb1632a88f86fd7c3d3f5631a5f082710203dda0be7"
+        },
+        {
+          "path": "vendor/loader/README.md",
+          "sha256": "7332be75f1a2e23be02ba19f6b269f3217ed5da2754d83c1cc641873ddacf3f5"
+        },
+        {
+          "path": "vendor/loader/package.json",
+          "sha256": "e5a2092daa45b264072465788c5b0a750b5d88c4801333070ba90063af65491c"
+        },
+        {
+          "path": "vendor/loader/src/config/diff.ts",
+          "sha256": "6025a6b9798a0a16af017bb7d8d6394bbe345685b2ace56b15975add5843edb3"
+        },
+        {
+          "path": "vendor/loader/src/config/entry.ts",
+          "sha256": "87edbbc63b8e090094d75bda074289c7ce55afc73c37d8ff0a252579c0902cf4"
+        },
+        {
+          "path": "vendor/loader/src/config/group.ts",
+          "sha256": "5e138e8a8fad22e21d031859345797c445efbc380559fc32d35b03c835e60ccc"
+        },
+        {
+          "path": "vendor/loader/src/config/isolate.ts",
+          "sha256": "dfc9e961f61fe5f7701b5593f98902aa971884fb242e208fc0d5207794117094"
+        },
+        {
+          "path": "vendor/loader/src/config/tree.ts",
+          "sha256": "365137ca32bf8b30ff22edca899dac6c844f921324a7c12eda33fac4c35898b1"
+        },
+        {
+          "path": "vendor/loader/src/config/utils.ts",
+          "sha256": "d85b8ac1693af4667e9c0395cd1d6b15ec28387073a81f0d00bd38d909a05f8e"
+        },
+        {
+          "path": "vendor/loader/src/index.ts",
+          "sha256": "a135e2189a0feb0af08ff79de761698fb8ce7b41c96fefda1d4a299e5982fef3"
+        },
+        {
+          "path": "vendor/loader/src/internal.ts",
+          "sha256": "35a50d597fed58656a11e3c5294fdf99524ed8c106739b4fab522a288eefa877"
+        },
+        {
+          "path": "vendor/loader/src/resolve.ts",
+          "sha256": "416336cfdc468ad504c6b7df64d32975a94e18914eca5d5e01dc9682207754d6"
+        },
+        {
+          "path": "vendor/loader/tsconfig.json",
+          "sha256": "3f2c18a1ce52d335d7151317ecc9b7984692e79f15a5336dfdafe80f03a5d6d0"
+        },
+        {
+          "path": "vendor/loader/tsdown.config.ts",
+          "sha256": "30e7b11e99a28f715da365d3f3ebc48bd75f62953d663ccf6ff7eaf54eacdee1"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    },
+    {
+      "path": "vendor/include",
+      "name": "@deepseek-ai/cordis-plugin-include",
+      "version": "1.0.10",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "vendor/include/LICENSE",
+          "sha256": "034fb52b1d57360ecbae6cb1632a88f86fd7c3d3f5631a5f082710203dda0be7"
+        },
+        {
+          "path": "vendor/include/README.md",
+          "sha256": "d6b9356931cb3a9b8a6a00339683be993f4fa4515cc654ffe7f42e09fa8b12c8"
+        },
+        {
+          "path": "vendor/include/package.json",
+          "sha256": "d6d6047472127599a6f7cf59a4a569530e8a1f518d151e69e7f6d5c67599ab75"
+        },
+        {
+          "path": "vendor/include/src/index.ts",
+          "sha256": "50005dcc3b35cb8e18e33ee157567aa14210b932fb25e22506d31aee25e59428"
+        },
+        {
+          "path": "vendor/include/tsconfig.json",
+          "sha256": "e389562c9879bc4db6fdfe7fd8c2189c7fb62cb36cec4bf8621ed3cca138bddb"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    },
+    {
+      "path": "vendor/group",
+      "name": "@deepseek-ai/cordis-plugin-group",
+      "version": "1.0.5",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "vendor/group/LICENSE",
+          "sha256": "034fb52b1d57360ecbae6cb1632a88f86fd7c3d3f5631a5f082710203dda0be7"
+        },
+        {
+          "path": "vendor/group/README.md",
+          "sha256": "132b6ccc11f0f0cba21f5cfb53f3ebdd3eaefc0547d465c2fffb5e8073d622af"
+        },
+        {
+          "path": "vendor/group/package.json",
+          "sha256": "5fd58be1a7e3705815cbcba9fd573ff367edb8508ace1b09ea5e98a5649f8066"
+        },
+        {
+          "path": "vendor/group/src/index.ts",
+          "sha256": "e3679df2068439b6624ef2b247f1e28db0de769f4986db3bd3da077f0d2269e6"
+        },
+        {
+          "path": "vendor/group/tsconfig.json",
+          "sha256": "f2c2a090fed5785c724eb88195712f8d22b9f811ee8998c5fda93e13fc394e8b"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    },
+    {
+      "path": "packages/util/brand",
+      "name": "@deepseek-ai/dsh-brand",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "packages/util/brand/README.i18n.yaml",
+          "sha256": "d9c0e1d335a753f0af652ca87858c264a5585fdf47bf86038ce56dfd4a3fa5fb"
+        },
+        {
+          "path": "packages/util/brand/README.md",
+          "sha256": "76704110a6444e1592d6e54d89e3bbaaed6b6e1528e735df7a8f7b2b6e92e31c"
+        },
+        {
+          "path": "packages/util/brand/README.zh.md",
+          "sha256": "cf86a5d142dd00fafecb2eac9df9c738c5cfb089dd6667f46e51e4675db27ac3"
+        },
+        {
+          "path": "packages/util/brand/package.json",
+          "sha256": "cfb082a3a747363b60a10042f0ecc9b7bd9d16eb12f8ef4f3ab15565584a1733"
+        },
+        {
+          "path": "packages/util/brand/src/index.ts",
+          "sha256": "f9d6da858d7308117227dcc2306ce7246b7309b2ae22d413d289cbae51e83e98"
+        },
+        {
+          "path": "packages/util/brand/tests/brand.spec.ts",
+          "sha256": "131f28c471f1ed1b398c5e6b00507c0676916e376ab527b3dbbd2df4e13134af"
+        },
+        {
+          "path": "packages/util/brand/tsconfig.json",
+          "sha256": "cd37553e80b9913dec33adf4aa0fff20071647b3952bf74118e4bf8193b5cc58"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    },
+    {
+      "path": "packages/typert/protocol",
+      "name": "@deepseek-ai/dsh-typert-protocol",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "packages/typert/protocol/README.i18n.yaml",
+          "sha256": "42a34350c6299519a31f7fa139c2af49b7da0bc27bdd0080a6678e82a9bdfb4d"
+        },
+        {
+          "path": "packages/typert/protocol/README.md",
+          "sha256": "d799b91759126e37ad68d84a6cd34b2c956226226a35a2dda4ada7b79e4e60a2"
+        },
+        {
+          "path": "packages/typert/protocol/README.zh.md",
+          "sha256": "f6e0687b41e1de5af809bb3cbd1bb6ae0d6f3bb2adaa0590ca2dda7541f4285d"
+        },
+        {
+          "path": "packages/typert/protocol/package.json",
+          "sha256": "198af79042877c373467fd259f12d417e66f486f801a1e7da10f4bfffa12e4df"
+        },
+        {
+          "path": "packages/typert/protocol/src/index.ts",
+          "sha256": "ad89508f0790243d6519693e2a80b40e3712745c11b0e64d8767b8670f516925"
+        },
+        {
+          "path": "packages/typert/protocol/src/json-value.ts",
+          "sha256": "c5d58b60b7e085004041326055737f7e718e719f5df7b7df5b09d2fb147e57c0"
+        },
+        {
+          "path": "packages/typert/protocol/src/owned-value.ts",
+          "sha256": "096c583e2093cd814d0cef5bc3f8161f6aabfe8cfe97eff78c3a340c0c95a44d"
+        },
+        {
+          "path": "packages/typert/protocol/src/principal.ts",
+          "sha256": "3af661e55a7f3f3ad11fac0d35abe4fba5529fc7054ec923dbd05dc56326c1e9"
+        },
+        {
+          "path": "packages/typert/protocol/src/remote-access.ts",
+          "sha256": "dbedd1563d0e7ae2b1a3d7879582f26335ff97190d674edf62cf8733b396dfab"
+        },
+        {
+          "path": "packages/typert/protocol/src/remote-error.ts",
+          "sha256": "bb902ec537e1dfbc74885e77a01192e6532b50a959a5bc4cc55c1fbf52e0a368"
+        },
+        {
+          "path": "packages/typert/protocol/src/remote-info.ts",
+          "sha256": "e89fc959e61271aa57366b8c64a56278099e58e7d82936a2fc305398e507f79d"
+        },
+        {
+          "path": "packages/typert/protocol/src/types.ts",
+          "sha256": "e953bdb0b0836b3822e50236a41ea6c513c890dcdbfc6b83751861a33af5a4c0"
+        },
+        {
+          "path": "packages/typert/protocol/tests/built-runtime.e2e.ts",
+          "sha256": "17e379848e52c2e6ea3101d7ace98b0d1946429bceda4125e83b9fe87e7375ed"
+        },
+        {
+          "path": "packages/typert/protocol/tests/fixtures/source-launch.ts",
+          "sha256": "96db33b5a278b10d7293fa235ce21956f18b67c6486a5174b61a13649d697416"
+        },
+        {
+          "path": "packages/typert/protocol/tests/owned-value.spec.ts",
+          "sha256": "b46301db16848b79184220c27226ca04410574bbe358bde0679a1cc19f031ad1"
+        },
+        {
+          "path": "packages/typert/protocol/tests/protocol.spec.ts",
+          "sha256": "3518f414055155726b201f1c5eb9ca520e34d2d73d54ffaabc91c85feb6a7a4d"
+        },
+        {
+          "path": "packages/typert/protocol/tests/remote-access.spec.ts",
+          "sha256": "4416ebc11be1058ffe5233ed44edf8f7473f9d74dded9a72bb324571bdcbddb3"
+        },
+        {
+          "path": "packages/typert/protocol/tests/remote-info.spec.ts",
+          "sha256": "0edf648a62731fd88e7c66c217b078338cc7af533117a1bfa31e5d6098a041f2"
+        },
+        {
+          "path": "packages/typert/protocol/tsconfig.json",
+          "sha256": "c8964ba633320eb7157b44073d1b7b6ae756cf17000e99dbbf10d1cbfcdfbd91"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    },
+    {
+      "path": "packages/boot/cmdline",
+      "name": "@deepseek-ai/dsh-cmdline",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "status": "planned",
+      "reason": "P0 Loader/Profile 和基础协议的必要闭包",
+      "upstreamFiles": [
+        {
+          "path": "packages/boot/cmdline/README.i18n.yaml",
+          "sha256": "9997922bb3869438bf76fb4b421ab91d570b875054b0482c8f49015403ea5824"
+        },
+        {
+          "path": "packages/boot/cmdline/README.md",
+          "sha256": "8b07cb0094013ca8fe5dfd82821815634440a9169a489ed6aea77721a956bf99"
+        },
+        {
+          "path": "packages/boot/cmdline/README.zh.md",
+          "sha256": "c0da6d712a95fdfb4544c6a5dfcdc487abf825baf72187833b6c444921f91482"
+        },
+        {
+          "path": "packages/boot/cmdline/package.json",
+          "sha256": "0d8d9904397d4303fc7061e1ceb51d5eb2afcf539aee6e697e9028295ba17532"
+        },
+        {
+          "path": "packages/boot/cmdline/src/index.ts",
+          "sha256": "943a8d9c5c1531ca8b98d081117a4c3e4c6597b53b00b5d2483a6999beaa23af"
+        },
+        {
+          "path": "packages/boot/cmdline/tests/cmdline.spec.ts",
+          "sha256": "e0cda0631810075d7fb2e317982c17c3ef77c393d1010c4e2e2f6993acda46eb"
+        },
+        {
+          "path": "packages/boot/cmdline/tsconfig.json",
+          "sha256": "7f25a3cc21a8cd2f5d477c101fa43fcd47718047a5a5e99ef7b388982fa09813"
+        }
+      ],
+      "localPatches": [],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+    }
+  ],
+  "startupAdaptation": {
+    "source": "packages/boot/app-boot/src/index.ts",
+    "sourceSha256": "17923804b20a771b8e0fd3636769494735c53a9f5014ad69807635466fb1efa4",
+    "target": "apps/cli/src/boot.ts",
+    "status": "planned",
+    "scope": "仅 Loader → Include → Patch → 服务树与失败清理；不迁动态插件安装或 DSH_HOME"
+  },
+  "enabled": [
+    "Loader",
+    "Include",
+    "Group",
+    "P0 lifecycle probe",
+    "Typert 基础契约（非 Gateway）"
+  ],
+  "excluded": [
+    "Agent Loop/Session（P1）",
+    "Gateway/React/UI（P2，前端选型暂缓）",
+    "DS-Bot/OpenMausBot 独立执行引擎",
+    "模型/账户/遥测/更新/全权限默认配置",
+    "Native、浏览器、终端与文件工具 Provider（本阶段不启用）"
+  ],
+  "unresolvedReferences": [
+    {
+      "reference": "loader 的可选 node-addon-require-builtin",
+      "disposition": "P0 使用 --expose-internals；仅加载本地相对插件，不启用 Native helper/HMR；须 TZ-003 行为验证"
+    }
+  ],
+  "openMuse": {
+    "commit": "4d275e6b2c4b7dadd5ad14d0399313423d5cae33",
+    "adoption": "reference_only；P4 重新评审，不在 P0 迁入",
+    "workingTreeDiff": "provenance/openmuse-working-tree.patch",
+    "changedFiles": [
+      "apps/worker/src/browser.ts",
+      "apps/worker/tests/lifecycle.test.ts"
+    ],
+    "patchSha256": "21b98dbfd5b4f695cfd5bafc2cfa67f1ecb8ff00cf4a8120b126c2486a7af606"
+  },
+  "snapshots": [
+    {
+      "path": "provenance/dsh-m0.tar.gz",
+      "sha256": "f233c63143e2a642e22349c1fc3f76f1a26f28ca82b5d7c534e10d401c19e80d"
+    },
+    {
+      "path": "provenance/openmuse-reference.tar.gz",
+      "sha256": "3041b8a230aefd55ecf729e8e38c63209c7d2a5e12fb8c921c7eb27f137d573f"
+    },
+    {
+      "path": "provenance/openmuse-working-tree.patch",
+      "sha256": "21b98dbfd5b4f695cfd5bafc2cfa67f1ecb8ff00cf4a8120b126c2486a7af606"
+    },
+    {
+      "path": "provenance/planning-before-p0.tar.gz",
+      "sha256": "a5b18b558eab1586107d3df7307edf6ada3b56244c20657ff421e660a552cb5a"
+    }
+  ],
+  "upstreamTree": "98266a99ba0e9bf6bac8ea39434f48605e40b368",
+  "rollback": "按任务反向提交；仅删除本项目迁入内容，参考仓库保持只读；尚无业务数据迁移"
+}
