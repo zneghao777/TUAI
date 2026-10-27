@@ -1,4 +1,35 @@
 {
   "files": [],
-  "references": [{ "path": "apps/cli" }]
+  "references": [
+    {
+      "path": "vendor/cosmokit"
+    },
+    {
+      "path": "vendor/schemastery"
+    },
+    {
+      "path": "vendor/cordis"
+    },
+    {
+      "path": "vendor/loader"
+    },
+    {
+      "path": "vendor/include"
+    },
+    {
+      "path": "vendor/group"
+    },
+    {
+      "path": "packages/util/brand"
+    },
+    {
+      "path": "packages/typert/protocol"
+    },
+    {
+      "path": "packages/boot/cmdline"
+    },
+    {
+      "path": "apps/cli"
+    }
+  ]
 }

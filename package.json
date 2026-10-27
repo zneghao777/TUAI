@@ -4,16 +4,23 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.28.5",
-  "engines": { "node": ">=26.8.1 <27" },
+  "engines": {
+    "node": ">=26.8.1 <27"
+  },
   "scripts": {
     "typecheck": "tsc -b tsconfig.host.json tsconfig.client.json",
     "build": "pnpm run typecheck && node scripts/build.mjs",
     "start": "node --expose-internals apps/cli/lib/index.js",
-    "audit:upstream": "node scripts/audit-upstream.mjs"
+    "audit:upstream": "node scripts/audit-upstream.mjs",
+    "test:loader": "node --expose-internals --test tests/loader.test.mjs",
+    "test:upstream": "vitest run packages/util/brand/tests/brand.spec.ts packages/typert/protocol/tests/protocol.spec.ts packages/typert/protocol/tests/owned-value.spec.ts packages/typert/protocol/tests/remote-access.spec.ts packages/typert/protocol/tests/remote-info.spec.ts packages/boot/cmdline/tests/cmdline.spec.ts"
   },
   "devDependencies": {
     "@types/node": "22.20.1",
     "esbuild": "0.28.2",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "4.1.11",
+    "@types/js-yaml": "4.0.9",
+    "tsx": "4.23.13"
   }
 }

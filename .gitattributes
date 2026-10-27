@@ -1,2 +1,3 @@
 provenance/*.patch -whitespace
 provenance/*.tar.gz binary
+vendor/*/README.md -whitespace

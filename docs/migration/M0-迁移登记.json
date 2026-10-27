@@ -3,7 +3,7 @@
   "batchId": "M0",
   "verifiedAt": "2026-10-27",
   "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
-  "status": "planned",
+  "status": "buildable",
   "auditInput": {
     "packageCount": 386,
     "sourceSnapshot": "docs/specs/appendices/DSH包元数据清单.json",
@@ -15,7 +15,7 @@
       "name": "@deepseek-ai/cosmokit",
       "version": "1.8.6",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -63,15 +63,22 @@
           "sha256": "a747d0d38c24a5efc4d4db7750e62c0d10f62ee951b5b8cde156ca50cdbbc402"
         }
       ],
-      "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "localPatches": [
+        {
+          "path": "vendor/cosmokit/tsconfig.json",
+          "sha256": "e8e6639c7720d7538f2e4c7ed75840a5e9d7c31ed0aadc3a638bc77064750e23",
+          "reason": "TS 配置按当前工作区规范化；保留上游 Vendor 类型策略，无 src 改动"
+        }
+      ],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": []
     },
     {
       "path": "vendor/schemastery",
       "name": "@deepseek-ai/schemastery",
       "version": "3.18.5",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -100,14 +107,15 @@
         }
       ],
       "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": []
     },
     {
       "path": "vendor/cordis",
       "name": "@deepseek-ai/cordis",
       "version": "4.0.5",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -168,14 +176,15 @@
         }
       ],
       "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": []
     },
     {
       "path": "vendor/loader",
       "name": "@deepseek-ai/cordis-plugin-loader",
       "version": "1.0.6",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -236,14 +245,15 @@
         }
       ],
       "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": []
     },
     {
       "path": "vendor/include",
       "name": "@deepseek-ai/cordis-plugin-include",
       "version": "1.0.10",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -268,14 +278,15 @@
         }
       ],
       "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": []
     },
     {
       "path": "vendor/group",
       "name": "@deepseek-ai/cordis-plugin-group",
       "version": "1.0.5",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -300,14 +311,15 @@
         }
       ],
       "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": []
     },
     {
       "path": "packages/util/brand",
       "name": "@deepseek-ai/dsh-brand",
       "version": "0.2.1-rc.3",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -339,15 +351,28 @@
           "sha256": "cd37553e80b9913dec33adf4aa0fff20071647b3952bf74118e4bf8193b5cc58"
         }
       ],
-      "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "localPatches": [
+        {
+          "path": "packages/util/brand/tsconfig.json",
+          "sha256": "7e86a9ae63aca473186b138ad589d9da22e4df8cfe64f2b74995d2726014d721",
+          "reason": "TS 配置按当前工作区规范化；保留上游 Vendor 类型策略，无 src 改动"
+        }
+      ],
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": [
+        {
+          "path": "packages/util/brand/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "补充 DSH 根 MIT 许可"
+        }
+      ]
     },
     {
       "path": "packages/typert/protocol",
       "name": "@deepseek-ai/dsh-typert-protocol",
       "version": "0.2.1-rc.3",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -428,14 +453,21 @@
         }
       ],
       "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": [
+        {
+          "path": "packages/typert/protocol/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "补充 DSH 根 MIT 许可"
+        }
+      ]
     },
     {
       "path": "packages/boot/cmdline",
       "name": "@deepseek-ai/dsh-cmdline",
       "version": "0.2.1-rc.3",
       "license": "MIT",
-      "status": "planned",
+      "status": "buildable",
       "reason": "P0 Loader/Profile 和基础协议的必要闭包",
       "upstreamFiles": [
         {
@@ -468,7 +500,14 @@
         }
       ],
       "localPatches": [],
-      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载"
+      "resources": "src、包清单、许可、构建配置；无 Worker 或运行时下载",
+      "additionalFiles": [
+        {
+          "path": "packages/boot/cmdline/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "补充 DSH 根 MIT 许可"
+        }
+      ]
     }
   ],
   "startupAdaptation": {
@@ -491,12 +530,6 @@
     "DS-Bot/OpenMausBot 独立执行引擎",
     "模型/账户/遥测/更新/全权限默认配置",
     "Native、浏览器、终端与文件工具 Provider（本阶段不启用）"
-  ],
-  "unresolvedReferences": [
-    {
-      "reference": "loader 的可选 node-addon-require-builtin",
-      "disposition": "P0 使用 --expose-internals；仅加载本地相对插件，不启用 Native helper/HMR；须 TZ-003 行为验证"
-    }
   ],
   "openMuse": {
     "commit": "4d275e6b2c4b7dadd5ad14d0399313423d5cae33",
@@ -527,5 +560,27 @@
     }
   ],
   "upstreamTree": "98266a99ba0e9bf6bac8ea39434f48605e40b368",
-  "rollback": "按任务反向提交；仅删除本项目迁入内容，参考仓库保持只读；尚无业务数据迁移"
+  "rollback": "按任务反向提交；仅删除本项目迁入内容，参考仓库保持只读；尚无业务数据迁移",
+  "testSupport": [
+    {
+      "source": "vitest.shared.ts",
+      "target": "vitest.shared.ts",
+      "sha256": "3e8900b7471bffab582974b3a0a6413140d8143d41f62f19a348c41ad3a316a0",
+      "scope": "上游标准装饰器测试转换；生产构建走 tsc/esbuild"
+    }
+  ],
+  "disabledReferences": [
+    {
+      "reference": "loader 的可选 node-addon-require-builtin",
+      "disposition": "P0 使用 --expose-internals；仅加载本地相对插件，不启用 Native helper/HMR；须 TZ-003 行为验证",
+      "verification": "TZ-003：真实 Loader 在 Node --expose-internals 下加载文件和释放服务通过；未安装 Native helper"
+    }
+  ],
+  "unresolvedReferences": [],
+  "checks": [
+    "typecheck Host/Client passed",
+    "build 12 workspace projects passed",
+    "real Loader lifecycle: 1 passed",
+    "upstream brand/Typert/cmdline: 58 passed; 6 files"
+  ]
 }
