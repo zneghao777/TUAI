@@ -11,7 +11,7 @@ test('代理路径 RPC、MUX、上传下载，切换另一 Host 不串线', asyn
     await page
       .locator('input[type=file]')
       .setInputFiles({ name: '代理.txt', mimeType: 'text/plain', buffer: Buffer.from('前缀上传') })
-    await expect(page.getByText(/已上传，尚未发送/)).toBeVisible()
+    await expect(page.locator('[data-upload-state=ready]')).toBeVisible()
     await page.getByRole('textbox', { name: '消息', exact: true }).fill('代理路径消息')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
     await expect(

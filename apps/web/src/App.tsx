@@ -1,5 +1,4 @@
 import { SessionSidebar } from './components/SessionSidebar'
-import { Modal as DshModal } from '@deepseek-ai/dsh-client-ui-primitives'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type {
   SessionBinding,
@@ -12,7 +11,7 @@ import { SessionId } from '@deepseek-ai/dsh-session/types'
 import { AppClient, describe, unwrap } from './model/client'
 import { useSource, useMediaQuery } from './bindings'
 import { Button, Icon, Glow, Modal } from './components/kit'
-import { ModelSettings } from './components/ModelSettings'
+import { SettingsDialog } from './components/SettingsDialog'
 import { Composer } from './components/Composer'
 import { Queue, Waiting } from './components/Interactions'
 import s from './App.module.css'
@@ -33,7 +32,7 @@ export function App({
   const shortcuts = useSource(client.ctx.shortcuts.catalog)
   const newSessionShortcut = shortcuts.find((entry) => entry.id === 'session.new')
   const [sidebar, setSidebar] = useState(false),
-    [panel, setPanel] = useState<'artifacts' | 'models' | 'display'>()
+    [panel, setPanel] = useState<'artifacts' | 'settings'>()
   const narrow = useMediaQuery('(max-width:760px)'),
     navigation = useRef<HTMLElement>(null)
   const owned = useRef<SessionReference>(),
@@ -65,12 +64,24 @@ export function App({
     nav?.addEventListener('keydown', trap)
     return () => {
       nav?.removeEventListener('keydown', trap)
-      if (previous instanceof HTMLElement && previous.isConnected) previous.focus()
+      if (
+        previous instanceof HTMLElement &&
+        previous.isConnected &&
+        !document.querySelector('[aria-modal="true"]')
+      )
+        previous.focus()
     }
   }, [narrow, sidebar])
   useEffect(() => {
     if (panel) setSidebar(false)
   }, [panel])
+  const openSettings = () => {
+    // A closing drawer must not become the modal's return-focus target.
+    if (narrow && sidebar && document.activeElement instanceof HTMLElement)
+      document.activeElement.blur()
+    setSidebar(false)
+    setPanel('settings')
+  }
   const select = async (id: SessionId) => {
     const run = ++version.current
     setBusy(true)
@@ -150,7 +161,7 @@ export function App({
           : { status: 'blocked', reason: '会话尚未就绪' },
     })
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSidebar(false)
+      if (e.key === 'Escape' && !e.defaultPrevented) setSidebar(false)
     }
     window.addEventListener('keydown', handler)
     return () => {
@@ -168,7 +179,6 @@ export function App({
       <aside
         ref={navigation}
         {...(narrow && !sidebar ? { inert: '' } : {})}
-        aria-hidden={narrow && !sidebar ? true : undefined}
         className={`${s.sidebar} ${sidebar ? s.sidebarOpen : ''}`}
       >
         <div className={s.brand}>
@@ -216,17 +226,13 @@ export function App({
           }}
         />
         <div className={s.sidebarFoot}>
-          <Button onClick={() => setPanel('models')} aria-label="设置">
+          <Button onClick={openSettings} aria-label="设置">
             <Icon name="settings" />
             设置
           </Button>
         </div>
       </aside>
-      <main
-        {...(narrow && sidebar ? { inert: '' } : {})}
-        aria-hidden={narrow && sidebar ? true : undefined}
-        className={s.main}
-      >
+      <main {...(narrow && sidebar ? { inert: '' } : {})} className={s.main}>
         <header className={s.header}>
           <Button className={s.mobileMenu} aria-label="打开导航" onClick={() => setSidebar(true)}>
             <Icon name="menu" />
@@ -260,7 +266,7 @@ export function App({
         ) : null}
         {binding ? (
           <SessionProvider session={owned.current}>
-            {renderSlot('tianzhiai.workspace', { onModels: () => setPanel('models') })}
+            {renderSlot('tianzhiai.workspace', { onModels: openSettings })}
           </SessionProvider>
         ) : (
           <div className={s.loading}>
@@ -270,38 +276,19 @@ export function App({
         )}
       </main>
       {renderSlot('shell.overlay', {})}
-      {panel === 'display' ? (
-        <DshModal
-          className={s.settingsDisplay}
-          contentClassName={s.settingsScroll}
-          open
-          title="设置"
-          closeLabel="关闭"
-          onClose={() => setPanel(undefined)}
-        >
-          <div className={s.settingsLayout}>
-            <nav className={s.settingsNav} aria-label="设置分类">
-              <Button onClick={() => setPanel('models')}>
-                <Icon name="model" />
-                模型
-              </Button>
-              <Button aria-current="page" className={s.settingsSelected}>
-                <Icon name="settings" />
-                对话显示
-              </Button>
-            </nav>
-            <section className={s.settingsContent} aria-label="对话显示设置">
-              {renderSlot('settings.general.item', {})}
-            </section>
-          </div>
-        </DshModal>
-      ) : null}
-      {panel === 'models' ? (
-        <ModelSettings
+      {panel === 'settings' ? (
+        <SettingsDialog
           client={client}
-          onClose={() => setPanel(undefined)}
-          onDisplay={() => setPanel('display')}
-        />
+          onClose={() => {
+            setPanel(undefined)
+            if (narrow)
+              requestAnimationFrame(() =>
+                document.querySelector<HTMLButtonElement>('[aria-label="打开导航"]')?.focus(),
+              )
+          }}
+        >
+          {renderSlot('settings.general.item', {})}
+        </SettingsDialog>
       ) : null}
       {panel === 'artifacts' && binding ? (
         <Modal title="文件与产物" onClose={() => setPanel(undefined)}>
@@ -336,10 +323,13 @@ export function Workspace({
       ) : (
         children
       )}
-      <div className={`${s.dock} ${state.blank ? s.homeDock : ''}`}>
-        <Waiting client={client} binding={binding} />
-        <Queue binding={binding} />
-        <Composer client={client} binding={binding} onModels={onModels} />
+      <div className={`${s.dock} ${state.blank ? s.homeDock : ''}`} data-composer-dock>
+        {!state.blank && <div className={s.dockFade} aria-hidden="true" data-composer-fade />}
+        <div className={s.dockContents}>
+          <Waiting client={client} binding={binding} />
+          <Queue binding={binding} />
+          <Composer client={client} binding={binding} onModels={onModels} />
+        </div>
       </div>
     </>
   )

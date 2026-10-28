@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Icon } from './kit'
 import s from '../App.module.css'
 
@@ -16,6 +16,8 @@ export function Select({
   disabled,
   placeholder = '请选择',
   onManage,
+  icon,
+  compact = false,
 }: {
   label: string
   value: string
@@ -24,6 +26,8 @@ export function Select({
   disabled?: boolean
   placeholder?: string
   onManage?: () => void
+  icon?: ReactNode
+  compact?: boolean
 }) {
   const id = useId(),
     trigger = useRef<HTMLButtonElement>(null),
@@ -48,7 +52,8 @@ export function Select({
     menu.current.setAttribute('popover', 'manual')
     menu.current.showPopover()
     const rect = trigger.current.getBoundingClientRect()
-    const width = Math.min(320, innerWidth - 24)
+    const width = Math.min(compact ? 250 : 320, innerWidth - 24)
+    menu.current.style.width = `${width}px`
     const above = rect.top > innerHeight - rect.bottom
     const maxHeight = Math.min(
       360,
@@ -61,7 +66,7 @@ export function Select({
       width,
       maxHeight,
     })
-  }, [open, options.length])
+  }, [open, options.length, compact])
   useEffect(() => {
     if (!open) return
     const close = (e: Event) => {
@@ -101,6 +106,7 @@ export function Select({
         className={s.selectTrigger}
         role="combobox"
         aria-label={label}
+        title={`${label}：${selected?.label ?? placeholder}`}
         aria-expanded={open}
         aria-controls={open ? id : undefined}
         aria-activedescendant={open && options[active] ? `${id}-${active}` : undefined}
@@ -156,13 +162,14 @@ export function Select({
           }
         }}
       >
+        {icon}
         <span>{selected?.label ?? placeholder}</span>
         <Icon name="chevron" />
       </button>
       {open ? (
         <div
           ref={menu}
-          className={s.selectMenu}
+          className={`${s.selectMenu} ${compact ? s.compactSelectMenu : ''}`}
           style={position}
           onBlur={(e) => {
             if (!e.currentTarget.contains(e.relatedTarget) && e.relatedTarget !== trigger.current)

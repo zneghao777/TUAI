@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import type { AskUserQuestionAnswerItem } from '@deepseek-ai/dsh-user-questions/types'
 import type { SessionBinding } from '@deepseek-ai/dsh-api-session-controller/client'
 import type { MessageId } from '@deepseek-ai/dsh-llm/brand'
@@ -26,6 +26,7 @@ export function Waiting({ client, binding }: { client: AppClient; binding: Sessi
   )
 }
 function InteractionCard({ item, stop }: { item: Interaction; stop: () => Promise<void> }) {
+  const formId = useId()
   const [answers, setAnswers] = useState<Record<string, AskUserQuestionAnswerItem>>({}),
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false)
@@ -34,10 +35,11 @@ function InteractionCard({ item, stop }: { item: Interaction; stop: () => Promis
       className={s.interaction}
       aria-label={item.kind === 'approval' ? '操作审批' : '用户问题'}
     >
-      <h3>{item.kind === 'approval' ? `操作需要你的确认：${item.title}` : item.title}</h3>
+      <h3>{item.kind === 'approval' ? `确认执行 ${item.title}` : item.title}</h3>
       {item.detail ? <SafeMarkdown text={item.detail} /> : null}
       {item.kind === 'question' ? (
         <form
+          id={formId}
           onSubmit={(e) => {
             e.preventDefault()
             const values =
@@ -101,30 +103,33 @@ function InteractionCard({ item, stop }: { item: Interaction; stop: () => Promis
               ) : null}
             </fieldset>
           ))}
-          <Button className={s.primary} type="submit">
+        </form>
+      ) : null}
+      <div className={s.interactionActions}>
+        {item.kind === 'question' ? (
+          <Button className={s.primary} type="submit" form={formId}>
             提交回答
           </Button>
-        </form>
-      ) : (
-        <div className={s.actions}>
-          <Button className={s.primary} onClick={() => item.answer('allowed-once')}>
-            仅允许本次
-          </Button>
-          <Button onClick={() => item.answer('rejected')}>拒绝</Button>
-        </div>
-      )}
-      <Button
-        busy={busy}
-        onClick={() => {
-          setBusy(true)
-          void stop()
-            .catch((e) => setError(describe(e)))
-            .finally(() => setBusy(false))
-        }}
-      >
-        取消当前执行
-      </Button>
-      <small>决定只作用于当前请求；批准后仍需等待工具实际结果。</small>
+        ) : (
+          <>
+            <Button className={s.primary} onClick={() => item.answer('allowed-once')}>
+              仅允许本次
+            </Button>
+            <Button onClick={() => item.answer('rejected')}>拒绝</Button>
+          </>
+        )}
+        <Button
+          busy={busy}
+          onClick={() => {
+            setBusy(true)
+            void stop()
+              .catch((e) => setError(describe(e)))
+              .finally(() => setBusy(false))
+          }}
+        >
+          取消当前执行
+        </Button>
+      </div>
       {error ? <p role="alert">{error}</p> : null}
     </section>
   )
@@ -180,6 +185,7 @@ export function queuedItems(
 export function Queue({ binding }: { binding: SessionBinding }) {
   const inbox = useSource(binding.session.projections.faceOf('inbox'))
   const rows = queuedItems(inbox)
+  const steering = queuedItems(inbox, 'next-step')
   const [editing, setEditing] = useState<string>(),
     [text, setText] = useState(''),
     [busy, setBusy] = useState(false),
@@ -200,9 +206,10 @@ export function Queue({ binding }: { binding: SessionBinding }) {
       setBusy(false)
     }
   }
+  if (!rows.length && !steering.length && !error) return null
   return (
-    <div className={s.queue}>
-      {queuedItems(inbox, 'next-step').map((row) => (
+    <section className={s.queue} aria-label="待发送消息">
+      {steering.map((row) => (
         <div className={s.queueRow} key={row.id}>
           <span>下一步插话 · {row.text || '附件消息'}</span>
           <Button disabled={busy} onClick={() => void act(row.id, 'remove')}>
@@ -225,34 +232,38 @@ export function Queue({ binding }: { binding: SessionBinding }) {
                   if (e.key === 'Escape') setEditing(undefined)
                 }}
               />
-              <Button disabled={busy || !text.trim()} onClick={() => void act(row.id, 'edit')}>
-                保存纯文本
-              </Button>
-              <Button onClick={() => setEditing(undefined)}>取消</Button>
+              <div className={s.queueActions}>
+                <Button disabled={busy || !text.trim()} onClick={() => void act(row.id, 'edit')}>
+                  保存纯文本
+                </Button>
+                <Button onClick={() => setEditing(undefined)}>取消</Button>
+              </div>
             </>
           ) : (
             <>
               <span>排队中 · {row.text || '附件消息'}</span>
-              <Button
-                disabled={busy}
-                onClick={() => {
-                  setEditing(row.id)
-                  setText(row.text)
-                }}
-              >
-                编辑
-              </Button>
-              <Button disabled={busy} onClick={() => void act(row.id, 'remove')}>
-                移除
-              </Button>
-              <Button disabled={busy} onClick={() => void act(row.id, 'steer')}>
-                插话
-              </Button>
+              <div className={s.queueActions}>
+                <Button
+                  disabled={busy}
+                  onClick={() => {
+                    setEditing(row.id)
+                    setText(row.text)
+                  }}
+                >
+                  编辑
+                </Button>
+                <Button disabled={busy} onClick={() => void act(row.id, 'remove')}>
+                  移除
+                </Button>
+                <Button disabled={busy} onClick={() => void act(row.id, 'steer')}>
+                  插话
+                </Button>
+              </div>
             </>
           )}
         </div>
       ))}
       {error ? <p role="alert">{error}</p> : null}
-    </div>
+    </section>
   )
 }

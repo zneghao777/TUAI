@@ -43,6 +43,10 @@ export function Icon({
     | 'check'
     | 'settings'
     | 'model'
+    | 'reset'
+    | 'right'
+    | 'back'
+    | 'shield'
 }) {
   const paths = {
     plus: 'M12 5v14M5 12h14',
@@ -59,6 +63,10 @@ export function Icon({
     check: 'M5 12l4 4L19 6',
     settings: 'M4 7h16M4 17h16M8 4v6M16 14v6',
     model: 'M4 7c0-5 16-5 16 0s-16 5-16 0v10c0 5 16 5 16 0V7M4 12c0 5 16 5 16 0',
+    reset: 'M4 4v6h6M4 10a8 8 0 118 10',
+    right: 'M9 5l7 7-7 7',
+    back: 'M15 5l-7 7 7 7',
+    shield: 'M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM9 12l2 2 4-4',
   }
   return (
     <svg

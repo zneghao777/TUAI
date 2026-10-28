@@ -31,8 +31,23 @@ class ControlledProgram extends PtcRuntime {
   }
 }
 class ScenarioModel extends MockAdapter {
-  constructor() {
-    super([])
+  constructor(composerControls = false, contextUsage) {
+    super(
+      [],
+      composerControls
+        ? {
+            efforts: [
+              { id: 'off', name: 'Off' },
+              { id: 'low', name: 'Low' },
+              { id: 'high', name: 'High' },
+              { id: 'max', name: 'Max' },
+            ],
+            defaultEffort: 'high',
+          }
+        : undefined,
+    )
+    this.composerControls = composerControls
+    this.contextUsage = contextUsage
     this.calls = []
     this.continuations = new Set()
     this.reasoningResumed = false
@@ -43,7 +58,17 @@ class ScenarioModel extends MockAdapter {
     this.continuations.clear()
   }
   async listModels() {
-    return [{ provider: 'p2-controlled', id: 'controlled', name: 'P2 受控验收模型' }]
+    return [
+      { provider: 'p2-controlled', id: 'controlled', name: 'P2 受控验收模型' },
+      ...(this.composerControls
+        ? [{ provider: 'p2-controlled', id: 'compact', name: '无推理验收模型' }]
+        : []),
+    ]
+  }
+  async resolveModel(provider, model) {
+    const info = await super.resolveModel(provider, model)
+    if (model === 'compact') delete info.reasoning
+    return info
   }
   async *stream(options) {
     this.calls.push(options)
@@ -200,7 +225,9 @@ class ScenarioModel extends MockAdapter {
       options.signal.throwIfAborted()
       if (chunk.type === 'text-delta')
         await delay(text.includes('流式恢复') ? 35 : 2, undefined, { signal: options.signal })
-      yield chunk
+      yield chunk.type === 'usage' && this.contextUsage !== undefined
+        ? { ...chunk, usage: { ...chunk.usage, inputTokens: this.contextUsage } }
+        : chunk
     }
   }
 }
@@ -208,7 +235,7 @@ export async function fixtureHost(options = {}) {
   const home = await mkdtemp(join(tmpdir(), 'tianzhiai-p2-ui-'))
   const previous = process.env.TIANZHIAI_HOME
   process.env.TIANZHIAI_HOME = home
-  const model = new ScenarioModel()
+  const model = new ScenarioModel(options.composerControls, options.contextUsage)
   try {
     const runtime = await startWebHost(
       { port: 0, provider: 'p2-controlled', model: 'controlled', ...options },

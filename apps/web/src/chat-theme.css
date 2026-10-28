@@ -1,17 +1,28 @@
 /* DSH controls keep their geometry and interaction; this layer supplies Tianzhi's palette. */
 body {
-  --dsh-chat-content-width: 840px;
+  --dsh-chat-content-width: 800px;
   --dsh-composer-side-clearance: 16px;
+  --dsh-content-font-size: 15px;
+  --dsh-code-font-size: 12px;
   --dsh-hairline-width: 1px;
   --dsw-alias-label-primary: var(--ink);
   --dsw-alias-label-secondary: var(--muted);
+  --dsw-alias-label-tertiary: #687381;
+  --dsw-alias-label-caption: #707986;
+  --dsw-alias-label-deep-diving: var(--accent);
   --dsw-alias-bg-base: var(--canvas);
   --dsw-alias-bg-layer-1: var(--glass);
   --dsw-alias-bg-layer-2: #fff;
   --dsw-alias-bg-overlay: #fff;
   --dsw-menu-surface-fill: #fff;
   --dsw-menu-backdrop-filter: none;
+  --dsw-mask-blur: blur(4px);
+  --dsw-alias-bg-mask-1: #29384b28;
   --dsw-alias-brand-primary: var(--accent);
+  --dsw-specific-bubble: #e9eff6;
+  --dsw-specific-bubble-highlight: #d9e4f1;
+  --dsw-alias-state-error-primary: #b5473e;
+  --dsw-alias-state-success-primary: #28755c;
 }
 [data-slot='conversation.view'] {
   display: flex;
@@ -20,4 +31,12 @@ body {
 }
 [data-slot='settings.general.item'] {
   min-width: 0;
+}
+/* Expanded code and tool output share the product's opaque surface. */
+[data-slot='conversation.view'] {
+  --dsw-alias-markdown-code-block: #fff;
+  --dsw-alias-markdown-code-block-banner: #f0f3f7;
+}
+[data-turn-process]:disabled {
+  opacity: 1;
 }

@@ -12,7 +12,9 @@ test.beforeEach(async ({ page }) => {
       errors.push(message.text())
   })
   await page.goto(host.login)
-  await expect(page.getByLabel('模型', { exact: true })).toContainText('P2 受控验收模型')
+  await expect(page.getByRole('button', { name: '模型与推理强度', exact: true })).toContainText(
+    'P2 受控验收模型',
+  )
 })
 test.afterEach(async ({ page }, info) => {
   if (info.status !== info.expectedStatus && !page.isClosed())

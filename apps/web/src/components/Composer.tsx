@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { SessionBinding } from '@deepseek-ai/dsh-api-session-controller/client'
 import type {
   PromptContentPart,
@@ -10,6 +10,7 @@ import { useSource } from '../bindings'
 import { AppClient, describe, unwrap } from '../model/client'
 import { Button, Icon } from './kit'
 import { Select } from './Select'
+import { ContextControl, ModelControl } from './ComposerControls'
 import s from '../App.module.css'
 import { queuedItems } from './Interactions'
 interface Attachment {
@@ -22,12 +23,16 @@ interface Attachment {
   progress?: number
   abort: AbortController
 }
-const effortNames: Record<string, string> = { off: '关闭推理', low: '低', high: '高', max: '最高' }
 interface Pending {
   id: SessionRequestId
   text: string
   mode: 'queue' | 'steer'
   receipts: FileUploadReceiptId[]
+}
+const permissionDescriptions: Record<string, string> = {
+  readonly: '查看文件，执行命令时询问',
+  'workspace-write': '允许修改当前工作区',
+  'full-access': '允许工作区外操作，不再逐项询问',
 }
 function restore(key: string): { text: string; pending?: Pending } {
   try {
@@ -110,10 +115,31 @@ export function Composer({
   const [files, setFiles] = useState<Attachment[]>(() => restoreAttachments(key))
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState('')
+  const [configuring, setConfiguring] = useState(false)
+  const configuringRef = useRef(false)
   const input = useRef<HTMLTextAreaElement>(null),
     picker = useRef<HTMLInputElement>(null),
     filesRef = useRef(files)
   filesRef.current = files
+  const fitInput = () => {
+    const element = input.current
+    if (!element) return
+    element.style.height = '0px'
+    element.style.height = `${element.scrollHeight}px`
+  }
+  useLayoutEffect(fitInput, [draft.text])
+  useEffect(() => {
+    const element = input.current
+    if (!element) return
+    let width = element.clientWidth
+    const observer = new ResizeObserver(() => {
+      if (element.clientWidth === width) return
+      width = element.clientWidth
+      fitInput()
+    })
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
   useEffect(() => {
     try {
       localStorage.setItem(key, JSON.stringify(draft))
@@ -158,7 +184,7 @@ export function Composer({
         setDraft((d) =>
           d.pending?.id === pending.id ? { text: d.text === pending.text ? '' : d.text } : d,
         )
-        setMessage('输入已接受；执行结果以会话记录为准')
+        setMessage('')
       }
     }
     reconcile()
@@ -233,6 +259,7 @@ export function Composer({
   const send = async (mode: 'queue' | 'steer') => {
     if (
       busy ||
+      configuringRef.current ||
       !available.some((m) => `${m.provider}/${m.id}` === selected) ||
       connection !== 'connected' ||
       files.some((f) => f.status !== 'ready') ||
@@ -240,7 +267,7 @@ export function Composer({
     )
       return
     setBusy(true)
-    setMessage('正在提交输入…')
+    setMessage('正在发送…')
     const submission = draft.pending
       ? undefined
       : binding.session.beginSubmission({ mode, text: draft.text, attachments: [] })
@@ -284,11 +311,7 @@ export function Composer({
       }
       setDraft((d) => ({ text: d.text === pending.text ? '' : d.text }))
       setFiles([])
-      setMessage(
-        pending.mode === 'steer'
-          ? '下一步插话已接受；处理结果以会话记录为准'
-          : '输入已接受；执行结果以会话记录为准',
-      )
+      setMessage('')
       input.current?.focus()
     } catch (error) {
       setMessage(`${describe(error)}。已保留本次请求身份，重试不会创建另一条输入。`)
@@ -300,7 +323,7 @@ export function Composer({
     setBusy(true)
     try {
       unwrap(await binding.session.cancel())
-      setMessage('停止请求已接受；当前状态以会话记录为准。队列仍保留，已发生的操作不会撤销。')
+      setMessage('已请求停止；队列保留，已执行的操作不会撤销。')
     } catch (error) {
       setMessage(describe(error))
     } finally {
@@ -328,7 +351,6 @@ export function Composer({
       : catalog
         ? `${catalog.default.provider}/${catalog.default.model}`
         : ''
-  const reasoning = available.find((m) => `${m.provider}/${m.id}` === selected)?.reasoning
   const effort =
     typeof model === 'object' &&
     model &&
@@ -339,21 +361,78 @@ export function Composer({
     typeof model.next.reasoningEffort === 'string'
       ? model.next.reasoningEffort
       : ''
+  const notice =
+    message ||
+    catalog?.failures.map((f) => `${f.name}：${f.message}`).join('；') ||
+    (available.length && !available.some((m) => `${m.provider}/${m.id}` === selected)
+      ? '当前模型不可用，请选择模型后发送'
+      : '') ||
+    (draft.pending
+      ? '发送结果待确认，草稿已保留，可重试'
+      : connection !== 'connected'
+        ? '连接恢复后将核对已接受输入，草稿已保留'
+        : '')
+  const sendLabel = draft.pending ? '重试本次输入' : state.running ? '排队发送' : '发送消息'
+  const configure = async (action: () => Promise<void>) => {
+    if (configuringRef.current) return false
+    configuringRef.current = true
+    setConfiguring(true)
+    try {
+      await action()
+      setMessage('')
+      return true
+    } catch (error) {
+      setMessage(describe(error))
+      return false
+    } finally {
+      configuringRef.current = false
+      setConfiguring(false)
+    }
+  }
   return (
-    <div className={s.composerArea}>
-      <div className={s.composer}>
+    <div className={s.composerArea} data-composer>
+      {state.running ? (
+        <div className={s.executionControls}>
+          <Button
+            onClick={() => void stop()}
+            busy={busy}
+            disabled={connection !== 'connected'}
+            aria-label="停止当前执行"
+            title="停止当前执行，保留排队消息"
+          >
+            <Icon name="stop" />
+            停止
+          </Button>
+          <Button
+            disabled={
+              busy ||
+              configuring ||
+              connection !== 'connected' ||
+              (!draft.text.trim() && !files.length)
+            }
+            onClick={() => void send('steer')}
+            aria-label="插话到下一步"
+            title="插话到下一步（⌘/Ctrl+Enter）"
+          >
+            插话
+          </Button>
+        </div>
+      ) : null}
+      <div className={s.composer} data-composer-surface>
         {files.length ? (
           <ul className={s.attachments}>
             {files.map((file) => (
-              <li key={file.id}>
+              <li
+                key={file.id}
+                data-upload-state={file.status}
+                aria-label={`${file.name} · ${file.status === 'ready' ? '已上传，尚未发送' : file.status === 'error' ? '上传失败' : '上传中'}`}
+              >
                 <Icon name="paperclip" />
                 <span>
-                  {file.name} ·{' '}
-                  {file.status === 'ready'
-                    ? '已上传，尚未发送'
-                    : file.status === 'error'
-                      ? '上传失败'
-                      : '上传中'}
+                  {file.name}
+                  {file.status !== 'ready' ? (
+                    <small role="status">{file.status === 'error' ? '上传失败' : '上传中…'}</small>
+                  ) : null}
                   {file.error ? <small>{file.error}</small> : null}
                 </span>
                 {file.status === 'error' && file.file ? (
@@ -375,13 +454,12 @@ export function Composer({
         <textarea
           ref={input}
           aria-label="消息"
-          placeholder={
-            state.blank ? '描述你的目标，或把资料交给我…' : '输入后续问题，或补充新的要求…'
-          }
+          placeholder="输入消息…"
+          title="Enter 发送 · Shift+Enter 换行 · ⌘/Ctrl+Enter 插话"
           value={draft.text}
           readOnly={Boolean(draft.pending)}
           onChange={(e) => setDraft({ text: e.target.value })}
-          rows={3}
+          rows={1}
           onPaste={(e) => {
             if (e.clipboardData.files.length) {
               e.preventDefault()
@@ -397,122 +475,106 @@ export function Composer({
           }}
         />
         <div className={s.composerTools}>
-          <input
-            ref={picker}
-            type="file"
-            multiple
-            hidden
-            onChange={(e) => {
-              attach(e.target.files)
-              e.target.value = ''
-            }}
-          />
-          <Button
-            title="从当前设备上传文件或图片"
-            aria-label="添加附件"
-            disabled={busy || Boolean(draft.pending)}
-            onClick={() => picker.current?.click()}
-          >
-            <Icon name="paperclip" />
-          </Button>
-          <Select
-            label="模型"
-            value={selected}
-            disabled={connection !== 'connected' || busy}
-            placeholder={available.length ? '选择模型' : '配置模型'}
-            onManage={onModels}
-            options={available.map((m) => ({
-              value: `${m.provider}/${m.id}`,
-              label: m.name,
-              detail: catalog?.groups.find((g) => g.id === m.provider)?.name,
-            }))}
-            onChange={(value) => {
-              const [provider, ...rest] = value.split('/')
-              void client.ctx.remote.session
-                .selectModel({ sessionId: binding.sessionId, provider, model: rest.join('/') })
-                .then(unwrap)
-                .catch((error) => setMessage(describe(error)))
-            }}
-          />
-          {!available.length ? <Button onClick={onModels}>添加模型</Button> : null}
-          {reasoning ? (
-            <Select
-              label="推理强度"
-              value={effort}
-              disabled={connection !== 'connected' || busy}
-              options={[
-                { value: '', label: '默认推理' },
-                ...reasoning.efforts.map((o) => ({
-                  value: o.id,
-                  label: effortNames[o.id] ?? o.name,
-                })),
-              ]}
-              onChange={(value) => {
-                const [provider, ...rest] = selected.split('/')
-                void client.ctx.remote.session
-                  .selectModel({
-                    sessionId: binding.sessionId,
-                    provider,
-                    model: rest.join('/'),
-                    ...(value ? { reasoningEffort: value } : {}),
-                  })
-                  .then(unwrap)
-                  .catch((error) => setMessage(describe(error)))
+          <div className={s.composerOptions}>
+            <input
+              ref={picker}
+              type="file"
+              multiple
+              hidden
+              onChange={(e) => {
+                attach(e.target.files)
+                e.target.value = ''
               }}
             />
-          ) : null}
-          <span
-            className={s.permission}
-            title={facts.permissions?.options.find((p) => p.value === permissionValue)?.description}
-          >
-            {facts.permissions?.options.find((p) => p.value === permissionValue)?.name ??
-              '读取权限中'}
-          </span>
-          <div className={s.sendGroup}>
-            {state.running ? (
-              <>
-                <Button onClick={() => void stop()} busy={busy} aria-label="停止当前执行">
-                  <Icon name="stop" />
-                  停止
-                </Button>
-                <Button
-                  disabled={busy || connection !== 'connected'}
-                  onClick={() => void send('steer')}
-                >
-                  插话到下一步
-                </Button>
-              </>
-            ) : null}
             <Button
-              className={s.primary}
+              className={s.composerIcon}
+              title="从当前设备上传文件或图片"
+              aria-label="添加附件"
+              disabled={busy || Boolean(draft.pending)}
+              onClick={() => picker.current?.click()}
+            >
+              <Icon name="paperclip" />
+            </Button>
+            {Boolean(permissions) && (
+              <Select
+                label="权限"
+                compact
+                icon={<Icon name="shield" />}
+                value={typeof permissionValue === 'string' ? permissionValue : ''}
+                disabled={
+                  connection !== 'connected' ||
+                  busy ||
+                  configuring ||
+                  !facts.permissions?.options.length
+                }
+                placeholder="权限"
+                options={
+                  facts.permissions?.options.map((option) => ({
+                    value: option.value,
+                    label: option.name,
+                    detail: option.description ?? permissionDescriptions[option.value],
+                  })) ?? []
+                }
+                onChange={(value) => {
+                  if (
+                    value === permissionValue ||
+                    !facts.permissions?.options.some((option) => option.value === value)
+                  )
+                    return
+                  void configure(async () => {
+                    const result = unwrap(await binding.session.command(`/permission ${value}`))
+                    if (!result.matched) throw new Error('当前 Host 不支持切换权限')
+                  })
+                }}
+              />
+            )}
+          </div>
+          <div className={s.sendGroup}>
+            <ContextControl binding={binding} />
+            <ModelControl
+              catalog={catalog}
+              selected={selected}
+              effort={effort}
+              disabled={connection !== 'connected' || busy}
+              onManage={onModels}
+              onChange={(value, reasoningEffort) =>
+                configure(async () => {
+                  const [provider, ...rest] = value.split('/')
+                  unwrap(
+                    await client.ctx.remote.session.selectModel({
+                      sessionId: binding.sessionId,
+                      provider,
+                      model: rest.join('/'),
+                      ...(reasoningEffort ? { reasoningEffort } : {}),
+                    }),
+                  )
+                })
+              }
+            />
+            <Button
+              className={`${s.primary} ${s.composerIcon} ${s.sendButton}`}
               busy={busy}
               disabled={
                 connection !== 'connected' ||
+                configuring ||
                 !available.some((m) => `${m.provider}/${m.id}` === selected) ||
                 (!draft.text.trim() && !files.length) ||
                 files.some((f) => f.status !== 'ready')
               }
               onClick={() => void send('queue')}
-              aria-label={draft.pending ? '重试本次输入' : state.running ? '排队发送' : '发送消息'}
+              aria-label={sendLabel}
+              title={`${sendLabel}（Enter）`}
             >
-              {state.running ? '排队发送' : draft.pending ? '重试' : '发送'}
               <Icon name="send" />
             </Button>
           </div>
         </div>
       </div>
-      <div className={s.composerHint} role="status">
-        {message ||
-          catalog?.failures.map((f) => `${f.name}：${f.message}`).join('；') ||
-          (available.length && !available.some((m) => `${m.provider}/${m.id}` === selected)
-            ? '当前模型不可用，请选择模型后发送'
-            : '') ||
-          (draft.pending
-            ? '上次提交结果待核对，可用同一请求重试'
-            : connection !== 'connected'
-              ? '连接恢复后将核对已接受输入，草稿已保留'
-              : 'Enter 发送 · Shift+Enter 换行 · ⌘/Ctrl+Enter 插话')}
-      </div>
+      {notice ? (
+        <div className={s.composerHint} role="status">
+          {notice}
+        </div>
+      ) : null}
     </div>
   )
 }

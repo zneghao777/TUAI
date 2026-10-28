@@ -1,6 +1,12 @@
 /** Managed-workspace navigation using DSH's original Session menu and dialogs. */
 import { useState, type ComponentProps } from 'react'
-import { Menu, writeClipboard } from '@deepseek-ai/dsh-client-ui-primitives'
+import {
+  IconChevronDownOutlineRegular,
+  IconEllipsisOutlineRegular,
+  IconPinFillRegular,
+  Menu,
+  writeClipboard,
+} from '@deepseek-ai/dsh-client-ui-primitives'
 import {
   PinSessionMenuItem,
   RenameSessionMenuItem,
@@ -118,12 +124,19 @@ export function SessionSidebar({
       </div>
       <nav className={s.history} aria-label="会话历史">
         {visible.filter((id) => pinned.has(id)).map(row)}
-        {groups.map(({ workspace, ids }) => (
-          <details open key={workspace.workspaceId} className={s.workspaceGroup}>
-            <summary>{sessions.byId[workspace.sessionIds[0]!]?.title ?? '新会话'}</summary>
-            {ids.map(row)}
-          </details>
-        ))}
+        {groups.map(({ workspace, ids }) =>
+          workspace.sessionIds.length === 1 ? (
+            ids.map(row)
+          ) : (
+            <details open key={workspace.workspaceId} className={s.workspaceGroup}>
+              <summary>
+                <IconChevronDownOutlineRegular size={14} />
+                <span>{sessions.byId[workspace.sessionIds[0]!]?.title ?? '新会话'}</span>
+              </summary>
+              {ids.map(row)}
+            </details>
+          ),
+        )}
         {visible.filter((id) => !accounted.has(id) && !pinned.has(id)).map(row)}
         {!visible.length ? (
           <p className={s.emptyNav}>
@@ -207,10 +220,14 @@ function SessionRow({
     ...actions,
   }
   return (
-    <div className={`${s.sessionLine} ${selected ? s.selected : ''}`}>
+    <div
+      className={`${s.sessionLine} ${selected ? s.selected : ''}`}
+      data-menu-open={open || undefined}
+    >
       <button
         data-session-id={id}
         className={s.historyRow}
+        title={title}
         aria-current={selected ? 'page' : undefined}
         onClick={() => {
           if (!archived) void onSelect(id)
@@ -221,7 +238,9 @@ function SessionRow({
         {running ? (
           <span className={s.activeDot} aria-label="运行中" />
         ) : pinned ? (
-          <span aria-label="已置顶">⌖</span>
+          <span className={s.sessionPin} aria-label="已置顶">
+            <IconPinFillRegular size={14} />
+          </span>
         ) : null}
       </button>
       <Menu
@@ -232,12 +251,14 @@ function SessionRow({
         align="end"
         anchor={
           <button
+            type="button"
+            className={s.sessionMenuButton}
             aria-label={`${title}的会话操作`}
             aria-haspopup="menu"
             aria-expanded={open}
             onClick={() => setOpen(!open)}
           >
-            ···
+            <IconEllipsisOutlineRegular size={16} />
           </button>
         }
       >

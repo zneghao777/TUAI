@@ -11,7 +11,9 @@ test.beforeEach(async ({ page }) => {
   )
   await page.goto(host.login)
   await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeVisible()
-  await expect(page.getByLabel('模型', { exact: true })).toContainText('P2 受控验收模型')
+  await expect(page.getByRole('button', { name: '模型与推理强度', exact: true })).toContainText(
+    'P2 受控验收模型',
+  )
 })
 test.afterEach(async ({ page }) => {
   await page.close()
@@ -131,7 +133,7 @@ test('文件图片上传、会话引用、鉴权下载与跨会话拒绝', async
       ),
     },
   ])
-  await expect(page.getByText(/已上传，尚未发送/)).toHaveCount(2)
+  await expect(page.locator('[data-upload-state=ready]')).toHaveCount(2)
   await send(page, '请查看附件')
   await expect(page.getByRole('img', { name: '像素.png', exact: true })).toBeVisible()
   await page.getByRole('button', { name: '文件与产物' }).click()
@@ -337,10 +339,10 @@ test('附件草稿切换会话与刷新保留，未接受失败可编辑', async
   await page
     .locator('input[type=file]')
     .setInputFiles({ name: '草稿.txt', mimeType: 'text/plain', buffer: Buffer.from('草稿附件') })
-  await expect(page.getByText(/已上传，尚未发送/)).toBeVisible()
+  await expect(page.locator('[data-upload-state=ready]')).toBeVisible()
   await page.getByRole('textbox', { name: '消息', exact: true }).fill('附件草稿')
   await page.reload()
-  await expect(page.getByText(/草稿.txt · 已上传，尚未发送/)).toBeVisible()
+  await expect(page.getByRole('listitem', { name: '草稿.txt · 已上传，尚未发送' })).toBeVisible()
   await expect(page.getByRole('textbox', { name: '消息', exact: true })).toHaveValue('附件草稿')
   await page.getByRole('button', { name: '发送消息', exact: true }).click()
   await expect(page.getByText('草稿.txt', { exact: true })).toBeVisible()
@@ -433,7 +435,7 @@ test('Host 明确拒绝后草稿仍可编辑，粘贴附件走真实上传', asy
     data.items.add(new File(['粘贴的真实内容'], '粘贴.txt', { type: 'text/plain' }))
     el.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, clipboardData: data }))
   })
-  await expect(page.getByText(/粘贴.txt · 已上传，尚未发送/)).toBeVisible()
+  await expect(page.getByRole('listitem', { name: '粘贴.txt · 已上传，尚未发送' })).toBeVisible()
   await send(page, '修正后发送')
   await expect(page.getByText('粘贴.txt', { exact: true })).toBeVisible()
 })
