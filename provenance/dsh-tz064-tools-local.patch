@@ -1,0 +1,294 @@
+--- a/packages/context/agent-instructions/src/config.ts
++++ b/packages/context/agent-instructions/src/config.ts
+@@ -4,7 +4,7 @@
+  * @module @deepseek-ai/dsh-agent-instructions/config
+  */
+ 
+-import { relative } from 'node:path'
++import { isAbsolute, relative, resolve } from 'node:path'
+ import z from '@deepseek-ai/schemastery'
+ import { resolveAgentsHome, resolveDshHome } from '@deepseek-ai/dsh-home-paths'
+ 
+@@ -16,6 +16,10 @@
+ 
+ /** User-facing workspace instruction loader configuration. */
+ export interface Config {
++  /** Use the immutable Session cwd as the product discovery boundary. */
++  projectRootFromSession?: boolean
++  /** Product-authorized absolute ancestor; project discovery never probes above it. */
++  projectRootBoundary?: string
+   /** Directory entries that identify the project root while walking upward from the current working directory. */
+   projectRootMarkers?: string[]
+   /**
+@@ -39,6 +43,8 @@
+ }
+ 
+ export const Config: z<Config> = z.object({
++  projectRootFromSession: z.boolean(),
++  projectRootBoundary: z.string(),
+   projectRootMarkers: z.array(z.string()).default([...DEFAULT_PROJECT_ROOT_MARKERS]),
+   maxBytes: z.number().required(),
+   maxSourceBytes: z.number().step(1).min(1).default(DEFAULT_MAX_SOURCE_BYTES),
+@@ -48,6 +54,7 @@
+ 
+ /** Normalized instruction discovery configuration. */
+ export interface ResolvedDiscoveryConfig {
++  projectRootBoundary?: string
+   dshHome: string
+   agentsHome: string
+   projectRootMarkers: string[]
+@@ -74,6 +81,7 @@
+   projectRoot: string,
+ ): string {
+   return JSON.stringify({
++    ...config.projectRootBoundary === undefined ? {} : { projectRootBoundary: relative(cwd, config.projectRootBoundary) },
+     projectRoot: relative(cwd, projectRoot),
+     projectRootMarkers: config.projectRootMarkers,
+     maxBytes: config.maxBytes,
+@@ -92,6 +100,7 @@
+ export function resolveConfig(config: Config): ResolvedConfig {
+   return {
+     ...resolveDiscoveryConfig({
++      ...config.projectRootBoundary === undefined ? {} : { projectRootBoundary: config.projectRootBoundary },
+       ...config.projectRootMarkers === undefined ? {} : { projectRootMarkers: config.projectRootMarkers },
+       ...config.instructionFileCandidates === undefined ? {} : { instructionFileCandidates: config.instructionFileCandidates },
+       ...config.localInstructionFileCandidates === undefined
+@@ -115,10 +124,14 @@
+  * @returns normalized home, root markers, and instruction candidates.
+  */
+ export function resolveDiscoveryConfig(
+-  config: Pick<Config, 'projectRootMarkers' | 'instructionFileCandidates' | 'localInstructionFileCandidates'>
++  config: Pick<Config, 'projectRootBoundary' | 'projectRootMarkers' | 'instructionFileCandidates' | 'localInstructionFileCandidates'>
+     & { dshHome?: string; agentsHome?: string },
+ ): ResolvedDiscoveryConfig {
++  if (config.projectRootBoundary !== undefined && !isAbsolute(config.projectRootBoundary)) {
++    throw new Error('agent-instructions: projectRootBoundary must be absolute')
++  }
+   return {
++    ...config.projectRootBoundary === undefined ? {} : { projectRootBoundary: resolve(config.projectRootBoundary) },
+     dshHome: resolveDshHome(config.dshHome),
+     agentsHome: resolveAgentsHome(config.agentsHome),
+     projectRootMarkers: config.projectRootMarkers ?? [...DEFAULT_PROJECT_ROOT_MARKERS],
+--- a/packages/context/agent-instructions/src/index.ts
++++ b/packages/context/agent-instructions/src/index.ts
+@@ -83,7 +83,7 @@
+ }
+ 
+ export function apply(ctx: Context, config: Config): void {
+-  const resolved: ResolvedConfig = resolveConfig(config)
++  const baseConfig: ResolvedConfig = resolveConfig(config)
+   const instructionVersions: InstructionVersionCache = new WeakMap()
+   const baselinePreparations = new WeakMap<Session, {
+     identity: string
+@@ -113,6 +113,9 @@
+     pending: readonly UserMessage[],
+     touchedPaths: readonly string[] = [],
+   ): Promise<UserMessage | undefined> => {
++    const resolved = config.projectRootFromSession && agent.session.header.cwd
++      ? { ...baseConfig, projectRootBoundary: agent.session.header.cwd }
++      : baseConfig
+     signal.throwIfAborted()
+     if (resolved.maxBytes <= 0 || !Number.isFinite(resolved.maxBytes)) {
+       return undefined
+@@ -124,7 +127,7 @@
+     let desiredBaseline = false
+     const authorityMessages = [...claimed]
+     const cwd = await ctx.workingDirectory.ensure(agent, signal)
+-    const projectRoot = await findProjectRoot(cwd, resolved.projectRootMarkers, fileSystem, signal)
++    const projectRoot = await findProjectRoot(cwd, resolved.projectRootMarkers, fileSystem, signal, resolved.projectRootBoundary)
+     const identity = workspaceBaselineIdentity(resolved, cwd, projectRoot)
+     if (touchedPaths.length === 0 && pending.length > 0
+       && baselinePreparations.get(agent.session)?.identity === identity) return pending[0]
+--- a/packages/api/session-controller/src/index.ts
++++ b/packages/api/session-controller/src/index.ts
+@@ -118,6 +118,8 @@
+ 
+ /** Host integrations replaceable by direct unit tests. */
+ export interface SessionControllerInternals {
++  /** Host-owned placement of newly created Sessions. */
++  readonly prepareCreate?: (request: SessionCreateRequest) => Promise<SessionCreateRequest>
+   /** Native default-application handoff. */
+   readonly openPath?: (path: string, signal: AbortSignal) => Promise<void>
+   /** Native file-association query. */
+@@ -152,6 +154,7 @@
+     listWorkSliceMs: z.natural().min(1).default(16),
+   })
+ 
++  private readonly prepareCreate: SessionControllerInternals['prepareCreate']
+   private agents!: ApiSessionAgentController
+   private commands!: SessionCommandController
+   private controlState!: SessionControlController
+@@ -172,6 +175,7 @@
+    */
+   constructor(ctx: Context, config: Config, internals: SessionControllerInternals = {}) {
+     super(ctx, 'sessionController', { namespace: 'session' })
++    this.prepareCreate = internals.prepareCreate
+     this.listWorkSliceMs = SessionController.Config(config).listWorkSliceMs
+     this.fileApplications = internals.fileApplications ?? nativeFileApplications
+     this.openFileApplication = internals.openFileApplication ?? openNativeFileApplication
+@@ -288,8 +292,8 @@
+    * @returns the created or reused Session identity and its preset when configured.
+    */
+   @Remote('create')
+-  create(request: SessionCreateRequest): Promise<SessionCreateValue> {
+-    return this.commands.create(request)
++  async create(request: SessionCreateRequest): Promise<SessionCreateValue> {
++    return this.commands.create(this.prepareCreate ? await this.prepareCreate(request) : request)
+   }
+ 
+   /**
+--- a/packages/client/ui-chat/src/client/apply.ts
++++ b/packages/client/ui-chat/src/client/apply.ts
+@@ -83,7 +83,30 @@
+  * Mount all Chat-owned contributions.
+  * @param ctx - Client root context.
+  */
++export interface ChatHostActions {
++  /** Hide accounting surfaces while retaining statistics and timing. */
++  showUsage?: boolean
++  openFile(sessionId: SessionId, path: string, options?: import('./contract/slots.ts').OpenFileOptions): Promise<void>
++  openSession(sessionId: SessionId): void
++}
++
++/** Original full-shell composition; embedded hosts use mountChat with their navigation. */
+ export function apply(ctx: Context): void {
++  mountChat(ctx, {
++    openSession: id => ctx.uiWorkspace.openSession(id),
++    async openFile(sessionId, path, options) {
++      const session = ctx.sessions.binding(sessionId)?.session
++      const cwd = ctx.sessions.list.getSnapshot().byId[sessionId]?.cwd
++      const current = session?.projections.faceOf('workingDirectory').getSnapshot() as string | null | undefined
++      const url = fileAddressFor(sessionId, cwd, resolveWorkspacePath(current ?? undefined, path))
++      if (options?.line === undefined) ctx.sidebarRight.openResource(url)
++      else ctx.sidebarRight.openResource(url, { params: { line: options.line } })
++    },
++  })
++}
++
++/** TZ-063: retain the original Chat registrations; adapt only Host navigation. */
++export function mountChat(ctx: Context, actions: ChatHostActions): void {
+   const quotaNotice = createSnapshotStore<QuotaNoticeState | null>(null)
+   let quotaNoticeSeq = 0
+   // Each hold is its own token, so a release can only drop the hold it was
+@@ -170,14 +193,16 @@
+   const presentation = derivePresentationPolicy(transcriptView.mode, transcriptView.collapseTiming, transcriptView.foldedReplies)
+   const performancePolicy = new PerformanceUsagePolicy(chatSettings)
+   ctx.effect(() => () => { transcriptView.dispose(); performancePolicy.dispose() })
+-  const performanceUsage = performancePolicy.mode
++  const performanceUsage = actions.showUsage === false
++    ? createSnapshotStore<import('../chat-settings.ts').PerformanceUsageMode>('compact')
++    : performancePolicy.mode
+   registerChatNodeRenderers(ctx, performanceUsage, presentation)
+   ctx.slots.registerFactory({
+     name: 'conversation.chat.user.content', scope: 'session', locale: NS,
+     children: { 'conversation.chat.user.images': { kind: 'single', scope: 'session' } },
+   }, UserContent)
+ 
+-  ctx.slots.inject('settings.general.item', () => ctx.slots.register({
++  if (actions.showUsage !== false) ctx.slots.inject('settings.general.item', () => ctx.slots.register({
+     name: 'settings.general.item',
+     id: 'performance-usage',
+     order: 30,
+@@ -268,14 +293,7 @@
+           // address: the file is one piece of content whether it is opened at
+           // its top or at line 400, so the same tab is revealed and told where
+           // to land.
+-          openFile: async (path, options) => {
+-            const cwd = ctx.sessions.list.getSnapshot().byId[sessionId]?.cwd
+-            const current = session.projections.faceOf('workingDirectory').getSnapshot() as string | null | undefined
+-            const url = fileAddressFor(sessionId, cwd, resolveWorkspacePath(current ?? undefined, path))
+-            if (options?.line === undefined) ctx.sidebarRight.openResource(url)
+-            else ctx.sidebarRight.openResource(url, { params: { line: options.line } })
+-            await Promise.resolve()
+-          },
++          openFile: (path, options) => actions.openFile(sessionId, path, options),
+           openExternalLink: (url) => {
+             if (linkOpening.getSnapshot() === 'sidebar' && ctx.get('sidebarRightTabs')?.get('browser') !== undefined) {
+               ctx.sidebarRight.openTab('browser', { params: { url } })
+@@ -302,7 +320,7 @@
+             ctx.sessions.fork({ sessionId, atSeq: seq, increaseTitle: true, onCreated: (childId) => {
+               ctx.get('productAnalytics')?.track('branch_session_click', { session_id: childId, parent_session_id: sessionId, ...messageId === undefined ? {} : { parent_message_id: messageId }, click_position: 'footer' })
+             } })
+-              .then((childId) => { ctx.uiWorkspace.openSession(childId) })
++              .then((childId) => { actions.openSession(childId) })
+               .catch(() => {
+                 // Fork or child-title failure leaves the source view unchanged.
+               })
+@@ -334,7 +352,7 @@
+ 
+   // One dock entry per pill, so a plugin replaces or adds a single pill by id.
+   const statPillInject = () => ({ hooks: { performanceUsage } })
+-  ctx.slots.inject('conversation.composer.dock', function* () {
++  if (actions.showUsage !== false) ctx.slots.inject('conversation.composer.dock', function* () {
+     yield ctx.slots.register({
+       name: 'conversation.composer.dock', id: 'activity', order: 0, locale: NS, inject: statPillInject,
+     }, ActivityPill)
+--- a/packages/client/ui-workspace/src/client/index.ts
++++ b/packages/client/ui-workspace/src/client/index.ts
+@@ -1,3 +1,6 @@
++// Preserve generated Remote declaration merges in this independent compilation face.
++export type {} from '@deepseek-ai/dsh-api-workspace-controller/remote'
++export type {} from '@deepseek-ai/dsh-api-session-controller/remote'
+ /**
+  * Workspace plugin, browser half. Two registrations: WorkspaceBrowser fills
+  * the sidebar shell's `sidebar.workspaces` hole (the whole browsing region),
+@@ -360,3 +363,12 @@
+   const { rpcError } = reason as WorkspaceArchiveError
+   return rpcError.code === 'workspace/session-active' ? rpcError.details.activity : undefined
+ }
++
++// Public original row actions for a host with managed workspace placement.
++export { PinSessionMenuItem, PinSessionRowButton } from './session-actions/PinSession.tsx'
++export { RenameSessionMenuItem, SessionRenameDialog } from './session-actions/RenameSession.tsx'
++export { ForkSessionMenuItem } from './session-actions/ForkSession.tsx'
++export { ArchiveSessionMenuItem, ArchiveSessionRowButton, SessionArchiveConfirmDialog } from './session-actions/ArchiveSession.tsx'
++export { SessionIdMenuItem } from './session-actions/SessionId.tsx'
++export type { SessionArchiveConfirmRequest } from './contract/slots.ts'
++export { zh as workspaceZh, en as workspaceEn } from './locales.ts'
+--- a/packages/web/tool-web/package.json
++++ b/packages/web/tool-web/package.json
+@@ -56,7 +56,6 @@
+     "@deepseek-ai/dsh-tools": "workspace:*",
+     "@deepseek-ai/dsh-web": "workspace:*",
+     "@deepseek-ai/dsh-web-fetch-http": "workspace:*",
+-    "@deepseek-ai/dsh-web-search-exa": "workspace:*",
+     "@types/turndown": "^5.0.6",
+     "@deepseek-ai/dsh-scope": "workspace:*",
+     "@deepseek-ai/dsh-token-meter": "workspace:*"
+--- a/packages/web/tool-web/tsconfig.json
++++ b/packages/web/tool-web/tsconfig.json
+@@ -4,7 +4,9 @@
+     "rootDir": "src",
+     "outDir": "lib/types"
+   },
+-  "include": ["src"],
++  "include": [
++    "src"
++  ],
+   "references": [
+     {
+       "path": "../../../vendor/cosmokit"
+--- a/packages/jobs/jobs-local/package.json
++++ b/packages/jobs/jobs-local/package.json
+@@ -36,7 +36,8 @@
+     "@deepseek-ai/cordis": "workspace:~"
+   },
+   "dependencies": {
+-    "@deepseek-ai/schemastery": "workspace:~"
++    "@deepseek-ai/schemastery": "workspace:~",
++    "@deepseek-ai/dsh-session": "workspace:*"
+   },
+   "devDependencies": {
+     "@deepseek-ai/cordis-plugin-include": "workspace:~",
+--- a/packages/fs/tool-fs-search/package.json
++++ b/packages/fs/tool-fs-search/package.json
+@@ -30,7 +30,8 @@
+   "license": "MIT",
+   "dependencies": {
+     "@vscode/ripgrep": "^1.18.0",
+-    "@deepseek-ai/schemastery": "workspace:~"
++    "@deepseek-ai/schemastery": "workspace:~",
++    "@deepseek-ai/dsh-util-values": "workspace:*"
+   },
+   "peerDependencies": {
+     "@deepseek-ai/dsh-llm": "workspace:*",

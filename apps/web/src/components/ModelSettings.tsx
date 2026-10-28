@@ -19,11 +19,11 @@ const emptyProvider = (): ModelProviderDraft => ({
 export function ModelSettings({
   client,
   onClose,
-  onHost,
+  onDisplay,
 }: {
   client: AppClient
   onClose(): void
-  onHost(): void
+  onDisplay(): void
 }) {
   const [data, setData] = useState<ModelProvidersState>(),
     [error, setError] = useState('')
@@ -125,9 +125,9 @@ export function ModelSettings({
             <Icon name="model" />
             模型
           </Button>
-          <Button onClick={onHost} disabled={busy}>
+          <Button onClick={onDisplay} disabled={busy}>
             <Icon name="settings" />
-            连接与工作区
+            对话显示
           </Button>
         </nav>
         <section className={s.settingsContent} aria-label="模型管理">

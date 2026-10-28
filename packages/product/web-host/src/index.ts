@@ -1,3 +1,5 @@
+import { ManagedSessionController, ManagedWorkspaceController } from './managed-workspaces.ts'
+import { TYPERT as contribution11 } from '@deepseek-ai/dsh-api-workspace-controller/typert'
 import { mountChatSettings } from './chat-settings.ts'
 import { TYPERT as contribution10 } from '@deepseek-ai/dsh-api-settings-controller/typert'
 import { validateTypertManifest } from '@deepseek-ai/dsh-typert-loader'
@@ -31,7 +33,6 @@ import ProjectionCache from '@deepseek-ai/dsh-session-projection-cache'
 import DefaultModel from '@deepseek-ai/dsh-agent-default-model'
 import Commands from '@deepseek-ai/dsh-commands'
 import Uploads from '@deepseek-ai/dsh-client-file-upload'
-import SessionController from '@deepseek-ai/dsh-api-session-controller'
 import type {} from '@tianzhiai/agent-runtime'
 
 import { entries, download } from './artifacts.ts'
@@ -113,6 +114,7 @@ export const REMOTE_PACKAGES = [
   '@deepseek-ai/dsh-subagent',
   '@tianzhiai/web-host',
   '@deepseek-ai/dsh-api-settings-controller',
+  '@deepseek-ai/dsh-api-workspace-controller',
 ]
 
 /** Mount the real transport and Session owners over the existing P1 runtime. */
@@ -134,7 +136,8 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
     model: options.model ?? 'deepseek-flash',
   })
   await ctx.plugin(Uploads)
-  await ctx.plugin(SessionController, { nativeOpen: false })
+  await ctx.plugin(ManagedWorkspaceController)
+  await ctx.plugin(ManagedSessionController)
   await ctx.plugin(PlatformService)
   await mountChatSettings(ctx)
   ctx.effect(() =>
@@ -157,6 +160,7 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
     contribution8,
     contribution9,
     contribution10,
+    contribution11,
   ].entries())
     ctx.effect(() =>
       ctx.typert.register(validateTypertManifest(REMOTE_PACKAGES[index]!, contribution)),

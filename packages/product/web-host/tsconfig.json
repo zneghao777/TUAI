@@ -80,6 +80,9 @@
     },
     {
       "path": "../../settings/settings"
+    },
+    {
+      "path": "../../api/workspace-controller/tsconfig.host.json"
     }
   ]
 }

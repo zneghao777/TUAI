@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "batchId": "M4",
   "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
-  "status": "verified-ui-foundation",
-  "scope": "TZ-062 UI 基础：7 包源码与构建闭包；运行启用 Session/Renderer/Access/Locale/Shortcuts；settings 仅契约，领域对话投影和 Composer 留给 TZ-063/065",
+  "status": "verified-tools-closure",
+  "scope": "P2 原 UI 与工具闭包；TZ-062/063/064 已验；完整 P2 未放行，未注册插件不表示启用",
   "rollbackRevision": "6d65d4e0657e6035b6f9442545ed4c250bfdb62e",
   "packages": [
     {
@@ -4851,8 +4851,8 @@
         },
         {
           "path": "packages/client/ui-chat/src/client/apply.ts",
-          "sha256": "cdcf40694ec4bf5e2acbfdd781a3b51c72bc2f43e785c56dafa40734c295ce01",
-          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+          "sha256": "4ca144f87150bf556d21f4f25a1151e0a7b4100cb8bba7143971c0fc0a1b02e4",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
         },
         {
           "path": "packages/client/ui-chat/src/client/index.ts",
@@ -7280,8 +7280,8 @@
         },
         {
           "path": "packages/client/ui-workspace/src/client/index.ts",
-          "sha256": "f8b30a438fbcc32c5fa024fe99d457b76a7833a4f62baa6f5c477a52833c1c30",
-          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+          "sha256": "29fc9f4a1dd1afacdd3909fb30942a1a9b99b40bd88d9eb5aa0487f167480a43",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
         }
       ],
       "additionalFiles": [
@@ -8310,6 +8310,1391 @@
           "reason": "保留来源许可"
         }
       ]
+    },
+    {
+      "path": "packages/web/web",
+      "name": "@deepseek-ai/dsh-web",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/web/web/README.i18n.yaml",
+          "sha256": "a68ea0e22c6c596eefba9c6974ac7d1d7a9a05ae323689f4eeef92d04ddfa193"
+        },
+        {
+          "path": "packages/web/web/README.md",
+          "sha256": "0a5b5258764c67f1baf92cf792c904a9889df12919f2f5d2162a1b31a0264f8a"
+        },
+        {
+          "path": "packages/web/web/README.zh.md",
+          "sha256": "f784f5665f565ae0e28b16a2edd3c693d5359a3d921eee1bb5ef3bf0741d6e9f"
+        },
+        {
+          "path": "packages/web/web/locale/de.json",
+          "sha256": "e339b6857f06f91c9bc22e5f3a5be4995a89175778b9b2c205eff2fe3f287a3d"
+        },
+        {
+          "path": "packages/web/web/locale/en.json",
+          "sha256": "06568b2a696e2191a56aba284ee73157b4b4048ab53226047530f9884e703f50"
+        },
+        {
+          "path": "packages/web/web/locale/es.json",
+          "sha256": "88f859ee557ac683c868833dcd7c8fa99cc22986ae35d9906bce86bfc6ed9b9d"
+        },
+        {
+          "path": "packages/web/web/locale/fr.json",
+          "sha256": "26783a17ee06b54347c73a711bfaa8957e7a4ddbc25c784d869b3ea613bacc64"
+        },
+        {
+          "path": "packages/web/web/locale/ja.json",
+          "sha256": "266ae443fcfbede09c5266b8a392722ee78f25cf816a47f7b98f9fdef0eea18a"
+        },
+        {
+          "path": "packages/web/web/locale/pt.json",
+          "sha256": "470e67cc85177f4e6a8988627c281558301a115abc36745eb3c4624720270be5"
+        },
+        {
+          "path": "packages/web/web/locale/ru.json",
+          "sha256": "5ab704118fce2124635db5b387c60ff1ca620cc3c9fb55cfab65833e3fb19874"
+        },
+        {
+          "path": "packages/web/web/locale/zh.json",
+          "sha256": "db99115293890070667264ace6bd6458d16a715d2fdb1ab88c2653cbc50b00fa"
+        },
+        {
+          "path": "packages/web/web/package.json",
+          "sha256": "da509fc4fe746530a6bdf8101298702a10d4fc001acc111fda9ffb38e519fdb8"
+        },
+        {
+          "path": "packages/web/web/src/index.ts",
+          "sha256": "377008bb54a901b6ea30df70e1ce1c05d199524cd4cacee85dbc2169ba15cb7b"
+        },
+        {
+          "path": "packages/web/web/src/types.ts",
+          "sha256": "4803a9bab43fc0f23ee070d300a61934696333f09ec69826a9385a909fc4deec"
+        },
+        {
+          "path": "packages/web/web/tests/web.spec.ts",
+          "sha256": "679beebc5153223b0dd33105637a8b6a13b2ae7c7798d618980f30f760f0d3ca"
+        },
+        {
+          "path": "packages/web/web/tsconfig.json",
+          "sha256": "e53aaa27be21728b5767914837b44793e18b1b307b7e5f0be7d595489ff1bb14"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/web/web/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/web/tool-web",
+      "name": "@deepseek-ai/dsh-tool-web",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/web/tool-web/README.i18n.yaml",
+          "sha256": "b3d52f1dcb977c5ad19d9069b0e9794430bb3e572b9b898d3720f46259cdd6dd"
+        },
+        {
+          "path": "packages/web/tool-web/README.md",
+          "sha256": "b5499fcbee5662394bb687b736c1160262e548e2ef7f9144b0172a5c533ffb38"
+        },
+        {
+          "path": "packages/web/tool-web/README.zh.md",
+          "sha256": "87b32e98816ea4ce3b81e3328326c8368e0cff51c6ba7ee8364531d50b938484"
+        },
+        {
+          "path": "packages/web/tool-web/locale/de.json",
+          "sha256": "19c1d8948fb16dc6f6cd9f412d6e8881e94fcb0402f5bdb60afe9c83822d8b94"
+        },
+        {
+          "path": "packages/web/tool-web/locale/en.json",
+          "sha256": "a3ca853333ec1511b88e143d95692c6a23557c4b4ff85d614862361ceba593e5"
+        },
+        {
+          "path": "packages/web/tool-web/locale/es.json",
+          "sha256": "638650553468aea72dde30e13a87bfad50738c8f710241357661028f438556a2"
+        },
+        {
+          "path": "packages/web/tool-web/locale/fr.json",
+          "sha256": "ab9218e787fdb08c44052e1e2043ba5a4e7703e69bb702788f437646e5a9dfd7"
+        },
+        {
+          "path": "packages/web/tool-web/locale/ja.json",
+          "sha256": "b90a627d77a8379f5c3a8f56b201efa9e951c5ce6f561518f2b1f531b608a1d7"
+        },
+        {
+          "path": "packages/web/tool-web/locale/pt.json",
+          "sha256": "43f4690aed0fba420e973c3834f5e74e3726083b35628e38fc1cbea6b6eeef23"
+        },
+        {
+          "path": "packages/web/tool-web/locale/ru.json",
+          "sha256": "0775db622b73d975b8ef266e02d72d8c87591d1feea8c0e95c80dbd1e9cfc5d6"
+        },
+        {
+          "path": "packages/web/tool-web/locale/zh.json",
+          "sha256": "218eb30b0b40347e1acf2f81014405134cb59d8e8ebddd10176115c8d8502ce0"
+        },
+        {
+          "path": "packages/web/tool-web/package.json",
+          "sha256": "6685a8ab1cd16707a9409e1a1f4236f4f7fbe4357e9150440d609645bdb15404"
+        },
+        {
+          "path": "packages/web/tool-web/src/fetch.ts",
+          "sha256": "7e5dd5701bf1200b31a258264204045ce4a1a4f36c2b666e0f9591a46e8a8bf1"
+        },
+        {
+          "path": "packages/web/tool-web/src/index.ts",
+          "sha256": "96e56283d7bd3523ed649ea9cfc2594c9ad4bc03ca116166f92d28ed65eff8d3"
+        },
+        {
+          "path": "packages/web/tool-web/src/search.ts",
+          "sha256": "c2b824b9e0d046377947b59d042426c0905da467fd994d9a8b063cf63427979e"
+        },
+        {
+          "path": "packages/web/tool-web/src/trust.ts",
+          "sha256": "3d35bb98ca3b29a393a733fd19142bf3b4a58cf61e4c70ba475def0203e89061"
+        },
+        {
+          "path": "packages/web/tool-web/src/turndown-plugin-gfm.d.ts",
+          "sha256": "d11e1ec1fef3763627bb129832c2e6a7cc9bdbc2586d1120a0d631456fbec22c"
+        },
+        {
+          "path": "packages/web/tool-web/tests/integration.spec.ts",
+          "sha256": "034d7882ac9f0add1034c13a6c228c6c996a8167682ec8847519b1317e90dead"
+        },
+        {
+          "path": "packages/web/tool-web/tests/load-path.spec.ts",
+          "sha256": "2a061627e1891aeb590ee320e5dcc7cb8a69057034f26525263f7e715b41063c"
+        },
+        {
+          "path": "packages/web/tool-web/tests/spill.spec.ts",
+          "sha256": "733811413c5b773c45a508a918781680b03a6214e88e773f235dcaa1b48a13ef"
+        },
+        {
+          "path": "packages/web/tool-web/tests/tool-web.spec.ts",
+          "sha256": "b429faa43a20de8ded07c153c24e16a6d55ccabdc494bf4a4e25cbeb7bc258f4"
+        },
+        {
+          "path": "packages/web/tool-web/tsconfig.json",
+          "sha256": "6f9da065306e4e35a8a55fd98d57b7e758305b0b03d0ee3ec395f6d67a2738de"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/web/tool-web/package.json",
+          "sha256": "8a3a41f668e5d89d598f77cf10b02644ce417a2f85f669f8c0aeb09356ff2e76",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/web/tool-web/tsconfig.json",
+          "sha256": "1cc4ab31ed4dcf2047aac19bdd826193006436ce7b345f3f9ed6e21830c9b597",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/web/tool-web/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/web/web-fetch-http",
+      "name": "@deepseek-ai/dsh-web-fetch-http",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/web/web-fetch-http/README.i18n.yaml",
+          "sha256": "55c1e6e6f7a9281bbd18bf11c9c2b183793e882fea69fd5beda14ef22102f8f8"
+        },
+        {
+          "path": "packages/web/web-fetch-http/README.md",
+          "sha256": "efd7326c0f62c3c594a151e9e59bca5895c5dfa612c0ec488167ce1c1c760025"
+        },
+        {
+          "path": "packages/web/web-fetch-http/README.zh.md",
+          "sha256": "cedebc402b2dae12896908e5d39c4a60d4d011ef8d16d5914e9b4d3fd3d69e37"
+        },
+        {
+          "path": "packages/web/web-fetch-http/locale/de.json",
+          "sha256": "9d1aef2aba6a7d53156f48e25ee9eb0eaebca0b9664aee256510f80ab3ca54c7"
+        },
+        {
+          "path": "packages/web/web-fetch-http/locale/en.json",
+          "sha256": "0edf51ff7a1556458ac6db40f54041318e6c61774e5be7a819c1790b9575b5a1"
+        },
+        {
+          "path": "packages/web/web-fetch-http/locale/es.json",
+          "sha256": "3924104df789c523bb1dffe9287d185e14c896a39645e469143a62d798ad40ab"
+        },
+        {
+          "path": "packages/web/web-fetch-http/locale/fr.json",
+          "sha256": "22fb413c4e6450a80588e3637bc478a17eca96ae764569cdd40d079ee9adc499"
+        },
+        {
+          "path": "packages/web/web-fetch-http/locale/ja.json",
+          "sha256": "a0fbfe3ee306216a2d6ba3ceb617d8238daefd4bc991560f7280f330275fa597"
+        },
+        {
+          "path": "packages/web/web-fetch-http/locale/pt.json",
+          "sha256": "c7c760f336210c5d1ae82d5c78129f7c5d01573445ff4ecd53d6c3fec4ec7924"
+        },
+        {
+          "path": "packages/web/web-fetch-http/locale/ru.json",
+          "sha256": "93a6cda219778d6ee4277f4a7b14f27f1d9d22101cf856f7f1fe261be2922da1"
+        },
+        {
+          "path": "packages/web/web-fetch-http/locale/zh.json",
+          "sha256": "6f46f644a863dc884f5811a009f5ac365327369d733032a11d8ee65abab44587"
+        },
+        {
+          "path": "packages/web/web-fetch-http/package.json",
+          "sha256": "31ac64c5af2b9cf9d8bbaaacedb438ba956b7008c21731d2ae7bf0e549d03dec"
+        },
+        {
+          "path": "packages/web/web-fetch-http/src/index.ts",
+          "sha256": "eeef35fabf4230e20e14813f0c5e6e41005d2e3d1e7c48137d78fbf5fdf616e2"
+        },
+        {
+          "path": "packages/web/web-fetch-http/src/policy.ts",
+          "sha256": "32b4b7c9c4f8b4f923b77a7596cc54863d92eff3d87cf04ff2572c8bcd4bc362"
+        },
+        {
+          "path": "packages/web/web-fetch-http/src/provider.ts",
+          "sha256": "22d8fd1ed4a626147542a10c0587f75c881385d3a3d3e024a77773c70f0dcf01"
+        },
+        {
+          "path": "packages/web/web-fetch-http/tests/fetch-http.spec.ts",
+          "sha256": "2ad343b25deed0a6859054dcd1667d167198cf99ac63b5f89e283740b04a95fe"
+        },
+        {
+          "path": "packages/web/web-fetch-http/tests/proxy.spec.ts",
+          "sha256": "abf7e67d55568ee4a83c83091c094b75c416690be69604264040b0dd8771389c"
+        },
+        {
+          "path": "packages/web/web-fetch-http/tsconfig.json",
+          "sha256": "b907bc83794bf1f02ce96b78a8d77065045e3bdc6944e7b2979abfe4e606b479"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/web/web-fetch-http/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/web/web-search-deepseek",
+      "name": "@deepseek-ai/dsh-web-search-deepseek",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/web/web-search-deepseek/README.i18n.yaml",
+          "sha256": "612b808f88f2b4a3845752042e5debe501ef2898f49c7aca3253f0dacea11880"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/README.md",
+          "sha256": "7a0cc71f8b0456fcf9713a7ce352e840bcc83f475fb0c11b1f0c7bee15a1c4bc"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/README.zh.md",
+          "sha256": "1b7990a229f01606ec931dbaf44b2c41dc9f2caca05d91af0f3a8751c1fac018"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/locale/de.json",
+          "sha256": "2e39811df12eef206788d57191fd76e0f74ea4c008580c13379e8adbb7f68e32"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/locale/en.json",
+          "sha256": "39016cb3b581afcbdb448a1f9546050d8a7879d7935925b5f11461f44b907d7d"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/locale/es.json",
+          "sha256": "67e10c39ad57ed4a94d8124a206f1e731d53813469b3f23ae9036bacad36a7b0"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/locale/fr.json",
+          "sha256": "76cbe9af682a4320cad9725899bf2a267fccc184a691e178826c126c7f11cf8d"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/locale/ja.json",
+          "sha256": "b39ac07de1052a62b4f8467b30c17bfcd74a107e244c457e33ab748818e2a34c"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/locale/pt.json",
+          "sha256": "6e417fd55ac6234507e1fa318b46397364fdf1adab2999ae584f3182ecb0b2e1"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/locale/ru.json",
+          "sha256": "b495356a4cf19fdce1a036357c751700d49b41702d1588c9262703b3f89456bc"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/locale/zh.json",
+          "sha256": "3d260b5837781a1277a579d38069ee53cc503de346627c016543e9ebf3355d22"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/package.json",
+          "sha256": "7f4a85b9c07615fb5d187d98dbe131c176a3fdf400dab6154e0aa1c5bfa6663b"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/src/index.ts",
+          "sha256": "42c8a1e0562aebbc08eee8644fd9cc4ae98298563ad52bd7fda1c737d634f163"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/src/provider.ts",
+          "sha256": "880fcbad692f54c0272b98c59dbbd57e0286131d2e02126d1f47aaf57523e4a3"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/src/types.ts",
+          "sha256": "18d50e1ecb5724205489b88703fefccc4fe7d70edacdf3ba7d0d357726265dca"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/tests/deepseek.e2e.ts",
+          "sha256": "13b8f66b08065e08bcc80cb252de920188650b8a0777f0b1f5f927fd506a3977"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/tests/deepseek.spec.ts",
+          "sha256": "1432bcc4da0b8bbdc0759d566e6f63ba07b2551f24611b26f24e562bcd76e7a3"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/tests/egress.spec.ts",
+          "sha256": "38d55ebc81f47353a94863c24d02619cb8c9b3ff6f488607b1f08d44a43ea098"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/tests/redirect.spec.ts",
+          "sha256": "4680f1edb439e9408cfbe03980650313b792a5d65f5f16bc65fe82085e094bd3"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/tests/settings.spec.ts",
+          "sha256": "6540755704abeaa8802628208fbd7e5af5db1cdec179f2e132ae08ee2dec476a"
+        },
+        {
+          "path": "packages/web/web-search-deepseek/tsconfig.json",
+          "sha256": "7450c9b0d8b0a390eb7795e06fd09955c019a22a8be3f3c61a6eeefc92955b9f"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/web/web-search-deepseek/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/jobs/jobs-local",
+      "name": "@deepseek-ai/dsh-jobs-local",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/jobs/jobs-local/README.i18n.yaml",
+          "sha256": "5e0cf136f7a950b9fa9aa082e4bc12e43475332fb49e34a3f671897980b32efc"
+        },
+        {
+          "path": "packages/jobs/jobs-local/README.md",
+          "sha256": "f164c5c9af74770a16d6761cb46613f9080ef4920e0bf019033eb7e7af18a533"
+        },
+        {
+          "path": "packages/jobs/jobs-local/README.zh.md",
+          "sha256": "56101daddb5bcbfe36b81a723266f851088d19579ef794b47f56f59f48270d89"
+        },
+        {
+          "path": "packages/jobs/jobs-local/locale/de.json",
+          "sha256": "3fce155f847fead708e0137fe10698d21b86c971f9af7fe63f1474cc1ed70fee"
+        },
+        {
+          "path": "packages/jobs/jobs-local/locale/en.json",
+          "sha256": "36793a69c91552933f06f696ff8f1ab9db0c73ccc89be8e91cf115484907eaaa"
+        },
+        {
+          "path": "packages/jobs/jobs-local/locale/es.json",
+          "sha256": "69eaa26df5278b53df1f998bfec664e0a2c430880451d5d4a45b4c7c2d74e524"
+        },
+        {
+          "path": "packages/jobs/jobs-local/locale/fr.json",
+          "sha256": "87d03732c17e8e477445af4725c60b370f94642e4ab73f53cbd004cbf8fec073"
+        },
+        {
+          "path": "packages/jobs/jobs-local/locale/ja.json",
+          "sha256": "11bc8c415e8a9e50f3260d3f0587918df9afac5ae2a47a96c03396b99b9173be"
+        },
+        {
+          "path": "packages/jobs/jobs-local/locale/pt.json",
+          "sha256": "03db10c6a539d11f815928e72d4b2981618c4e511871f19cbe4686891609e697"
+        },
+        {
+          "path": "packages/jobs/jobs-local/locale/ru.json",
+          "sha256": "ae087c9dde6eb32586db40539288e9343a222806ae0f6a30584554284b1fc50c"
+        },
+        {
+          "path": "packages/jobs/jobs-local/locale/zh.json",
+          "sha256": "3e67862596bfc235708f696ecab88dd1868f7772d4af40612d7904f8d6c9b917"
+        },
+        {
+          "path": "packages/jobs/jobs-local/package.json",
+          "sha256": "30bf69dcd9bccd765d58aee99a842413692fc69d1020d54a4c87c13fe9949ffd"
+        },
+        {
+          "path": "packages/jobs/jobs-local/src/events.ts",
+          "sha256": "e0d8eef812e00653f808f4879fb0b4b460f6dea0f5b99c9505319a877018b78c"
+        },
+        {
+          "path": "packages/jobs/jobs-local/src/index.ts",
+          "sha256": "8c52fcba4410a89afd065b77a0cb98b558926292508cde276cce76355df76d19"
+        },
+        {
+          "path": "packages/jobs/jobs-local/src/pump.ts",
+          "sha256": "1c26ed31582dd029f59b87c444842d7a4d632b79e509c4f3510a95d275341201"
+        },
+        {
+          "path": "packages/jobs/jobs-local/src/ring.ts",
+          "sha256": "ce5c351de29390a08cd459bf9b71194a1da6bcfceb6bbdf06ae4b8367528efc9"
+        },
+        {
+          "path": "packages/jobs/jobs-local/tests/events.spec.ts",
+          "sha256": "abf7c08ca103efdf6bd88d0aaeef57e097c4a27e44eeb09581988de6c210d654"
+        },
+        {
+          "path": "packages/jobs/jobs-local/tests/jobs.spec.ts",
+          "sha256": "e116d1217883520ebb9bd25e0b4ff2d4c6337cfccf2370a67587dd3e691ea072"
+        },
+        {
+          "path": "packages/jobs/jobs-local/tests/loader-composition.spec.ts",
+          "sha256": "27c79f734741f23036acff6c6359bd1b3bb425716c0a794c044a890340b5741f"
+        },
+        {
+          "path": "packages/jobs/jobs-local/tests/pump.spec.ts",
+          "sha256": "e2dc250775caa7da480c1aa7320a971ca7dd74cb2cdbf7928813fddcd81e929b"
+        },
+        {
+          "path": "packages/jobs/jobs-local/tests/ring.spec.ts",
+          "sha256": "8c261276428dccfc1d6b3436e7549b83abe4e88f8deda368ce800e3ae64a8b12"
+        },
+        {
+          "path": "packages/jobs/jobs-local/tsconfig.json",
+          "sha256": "4160c15e3a7699d1f9c0e9687833d788ce54aa747cbb9db273203ac2901b1942"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/jobs/jobs-local/package.json",
+          "sha256": "90266513d411068e4332f77780a4c0a6116fe485ea20ecc44d5d8a4be758a9da",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/jobs/jobs-local/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/jobs/tool-jobs",
+      "name": "@deepseek-ai/dsh-tool-jobs",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/jobs/tool-jobs/README.i18n.yaml",
+          "sha256": "071b20e0d0de175db3e505c974b36a1865e34b902bd06d3e1c26244eda516e8f"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/README.md",
+          "sha256": "d174db7cb1a9dfffeca735fa66b7b1b503a77d94e903b5c0fc32e390f7555d94"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/README.zh.md",
+          "sha256": "0749aa85db87dc8bacbcbb4eafdb6c9c99d0c11d8d11fda03c777db58b8f65c5"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/locale/de.json",
+          "sha256": "6ab6473da6fe000ff18e8a8415fb6745762d59e23623b1729c5837412beb4d90"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/locale/en.json",
+          "sha256": "b808d2e652d4c4776849e195800561f62a84edb42691be32de82bc1040041f88"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/locale/es.json",
+          "sha256": "973b97d1b3d8c8ca8cb062e490301f4e8fa7e38ae32fb8a57944c322c1e60e43"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/locale/fr.json",
+          "sha256": "35dbcca64739e4539aabee092d6a584a0389700a389102597b66aff576e2acc5"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/locale/ja.json",
+          "sha256": "2b3247732f6f13b1836454010a7c5c1ee0ead87419ab7c4af2b60adb8c472755"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/locale/pt.json",
+          "sha256": "4280f2e5c7a6a6af395baaadf3e53dd8ef811c15f88b4a4acce9dba3afef9c49"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/locale/ru.json",
+          "sha256": "fc3c6f1a958d661bc935bb63add391247be2ac30a7544ec277d3b8530a9e423e"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/locale/zh.json",
+          "sha256": "12ad315dfa6964c4ff9f9dce9201fdcfa930d8db9134616ca706a1e460f79578"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/package.json",
+          "sha256": "6c48b91adbef144cb3ebf13b152450b5ce8ae3018c07c7d6bb5aa4ad047e9de1"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/src/index.ts",
+          "sha256": "acdd47e8c5160eeda564c0edc012ba3ae3294be3e017e810c74c7037c1d87e56"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/src/render.ts",
+          "sha256": "8dfdd40255e07299cb59e7a89f67eb19cb4d059fd773b9539a5cfaeaf0a604a3"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/tests/scripted-adapter.ts",
+          "sha256": "23326e3e348008e4e4f27ca42cf583ab06f298c1741b83814267293f20cb55de"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/tests/steer-wait.spec.ts",
+          "sha256": "4af8621edf555e5aae0b131f72010f18108c49a41209c5b28a11331fbc9d032c"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/tests/tool-jobs.spec.ts",
+          "sha256": "cc9d228e43813b426c31d2af92bcec91034a181518916e05dbca83ef8579ff43"
+        },
+        {
+          "path": "packages/jobs/tool-jobs/tsconfig.json",
+          "sha256": "1a1f30c331f1d857ff20fe2641b56f6663f8d21805139e0bfc71c72c23d2d529"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/jobs/tool-jobs/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/terminal/terminal-bash",
+      "name": "@deepseek-ai/dsh-terminal-bash",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/terminal/terminal-bash/README.i18n.yaml",
+          "sha256": "eb219dcbc85dfd95bd71cb34cdfc0f6a55458a3f3be5d99f0810c67c43f861d1"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/README.md",
+          "sha256": "043217a57116b7770f38ae3a07212d72197097c755885fb0c9686705e8996748"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/README.zh.md",
+          "sha256": "30b123151090fc8ada99cf5c11dbc710f8a8c123ecd983b57ef3dbb79dc165f9"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/locale/de.json",
+          "sha256": "06b55f0a5fe29c54b8354e31916e6b33948973b08606dd531c24943c1c03a0c9"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/locale/en.json",
+          "sha256": "54478599fed4df6f9ff7f1adf3da2cf0dc56f5195b3de57898a37652771311b8"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/locale/es.json",
+          "sha256": "81795678b4aecf0cbfab913b0d08fe0a0519d8b33d4771140ba09c9c19bd6d82"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/locale/fr.json",
+          "sha256": "d5d147bfc9c2b41092627f48dc50526034afea658894dc75c0c4737cd4aece12"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/locale/ja.json",
+          "sha256": "de78fb534b4b0bfa5a75722c2f8b4dc52c2e8a07900cc3245f518485a079f9b6"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/locale/pt.json",
+          "sha256": "a65b5bce189b20adf6e0886fd26cd9c87ecb832177c868da81d517fe5eed0f23"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/locale/ru.json",
+          "sha256": "cb9251503a5084c0bd13c88ddf76879ef12814b42c6c5db75eaa4e5e0e3f6060"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/locale/zh.json",
+          "sha256": "9eef29a7fe2e42428ac220a574c01ac5b4c09d86979200205e369f241187c312"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/package.json",
+          "sha256": "0c9ecdc77c8d32b7c6892d5120b4e079a4512d267783b707f5b44a5de2ee6fe5"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/src/config.ts",
+          "sha256": "2d8d6731ca5951b5665e5072e80f569de7780cc00baf48a02b1e3d8c0fe5abf3"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/src/index.ts",
+          "sha256": "276f101348241eb91cb4498eb7f4d7ff47d4cae802f5cc2d8059463454c6b916"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/src/sanitize.ts",
+          "sha256": "2f829af818a1219292adf4132be9cbacd43bc5c9da331c9e365435b0773b78ad"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/src/session.ts",
+          "sha256": "34fb3752c3a69af771c88310e14bbd11aaed6771498d10ce52a4b12aa449dffb"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/tests/config.spec.ts",
+          "sha256": "c0e9fc9f52dca2454132be22be14833450b0e20eecae9a167246e3a2437f43f5"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/tests/index.spec.ts",
+          "sha256": "4ed11a4df86dba76d500d6fdab49b5a6dc23b102e5e9b8478af3cce28788f28f"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/tests/local.spec.ts",
+          "sha256": "a6167b3922e344b7d6d4ca947e12a0883c8cbda2dd7e3c52fe2d24792153d914"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/tests/sanitize.spec.ts",
+          "sha256": "d8283074627c7f52e461155dbee8a24ec8159df2ea6a8b11569216f9b1d97b4c"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/tests/session-buffer.spec.ts",
+          "sha256": "94aa022b8519868af1428cbc1c2a82b68ff0a8d0473f36cc9cf1bf69c67173f4"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/tests/session.spec.ts",
+          "sha256": "15cdbd141529d8819f5d45145f1e8aec85f6bfaf74526c8c518058523ee53fe6"
+        },
+        {
+          "path": "packages/terminal/terminal-bash/tsconfig.json",
+          "sha256": "62577d9457c1b59ceb589e33bcf4cbc01a5d38fe61b72ef10635783a5bc49954"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/terminal/terminal-bash/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/shell/pwsh-local",
+      "name": "@deepseek-ai/dsh-pwsh-local",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/shell/pwsh-local/README.i18n.yaml",
+          "sha256": "b01e73674f25138e638653ca33d97e1c9a52fe10aca3fd872bd37ced761e8418"
+        },
+        {
+          "path": "packages/shell/pwsh-local/README.md",
+          "sha256": "d92bde6e6e8fafd7431a98dd90c27e19508920d30881e813d81a8020cf2696ef"
+        },
+        {
+          "path": "packages/shell/pwsh-local/README.zh.md",
+          "sha256": "e88823a9df762a6487a7ad61cef32fa773af88c4c501c6cab020fda3e2baf1df"
+        },
+        {
+          "path": "packages/shell/pwsh-local/locale/de.json",
+          "sha256": "85d180ef2be78ad03b4fae3824659203c5fc3388dd04097a84f6361f1b6ae044"
+        },
+        {
+          "path": "packages/shell/pwsh-local/locale/en.json",
+          "sha256": "79287b97f2773db967ae0a212d269a1100856f0191aa384319acafdfcfe62f6c"
+        },
+        {
+          "path": "packages/shell/pwsh-local/locale/es.json",
+          "sha256": "8738cf3c2bf7fcedfabbb001ab1fb6e5c6e75d151fdcd32fd408f035485ea29b"
+        },
+        {
+          "path": "packages/shell/pwsh-local/locale/fr.json",
+          "sha256": "135f40c715a0fa2a5fa0c66aeba475d9180ac808dfaf24dad4ead1df95b196fe"
+        },
+        {
+          "path": "packages/shell/pwsh-local/locale/ja.json",
+          "sha256": "df242ad0277ea49057139ca8d4ee74c85c2deeb78a4ab11abe293a0a82595374"
+        },
+        {
+          "path": "packages/shell/pwsh-local/locale/pt.json",
+          "sha256": "14bd4b78abcf90a040d69dc4e97009bd8c9992a272d2f99b6857f476312a1673"
+        },
+        {
+          "path": "packages/shell/pwsh-local/locale/ru.json",
+          "sha256": "2e9d2ac3a27f949fe5efadf03e840689e81fc2501d49f7e040d64db8b078ccfd"
+        },
+        {
+          "path": "packages/shell/pwsh-local/locale/zh.json",
+          "sha256": "e09942536dd47bc149f1fb519eea4d495c4bd78a246a103115130628a94d1c80"
+        },
+        {
+          "path": "packages/shell/pwsh-local/package.json",
+          "sha256": "752fabae44c6aa04702acb7d929b58f97ac7ffbcf149e44a2c0fb214a952b990"
+        },
+        {
+          "path": "packages/shell/pwsh-local/src/index.ts",
+          "sha256": "feebf120ba9c27590b138da54fbc4124bbf79a1a63b56008199676c30239f5a4"
+        },
+        {
+          "path": "packages/shell/pwsh-local/src/resolve.ts",
+          "sha256": "5c832a5a3cd944735dca27e608b40a1fd5e259ed5629b8c92d0ae899157fcf37"
+        },
+        {
+          "path": "packages/shell/pwsh-local/tests/executor.spec.ts",
+          "sha256": "4600f296ff24f3ad78e3c9dcc967ac2fb422d4be89128b492c3c68f3aedbceba"
+        },
+        {
+          "path": "packages/shell/pwsh-local/tests/settings.spec.ts",
+          "sha256": "b0095fb84e6fb6524e1fe24485702a1cdbbb179bb0c55fac6524c97282a9bf15"
+        },
+        {
+          "path": "packages/shell/pwsh-local/tsconfig.json",
+          "sha256": "94ef3511a9cb666ba581739944f32a632a945a6049dea4471ab4377caaa9b430"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/shell/pwsh-local/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/terminal/terminal",
+      "name": "@deepseek-ai/dsh-terminal",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/terminal/terminal/README.i18n.yaml",
+          "sha256": "226de8f0aac01928a0ba01ce91709575469b313afa2a4aaab0f427e228b64771"
+        },
+        {
+          "path": "packages/terminal/terminal/README.md",
+          "sha256": "9fd70f6cf4bdd5e5e691f828442f1a5ca5b46573e70d42976f7dc041247708ce"
+        },
+        {
+          "path": "packages/terminal/terminal/README.zh.md",
+          "sha256": "da71ae21b8ae021ac418149e7bbf0a3109e88c983f62b643b6a061be34329f2e"
+        },
+        {
+          "path": "packages/terminal/terminal/locale/de.json",
+          "sha256": "59e9786e193eb56b55e5a5c76c923eb16407f28d17ffc1787adea54a2adb07db"
+        },
+        {
+          "path": "packages/terminal/terminal/locale/en.json",
+          "sha256": "1930162579a22419b6a92382c3125cfbc1fd22ef4f825c0e48538aa161e6fb84"
+        },
+        {
+          "path": "packages/terminal/terminal/locale/es.json",
+          "sha256": "cdb4dd1262771c47661b5a571746637af2141421713795a4b65137f9a1098012"
+        },
+        {
+          "path": "packages/terminal/terminal/locale/fr.json",
+          "sha256": "9bce2fca1cd55a52e0ae631df656d1764b15df20bc409a7beec64bd12745c793"
+        },
+        {
+          "path": "packages/terminal/terminal/locale/ja.json",
+          "sha256": "82a40d2ad2827fd2c243d6d9251a13e7486389b7007b2a4165e09b430da88f29"
+        },
+        {
+          "path": "packages/terminal/terminal/locale/pt.json",
+          "sha256": "098b02833b11f24ea8fabd147b01293908025100f3fefc3622ef51f730f4dab3"
+        },
+        {
+          "path": "packages/terminal/terminal/locale/ru.json",
+          "sha256": "8a6921b6e9ea80d39de693721f4da4e1d00c284a27cf632ba1e8a2b71a977d66"
+        },
+        {
+          "path": "packages/terminal/terminal/locale/zh.json",
+          "sha256": "3cef6d9847baffc23e4d5327d0841896c289f2ffb937d6a3087eef7817db6b3a"
+        },
+        {
+          "path": "packages/terminal/terminal/package.json",
+          "sha256": "160292b3c1a5ff66c6f26f9f0f13003e90a7a0daa3776b01910d81f4d3fb6cf1"
+        },
+        {
+          "path": "packages/terminal/terminal/src/index.ts",
+          "sha256": "0264b62850764a5e32f1e2da93540cdcbe6e0e6442314f72b25a8ee2da6d2995"
+        },
+        {
+          "path": "packages/terminal/terminal/src/types.ts",
+          "sha256": "4755118b8558bdd2a023b42bffcf512fa5d108bd00cbf8c4224a1484fde774c5"
+        },
+        {
+          "path": "packages/terminal/terminal/tests/service.spec.ts",
+          "sha256": "f8c45834640362a3692d98b439e13b3e2839f588678b072037486d78c8c128d8"
+        },
+        {
+          "path": "packages/terminal/terminal/tsconfig.json",
+          "sha256": "6c831bb32c17f8dfeaba5eaece01ebe64b62d042d9676d08883f1659dcbe27ed"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/terminal/terminal/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/shell/tool-bash-persistent",
+      "name": "@deepseek-ai/dsh-tool-bash-persistent",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/shell/tool-bash-persistent/README.i18n.yaml",
+          "sha256": "43122492ca868866b071e294bf35b131595ae0f84a339b952a704f1009992295"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/README.md",
+          "sha256": "3e6f6861c996ed34f6c1726d16893f6af74ad5626a7aa1b63f9171857741243f"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/README.zh.md",
+          "sha256": "65e2fd8694bbcd7b7bb2d17f95bd1094bc7e0637435f780f49c87c39eefc79ec"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/locale/de.json",
+          "sha256": "863ae8666cc46cb98fa122176f0395c6f0a159098531899fe5f2b4d1647c5d77"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/locale/en.json",
+          "sha256": "ef2b415deffee9635c0269cafad1d01a6d20bcc29299345535b5b644f20d784b"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/locale/es.json",
+          "sha256": "2e5ca84aac8a53dc858622c20f78a3e1b126021716f75a16fad16fa28acb6d7a"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/locale/fr.json",
+          "sha256": "a7067f20f201ef17520d112750e8ab772910f95c7517328743f894ffc7a9bde3"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/locale/ja.json",
+          "sha256": "fa5341845d06e033f8e74960f114820c8a7d2b38ec61c77d635437619888d740"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/locale/pt.json",
+          "sha256": "0aeeffc56f0fb3723be97f36c36189eee731c4d093589ec2e756ba267b46ab6e"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/locale/ru.json",
+          "sha256": "834e1a852aba49a4f9b4c41da2bde6fdca4857e17fe15d217b4869ad9656bcad"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/locale/zh.json",
+          "sha256": "482b987d86e0c1b210e10fa0398e1c1f94c62bbe5e693f317cb698e1a84ad0e0"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/package.json",
+          "sha256": "4def89229a55456b8823cdc6b7ae0c5bbe70f0c62b426009bd8ae054c63acdd6"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/src/index.ts",
+          "sha256": "38554a802dfaa12ca86e666c27f8a9b81c67797b67db405236039a3760a3d39b"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/tests/loader-composition.spec.ts",
+          "sha256": "75afa18bbc8a6ed3cc5ed76521613604e6f0ddd2866439d10747c8ffb892cf35"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/tests/tools.spec.ts",
+          "sha256": "34bf6afe387fb4e2688be28dc765e1ddcb832b52537fc530101bba75e5cd2300"
+        },
+        {
+          "path": "packages/shell/tool-bash-persistent/tsconfig.json",
+          "sha256": "d2e8c37c4dcb7aa5ac5ee98ba8b03818d53f2bd9529d68b9402296da9c62ef4b"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/shell/tool-bash-persistent/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/experimental/tool-terminal",
+      "name": "@deepseek-ai/dsh-tool-terminal",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/experimental/tool-terminal/README.i18n.yaml",
+          "sha256": "cf093cfd80c6ca6554891e1edc7478deaed09c42628cfdbc58aba4240c5e04c7"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/README.md",
+          "sha256": "7c04e70bd42f01a73fd3b0071b58cedc938d59bb9e0bef4eb91f91fc8ed96ed5"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/README.zh.md",
+          "sha256": "ae9e23d6cc71599bd7ea015e58f9c3be95909e28c06ab3fc1802ac29ef7c5984"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/locale/de.json",
+          "sha256": "49759a2f389a07b8b7d019c5b41f03d52abc60d6aa29e09c7a01653a2176d797"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/locale/en.json",
+          "sha256": "ebe2f89f6ff2e17747ec9c28ce937872921de57bc1cef48d95224e2713fbf615"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/locale/es.json",
+          "sha256": "5e419edf485228cc19ed364cdf827494c607a30096f2bdcfe220a5af8121ed51"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/locale/fr.json",
+          "sha256": "87219307389eb20a72b360354509a0849e641a725ad34ad1172a360fb7ff6030"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/locale/ja.json",
+          "sha256": "6c514f4f7cae2e509a6ad3f485d6815b36ede3524dcbc1dcd45a61e521f429ba"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/locale/pt.json",
+          "sha256": "403f707171fcd570f7f85b39e326831b7a77854f9b366e6dc5273728a332fa5c"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/locale/ru.json",
+          "sha256": "a190c8e1c7f73d45d8fea193b19e36152c2452976a1ba4fce6819018fa86b2ae"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/locale/zh.json",
+          "sha256": "3812ce0702fde52e84a4ecc84593c73709572a8829b09dc98599d22bd83a96e8"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/package.json",
+          "sha256": "08afdd1574d79c5b456cc57f1c4ddcad73596734c420eb281fc56a36b315efb0"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/src/background.ts",
+          "sha256": "c23ece9fedca0c77de04faf9bf50c91906ef44edf89ca084e8127c9640046384"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/src/index.ts",
+          "sha256": "8ec0de7199d2b4de06157e33b7e6325cc73d07bfbdcae003a3c445b494ba7197"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/src/render.ts",
+          "sha256": "e00031a0a88532c3c8b13ff030edfd5d2d5ab123bb370628752a8a8dd84c28ad"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/tests/loader-composition.spec.ts",
+          "sha256": "1127fc818b1f39e97cc81c2041bdbcfd1cc53a4b0deeb6be2130c3286d1b88aa"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/tests/render.spec.ts",
+          "sha256": "7c469a4f37b2a9e719cff218f12d47b27ad98140bcf8af5fa1556bd4f1d5f563"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/tests/tools.spec.ts",
+          "sha256": "6b95e23d000c301f89e937c112c28383b850a65c1aff5da3e49a7644137c16f2"
+        },
+        {
+          "path": "packages/experimental/tool-terminal/tsconfig.json",
+          "sha256": "1c49eadea6d93f7a5e44eec76c16f627cd41b213e997447197896daf526018df"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/experimental/tool-terminal/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/fs/tool-fs-search",
+      "name": "@deepseek-ai/dsh-tool-fs-search",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/fs/tool-fs-search/README.i18n.yaml",
+          "sha256": "cbba512306e9db4b7b87b8faef5ae720239d52475e376deebcc6fd2f9a9e6bd1"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/README.md",
+          "sha256": "351e07183d7eb6db1f3c0c1c354fa1c68b22a936fa86e86405fa06858b822394"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/README.zh.md",
+          "sha256": "5b991c7de4f1eec0c2cd5d0bfed20f1494b0ababc41fbdd6c70b3647d4a16349"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/locale/de.json",
+          "sha256": "edd9ffc8cf3d98a8f5018a7de3ee3cf4789a5492a80217a3eddf335112537be4"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/locale/en.json",
+          "sha256": "8c8a8598b7662b937c76c5174d91bb9bdbe59440777c3ccfc4f5b335e8979373"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/locale/es.json",
+          "sha256": "8aa659f9ecef891296c13824b6613c5f31635833062697df67dd2c53bc9bae5b"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/locale/fr.json",
+          "sha256": "b187c95a5912758c59a392f119352ca651e11a4ae9391e6901a7138792668530"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/locale/ja.json",
+          "sha256": "d344adc2efc74161e66ff0061316dc32aa016ae85311905bca4455bb860d9af9"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/locale/pt.json",
+          "sha256": "8e9ba796a90ccb9d41c298187ac38dd696cab379d0312eee39ea645af296e983"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/locale/ru.json",
+          "sha256": "a22f34ace89a0eff0947942e524876b1d9879a22c165734a7653079882357e90"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/locale/zh.json",
+          "sha256": "af281381e21e53254daf7d9f6acbf772dca65bacfa2281a35ed0bdc8e1702d41"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/package.json",
+          "sha256": "efe02df54233e9e440edc68b39855dc915d0b2f1bc494f3e691b20e0ad341796"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/src/direct-call.ts",
+          "sha256": "e7275b4b2dfc84e754ecec204b3eb7398d3fea7fd18df3b0c824244d55e9b6ce"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/src/glob.ts",
+          "sha256": "37c85bc8f63e925cdab8c63e11e28b8420cbb4560a03efb87cf4a2a45b6dae6e"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/src/grep.ts",
+          "sha256": "ad5dc6b5b9a41d8290172aa8d8dd7d4ddc66aa6cf6dfceba7d130666fd29a019"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/src/index.ts",
+          "sha256": "5193d396dcc769e5e79b5a9a3bdbd81a6709df6988d7e3fffa020add75b401b5"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/src/presentation.ts",
+          "sha256": "7d8029cff975c75f6874918af38dbc0a403135cdb3d1d72d10d05d363d2d413a"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/src/ripgrep.d.ts",
+          "sha256": "00b32d27e81eeff4f1575a2827c406c4c753f00c98f484150f840edb63b1674c"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/src/search-core.ts",
+          "sha256": "d642c99286faff7cb6e70a24b0c4743184b3f83e8c6620bc9537c426987b198f"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/tests/integration.spec.ts",
+          "sha256": "dbb315daec19e1b0655ccf9ab3c9f8dd4a4e905bacc09e128dedf40156af5f75"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/tests/load-path.spec.ts",
+          "sha256": "1131c6232a2b140f094f55500c8e3e2bc92904a4b446b694e75bfcc5859bd16a"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/tests/presentation.spec.ts",
+          "sha256": "10246ab147669dcacaf323e66b727a8ceb781771daa60a0a22b500adce54a8c4"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/tests/rg-path.spec.ts",
+          "sha256": "830b95b7bc9969e6007117a6ab9c48cbe4b3db1fb812c28ca108ca2073d7b518"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/tests/rg-sidecar.spec.ts",
+          "sha256": "aa58edccb4e96a7c3921d6b77b158adc1ed41fbe181d462b5387e40f04c218f8"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/tests/tools.spec.ts",
+          "sha256": "01e339b6e95c9eac103236453565d505d0dec133eafa7e9ec798c8fc84404f1a"
+        },
+        {
+          "path": "packages/fs/tool-fs-search/tsconfig.json",
+          "sha256": "abc79374f71d61c84ec6d96ba4aee7845f2ec63aafe5dfb8cf635a457d30ede5"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/fs/tool-fs-search/package.json",
+          "sha256": "1244606397db2e1b77058c100bda95481e1ce9242243f3d3e6a458e2dc0eabdc",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/fs/tool-fs-search/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/web/web-search-exa",
+      "name": "@deepseek-ai/dsh-web-search-exa",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/web/web-search-exa/README.i18n.yaml",
+          "sha256": "c7abe151af387e3bd751886b712503c95f3e49ed15e56f22157dfaa819399296"
+        },
+        {
+          "path": "packages/web/web-search-exa/README.md",
+          "sha256": "45ab549de27532d915c6751af45bb1b42f7b9fe6a49112c04525506fc6aebd01"
+        },
+        {
+          "path": "packages/web/web-search-exa/README.zh.md",
+          "sha256": "d2eab0ef6162fa1d13f4e0e7c3d13f31d21def36cd6d39d7bb748bd7c9f58497"
+        },
+        {
+          "path": "packages/web/web-search-exa/locale/de.json",
+          "sha256": "319cc6d94d11d3eb5cfeb9c2d84fc88d9867a5fbb006d1694a07131b42bb4fc2"
+        },
+        {
+          "path": "packages/web/web-search-exa/locale/en.json",
+          "sha256": "c5917c35a9040cfbedcf3c712e2bbeb1dad1fdf6c9fb8157ed34a9f05d6b0295"
+        },
+        {
+          "path": "packages/web/web-search-exa/locale/es.json",
+          "sha256": "85395a2ea34684dae9697ec6ea3413fb28776f15f406bdeef847d92e2dc08447"
+        },
+        {
+          "path": "packages/web/web-search-exa/locale/fr.json",
+          "sha256": "f7120e8af21875f899c73fc36824b295867d2761b8d043d32ecf7a8537228104"
+        },
+        {
+          "path": "packages/web/web-search-exa/locale/ja.json",
+          "sha256": "344e236dfaadf4304e7ceda1f4210359602a8c2ad5a9e2f45412cda96c41d014"
+        },
+        {
+          "path": "packages/web/web-search-exa/locale/pt.json",
+          "sha256": "fb84116a7a99af1c88e62768380d867e8a6836125009b6a1f8431ff72a8cc31f"
+        },
+        {
+          "path": "packages/web/web-search-exa/locale/ru.json",
+          "sha256": "aaa60c70ba3a479eac9ea5fd0fc55918726fc20bcf3f0f8d6ecdcecaf380d2a4"
+        },
+        {
+          "path": "packages/web/web-search-exa/locale/zh.json",
+          "sha256": "3033aaf0fc6deb3817cedb03f7ecbf531e4e06dbaee191d526c7723b187d836f"
+        },
+        {
+          "path": "packages/web/web-search-exa/package.json",
+          "sha256": "6585c956c884a62d16441ebd884a2af03f806703be6d5e572b3cc3486caa34b1"
+        },
+        {
+          "path": "packages/web/web-search-exa/src/index.ts",
+          "sha256": "e4aa12c5475a942c2500b559ceb44ebb32478e3d97f38039837a9cb1aa00a5d4"
+        },
+        {
+          "path": "packages/web/web-search-exa/src/provider.ts",
+          "sha256": "1205c8518a89e75028d63c7b19674c743eec108b2b562009fddff79b0ec4976e"
+        },
+        {
+          "path": "packages/web/web-search-exa/src/types.ts",
+          "sha256": "466bcf2f25ffe1bb87612fb125264f30602656a688020d016d94b8bb48747335"
+        },
+        {
+          "path": "packages/web/web-search-exa/tests/egress.spec.ts",
+          "sha256": "42e0d49b34fa4dbbd5ca5980573c61a0275b8831401349fd523ffe9ac24cfbf0"
+        },
+        {
+          "path": "packages/web/web-search-exa/tests/exa.e2e.ts",
+          "sha256": "23a96e07dd4ed727bb2dc826724b20525b1b43fdfc8fcecf453aee0a0bf09131"
+        },
+        {
+          "path": "packages/web/web-search-exa/tests/exa.spec.ts",
+          "sha256": "fc3e524d966d30e682e91a8c49bf2a1ea93fd7306227f47e1dcf38b87db91d92"
+        },
+        {
+          "path": "packages/web/web-search-exa/tsconfig.json",
+          "sha256": "3c2cb91e1328612a80210c4d20cdf00795a17a97fa5fa0ef8c17d362d6b57d41"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/web/web-search-exa/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/experimental/tool-session-query",
+      "name": "@deepseek-ai/dsh-tool-session-query",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-064",
+      "status": "verified-tools-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/experimental/tool-session-query/README.i18n.yaml",
+          "sha256": "a1dbd7d635b613381e3a687d765e0e69eccf7d0fa0d964f25555d1b60017d05d"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/README.md",
+          "sha256": "57247039caf11c393d8c9851e2e88d6b6f28c7fc72639bb1a8cbce04cea5f705"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/README.zh.md",
+          "sha256": "e8fc48efc1d56fac2a2739c4b44b7f508c40a4f2d9927eac3408ee996b91cae8"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/locale/de.json",
+          "sha256": "5e6f615b1fa0484ccad723d6dba006b502a0bf9b2b9c219a197fe124190b3263"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/locale/en.json",
+          "sha256": "58fbaf5ff05c664c05cd235e58cf5c95d80170574e4715b66f9be52b1038deb7"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/locale/es.json",
+          "sha256": "d39f2f6e350d838c63e2f162fe7b5580cb9a1923e963ba351434c3cdc3870d78"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/locale/fr.json",
+          "sha256": "7da8e3e358afa5b01cf5aaafcdb62d4be4296a6fbaff12c900c360fb6736a3f5"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/locale/ja.json",
+          "sha256": "7fa541e47d1c06771bc64d4f0e17f915d8051bed8bffeeffdf82307d592cbf7a"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/locale/pt.json",
+          "sha256": "87e29e4fc4f817a18393d2cffc1addb9b5d46c0b37a2037054b8164bd2d7b18d"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/locale/ru.json",
+          "sha256": "25752d206af9f0ff1bfc0f2258a65c2a1a5e6373a63b16c269f5ee62137c5095"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/locale/zh.json",
+          "sha256": "94f9dbf260200c16fc98aad5337335fc2da530cf6081b1e1bd1d5d17bf20dbab"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/package.json",
+          "sha256": "13a9f9b438271655d4cf107fc59e279acaf2aeb7f2993b36d48d400ae6d38a5d"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/src/index.ts",
+          "sha256": "84a4fc31325ba19b74d368c6c8160788e3e2294458b882ed2172905305337632"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/src/input.ts",
+          "sha256": "d27d365537360ec82402b91d24092d715906ffae74fb9ca947dfa35d58a5cb3f"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/src/operations.ts",
+          "sha256": "5ed4f520841b0ebd0f55c0c8cdfe990ddbb8e8245eb729ca2739ab900c7c194a"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/src/presentation.ts",
+          "sha256": "f05f5fa18507d03cab12ea1c689e4f72fb448e1dab21245f0074a289520bf462"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/src/service-boundary.ts",
+          "sha256": "f67e74bdf163d79ec399c8f63865e9180346623ba970c60ea0d2cea76b20bd99"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/src/workspace-access.ts",
+          "sha256": "3cd7875933cf0ee5d24327e681ed8468b5630c6314de97f9f501b3514b7d88ef"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/tests/sqlite-integration.spec.ts",
+          "sha256": "f8ea524ae9110c70c229c3564a4924f6b5ac69e5a2844811974f53d9c7a7103a"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/tests/tool-session-query.spec.ts",
+          "sha256": "5a111b4c7fb2af02d0b72b55afdbbfe37c6616045ca66d94a11e3bdc67553aac"
+        },
+        {
+          "path": "packages/experimental/tool-session-query/tsconfig.json",
+          "sha256": "4c2606f119888ca3d9eefe8ea650a20a7963a27b4b03e5ad3a3939994f849f01"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/experimental/tool-session-query/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
     }
   ],
   "checks": [
@@ -8393,6 +9778,16 @@
       "path": "provenance/dsh-tz063-conversation-local.patch",
       "sha256": "746b1acf04bfd64caddf98ca23321bd640bf81e76e77b75694a1c4d5c5a90f80",
       "reason": "TZ-063 可复核的原始基线到迁入源码补丁；保留既有 M3 与 TZ-062 补丁文件"
+    },
+    {
+      "path": "provenance/dsh-tz064-tools.tar.gz",
+      "sha256": "5dfc4454186a8945b929da7cc04fc95219891ae1c980fcfdd5d6d0bb7e9f479f",
+      "reason": "TZ-064 锁定基线的 14 包与原翻译测试 helper"
+    },
+    {
+      "path": "provenance/dsh-tz064-tools-local.patch",
+      "sha256": "ade57ce13a83411a9a0964cb60bdbfe464cc780fa64e2305d74bb70eae59e698",
+      "reason": "TZ-064 本地源码适配；既有批次补丁保持不变"
     }
   ],
   "excludedRuntime": [
@@ -8402,5 +9797,14 @@
     "product-analytics",
     "updater"
   ],
-  "acceptanceScope": "TZ-062 UI 基础及 TZ-063 原对话迁移；复制包含未激活的类型依赖，不代表 TZ-064～069 或整个 P2 通过。"
+  "acceptanceScope": "TZ-062/063/064 各自以总计划和核验记录为准；完整 P2 未放行。",
+  "support": [
+    {
+      "path": "tests/fixtures/dsh-translate.ts",
+      "sha256": "c05dbe39355916881dd30ab4b0eea00ff3d09ed17480c14e9d2b3e9c5abdc161",
+      "source": "packages/test-support/client-runtime/src/translate.ts",
+      "sourceSha256": "c05dbe39355916881dd30ab4b0eea00ff3d09ed17480c14e9d2b3e9c5abdc161",
+      "reason": "原 MIT 测试 helper，字节不变；避免导入整个上游桌面测试平台"
+    }
+  ]
 }

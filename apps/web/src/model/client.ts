@@ -1,3 +1,6 @@
+import * as Workspaces from '@deepseek-ai/dsh-api-workspace-controller/client'
+import workspaceRemote from '@deepseek-ai/dsh-api-workspace-controller/remote'
+import { workspaceZh, workspaceEn } from '@deepseek-ai/dsh-client-ui-workspace/client'
 import { createRemotePlatform, parseClientConfig, type PlatformAdapter } from '@tianzhiai/platform'
 import type {} from '@deepseek-ai/dsh-api-session-controller/remote'
 import type {} from '@deepseek-ai/dsh-permission-presets/remote'
@@ -67,8 +70,19 @@ export class AppClient {
         resolve()
       })
     })
+    await this.ctx.remote.$mount(workspaceRemote)
+    await this.ctx.plugin(Workspaces)
     await mountUiFoundation(this.ctx)
+    this.ctx.locale.register('workspace', {
+      zh: {
+        ...workspaceZh,
+        'archive.confirm.desc':
+          '“{title}”仍有正在进行的工作。归档会先停止这些工作；之后可从侧栏“已归档”恢复会话，被停止的工作不会自动继续。',
+      },
+      en: workspaceEn,
+    })
     await mountChatRuntime(this.ctx, {
+      showUsage: false,
       openSession: (id) => {
         void this.openSession?.(id)
       },

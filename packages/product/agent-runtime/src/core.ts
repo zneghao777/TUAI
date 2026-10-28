@@ -1,3 +1,4 @@
+import { mountWebTools } from './web-tools.ts'
 import type { Context } from '@deepseek-ai/cordis'
 import LlmRuntime, { createUserMessage } from '@deepseek-ai/dsh-llm'
 import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
@@ -49,6 +50,7 @@ export async function apply(ctx: Context) {
   await ctx.plugin(AgentLoop, { agents: [] })
   await mountContext(ctx)
   await mountPermissions(ctx)
+  await mountWebTools(ctx)
   await ctx.plugin({
     name: 'tianzhiai-basic-tools',
     inject: ['tools', 'tianzhiaiHost'],

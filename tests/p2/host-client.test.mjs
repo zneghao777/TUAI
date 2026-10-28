@@ -31,7 +31,7 @@ test('real authenticated Host, generated codecs, Session objects, accepted ident
     )
     const status = await client.ctx.remote.platform.hostStatus()
     assert.equal(status.ok, true)
-    const id = await client.ctx.sessions.create({ cwd: process.cwd() })
+    const id = await client.ctx.sessions.create({})
     ref = client.ctx.sessions.retain(id, { source: 'controllerOperation' })
     await ref.ready
     const session = ref.binding.session
@@ -70,6 +70,8 @@ test('real authenticated Host, generated codecs, Session objects, accepted ident
     ref = undefined
     await client.dispose()
     client = await clientFor(runtime)
+    // Connection ready precedes the Session list baseline on a fresh client.
+    await client.ctx.sessions.refresh()
     ref = client.ctx.sessions.retain(id, { source: 'controllerOperation' })
     await ref.ready
     assert.equal(

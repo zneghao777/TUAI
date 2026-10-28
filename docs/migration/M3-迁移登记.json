@@ -2160,6 +2160,11 @@
           "path": "packages/api/session-controller/tsconfig.json",
           "sha256": "ad1b25d36ea100440140e543e2a2af188178934da74eadce1b27ef14e91b335e",
           "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/api/session-controller/src/index.ts",
+          "sha256": "c107048514d6ee520a03e6c3de2fbad946df3a2be815ae6991eea3773abeefdb",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
         }
       ],
       "additionalFiles": [

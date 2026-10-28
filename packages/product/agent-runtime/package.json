@@ -63,6 +63,17 @@
     "@deepseek-ai/dsh-permission-presets": "workspace:*",
     "@deepseek-ai/dsh-atomic-write": "workspace:*",
     "@deepseek-ai/dsh-llm-deepseek": "workspace:*",
-    "zod": "4.4.3"
+    "zod": "4.4.3",
+    "@deepseek-ai/dsh-jobs-local": "workspace:*",
+    "@deepseek-ai/dsh-tool-jobs": "workspace:*",
+    "@deepseek-ai/dsh-terminal": "workspace:*",
+    "@deepseek-ai/dsh-terminal-bash": "workspace:*",
+    "@deepseek-ai/dsh-tool-terminal": "workspace:*",
+    "@deepseek-ai/dsh-web": "workspace:*",
+    "@deepseek-ai/dsh-tool-web": "workspace:*",
+    "@deepseek-ai/dsh-web-fetch-http": "workspace:*",
+    "@deepseek-ai/dsh-web-search-deepseek": "workspace:*",
+    "@deepseek-ai/dsh-tool-fs-search": "workspace:*",
+    "@deepseek-ai/dsh-tool-todo": "workspace:*"
   }
 }

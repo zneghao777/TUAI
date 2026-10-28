@@ -511,6 +511,48 @@
     },
     {
       "path": "packages/client/ui-attachment"
+    },
+    {
+      "path": "packages/jobs/jobs-local"
+    },
+    {
+      "path": "packages/jobs/tool-jobs"
+    },
+    {
+      "path": "packages/shell/pwsh-local"
+    },
+    {
+      "path": "packages/shell/tool-bash-persistent"
+    },
+    {
+      "path": "packages/terminal/terminal-bash"
+    },
+    {
+      "path": "packages/terminal/terminal"
+    },
+    {
+      "path": "packages/web/tool-web"
+    },
+    {
+      "path": "packages/web/web-fetch-http"
+    },
+    {
+      "path": "packages/web/web-search-deepseek"
+    },
+    {
+      "path": "packages/web/web"
+    },
+    {
+      "path": "packages/experimental/tool-terminal"
+    },
+    {
+      "path": "packages/fs/tool-fs-search"
+    },
+    {
+      "path": "packages/web/web-search-exa"
+    },
+    {
+      "path": "packages/experimental/tool-session-query"
     }
   ]
 }

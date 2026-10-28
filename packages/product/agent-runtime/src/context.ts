@@ -25,6 +25,7 @@ export async function mountContext(ctx: Context) {
   await ctx.plugin(Instructions, {
     maxBytes: 32768,
     projectRootBoundary: realpathSync(process.cwd()),
+    projectRootFromSession: true,
   })
   await ctx.plugin(FileReferences, {
     maxEntries: 10000,

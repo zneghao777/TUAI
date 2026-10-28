@@ -64,6 +64,7 @@
     "@deepseek-ai/dsh-session-projection-cache": "workspace:*",
     "@deepseek-ai/dsh-api-settings-controller": "workspace:*",
     "@deepseek-ai/dsh-settings": "workspace:*",
-    "@deepseek-ai/dsh-client-ui-chat": "workspace:*"
+    "@deepseek-ai/dsh-client-ui-chat": "workspace:*",
+    "@deepseek-ai/dsh-api-workspace-controller": "workspace:*"
   }
 }

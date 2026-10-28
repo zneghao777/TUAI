@@ -131,6 +131,39 @@
     },
     {
       "path": "../../llm/llm-deepseek"
+    },
+    {
+      "path": "../../jobs/jobs-local/tsconfig.json"
+    },
+    {
+      "path": "../../jobs/tool-jobs/tsconfig.json"
+    },
+    {
+      "path": "../../terminal/terminal/tsconfig.json"
+    },
+    {
+      "path": "../../terminal/terminal-bash/tsconfig.json"
+    },
+    {
+      "path": "../../experimental/tool-terminal/tsconfig.json"
+    },
+    {
+      "path": "../../web/web/tsconfig.json"
+    },
+    {
+      "path": "../../web/tool-web/tsconfig.json"
+    },
+    {
+      "path": "../../web/web-fetch-http/tsconfig.json"
+    },
+    {
+      "path": "../../web/web-search-deepseek/tsconfig.json"
+    },
+    {
+      "path": "../../fs/tool-fs-search/tsconfig.json"
+    },
+    {
+      "path": "../../todo/tool-todo/tsconfig.json"
     }
   ]
 }

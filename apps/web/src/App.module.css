@@ -1355,3 +1355,64 @@
     min-height: 40px;
   }
 }
+
+/* DSH menu interaction with an opaque product surface. */
+.selectMenu {
+  background: #fff;
+  backdrop-filter: none;
+}
+.sessionLine {
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  min-width: 0;
+}
+.sessionLine:focus-within,
+.sessionLine:hover {
+  background: #e9edf2;
+}
+.sessionLine > button:first-child {
+  flex: 1;
+  min-width: 0;
+}
+.sessionLine [aria-haspopup='menu'] {
+  flex: none;
+  width: 30px;
+  padding: 5px;
+  border-radius: 8px;
+}
+.workspaceGroup {
+  margin: 4px 0 12px;
+}
+.workspaceGroup > summary {
+  padding: 8px 10px;
+  color: var(--muted);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.workspaceGroup .sessionLine {
+  margin-left: 10px;
+}
+.historyControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.historyControls button {
+  font-size: 12px;
+  padding: 4px 6px;
+}
+
+[role='dialog'].settingsDisplay {
+  width: min(940px, 100%);
+  max-height: 100%;
+}
+.settingsScroll {
+  overflow-y: auto;
+  min-height: 0;
+}

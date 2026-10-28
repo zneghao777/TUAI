@@ -12,16 +12,22 @@ const conversationTests: string[] = JSON.parse(
 export default defineConfig({
   plugins: [standardDecoratorPlugin()],
   resolve: {
-    alias: Object.entries(paths)
-      .sort(([a], [b]) => b.length - a.length)
-      .map(([key, values]) => ({
-        find: new RegExp(`^${key.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace('*', '(.*)')}$`),
-        replacement: resolve(
-          comparisonRoot && /packages\/client\/ui-(?:chat|conversation)\//.test(values[0]!)
-            ? resolve(comparisonRoot, values[0]!)
-            : values[0]!,
-        ).replace('*', '$1'),
-      })),
+    alias: [
+      {
+        find: '@deepseek-ai/dsh-client-test-runtime',
+        replacement: resolve('tests/fixtures/dsh-translate.ts'),
+      },
+      ...Object.entries(paths)
+        .sort(([a], [b]) => b.length - a.length)
+        .map(([key, values]) => ({
+          find: new RegExp(`^${key.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace('*', '(.*)')}$`),
+          replacement: resolve(
+            comparisonRoot && /packages\/client\/ui-(?:chat|conversation)\//.test(values[0]!)
+              ? resolve(comparisonRoot, values[0]!)
+              : values[0]!,
+          ).replace('*', '$1'),
+        })),
+    ],
   },
   test: {
     include: process.env.TIANZHI_CONVERSATION_PARITY
@@ -29,6 +35,12 @@ export default defineConfig({
       : [
           'tests/p2/**/*.spec.ts',
           ...conversationTests,
+          'packages/client/ui-tool/tests/**/*.spec.ts',
+          'packages/web/*/tests/**/*.spec.ts',
+          'packages/jobs/*/tests/**/*.spec.ts',
+          'packages/fs/tool-fs-search/tests/**/*.spec.ts',
+          'packages/terminal/*/tests/**/*.spec.ts',
+          'packages/experimental/tool-terminal/tests/**/*.spec.ts',
           'packages/api/session-controller/tests/**/*.spec.ts',
           'packages/client/connection/tests/**/*.spec.ts',
           'packages/api/gateway/tests/**/*.spec.ts',

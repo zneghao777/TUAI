@@ -7896,8 +7896,8 @@
         },
         {
           "path": "packages/context/agent-instructions/src/config.ts",
-          "sha256": "4f1b003bb982acd2b572b910383da3c2c324ca680db8bb6ea0d8b77787ca6d8e",
-          "reason": "增加可选 projectRootBoundary；只在产品授权工作区内寻找根标记并保留子目录继承；缺省行为保持上游"
+          "sha256": "a668fa3567dc557be7e3735b046ca08fdeebb3353a4601cfaa0df485437ecc31",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
         },
         {
           "path": "packages/context/agent-instructions/src/files.ts",
@@ -7906,8 +7906,8 @@
         },
         {
           "path": "packages/context/agent-instructions/src/index.ts",
-          "sha256": "77ba53d62942569943e0c049f0c57668c6b1cb52238716c3049a5ff3027eb653",
-          "reason": "增加可选 projectRootBoundary；只在产品授权工作区内寻找根标记并保留子目录继承；缺省行为保持上游"
+          "sha256": "dcba3e0789584c2a79c3bffb3f30fe4329fbabbe7102f8fa9f197261d2d9918e",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
         },
         {
           "path": "packages/context/agent-instructions/src/state.ts",

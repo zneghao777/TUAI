@@ -16,6 +16,8 @@ const RESERVED_PATH_SEGMENTS = new Set(['', '.', '..'])
 
 /** User-facing workspace instruction loader configuration. */
 export interface Config {
+  /** Use the immutable Session cwd as the product discovery boundary. */
+  projectRootFromSession?: boolean
   /** Product-authorized absolute ancestor; project discovery never probes above it. */
   projectRootBoundary?: string
   /** Directory entries that identify the project root while walking upward from the current working directory. */
@@ -41,6 +43,7 @@ export interface Config {
 }
 
 export const Config: z<Config> = z.object({
+  projectRootFromSession: z.boolean(),
   projectRootBoundary: z.string(),
   projectRootMarkers: z.array(z.string()).default([...DEFAULT_PROJECT_ROOT_MARKERS]),
   maxBytes: z.number().required(),

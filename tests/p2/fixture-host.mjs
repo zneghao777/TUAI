@@ -1,5 +1,5 @@
 // Explicit test launcher. This module is never imported by the product boot path.
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdtemp, rm, writeFile, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { startWebHost } from '../../apps/cli/lib/web.js'
@@ -62,6 +62,23 @@ class ScenarioModel extends MockAdapter {
         ?.filter((b) => b.type === 'text')
         .map((b) => b.text)
         .join('') ?? ''
+    if (requestText.includes('TZ064')) {
+      const step = messages
+        .slice(messages.lastIndexOf(request))
+        .filter((message) => message.role === 'tool').length
+      const operations = [
+        ['write', { file_path: 'tool-result.txt', content: 'initial value' }],
+        ['edit', { file_path: 'tool-result.txt', old_string: 'initial', new_string: 'updated' }],
+        ['read', { file_path: 'tool-result.txt' }],
+        ['grep', { pattern: 'updated', path: '.' }],
+        ['todo_write', { todos: [{ content: '验证工具展示', status: 'completed' }] }],
+        ['bash', { description: '验证真实沙箱输出', command: 'printf TZ064-shell-output' }],
+        ['web_fetch', { url: 'http://127.0.0.1:1/private' }],
+      ]
+      if (step >= operations.length) yield* textResponse('TZ064 工具执行验收完成。')
+      else yield* toolCallResponse(crypto.randomUUID(), ...operations[step])
+      return
+    }
     if (requestText.includes('TZ063')) {
       const results = messages
         .slice(messages.lastIndexOf(request))
@@ -100,10 +117,7 @@ class ScenarioModel extends MockAdapter {
         results >= (requestText.includes('长过程') ? 12 : 2)
           ? textResponse('TZ063 验收回答：资料已读取，失败已记录，结果完整。')
           : toolCallResponse(crypto.randomUUID(), 'read', {
-              file_path: join(
-                process.cwd(),
-                results === 0 ? 'package.json' : 'tz063-missing-file.txt',
-              ),
+              file_path: results === 0 ? 'package.json' : 'tz063-missing-file.txt',
             })
       for (const chunk of response)
         yield 'index' in chunk ? { ...chunk, index: chunk.index + 1 } : chunk
@@ -149,13 +163,13 @@ class ScenarioModel extends MockAdapter {
     }
     if (text.includes('工具失败')) {
       yield* toolCallResponse(crypto.randomUUID(), 'read', {
-        file_path: join(process.cwd(), 'p2-does-not-exist.txt'),
+        file_path: 'p2-does-not-exist.txt',
       })
       return
     }
     if (text.includes('读取工具')) {
       yield* toolCallResponse(crypto.randomUUID(), 'read', {
-        file_path: join(process.cwd(), 'package.json'),
+        file_path: 'package.json',
       })
       return
     }
@@ -200,6 +214,14 @@ export async function fixtureHost(options = {}) {
       { port: 0, provider: 'p2-controlled', model: 'controlled', ...options },
       async (ctx) => {
         ctx.llm.registerAdapter(['p2-controlled'], model)
+        const sample = await readFile('package.json', 'utf8')
+        ctx.on('agent/created', async ({ agent }) => {
+          const cwd = agent.session.header.cwd
+          if (cwd?.includes('/data/workspaces/'))
+            await writeFile(join(cwd, 'package.json'), sample, { flag: 'wx' }).catch((error) => {
+              if (error.code !== 'EEXIST') throw error
+            })
+        })
         if (options.nested) {
           for (const fiber of [...(ctx.registry.get(NativeExecutor)?.fibers ?? [])])
             await fiber.dispose()

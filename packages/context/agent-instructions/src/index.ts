@@ -83,7 +83,7 @@ function filePathFromExecution(exec: ToolExecution): string | undefined {
 }
 
 export function apply(ctx: Context, config: Config): void {
-  const resolved: ResolvedConfig = resolveConfig(config)
+  const baseConfig: ResolvedConfig = resolveConfig(config)
   const instructionVersions: InstructionVersionCache = new WeakMap()
   const baselinePreparations = new WeakMap<Session, {
     identity: string
@@ -113,6 +113,9 @@ export function apply(ctx: Context, config: Config): void {
     pending: readonly UserMessage[],
     touchedPaths: readonly string[] = [],
   ): Promise<UserMessage | undefined> => {
+    const resolved = config.projectRootFromSession && agent.session.header.cwd
+      ? { ...baseConfig, projectRootBoundary: agent.session.header.cwd }
+      : baseConfig
     signal.throwIfAborted()
     if (resolved.maxBytes <= 0 || !Number.isFinite(resolved.maxBytes)) {
       return undefined

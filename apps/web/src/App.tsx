@@ -1,3 +1,4 @@
+import { SessionSidebar } from './components/SessionSidebar'
 import { Modal as DshModal } from '@deepseek-ai/dsh-client-ui-primitives'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type {
@@ -16,7 +17,12 @@ import { Composer } from './components/Composer'
 import { Queue, Waiting } from './components/Interactions'
 import s from './App.module.css'
 
-export function App({ client, SessionProvider, renderSlot }: { client: AppClient } & AppSlots) {
+export function App({
+  client,
+  SessionProvider,
+  renderSlot,
+  ...standard
+}: { client: AppClient } & AppSlots) {
   const facts = useSource(client.facts),
     list = useSource(client.ctx.sessions.list),
     connection = useSource(client.connection.state)
@@ -27,12 +33,7 @@ export function App({ client, SessionProvider, renderSlot }: { client: AppClient
   const shortcuts = useSource(client.ctx.shortcuts.catalog)
   const newSessionShortcut = shortcuts.find((entry) => entry.id === 'session.new')
   const [sidebar, setSidebar] = useState(false),
-    [panel, setPanel] = useState<
-      'host' | 'rename' | 'artifacts' | 'actions' | 'models' | 'display'
-    >(),
-    [rename, setRename] = useState(''),
-    [hostUrl, setHostUrl] = useState(''),
-    [platformMessage, setPlatformMessage] = useState('')
+    [panel, setPanel] = useState<'artifacts' | 'models' | 'display'>()
   const narrow = useMediaQuery('(max-width:760px)'),
     navigation = useRef<HTMLElement>(null)
   const owned = useRef<SessionReference>(),
@@ -103,7 +104,7 @@ export function App({ client, SessionProvider, renderSlot }: { client: AppClient
   const create = async () => {
     setBusy(true)
     try {
-      const id = await client.ctx.sessions.create({ cwd: facts.host?.workspace })
+      const id = await client.ctx.sessions.create({})
       await select(id)
     } catch (e) {
       setError(describe(e))
@@ -157,14 +158,7 @@ export function App({ client, SessionProvider, renderSlot }: { client: AppClient
       window.removeEventListener('keydown', handler)
     }
   }, [client, facts.host, busy, connection])
-  const title = binding ? (list.byId[binding.sessionId]?.displayTitle ?? '新会话') : '新会话'
-  const state = binding?.session.getSnapshot()
-  const rows = list.ids
-    .map((id) => list.byId[id])
-    .filter(Boolean)
-    .filter(
-      (row) => !search || row.displayTitle.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
-    )
+  const title = binding ? (list.byId[binding.sessionId]?.title ?? '新会话') : '新会话'
   return (
     <div className={s.app}>
       <Glow />
@@ -206,44 +200,26 @@ export function App({ client, SessionProvider, renderSlot }: { client: AppClient
             onChange={(e) => setSearch(e.target.value)}
           />
         </label>
-        <Button className={s.hostButton} onClick={() => setPanel('host')}>
-          <span className={connection === 'connected' ? s.doneDot : s.failedDot} />
-          <span>
-            {facts.host ? shortPath(facts.host.workspace) : '连接 Host'} ·{' '}
-            {connection === 'connected'
-              ? '已连接'
-              : connection === 'connecting'
-                ? '重连中'
-                : '未连接'}
-          </span>
-          <Icon name="chevron" />
-        </Button>
-        <div className={s.navLabel}>会话记录</div>
-        <nav className={s.history} aria-label="会话历史">
-          {rows.map((row) => (
-            <button
-              key={row.id}
-              data-session-id={row.id}
-              className={`${s.historyRow} ${row.id === binding?.sessionId ? s.selected : ''}`}
-              aria-current={row.id === binding?.sessionId ? 'page' : undefined}
-              onClick={() => void select(row.id)}
-            >
-              <span>{row.blank ? '新会话' : row.displayTitle}</span>
-              {row.running ? <span className={s.activeDot} aria-label="运行中" /> : null}
-            </button>
-          ))}
-          {!rows.length ? (
-            <p className={s.emptyNav}>
-              {search ? '没有匹配的会话' : list.phase === 'ready' ? '还没有会话' : '正在读取历史…'}
-            </p>
-          ) : null}
-        </nav>
+        <SessionSidebar
+          standard={standard}
+          client={client}
+          search={search}
+          selected={binding?.sessionId}
+          onSelect={select}
+          onError={setError}
+          onArchived={async (id) => {
+            if (id !== binding?.sessionId) return
+            const archived = new Set(client.ctx.workspaces.list.getSnapshot().archivedSessionIds)
+            const next = list.ids.find((candidate) => candidate !== id && !archived.has(candidate))
+            if (next) await select(next)
+            else await create()
+          }}
+        />
         <div className={s.sidebarFoot}>
-          <Button onClick={() => setPanel('models')} aria-label="模型管理">
-            <Icon name="model" />
-            模型
+          <Button onClick={() => setPanel('models')} aria-label="设置">
+            <Icon name="settings" />
+            设置
           </Button>
-          <button onClick={() => setPanel('host')}>连接与工作区</button>
         </div>
       </aside>
       <main
@@ -256,45 +232,12 @@ export function App({ client, SessionProvider, renderSlot }: { client: AppClient
             <Icon name="menu" />
           </Button>
           <div>
-            <h1>{state?.blank ? '新会话' : title}</h1>
-            <span>{facts.host ? shortPath(facts.host.workspace) : '正在连接工作区'}</span>
+            <h1>{title}</h1>
           </div>
           <div className={s.headerActions}>
-            <Button onClick={() => setPanel('display')} aria-label="对话显示设置">
-              显示设置
-            </Button>
             <Button disabled={!binding} onClick={() => setPanel('artifacts')}>
               <Icon name="paperclip" />
               文件与产物
-            </Button>
-            <Button
-              disabled={!binding}
-              onClick={() => {
-                setRename(title)
-                setPanel('rename')
-              }}
-            >
-              重命名
-            </Button>
-            <Button
-              disabled={!binding || busy}
-              onClick={() => {
-                if (binding)
-                  void client.ctx.sessions
-                    .fork({ sessionId: binding.sessionId })
-                    .then(select)
-                    .catch((e) => setError(describe(e)))
-              }}
-            >
-              派生会话
-            </Button>
-            <Button
-              className={s.mobileMenu}
-              aria-label="更多会话操作"
-              disabled={!binding}
-              onClick={() => setPanel('actions')}
-            >
-              ···
             </Button>
           </div>
         </header>
@@ -328,123 +271,37 @@ export function App({ client, SessionProvider, renderSlot }: { client: AppClient
       </main>
       {renderSlot('shell.overlay', {})}
       {panel === 'display' ? (
-        <DshModal open title="对话显示" closeLabel="关闭" onClose={() => setPanel(undefined)}>
-          {renderSlot('settings.general.item', {})}
+        <DshModal
+          className={s.settingsDisplay}
+          contentClassName={s.settingsScroll}
+          open
+          title="设置"
+          closeLabel="关闭"
+          onClose={() => setPanel(undefined)}
+        >
+          <div className={s.settingsLayout}>
+            <nav className={s.settingsNav} aria-label="设置分类">
+              <Button onClick={() => setPanel('models')}>
+                <Icon name="model" />
+                模型
+              </Button>
+              <Button aria-current="page" className={s.settingsSelected}>
+                <Icon name="settings" />
+                对话显示
+              </Button>
+            </nav>
+            <section className={s.settingsContent} aria-label="对话显示设置">
+              {renderSlot('settings.general.item', {})}
+            </section>
+          </div>
         </DshModal>
       ) : null}
       {panel === 'models' ? (
         <ModelSettings
           client={client}
           onClose={() => setPanel(undefined)}
-          onHost={() => setPanel('host')}
+          onDisplay={() => setPanel('display')}
         />
-      ) : null}
-      {panel === 'actions' && binding ? (
-        <Modal title="会话操作" onClose={() => setPanel(undefined)}>
-          <Button
-            onClick={() => {
-              setRename(title)
-              setPanel('rename')
-            }}
-          >
-            重命名
-          </Button>
-          <Button
-            onClick={() => {
-              setPanel(undefined)
-              void client.ctx.sessions
-                .fork({ sessionId: binding.sessionId })
-                .then(select)
-                .catch((e) => setError(describe(e)))
-            }}
-          >
-            派生会话
-          </Button>
-        </Modal>
-      ) : null}
-      {panel === 'rename' && binding ? (
-        <Modal title="重命名会话" onClose={() => setPanel(undefined)}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              void binding.session
-                .rename(rename)
-                .then(unwrap)
-                .then(() => {
-                  setPanel(undefined)
-                  return client.ctx.sessions.refresh()
-                })
-                .catch((e) => setError(describe(e)))
-            }}
-          >
-            <input
-              aria-label="会话名称"
-              autoFocus
-              value={rename}
-              onChange={(e) => setRename(e.target.value)}
-            />
-            <Button className={s.primary} type="submit" disabled={!rename.trim()}>
-              保存名称
-            </Button>
-          </form>
-        </Modal>
-      ) : null}
-      {panel === 'host' ? (
-        <Modal title="连接与工作区" onClose={() => setPanel(undefined)}>
-          <dl>
-            <dt>当前 Host</dt>
-            <dd>{location.origin}</dd>
-            <dt>执行工作区（Host 目录）</dt>
-            <dd>{facts.host?.workspace ?? '尚未连接'}</dd>
-            <dt>模型凭据</dt>
-            <dd>
-              {facts.host?.modelConfigured ? '已配置' : '未配置'}
-              <Button onClick={() => setPanel('models')}>管理模型</Button>
-            </dd>
-            <dt>当前平台</dt>
-            <dd>Web · 文件选择来自当前设备；上传后由 Host 接收。</dd>
-          </dl>
-          <p>系统目录选择、原生文件打开与系统通知在 Web 中不可用。</p>
-          <Button
-            disabled={!client.platform}
-            onClick={() => {
-              void client.platform
-                ?.chooseDirectory()
-                .then((result) =>
-                  setPlatformMessage(result.available ? result.value.path : result.message),
-                )
-            }}
-          >
-            选择 Host 目录
-          </Button>
-          {platformMessage ? <p role="status">{platformMessage}</p> : null}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              try {
-                const target = new URL(hostUrl)
-                if (!['http:', 'https:'].includes(target.protocol))
-                  throw new Error('仅支持 HTTP/HTTPS Host 地址')
-                void client.dispose().then(() => location.assign(target.href))
-              } catch (e) {
-                setError(describe(e))
-              }
-            }}
-          >
-            <label>
-              切换 Host（粘贴目标 Host 的登录入口）
-              <input
-                aria-label="目标 Host 地址"
-                type="url"
-                value={hostUrl}
-                onChange={(e) => setHostUrl(e.target.value)}
-                placeholder="https://host.example/app/"
-                required
-              />
-            </label>
-            <Button type="submit">切换并重新认证</Button>
-          </form>
-        </Modal>
       ) : null}
       {panel === 'artifacts' && binding ? (
         <Modal title="文件与产物" onClose={() => setPanel(undefined)}>
@@ -486,9 +343,6 @@ export function Workspace({
       </div>
     </>
   )
-}
-function shortPath(path: string) {
-  return path.split(/[\\/]/).filter(Boolean).at(-1) ?? '工作区'
 }
 function Artifacts({ client, binding }: { client: AppClient; binding: SessionBinding }) {
   const [items, setItems] = useState<{ id: string; name: string; bytes: number }[]>([]),

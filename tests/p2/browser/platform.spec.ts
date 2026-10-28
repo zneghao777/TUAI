@@ -31,9 +31,7 @@ test('代理路径 RPC、MUX、上传下载，切换另一 Host 不串线', asyn
     await page.getByRole('button', { name: '关闭', exact: true }).click()
     await page.getByRole('textbox', { name: '消息', exact: true }).fill('第一个 Host 的草稿')
     second = await fixtureHost()
-    await page.getByRole('button', { name: '连接与工作区', exact: true }).click()
-    await page.getByRole('textbox', { name: '目标 Host 地址' }).fill(second.login)
-    await page.getByRole('button', { name: '切换并重新认证' }).click()
+    await page.goto(second.login)
     await expect(page.getByRole('textbox', { name: '消息', exact: true })).toHaveValue('')
     await expect(page.getByRole('navigation', { name: '会话历史' })).not.toContainText(
       '代理路径消息',

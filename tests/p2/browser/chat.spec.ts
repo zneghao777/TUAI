@@ -257,10 +257,9 @@ test('安全 Markdown、窄屏、IME、键盘与焦点', async ({ page }) => {
   expect(externalImageRequests).toBe(0)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.getByRole('button', { name: '打开导航' }).click()
-  await page.getByRole('button', { name: '连接与工作区', exact: true }).click()
-  await expect(
-    page.getByText('系统目录选择、原生文件打开与系统通知在 Web 中不可用。'),
-  ).toBeVisible()
+  await page.getByRole('button', { name: '设置', exact: true }).click()
+  await expect(page.getByRole('button', { name: '对话显示', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: '连接与工作区', exact: true })).toHaveCount(0)
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await page.screenshot({ path: 'reports/p2/07-窄屏.png' })

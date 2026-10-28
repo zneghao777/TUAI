@@ -7,7 +7,10 @@ body {
   --dsw-alias-label-secondary: var(--muted);
   --dsw-alias-bg-base: var(--canvas);
   --dsw-alias-bg-layer-1: var(--glass);
+  --dsw-alias-bg-layer-2: #fff;
   --dsw-alias-bg-overlay: #fff;
+  --dsw-menu-surface-fill: #fff;
+  --dsw-menu-backdrop-filter: none;
   --dsw-alias-brand-primary: var(--accent);
 }
 [data-slot='conversation.view'] {

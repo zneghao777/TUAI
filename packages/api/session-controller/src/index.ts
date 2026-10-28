@@ -118,6 +118,8 @@ type ResolvedConfig = Config & { readonly listWorkSliceMs: number }
 
 /** Host integrations replaceable by direct unit tests. */
 export interface SessionControllerInternals {
+  /** Host-owned placement of newly created Sessions. */
+  readonly prepareCreate?: (request: SessionCreateRequest) => Promise<SessionCreateRequest>
   /** Native default-application handoff. */
   readonly openPath?: (path: string, signal: AbortSignal) => Promise<void>
   /** Native file-association query. */
@@ -152,6 +154,7 @@ export class SessionController extends TypertRemoteService {
     listWorkSliceMs: z.natural().min(1).default(16),
   })
 
+  private readonly prepareCreate: SessionControllerInternals['prepareCreate']
   private agents!: ApiSessionAgentController
   private commands!: SessionCommandController
   private controlState!: SessionControlController
@@ -172,6 +175,7 @@ export class SessionController extends TypertRemoteService {
    */
   constructor(ctx: Context, config: Config, internals: SessionControllerInternals = {}) {
     super(ctx, 'sessionController', { namespace: 'session' })
+    this.prepareCreate = internals.prepareCreate
     this.listWorkSliceMs = SessionController.Config(config).listWorkSliceMs
     this.fileApplications = internals.fileApplications ?? nativeFileApplications
     this.openFileApplication = internals.openFileApplication ?? openNativeFileApplication
@@ -288,8 +292,8 @@ export class SessionController extends TypertRemoteService {
    * @returns the created or reused Session identity and its preset when configured.
    */
   @Remote('create')
-  create(request: SessionCreateRequest): Promise<SessionCreateValue> {
-    return this.commands.create(request)
+  async create(request: SessionCreateRequest): Promise<SessionCreateValue> {
+    return this.commands.create(this.prepareCreate ? await this.prepareCreate(request) : request)
   }
 
   /**

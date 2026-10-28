@@ -363,3 +363,12 @@ function activeSessionRefusal(reason: unknown): readonly SessionActivity[] | und
   const { rpcError } = reason as WorkspaceArchiveError
   return rpcError.code === 'workspace/session-active' ? rpcError.details.activity : undefined
 }
+
+// Public original row actions for a host with managed workspace placement.
+export { PinSessionMenuItem, PinSessionRowButton } from './session-actions/PinSession.tsx'
+export { RenameSessionMenuItem, SessionRenameDialog } from './session-actions/RenameSession.tsx'
+export { ForkSessionMenuItem } from './session-actions/ForkSession.tsx'
+export { ArchiveSessionMenuItem, ArchiveSessionRowButton, SessionArchiveConfirmDialog } from './session-actions/ArchiveSession.tsx'
+export { SessionIdMenuItem } from './session-actions/SessionId.tsx'
+export type { SessionArchiveConfirmRequest } from './contract/slots.ts'
+export { zh as workspaceZh, en as workspaceEn } from './locales.ts'

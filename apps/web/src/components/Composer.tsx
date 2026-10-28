@@ -310,6 +310,11 @@ export function Composer({
   const catalog = facts.catalog,
     available =
       catalog?.groups.flatMap((g) => g.models.map((m) => ({ provider: g.id, ...m }))) ?? []
+  const permissions = useSource(binding.session.projections.faceOf('permissions'))
+  const permissionValue =
+    permissions && typeof permissions === 'object' && 'currentValue' in permissions
+      ? permissions.currentValue
+      : undefined
   const model = useSource(binding.session.projections.faceOf('modelSelection'))
   const selected =
     typeof model === 'object' &&
@@ -456,9 +461,12 @@ export function Composer({
               }}
             />
           ) : null}
-          <span className={s.permission} title={facts.permissions?.options[0]?.description}>
-            {facts.permissions?.options.find((p) => p.value === facts.permissions?.defaultPreset)
-              ?.name ?? '读取权限中'}
+          <span
+            className={s.permission}
+            title={facts.permissions?.options.find((p) => p.value === permissionValue)?.description}
+          >
+            {facts.permissions?.options.find((p) => p.value === permissionValue)?.name ??
+              '读取权限中'}
           </span>
           <div className={s.sendGroup}>
             {state.running ? (

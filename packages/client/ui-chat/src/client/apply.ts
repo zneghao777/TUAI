@@ -84,6 +84,8 @@ export const inject = [
  * @param ctx - Client root context.
  */
 export interface ChatHostActions {
+  /** Hide accounting surfaces while retaining statistics and timing. */
+  showUsage?: boolean
   openFile(sessionId: SessionId, path: string, options?: import('./contract/slots.ts').OpenFileOptions): Promise<void>
   openSession(sessionId: SessionId): void
 }
@@ -191,14 +193,16 @@ export function mountChat(ctx: Context, actions: ChatHostActions): void {
   const presentation = derivePresentationPolicy(transcriptView.mode, transcriptView.collapseTiming, transcriptView.foldedReplies)
   const performancePolicy = new PerformanceUsagePolicy(chatSettings)
   ctx.effect(() => () => { transcriptView.dispose(); performancePolicy.dispose() })
-  const performanceUsage = performancePolicy.mode
+  const performanceUsage = actions.showUsage === false
+    ? createSnapshotStore<import('../chat-settings.ts').PerformanceUsageMode>('compact')
+    : performancePolicy.mode
   registerChatNodeRenderers(ctx, performanceUsage, presentation)
   ctx.slots.registerFactory({
     name: 'conversation.chat.user.content', scope: 'session', locale: NS,
     children: { 'conversation.chat.user.images': { kind: 'single', scope: 'session' } },
   }, UserContent)
 
-  ctx.slots.inject('settings.general.item', () => ctx.slots.register({
+  if (actions.showUsage !== false) ctx.slots.inject('settings.general.item', () => ctx.slots.register({
     name: 'settings.general.item',
     id: 'performance-usage',
     order: 30,
@@ -348,7 +352,7 @@ export function mountChat(ctx: Context, actions: ChatHostActions): void {
 
   // One dock entry per pill, so a plugin replaces or adds a single pill by id.
   const statPillInject = () => ({ hooks: { performanceUsage } })
-  ctx.slots.inject('conversation.composer.dock', function* () {
+  if (actions.showUsage !== false) ctx.slots.inject('conversation.composer.dock', function* () {
     yield ctx.slots.register({
       name: 'conversation.composer.dock', id: 'activity', order: 0, locale: NS, inject: statPillInject,
     }, ActivityPill)

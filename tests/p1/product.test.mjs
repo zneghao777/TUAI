@@ -205,8 +205,8 @@ test('TZ-011 产品文件只读范围和附件目录实际生效', async (t) => 
     })
     assert.ok(ref.attachmentId)
     assert.ok(runtime.ctx.attachments.root.startsWith(join(outside, 'host', 'data')))
-    assert.equal(runtime.ctx.tools.get('write'), undefined)
-    assert.equal(runtime.ctx.tools.get('edit'), undefined)
+    assert.ok(runtime.ctx.tools.get('write'))
+    assert.ok(runtime.ctx.tools.get('edit'))
   } finally {
     await runtime.dispose()
   }

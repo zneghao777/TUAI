@@ -16,7 +16,7 @@ test('DSH UI Session uses real Controller identities and releases stale bindings
     await client.ctx.plugin(Access)
     const ui = await client.ctx.plugin(UiSession)
     await until(() => client.ctx.uiSession)
-    const id = await client.ctx.sessions.create({ cwd: process.cwd() })
+    const id = await client.ctx.sessions.create({})
     reference = client.ctx.sessions.retain(id, { source: 'mainView' })
     const binding = await reference.ready
     const source = client.ctx.uiSession.bindingSource(reference)

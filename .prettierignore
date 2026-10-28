@@ -62,3 +62,9 @@ packages/goal/
 packages/plan/
 packages/schedule/
 packages/telemetry/
+
+# TZ-064 original tools and test helper.
+packages/web/
+packages/terminal/
+packages/experimental/
+tests/fixtures/dsh-translate.ts

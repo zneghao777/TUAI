@@ -13,5 +13,13 @@
     "noUnusedParameters": true,
     "esModuleInterop": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../packages/api/workspace-controller/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/client/ui-workspace/tsconfig.json"
+    }
+  ]
 }
