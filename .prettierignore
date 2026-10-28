@@ -55,3 +55,10 @@ packages/subagent/
 packages/todo/
 scripts/types/
 docs/design/
+
+# TZ-063 upstream source closure.
+packages/document/
+packages/goal/
+packages/plan/
+packages/schedule/
+packages/telemetry/

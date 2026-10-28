@@ -1,19 +1,22 @@
-import { useEffect, useRef, useState } from 'react'
+import { Modal as DshModal } from '@deepseek-ai/dsh-client-ui-primitives'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type {
   SessionBinding,
   SessionReference,
+  SessionSnapshot,
 } from '@deepseek-ai/dsh-api-session-controller/client'
+import type { AppSlots } from './ui'
+import type { ShortcutCommandId } from '@deepseek-ai/dsh-client-shortcuts/client'
 import { SessionId } from '@deepseek-ai/dsh-session/types'
 import { AppClient, describe, unwrap } from './model/client'
 import { useSource, useMediaQuery } from './bindings'
 import { Button, Icon, Glow, Modal } from './components/kit'
 import { ModelSettings } from './components/ModelSettings'
 import { Composer } from './components/Composer'
-import { Conversation } from './components/Conversation'
 import { Queue, Waiting } from './components/Interactions'
 import s from './App.module.css'
 
-export function App({ client }: { client: AppClient }) {
+export function App({ client, SessionProvider, renderSlot }: { client: AppClient } & AppSlots) {
   const facts = useSource(client.facts),
     list = useSource(client.ctx.sessions.list),
     connection = useSource(client.connection.state)
@@ -21,8 +24,12 @@ export function App({ client }: { client: AppClient }) {
     [search, setSearch] = useState(''),
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false)
+  const shortcuts = useSource(client.ctx.shortcuts.catalog)
+  const newSessionShortcut = shortcuts.find((entry) => entry.id === 'session.new')
   const [sidebar, setSidebar] = useState(false),
-    [panel, setPanel] = useState<'host' | 'rename' | 'artifacts' | 'actions' | 'models'>(),
+    [panel, setPanel] = useState<
+      'host' | 'rename' | 'artifacts' | 'actions' | 'models' | 'display'
+    >(),
     [rename, setRename] = useState(''),
     [hostUrl, setHostUrl] = useState(''),
     [platformMessage, setPlatformMessage] = useState('')
@@ -69,7 +76,7 @@ export function App({ client }: { client: AppClient }) {
     setError('')
     let next: SessionReference | undefined
     try {
-      next = client.ctx.sessions.retain(id, { source: 'controllerOperation' })
+      next = client.ctx.sessions.retain(id, { source: 'mainView' })
       const value = await next.ready
       if (run !== version.current) {
         next.release()
@@ -87,6 +94,12 @@ export function App({ client }: { client: AppClient }) {
       if (run === version.current) setBusy(false)
     }
   }
+  useEffect(() => {
+    client.openSession = select
+    return () => {
+      client.openSession = undefined
+    }
+  }, [client, facts.host])
   const create = async () => {
     setBusy(true)
     try {
@@ -112,16 +125,38 @@ export function App({ client }: { client: AppClient }) {
     [],
   )
   useEffect(() => {
+    const unregister = client.ctx.shortcuts.register({
+      id: 'session.new' as ShortcutCommandId,
+      label: () => '新会话',
+      aliases: ['new session', 'new chat'],
+      defaults: {
+        'web:macos': { code: 'KeyN', modifiers: ['primary', 'alt'] },
+        'web:windows': { code: 'KeyN', modifiers: ['primary', 'alt'] },
+        'desktop:macos': { code: 'KeyN', modifiers: ['primary'] },
+        'desktop:windows': { code: 'KeyN', modifiers: ['primary'] },
+        'desktop:linux': { code: 'KeyN', modifiers: ['primary'] },
+      },
+      regions: ['page', 'editable'],
+      modals: [],
+      resolve: () =>
+        facts.host && !busy && connection === 'connected'
+          ? {
+              status: 'handled',
+              run: () => {
+                void create()
+              },
+            }
+          : { status: 'blocked', reason: '会话尚未就绪' },
+    })
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
-        e.preventDefault()
-        if (facts.host && !busy) void create()
-      }
       if (e.key === 'Escape') setSidebar(false)
     }
     window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [facts.host, busy])
+    return () => {
+      unregister()
+      window.removeEventListener('keydown', handler)
+    }
+  }, [client, facts.host, busy, connection])
   const title = binding ? (list.byId[binding.sessionId]?.displayTitle ?? '新会话') : '新会话'
   const state = binding?.session.getSnapshot()
   const rows = list.ids
@@ -153,11 +188,14 @@ export function App({ client }: { client: AppClient }) {
         </div>
         <Button
           className={s.newSession}
+          aria-label="新会话"
           onClick={() => void create()}
           disabled={busy || connection !== 'connected' || !facts.host}
+          aria-keyshortcuts={newSessionShortcut?.aria}
         >
           <Icon name="plus" />
-          新会话<kbd>⌘N</kbd>
+          新会话
+          {newSessionShortcut?.keys.length ? <kbd>{newSessionShortcut.keys.join('')}</kbd> : null}
         </Button>
         <label className={s.search}>
           <Icon name="search" />
@@ -222,6 +260,9 @@ export function App({ client }: { client: AppClient }) {
             <span>{facts.host ? shortPath(facts.host.workspace) : '正在连接工作区'}</span>
           </div>
           <div className={s.headerActions}>
+            <Button onClick={() => setPanel('display')} aria-label="对话显示设置">
+              显示设置
+            </Button>
             <Button disabled={!binding} onClick={() => setPanel('artifacts')}>
               <Icon name="paperclip" />
               文件与产物
@@ -275,12 +316,9 @@ export function App({ client }: { client: AppClient }) {
           </div>
         ) : null}
         {binding ? (
-          <Workspace
-            key={`${facts.host?.id}:${binding.sessionId}`}
-            client={client}
-            binding={binding}
-            onModels={() => setPanel('models')}
-          />
+          <SessionProvider session={owned.current}>
+            {renderSlot('tianzhiai.workspace', { onModels: () => setPanel('models') })}
+          </SessionProvider>
         ) : (
           <div className={s.loading}>
             {busy ? '正在打开会话…' : '正在连接 Host…'}
@@ -288,6 +326,12 @@ export function App({ client }: { client: AppClient }) {
           </div>
         )}
       </main>
+      {renderSlot('shell.overlay', {})}
+      {panel === 'display' ? (
+        <DshModal open title="对话显示" closeLabel="关闭" onClose={() => setPanel(undefined)}>
+          {renderSlot('settings.general.item', {})}
+        </DshModal>
+      ) : null}
       {panel === 'models' ? (
         <ModelSettings
           client={client}
@@ -410,16 +454,19 @@ export function App({ client }: { client: AppClient }) {
     </div>
   )
 }
-function Workspace({
+export function Workspace({
+  children,
   client,
   binding,
+  state,
   onModels,
 }: {
+  children: ReactNode
   client: AppClient
   binding: SessionBinding
+  state: SessionSnapshot
   onModels(): void
 }) {
-  const state = useSource(binding.session)
   return (
     <>
       {state.blank ? (
@@ -430,7 +477,7 @@ function Workspace({
           <h2>今天，想一起完成什么？</h2>
         </div>
       ) : (
-        <Conversation client={client} binding={binding} />
+        children
       )}
       <div className={`${s.dock} ${state.blank ? s.homeDock : ''}`}>
         <Waiting client={client} binding={binding} />

@@ -30,12 +30,17 @@ const candidates = globSync(
 ).map((path) => ({ dir: dirname(path), ...json(resolve(source, path)) }))
 const byName = new Map(candidates.map((pkg) => [pkg.name, pkg]))
 const p2 = Number(task.slice(3)) >= 15
-const registryPath = p2 ? 'docs/migration/M3-迁移登记.json' : 'docs/migration/M1-迁移登记.json'
+const uiFoundation = Number(task.slice(3)) >= 62 && Number(task.slice(3)) <= 69
+const registryPath = uiFoundation
+  ? 'docs/migration/M4-迁移登记.json'
+  : p2
+    ? 'docs/migration/M3-迁移登记.json'
+    : 'docs/migration/M1-迁移登记.json'
 const registry = existsSync(registryPath)
   ? json(registryPath)
   : {
       schemaVersion: 1,
-      batchId: p2 ? 'M3' : 'M1-M2',
+      batchId: uiFoundation ? 'M4' : p2 ? 'M3' : 'M1-M2',
       upstreamCommit: commit,
       status: 'in_progress',
       scope: `${p2 ? 'P2' : 'P1'} 实际启用能力及其运行、类型和资源闭包；未注册插件不表示能力已启用`,
@@ -44,29 +49,32 @@ const registry = existsSync(registryPath)
       checks: [],
     }
 const local = new Map(workspacePackages().map((pkg) => [pkg.name, pkg]))
+const excluded = new Set((process.env.TIANZHI_MIGRATION_EXCLUDE ?? '').split(',').filter(Boolean))
 const selected = new Map()
 const imported = new Map()
 function importsOf(pkg) {
-  return globSync(`${pkg.dir}/src/**/*.ts`, { cwd: source }).flatMap((path) => {
-    const text = readFileSync(resolve(source, path), 'utf8')
-    const tree = ts.createSourceFile(path, text, ts.ScriptTarget.Latest)
-    const result = []
-    function visit(node) {
-      if (
-        (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
-        node.moduleSpecifier &&
-        ts.isStringLiteral(node.moduleSpecifier)
-      ) {
-        result.push(node.moduleSpecifier.text)
+  return globSync([`${pkg.dir}/src/**/*.ts`, `${pkg.dir}/src/**/*.tsx`], { cwd: source }).flatMap(
+    (path) => {
+      const text = readFileSync(resolve(source, path), 'utf8')
+      const tree = ts.createSourceFile(path, text, ts.ScriptTarget.Latest)
+      const result = []
+      function visit(node) {
+        if (
+          (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+          node.moduleSpecifier &&
+          ts.isStringLiteral(node.moduleSpecifier)
+        ) {
+          result.push(node.moduleSpecifier.text)
+        }
+        ts.forEachChild(node, visit)
       }
-      ts.forEachChild(node, visit)
-    }
-    visit(tree)
-    return result
-  })
+      visit(tree)
+      return result
+    },
+  )
 }
 function select(name) {
-  if (local.has(name) || selected.has(name)) return
+  if (local.has(name) || selected.has(name) || excluded.has(name)) return
   const pkg = byName.get(name)
   assert.ok(pkg, `Missing source package: ${name}`)
   selected.set(name, pkg)
@@ -79,6 +87,31 @@ function select(name) {
   for (const dep of names) if (byName.has(dep)) select(dep)
 }
 roots.forEach(select)
+const manifests = new Map()
+for (const [name, pkg] of selected) {
+  // Upstream devDependencies enumerate the entire upstream test universe. Keep
+  // only source-required dependencies; selected test support is explicit.
+  const manifest = json(resolve(source, pkg.dir, 'package.json'))
+  manifest.devDependencies = Object.fromEntries(
+    Object.entries(manifest.devDependencies ?? {}).filter(
+      ([n]) => !n.startsWith('@deepseek-ai/') || local.has(n) || selected.has(n),
+    ),
+  )
+  for (const specifier of imported.get(name)) {
+    const owner = specifier.startsWith('@')
+      ? specifier.split('/').slice(0, 2).join('/')
+      : specifier.split('/')[0]
+    if (specifier.startsWith('.') || specifier.startsWith('node:') || owner === name) continue
+    if (!manifest.dependencies?.[owner] && !manifest.peerDependencies?.[owner]) {
+      const version = byName.has(owner) ? 'workspace:*' : manifest.devDependencies?.[owner]
+      if (!version && manifest.devDependencies?.[`@types/${owner}`]) continue
+      assert.ok(version, `${name}: undeclared source import ${specifier}`)
+      manifest.dependencies ??= {}
+      manifest.dependencies[owner] = version
+    }
+  }
+  manifests.set(name, manifest)
+}
 if (process.env.TIANZHI_MIGRATION_DRY_RUN === '1') {
   console.log([...selected.keys()].join('\n'))
   process.exit(0)
@@ -114,24 +147,7 @@ for (const [name, pkg] of selected) {
       reason: '保留来源许可',
     })
   }
-  // Upstream devDependencies enumerate the entire upstream test universe. Keep
-  // only source-required dependencies; selected test support is explicit.
-  const manifest = json(`${pkg.dir}/package.json`)
-  manifest.devDependencies = Object.fromEntries(
-    Object.entries(manifest.devDependencies ?? {}).filter(
-      ([n]) => !n.startsWith('@deepseek-ai/') || local.has(n) || selected.has(n),
-    ),
-  )
-  for (const specifier of imported.get(name)) {
-    const owner = specifier.startsWith('@')
-      ? specifier.split('/').slice(0, 2).join('/')
-      : specifier.split('/')[0]
-    if (!byName.has(owner)) continue
-    if (!manifest.dependencies?.[owner] && !manifest.peerDependencies?.[owner]) {
-      manifest.dependencies ??= {}
-      manifest.dependencies[owner] = 'workspace:*'
-    }
-  }
+  const manifest = manifests.get(name)
   save(`${pkg.dir}/package.json`, manifest)
   if (existsSync(`${pkg.dir}/tsconfig.json`) && !pkg.dir.startsWith('native/')) {
     const config = json(`${pkg.dir}/tsconfig.json`)
@@ -158,20 +174,38 @@ const config = json('tsconfig.base.json')
 for (const pkg of all) {
   for (const [key, entry] of Object.entries(pkg.exports ?? {})) {
     const type = typeof entry === 'object' && entry !== null ? entry.types : undefined
-    if (type?.startsWith('./lib/types/') && type.endsWith('.d.ts'))
+    if (type?.startsWith('./lib/types/') && type.endsWith('.d.ts')) {
+      const stem = `${pkg.dir}/src/${type.slice('./lib/types/'.length).replace(/\.d\.ts$/, '')}`
+      const sourceFile = existsSync(`${stem}.ts`) ? `${stem}.ts` : `${stem}.tsx`
+      assert.ok(existsSync(sourceFile), `Missing type entry source: ${sourceFile}`)
       config.compilerOptions.paths[pkg.name + (key === '.' ? '' : key.slice(1))] = [
-        `./${pkg.dir}/src/${type.slice('./lib/types/'.length).replace(/\.d\.ts$/, '.ts')}`,
+        `./${sourceFile}`,
       ]
+    }
     if (key === './src/*')
       config.compilerOptions.paths[`${pkg.name}/src/*`] = [`./${pkg.dir}/src/*`]
   }
 }
 save('tsconfig.base.json', config)
-const host = json('tsconfig.host.json')
-const paths = new Set(host.references.map((ref) => ref.path))
-for (const pkg of all)
-  if (existsSync(`${pkg.dir}/tsconfig.json`) && !pkg.dir.startsWith('native/')) paths.add(pkg.dir)
-host.references = [...paths].map((path) => ({ path }))
-save('tsconfig.host.json', host)
+// Dual-face package roots intentionally have no files: each aggregate must
+// reference the corresponding leaf, also used by the protocol generator.
+for (const face of ['host', 'client']) {
+  const aggregate = json(`tsconfig.${face}.json`)
+  const paths = new Set(
+    aggregate.references.map(({ path }) =>
+      existsSync(`${path}/tsconfig.${face}.json`) ? `${path}/tsconfig.${face}.json` : path,
+    ),
+  )
+  for (const pkg of all) {
+    if (!pkg.dir.startsWith('packages/') && !pkg.dir.startsWith('vendor/')) continue
+    if (existsSync(`${pkg.dir}/tsconfig.${face}.json`))
+      paths.add(`${pkg.dir}/tsconfig.${face}.json`)
+    else if (existsSync(`${pkg.dir}/tsconfig.json`) && face === 'host') paths.add(pkg.dir)
+  }
+  // Web is checked separately after protocol generation and shared client builds.
+  paths.delete('apps/web')
+  aggregate.references = [...paths].map((path) => ({ path }))
+  save(`tsconfig.${face}.json`, aggregate)
+}
 save(registryPath, registry)
 console.log(`${task}: migrated ${selected.size} packages; source commit ${commit}`)

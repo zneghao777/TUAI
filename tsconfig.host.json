@@ -18,6 +18,9 @@
       "path": "packages/api/session-controller/tsconfig.host.json"
     },
     {
+      "path": "packages/api/settings-controller"
+    },
+    {
       "path": "packages/attachment/attachment-local"
     },
     {
@@ -40,6 +43,15 @@
     },
     {
       "path": "packages/client/file-upload/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/locale/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/shortcuts/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/ui-settings/tsconfig.host.json"
     },
     {
       "path": "packages/compaction/compaction-basic"
@@ -342,6 +354,9 @@
       "path": "packages/util/deque"
     },
     {
+      "path": "packages/util/file-drag"
+    },
+    {
       "path": "packages/util/home-paths"
     },
     {
@@ -400,6 +415,102 @@
     },
     {
       "path": "vendor/timer"
+    },
+    {
+      "path": "packages/api/workspace-controller/tsconfig.host.json"
+    },
+    {
+      "path": "packages/api/workspace-files/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/product-analytics/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/resources"
+    },
+    {
+      "path": "packages/client/store"
+    },
+    {
+      "path": "packages/client/ui-approval"
+    },
+    {
+      "path": "packages/client/ui-chat/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/ui-conversation/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/ui-dockkit"
+    },
+    {
+      "path": "packages/client/ui-file-drag"
+    },
+    {
+      "path": "packages/client/ui-input-trigger"
+    },
+    {
+      "path": "packages/client/ui-layout"
+    },
+    {
+      "path": "packages/client/ui-primitives"
+    },
+    {
+      "path": "packages/client/ui-renderer"
+    },
+    {
+      "path": "packages/client/ui-session"
+    },
+    {
+      "path": "packages/client/ui-sidebar-browser/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/ui-sidebar-documentpreview/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/ui-sidebar-right"
+    },
+    {
+      "path": "packages/client/ui-sidebar"
+    },
+    {
+      "path": "packages/client/ui-slots"
+    },
+    {
+      "path": "packages/client/ui-theme/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/ui-tool"
+    },
+    {
+      "path": "packages/client/ui-workspace"
+    },
+    {
+      "path": "packages/credentials/deepseek-account"
+    },
+    {
+      "path": "packages/document/office-to-pdf"
+    },
+    {
+      "path": "packages/goal/goal"
+    },
+    {
+      "path": "packages/host/directory-picker"
+    },
+    {
+      "path": "packages/host/product-telemetry-otel"
+    },
+    {
+      "path": "packages/plan/plan-mode"
+    },
+    {
+      "path": "packages/schedule/schedule"
+    },
+    {
+      "path": "packages/telemetry/otel"
+    },
+    {
+      "path": "packages/client/ui-attachment"
     }
   ]
 }

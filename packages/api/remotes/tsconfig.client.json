@@ -61,6 +61,18 @@
     },
     {
       "path": "../../typert/protocol"
+    },
+    {
+      "path": "../workspace-controller/tsconfig.client.json"
+    },
+    {
+      "path": "../workspace-files/tsconfig.client.json"
+    },
+    {
+      "path": "../../document/office-to-pdf"
+    },
+    {
+      "path": "../settings-controller"
     }
   ]
 }

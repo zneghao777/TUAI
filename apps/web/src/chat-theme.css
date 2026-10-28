@@ -1,0 +1,20 @@
+/* DSH controls keep their geometry and interaction; this layer supplies Tianzhi's palette. */
+body {
+  --dsh-chat-content-width: 840px;
+  --dsh-composer-side-clearance: 16px;
+  --dsh-hairline-width: 1px;
+  --dsw-alias-label-primary: var(--ink);
+  --dsw-alias-label-secondary: var(--muted);
+  --dsw-alias-bg-base: var(--canvas);
+  --dsw-alias-bg-layer-1: var(--glass);
+  --dsw-alias-bg-overlay: #fff;
+  --dsw-alias-brand-primary: var(--accent);
+}
+[data-slot='conversation.view'] {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+[data-slot='settings.general.item'] {
+  min-width: 0;
+}

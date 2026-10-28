@@ -3,16 +3,27 @@ import { fixtureHost } from '../fixture-host.mjs'
 test('实际 Host PTC 调度的父子工具记录可逐层展开', async ({ page }) => {
   const host = await fixtureHost({ nested: true })
   try {
+    await host.runtime.ctx.settingsController.update(
+      'ui-chat',
+      { transcriptView: 'verbose' },
+      undefined,
+    )
     await page.goto(host.login)
     await page.getByRole('textbox', { name: '消息', exact: true }).fill('嵌套工具验收')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
-    const outer = page.getByRole('button', { name: /run_code.*已完成/ })
+    const outer = page
+      .locator('[data-tool="run_code"][data-state="ok"] [data-disclosure-row][aria-expanded]')
+      .first()
     await expect(outer).toBeVisible()
-    await outer.click()
-    const child = page.getByRole('button', { name: /sum_numbers.*已完成/ })
+    if ((await outer.getAttribute('aria-expanded')) === 'false') await outer.click()
+    const child = page
+      .locator('[data-tool="sum_numbers"][data-state="ok"] [data-disclosure-row][aria-expanded]')
+      .first()
     await expect(child).toBeVisible()
-    await child.click()
-    await expect(page.locator('pre').filter({ hasText: /^42$/ }).last()).toBeVisible()
+    if ((await child.getAttribute('aria-expanded')) === 'false') await child.click()
+    await expect(
+      page.locator('[data-tool="sum_numbers"]').getByText('42', { exact: true }),
+    ).toBeVisible()
     const events = host.runtime.ctx.sessions.list().flatMap((s) => s.snapshotEvents())
     expect(
       events.filter(

@@ -12,3 +12,7 @@ allowBuilds:
 
 autoInstallPeers: false
 strictPeerDependencies: true
+
+# Upstream telemetry is a type closure only; keep its peer ranges compatible.
+overrides:
+  '@opentelemetry/api': '1.9.0'

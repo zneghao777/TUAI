@@ -105,6 +105,8 @@ export function Modal({
   return (
     <dialog
       ref={ref}
+      role="dialog"
+      aria-modal="true"
       className={`${s.modal} ${className ?? ''}`}
       aria-labelledby={titleId}
       onCancel={(e) => {

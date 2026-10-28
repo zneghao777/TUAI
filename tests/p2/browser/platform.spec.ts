@@ -14,14 +14,21 @@ test('代理路径 RPC、MUX、上传下载，切换另一 Host 不串线', asyn
     await expect(page.getByText(/已上传，尚未发送/)).toBeVisible()
     await page.getByRole('textbox', { name: '消息', exact: true }).fill('代理路径消息')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
-    await expect(page.locator('[data-message-kind="assistant"]')).toContainText('代理路径消息')
-    const link = page.getByRole('link', { name: /代理.txt/ })
-    expect(await link.getAttribute('href')).toMatch(/^api\/artifact/)
-    expect(
-      (
-        await page.context().request.get(new URL(await link.getAttribute('href'), proxy.base).href)
-      ).status(),
-    ).toBe(200)
+    await expect(
+      page.locator(
+        '[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])',
+      ),
+    ).toContainText('代理路径消息')
+    await expect(page.getByText('代理.txt', { exact: true })).toBeVisible()
+    await page.getByRole('button', { name: '文件与产物' }).click()
+    const response = page.waitForResponse((value) =>
+      value.url().startsWith(proxy.base + 'api/artifact?'),
+    )
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: '下载', exact: true }).click()
+    expect((await response).status()).toBe(200)
+    expect((await download).suggestedFilename()).toBe('代理.txt')
+    await page.getByRole('button', { name: '关闭', exact: true }).click()
     await page.getByRole('textbox', { name: '消息', exact: true }).fill('第一个 Host 的草稿')
     second = await fixtureHost()
     await page.getByRole('button', { name: '连接与工作区', exact: true }).click()

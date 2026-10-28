@@ -3556,8 +3556,8 @@
       "localPatches": [
         {
           "path": "packages/api/remotes/package.json",
-          "sha256": "28a8f0987525848aa7801649b15973dae1e7b66362f6c2ad2851133c69be7aed",
-          "reason": "声明实际 P2 Client 运行依赖，保留生成协议身份"
+          "sha256": "1470aaa77b4452ee3acbb3fd791e45ba1fa6845acfdad3f4fc2b2c7c43ed1263",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
         },
         {
           "path": "packages/api/remotes/tsconfig.host.json",
@@ -3566,8 +3566,8 @@
         },
         {
           "path": "packages/api/remotes/tsconfig.client.json",
-          "sha256": "be580f2ec05963e7c6dac4f559adb3f1be4005a7e798667359bfd1261ac1473a",
-          "reason": "P2 双端类型闭包，不依赖未迁入模块"
+          "sha256": "20c665413fdd82559a9a97963c59a8f4c191a124a3c5d3ae5458ca808dd95738",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
         },
         {
           "path": "packages/api/remotes/src/index.ts",
@@ -3581,8 +3581,8 @@
         },
         {
           "path": "packages/api/remotes/src/client/index.ts",
-          "sha256": "51095e88a92a62b0f4695fbc391f6a8f8ac6f16d34a4b840bbaf99642a1564f3",
-          "reason": "保留原转发队列和请求生命周期，仅组合 P2 已启用的 Session/问题/审批/上传/模型契约；移除账户、遥测及 P3+ 业务事件"
+          "sha256": "c72d00e7befb3615096e9646a16f455776eed969cc3bae36502fc839428201ae",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
         }
       ],
       "additionalFiles": [

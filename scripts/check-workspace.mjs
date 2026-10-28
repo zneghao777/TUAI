@@ -37,7 +37,7 @@ for (const pkg of references.packages) {
 assert.equal(references.unresolvedReferences.length, 0)
 assert.equal(hash(references.startupAdaptation.target), references.startupAdaptation.targetSha256)
 for (const file of references.testSupport) assert.equal(hash(file.target), file.sha256)
-for (const registryPath of ['docs/migration/M1-迁移登记.json', 'docs/migration/M3-迁移登记.json']) {
+for (const registryPath of globSync('docs/migration/M[1-9]-迁移登记.json').sort()) {
   const core = JSON.parse(read(registryPath))
   for (const pkg of core.packages) {
     assert.ok(byName.has(pkg.name), `Missing migrated package: ${pkg.name}`)
@@ -53,6 +53,11 @@ for (const registryPath of ['docs/migration/M1-迁移登记.json', 'docs/migrati
   }
   for (const file of core.support ?? [])
     assert.equal(hash(file.path), file.localSha256 ?? file.sha256, file.path)
+  for (const file of [
+    ...(core.snapshots ?? []),
+    ...(typeof core.localSourcePatch === 'object' ? [core.localSourcePatch] : []),
+  ])
+    assert.equal(hash(file.path), file.sha256, file.path)
 }
 
 const forbiddenRoots = [
@@ -108,7 +113,9 @@ for (const pkg of packages) {
       assert.ok(
         owner === pkg.name ||
           owner in declared ||
-          (typeOnly && owner in (pkg.devDependencies ?? {})),
+          (typeOnly &&
+            (owner in (pkg.devDependencies ?? {}) ||
+              `@types/${owner}` in (pkg.devDependencies ?? {}))),
         `${file}: undeclared import ${name}`,
       )
       imports++

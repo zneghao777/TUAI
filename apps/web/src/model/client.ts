@@ -23,6 +23,8 @@ import type {
 } from '@deepseek-ai/dsh-user-questions/types'
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import { mountUiFoundation } from './ui-foundation'
+import { mountChatRuntime } from './chat-runtime'
 
 export interface Interaction {
   id: string
@@ -45,6 +47,7 @@ export class AppClient {
   readonly interactions = createSnapshotStore<readonly Interaction[]>([])
   connection!: ConnectionHandle
   platform?: PlatformAdapter
+  openSession: ((id: SessionId) => Promise<void>) | undefined
   private loadVersion = 0
   async start() {
     connectionPlugin(this.ctx)
@@ -63,6 +66,15 @@ export class AppClient {
         signal.removeEventListener('abort', fail)
         resolve()
       })
+    })
+    await mountUiFoundation(this.ctx)
+    await mountChatRuntime(this.ctx, {
+      openSession: (id) => {
+        void this.openSession?.(id)
+      },
+      openFile: async () => {
+        throw new Error('无法打开文件预览，请从“文件与产物”下载当前会话文件')
+      },
     })
     const root = this
     this.ctx.remote.$on('approval/request', function (request, next) {

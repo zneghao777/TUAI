@@ -5,6 +5,10 @@ import { standardDecoratorPlugin, vitestExecArgv } from './vitest.shared.ts'
 
 const paths: Record<string, string[]> = JSON.parse(readFileSync('tsconfig.base.json', 'utf8'))
   .compilerOptions.paths
+const comparisonRoot = process.env.TIANZHI_PARITY_ROOT
+const conversationTests: string[] = JSON.parse(
+  readFileSync('tests/p2/conversation-fixtures.json', 'utf8'),
+)
 export default defineConfig({
   plugins: [standardDecoratorPlugin()],
   resolve: {
@@ -12,19 +16,26 @@ export default defineConfig({
       .sort(([a], [b]) => b.length - a.length)
       .map(([key, values]) => ({
         find: new RegExp(`^${key.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace('*', '(.*)')}$`),
-        replacement: resolve(values[0]!).replace('*', '$1'),
+        replacement: resolve(
+          comparisonRoot && /packages\/client\/ui-(?:chat|conversation)\//.test(values[0]!)
+            ? resolve(comparisonRoot, values[0]!)
+            : values[0]!,
+        ).replace('*', '$1'),
       })),
   },
   test: {
-    include: [
-      'tests/p2/**/*.spec.ts',
-      'packages/api/session-controller/tests/**/*.spec.ts',
-      'packages/client/connection/tests/**/*.spec.ts',
-      'packages/api/gateway/tests/**/*.spec.ts',
-      'packages/api/remote-access/tests/**/*.spec.ts',
-      'packages/typert/registry/tests/**/*.spec.ts',
-      'packages/typert/loader/tests/**/*.spec.ts',
-    ],
+    include: process.env.TIANZHI_CONVERSATION_PARITY
+      ? conversationTests.map((path) => resolve(comparisonRoot ?? '.', path))
+      : [
+          'tests/p2/**/*.spec.ts',
+          ...conversationTests,
+          'packages/api/session-controller/tests/**/*.spec.ts',
+          'packages/client/connection/tests/**/*.spec.ts',
+          'packages/api/gateway/tests/**/*.spec.ts',
+          'packages/api/remote-access/tests/**/*.spec.ts',
+          'packages/typert/registry/tests/**/*.spec.ts',
+          'packages/typert/loader/tests/**/*.spec.ts',
+        ],
     exclude: [
       'tests/p2/browser/**',
       'packages/api/session-controller/tests/session.client.spec.ts',

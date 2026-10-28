@@ -1,3 +1,5 @@
+import { mountChatSettings } from './chat-settings.ts'
+import { TYPERT as contribution10 } from '@deepseek-ai/dsh-api-settings-controller/typert'
 import { validateTypertManifest } from '@deepseek-ai/dsh-typert-loader'
 import { TYPERT as contribution0 } from '@deepseek-ai/dsh-api-session-controller/typert'
 import { TYPERT as contribution1 } from '@deepseek-ai/dsh-api-remote-access/typert'
@@ -110,6 +112,7 @@ export const REMOTE_PACKAGES = [
   '@deepseek-ai/dsh-agent-preset-registry',
   '@deepseek-ai/dsh-subagent',
   '@tianzhiai/web-host',
+  '@deepseek-ai/dsh-api-settings-controller',
 ]
 
 /** Mount the real transport and Session owners over the existing P1 runtime. */
@@ -133,6 +136,7 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
   await ctx.plugin(Uploads)
   await ctx.plugin(SessionController, { nativeOpen: false })
   await ctx.plugin(PlatformService)
+  await mountChatSettings(ctx)
   ctx.effect(() =>
     ctx.connection.fetch.register({
       path: '/api/artifact',
@@ -152,6 +156,7 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
     contribution7,
     contribution8,
     contribution9,
+    contribution10,
   ].entries())
     ctx.effect(() =>
       ctx.typert.register(validateTypertManifest(REMOTE_PACKAGES[index]!, contribution)),

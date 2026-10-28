@@ -35,8 +35,10 @@ class ScenarioModel extends MockAdapter {
     super([])
     this.calls = []
     this.continuations = new Set()
+    this.reasoningResumed = false
   }
   continueRuns() {
+    this.reasoningResumed = true
     for (const resume of this.continuations) resume()
     this.continuations.clear()
   }
@@ -54,6 +56,59 @@ class ScenarioModel extends MockAdapter {
         ?.filter((b) => b.type === 'text')
         .map((b) => b.text)
         .join('\n') ?? ''
+    const request = messages.filter((m) => m.role === 'user' && m.source?.kind === 'user').at(-1)
+    const requestText =
+      request?.content
+        ?.filter((b) => b.type === 'text')
+        .map((b) => b.text)
+        .join('') ?? ''
+    if (requestText.includes('TZ063')) {
+      const results = messages
+        .slice(messages.lastIndexOf(request))
+        .filter((m) => m.role === 'tool').length
+      const reasoning =
+        results === 0
+          ? '先检查工作区资料。\n\n核对文件读取与错误处理。'
+          : '已收到工具返回，继续核验执行结果。'
+      yield { type: 'block-start', index: 0, blockType: 'reasoning' }
+      for (const part of [reasoning.slice(0, 10), reasoning.slice(10)]) {
+        yield { type: 'reasoning-delta', index: 0, text: part }
+        await delay(750, undefined, { signal: options.signal })
+      }
+      if (results === 0 && requestText.includes('可控思考') && !this.reasoningResumed) {
+        await new Promise((resolve, reject) => {
+          this.continuations.add(resolve)
+          options.signal.addEventListener(
+            'abort',
+            () => {
+              this.continuations.delete(resolve)
+              reject(options.signal.reason)
+            },
+            { once: true },
+          )
+        })
+      }
+      if (requestText.includes('持续思考')) {
+        await delay(10000, undefined, { signal: options.signal })
+      }
+      yield { type: 'block-end', index: 0, block: { type: 'reasoning', text: reasoning } }
+      if (requestText.includes('纯思考')) {
+        yield { type: 'finish', reason: { kind: 'stop' } }
+        return
+      }
+      const response =
+        results >= (requestText.includes('长过程') ? 12 : 2)
+          ? textResponse('TZ063 验收回答：资料已读取，失败已记录，结果完整。')
+          : toolCallResponse(crypto.randomUUID(), 'read', {
+              file_path: join(
+                process.cwd(),
+                results === 0 ? 'package.json' : 'tz063-missing-file.txt',
+              ),
+            })
+      for (const chunk of response)
+        yield 'index' in chunk ? { ...chunk, index: chunk.index + 1 } : chunk
+      return
+    }
     if (last?.role === 'tool') {
       yield* textResponse('工具回执已收到。')
       return

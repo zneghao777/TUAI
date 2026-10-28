@@ -21,3 +21,21 @@ export async function apply(ctx: Context) {
  }
  return async () => { for (const dispose of disposers.reverse()) await dispose() }
 }
+
+// Generated type faces are public even when their optional runtime is not mounted.
+export type {} from '@deepseek-ai/dsh-commands/remote'
+export type {} from '@deepseek-ai/dsh-user-questions/remote'
+export type {} from '@deepseek-ai/dsh-permission-presets/remote'
+export type {} from '@deepseek-ai/dsh-client-file-upload/remote'
+export type {} from '@deepseek-ai/dsh-api-session-controller/remote'
+export type {} from '@deepseek-ai/dsh-subagent/remote'
+export type {} from '@deepseek-ai/dsh-llm/remote'
+export type {} from '@deepseek-ai/dsh-agent-preset-registry/remote'
+export type {} from '@deepseek-ai/dsh-api-settings-controller/remote'
+export type {} from '@deepseek-ai/dsh-api-workspace-controller/remote'
+export type {} from '@deepseek-ai/dsh-api-workspace-files/remote'
+export type {} from '@deepseek-ai/dsh-office-to-pdf/remote'
+export type {} from '@deepseek-ai/dsh-user-approval/types'
+export type { ClientRemote, RemoteHostFacts } from '@deepseek-ai/dsh-api-gateway/client'
+export type { RemoteFailure, RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+export type * from '@deepseek-ai/dsh-api-workspace-controller/types'

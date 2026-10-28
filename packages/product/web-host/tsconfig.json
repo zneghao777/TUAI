@@ -71,6 +71,15 @@
     },
     {
       "path": "../../session/session-projection-cache"
+    },
+    {
+      "path": "../../client/ui-chat/tsconfig.host.json"
+    },
+    {
+      "path": "../../api/settings-controller"
+    },
+    {
+      "path": "../../settings/settings"
     }
   ]
 }

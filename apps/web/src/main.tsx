@@ -1,26 +1,45 @@
-import { createRoot } from 'react-dom/client'
+import { createRoot, type Root } from 'react-dom/client'
 import { AppClient } from './model/client'
-import { App } from './App'
+import { mountProductUi } from './ui'
+import '@deepseek-ai/dsh-client-ui-theme/src/styles/base.css'
+import '@deepseek-ai/dsh-client-ui-theme/src/styles/design-platform.css'
+import '@deepseek-ai/dsh-client-ui-theme/src/styles/focus.css'
+import '@deepseek-ai/dsh-client-ui-theme/src/styles/scrollbar.css'
 import './theme.css'
-const root = createRoot(document.getElementById('root')!)
+import './chat-theme.css'
+const container = document.getElementById('root')!
+let root: Root | undefined
 const client = new AppClient()
-root.render(<p style={{ padding: 32 }}>正在连接天质 AI…</p>)
+let unmount: (() => void) | undefined
+let closed = false
+const loading = document.createElement('p')
+loading.style.padding = '32px'
+loading.textContent = '正在连接天质 AI…'
+container.replaceChildren(loading)
 void client
   .start()
-  .then(() => root.render(<App client={client} />))
-  .catch((error) =>
+  .then(() => {
+    if (closed) return
+    unmount = mountProductUi(client, container)
+  })
+  .catch((error) => {
+    if (closed) return
+    void client.dispose()
+    root ??= createRoot(container)
     root.render(
       <main style={{ padding: 32 }}>
         <h1>连接未完成</h1>
         <p>{error instanceof Error ? error.message : 'Host 未就绪'}</p>
         <button onClick={() => location.reload()}>重新连接</button>
       </main>,
-    ),
-  )
+    )
+  })
 window.addEventListener(
   'pagehide',
   () => {
-    root.unmount()
+    closed = true
+    if (unmount) unmount()
+    else root?.unmount()
     void client.dispose()
   },
   { once: true },

@@ -57,22 +57,35 @@ const rows = [...plan.matchAll(/^\| [☑☐] \| \[TZ-\d{3}\].*$/gm)].map((match)
     .slice(1, -1)
     .map((value) => value.trim()),
 )
-assert.equal(rows.length, 61)
+const progress = plan.match(/\*\*(\d+) \/ (\d+) 已完成/)
+assert.ok(progress, 'missing progress totals')
+assert.equal(rows.length, Number(progress[2]), 'task total mismatch')
 const completed = rows.filter((row) => row[5] === '已完成')
-assert.equal(Number(plan.match(/\*\*(\d+) \/ 61 已完成/)[1]), completed.length)
+assert.equal(Number(progress[1]), completed.length, 'completed total mismatch')
+const taskIds = rows.map((row) => row[1].match(/^\[(TZ-\d{3})\]/)?.[1])
+assert.ok(taskIds.every(Boolean), 'invalid task identity')
+assert.equal(new Set(taskIds).size, rows.length, 'duplicate task identity')
+const sortedIds = [...taskIds].sort()
+for (let i = 0; i < sortedIds.length; i++)
+  assert.equal(sortedIds[i], `TZ-${String(i + 1).padStart(3, '0')}`, 'missing task identity')
+const detailIds = [...plan.matchAll(/^#### (TZ-\d{3})$/gm)].map((match) => match[1])
+assert.deepEqual(detailIds, taskIds, 'task details must follow execution order')
+const statuses = new Set(['待开始', '进行中', '待验证', '受阻', '已完成', '已延期'])
+const preceding = new Set()
 for (let i = 0; i < rows.length; i++) {
   const row = rows[i]
-  const id = `TZ-${String(i + 1).padStart(3, '0')}`
-  assert.ok(row[1].startsWith(`[${id}]`))
+  const id = taskIds[i]
+  assert.ok(statuses.has(row[5]), `${id}: invalid status`)
   assert.equal(row[0] === '☑', row[5] === '已完成', `${id}: checkbox/status mismatch`)
-  for (const dependency of row[4].matchAll(/TZ-(\d+)/g))
-    assert.ok(Number(dependency[1]) < i + 1, `${id}: forward dependency`)
+  for (const dependency of row[4].matchAll(/TZ-\d{3}/g))
+    assert.ok(preceding.has(dependency[0]), `${id}: missing or later dependency ${dependency[0]}`)
   const section = plan.split(`#### ${id}\n`)[1]?.split(/\n#### TZ-|\n### P[1-7]/)[0]
   assert.ok(section, `${id}: missing detail`)
   if (row[5] === '已完成') {
     assert.equal((section.match(/^- \[x\]/gm) ?? []).length, 4, `${id}: incomplete steps`)
     assert.ok(row[6].includes('RUN-'), `${id}: missing execution evidence`)
   }
+  preceding.add(id)
 }
 for (const phase of ['P0', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7']) {
   const expected = rows.filter((row) => row[2] === phase)
@@ -83,5 +96,5 @@ for (const phase of ['P0', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7']) {
   )
 }
 console.log(
-  `Documentation: ${files.length} files, ${links} local links, 61 task states and phase counts verified`,
+  `Documentation: ${files.length} files, ${links} local links, ${rows.length} task states and phase counts verified`,
 )

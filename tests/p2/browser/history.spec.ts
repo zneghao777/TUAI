@@ -55,8 +55,11 @@ test('真实 Host 一万条持久历史、分页锚点与持续输入', async ({
     await expect(page.getByText(/历史记录 10000/).first()).toBeVisible()
     const initialMs = performance.now() - opened
     console.log('history initial', initialMs)
-    const more = page.getByRole('button', { name: '加载更早记录' })
-    const scroller = page.locator('[class*="conversation_"]').first()
+    const more = page.locator('[class*="older_"] button')
+    const scroller = page
+      .locator('[class*="scroll_"]')
+      .filter({ has: page.locator('[data-chat-flow]') })
+      .first()
     let pages = 0
     while (await more.count()) {
       await scroller.evaluate((el) => {
@@ -73,19 +76,21 @@ test('真实 Host 一万条持久历史、分页锚点与持续输入', async ({
       el.scrollTop = 0
     })
     await expect(page.getByText(/历史记录 00001/).first()).toBeVisible()
-    expect(await page.locator('[data-message-kind="user"]').count()).toBeLessThan(40)
+    // Original DSH retains loaded rows for turn navigation and browser find.
+    expect(await page.locator('[data-chat-flow-kind="user"]').count()).toBe(10000)
     const before = await scroller.evaluate((el) => el.scrollTop)
     await page.getByRole('textbox', { name: '消息', exact: true }).fill('万条历史之后的新输入')
     const sendAt = performance.now()
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
     await expect.poll(() => host.model.calls.length).toBeGreaterThan(0)
     console.log('history new accepted')
-    await expect(page.getByText(/历史记录 00001/).first()).toBeVisible()
-    expect(await scroller.evaluate((el) => el.scrollTop)).toBeLessThan(before + 100)
-    await page.getByRole('button', { name: '回到最新消息' }).click()
-    await expect(page.locator('[data-message-kind="assistant"]').last()).toContainText(
-      '万条历史之后的新输入',
-    )
+    // DSH intentionally follows the user's own submission, while remote growth preserves reading.
+    await expect.poll(() => scroller.evaluate((el) => el.scrollTop)).toBeGreaterThan(before + 100)
+    await expect(
+      page
+        .locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])')
+        .last(),
+    ).toContainText('万条历史之后的新输入')
     const metrics = {
       environment: {
         platform: platform(),

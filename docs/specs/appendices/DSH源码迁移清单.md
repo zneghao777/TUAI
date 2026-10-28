@@ -1,9 +1,17 @@
 # DSH 源码迁移清单
 
 本附录把主规范的迁移要求落实到源码目录、依赖检查和迁入批次。
-它是一份待实施清单，不表示这些包已经出现在 TIanZhiAi 中。
+表中策略表示迁移计划，不等于实际迁入状态；已实施来源见 migration 登记。
+2026-10-27 的 P2 策略按[P2 换壳对齐需求](P2-DSH换壳对齐需求.md)更新。
 上游基线、包名和依赖快照分别见
 [上游基线](上游源码基线.json)和[包元数据](DSH包元数据清单.json)。
+
+TZ-062 的 7 包 UI 基础源码、静态 ESM 适配和运行排除项见
+[M4 迁移登记](../../migration/M4-迁移登记.json)与
+[UI 基础核验](../../verification/TZ-062-DSH-UI基础迁移.md)。
+TZ-063 另迁入 27 包对话与依赖源码，启用原 ChatView、过程、工具行和对话显示 settings；
+适配与证据见[对话迁移核验](../../verification/TZ-063-DSH对话与过程迁移.md)。
+复制的其他插件不等于运行时启用；本表仍保留规划策略，实际事实查登记和核验。
 
 ## 1. 使用清单的方式
 
@@ -127,18 +135,23 @@ Workspace 内有用途。裁剪根脚本时，必须同步裁剪其依赖，不�
 
 ### M3：类型化 API 与自主前端的数据层
 
-这一批对应 P2，迁入前后端交互的语义，视觉实现由 TIanZhiAi 决定。
+这一批对应 P2，迁入前后端交互及 DSH 原工作区结构；天质仅在不改变行为的前提下适配品牌与主题。
 
 - 迁入 `packages/typert/*`、`api/gateway`、`api/remotes`、`api/session-controller`。
 - 根据工作区、文件和终端页面的实际范围加入相应 Controller。
 - 迁入 `client/connection`、Session Client 对象、流归并和必要 `client/store`。
 - 评估 `client/web`、`client/modules` 的启动／注入机制；使用新入口时保留
   静态模块共享身份，不能一边直接打包 React、一边加载第二份 React。
-- 组件按[前端参考附录](前端协议与多端参考.md)逐项选择：复用行为、
-  包装适配或自主重写，不要求搬迁整套上游页面。
+- P2 对话组件按[换壳对齐需求](P2-DSH换壳对齐需求.md)优先迁入：Conversation／Chat／Tool、
+  Composer／Trigger／Commands／Reference、问题审批、工作区与富文本；产品层换主题。
+- 主布局／侧栏和必要 settings 运行时属于必迁范围；新增 experimental/auto-review，接真实四项权限。
+- 补齐 Goal／Plan、Compact／Feedback／Export 及文件／沙箱／Web 工具的 Host 组合。
+  独立轨迹页和技能界面暂缓；新闭包不能误带账户、遥测和完整上游运行配置。
+- 确需重写时登记无法复用原因与行为等价证据，不再默认以简化版替换原交互。
 
 验收要求：连接、认证、发送、排队、停止、附件、流结束、历史、重连、审批与
 问题卡片均通过真实类型化调用；浏览器重载不能造成重复任务。
+新增 DSH-01～16 对照覆盖思考／步骤、指令、沙箱／Web、工作区与资源，不能仅验旧卡片。
 
 ### M4：Agent 组合、MCP、Skill 与临时协作
 
@@ -343,9 +356,9 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/api/remotes`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/remotes/package.json)<br>`@deepseek-ai/dsh-api-remotes` | P2 | `planned` | 迁入网关与所用控制器；账户接口另审 |
 | [`packages/api/session-controller`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/session-controller/package.json)<br>`@deepseek-ai/dsh-api-session-controller` | P2 | `planned` | 迁入网关与所用控制器；账户接口另审 |
 | [`packages/api/settings-controller`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/settings-controller/package.json)<br>`@deepseek-ai/dsh-api-settings-controller` | P2 | `planned` | 迁入网关与所用控制器；账户接口另审 |
-| [`packages/api/terminal-controller`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/terminal-controller/package.json)<br>`@deepseek-ai/dsh-api-terminal-controller` | P2 | `planned` | 迁入网关与所用控制器；账户接口另审 |
-| [`packages/api/workspace-controller`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/workspace-controller/package.json)<br>`@deepseek-ai/dsh-api-workspace-controller` | P2 | `planned` | 迁入网关与所用控制器；账户接口另审 |
-| [`packages/api/workspace-files`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/workspace-files/package.json)<br>`@deepseek-ai/dsh-api-workspace-files` | P2 | `planned` | 迁入网关与所用控制器；账户接口另审 |
+| [`packages/api/terminal-controller`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/terminal-controller/package.json)<br>`@deepseek-ai/dsh-api-terminal-controller` | P2 | `planned` | P2 长命令／终端状态与受控操作 |
+| [`packages/api/workspace-controller`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/workspace-controller/package.json)<br>`@deepseek-ai/dsh-api-workspace-controller` | P2 | `planned` | P2 工作区树、Host cwd 与授权同步 |
+| [`packages/api/workspace-files`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/api/workspace-files/package.json)<br>`@deepseek-ai/dsh-api-workspace-files` | P2 | `planned` | P2 文件／资源预览与所属工作区鉴权 |
 
 ### apps
 
@@ -426,12 +439,12 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/client/shortcuts`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/shortcuts/package.json)<br>`@deepseek-ai/dsh-client-shortcuts` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/store`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/store/package.json)<br>`@deepseek-ai/dsh-client-store` | P2 | `planned` | 优先迁入连接、状态、启动或渲染契约，视觉可替换 |
 | [`packages/client/ui-agent-preset`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-agent-preset/package.json)<br>`@deepseek-ai/dsh-client-ui-agent-preset` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-approval`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-approval/package.json)<br>`@deepseek-ai/dsh-client-ui-approval` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-attachment`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-attachment/package.json)<br>`@deepseek-ai/dsh-client-ui-attachment` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-approval`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-approval/package.json)<br>`@deepseek-ai/dsh-client-ui-approval` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-attachment`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-attachment/package.json)<br>`@deepseek-ai/dsh-client-ui-attachment` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-brand-official`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-brand-official/package.json)<br>`@deepseek-ai/dsh-client-ui-brand-official` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-chat`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-chat/package.json)<br>`@deepseek-ai/dsh-client-ui-chat` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-commands`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-commands/package.json)<br>`@deepseek-ai/dsh-client-ui-commands` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-conversation`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-conversation/package.json)<br>`@deepseek-ai/dsh-client-ui-conversation` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-chat`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-chat/package.json)<br>`@deepseek-ai/dsh-client-ui-chat` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-commands`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-commands/package.json)<br>`@deepseek-ai/dsh-client-ui-commands` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-conversation`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-conversation/package.json)<br>`@deepseek-ai/dsh-client-ui-conversation` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-deepseek-model-label-1017`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-deepseek-model-label-1017/package.json)<br>`@deepseek-ai/dsh-client-ui-deepseek-model-label-1017` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-deliverables`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-deliverables/package.json)<br>`@deepseek-ai/dsh-client-ui-deliverables` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-directory-picker-browse`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-directory-picker-browse/package.json)<br>`@deepseek-ai/dsh-client-ui-directory-picker-browse` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
@@ -439,27 +452,27 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/client/ui-dockkit`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-dockkit/package.json)<br>`@deepseek-ai/dsh-client-ui-dockkit` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-entry-customization`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-entry-customization/package.json)<br>`@deepseek-ai/dsh-client-ui-entry-customization` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-file-drag`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-file-drag/package.json)<br>`@deepseek-ai/dsh-client-ui-file-drag` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-goal/package.json)<br>`@deepseek-ai/dsh-client-ui-goal` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-input-trigger`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-input-trigger/package.json)<br>`@deepseek-ai/dsh-client-ui-input-trigger` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-goal/package.json)<br>`@deepseek-ai/dsh-client-ui-goal` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-input-trigger`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-input-trigger/package.json)<br>`@deepseek-ai/dsh-client-ui-input-trigger` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-jobs`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-jobs/package.json)<br>`@deepseek-ai/dsh-client-ui-jobs` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-layout`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-layout/package.json)<br>`@deepseek-ai/dsh-client-ui-layout` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-layout`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-layout/package.json)<br>`@deepseek-ai/dsh-client-ui-layout` | P2 | `planned` | 迁原三栏骨架、宽度／折叠与 Slot 协调；TZ-063/068 |
 | [`packages/client/ui-message-feedback`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-message-feedback/package.json)<br>`@deepseek-ai/dsh-client-ui-message-feedback` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-model-selection`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-model-selection/package.json)<br>`@deepseek-ai/dsh-client-ui-model-selection` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-model-selection`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-model-selection/package.json)<br>`@deepseek-ai/dsh-client-ui-model-selection` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-open-in-app`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-open-in-app/package.json)<br>`@deepseek-ai/dsh-client-ui-open-in-app` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-permission-presets`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-permission-presets/package.json)<br>`@deepseek-ai/dsh-client-ui-permission-presets` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-plan`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-plan/package.json)<br>`@deepseek-ai/dsh-client-ui-plan` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-permission-presets`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-permission-presets/package.json)<br>`@deepseek-ai/dsh-client-ui-permission-presets` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-plan`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-plan/package.json)<br>`@deepseek-ai/dsh-client-ui-plan` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-plugin-manager`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-plugin-manager/package.json)<br>`@deepseek-ai/dsh-client-ui-plugin-manager` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-plugin-market`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-plugin-market/package.json)<br>`@deepseek-ai/dsh-client-ui-plugin-market` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-primitives`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-primitives/package.json)<br>`@deepseek-ai/dsh-client-ui-primitives` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-reference`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-reference/package.json)<br>`@deepseek-ai/dsh-client-ui-reference` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-primitives`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-primitives/package.json)<br>`@deepseek-ai/dsh-client-ui-primitives` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-reference`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-reference/package.json)<br>`@deepseek-ai/dsh-client-ui-reference` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-renderer`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-renderer/package.json)<br>`@deepseek-ai/dsh-client-ui-renderer` | P2 | `planned` | 优先迁入连接、状态、启动或渲染契约，视觉可替换 |
 | [`packages/client/ui-schedule`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-schedule/package.json)<br>`@deepseek-ai/dsh-client-ui-schedule` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-secret-mask`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-secret-mask/package.json)<br>`@deepseek-ai/dsh-client-ui-secret-mask` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-session`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-session/package.json)<br>`@deepseek-ai/dsh-client-ui-session` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-settings`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings/package.json)<br>`@deepseek-ai/dsh-client-ui-settings` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-session`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-session/package.json)<br>`@deepseek-ai/dsh-client-ui-session` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-settings`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings/package.json)<br>`@deepseek-ai/dsh-client-ui-settings` | P2 | `planned` | 来源／契约已迁不等于运行时启用；接显示、输入与权限所需 settings 闭包；TZ-063/065/066 |
 | [`packages/client/ui-settings-account`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-account/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-account` | P2 | `reference_only` | 审计契约并替换产品账户或观测集成 |
 | [`packages/client/ui-settings-agent-loop`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-agent-loop/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-agent-loop` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-settings-general`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-general/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-general` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-settings-general`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-general/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-general` | P2 | `planned` | 迁必要 General 偏好与原设置交互；不引入账户／遥测；TZ-063/065/066 |
 | [`packages/client/ui-settings-models`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-models/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-models` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-settings-plugin-inventory`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-plugin-inventory/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-plugin-inventory` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-settings-plugins`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-plugins/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-plugins` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
@@ -468,21 +481,21 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/client/ui-settings-subagent`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-subagent/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-subagent` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-settings-web-search`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-web-search/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-web-search` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-shortcuts`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-shortcuts/package.json)<br>`@deepseek-ai/dsh-client-ui-shortcuts` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-sidebar`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-sidebar`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar` | P2 | `planned` | 迁原工作区侧栏容器与操作结构；TZ-068 |
 | [`packages/client/ui-sidebar-browser`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-browser/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-browser` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-sidebar-documentpreview`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-documentpreview/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-documentpreview` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-sidebar-files`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-files/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-files` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-sidebar-right`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-right/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-right` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-sidebar-terminal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-terminal/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-terminal` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-sidebar-documentpreview`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-documentpreview/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-documentpreview` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-sidebar-files`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-files/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-files` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-sidebar-right`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-right/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-right` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-sidebar-terminal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-terminal/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-terminal` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-skill`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-skill/package.json)<br>`@deepseek-ai/dsh-client-ui-skill` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-slots`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-slots/package.json)<br>`@deepseek-ai/dsh-client-ui-slots` | P2 | `planned` | 优先迁入连接、状态、启动或渲染契约，视觉可替换 |
 | [`packages/client/ui-subagent`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-subagent/package.json)<br>`@deepseek-ai/dsh-client-ui-subagent` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-theme`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-theme/package.json)<br>`@deepseek-ai/dsh-client-ui-theme` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-tool`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-tool/package.json)<br>`@deepseek-ai/dsh-client-ui-tool` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-tool`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-tool/package.json)<br>`@deepseek-ai/dsh-client-ui-tool` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-trajectory`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-trajectory/package.json)<br>`@deepseek-ai/dsh-client-ui-trajectory` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-user-questions`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-user-questions/package.json)<br>`@deepseek-ai/dsh-client-ui-user-questions` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-user-questions`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-user-questions/package.json)<br>`@deepseek-ai/dsh-client-ui-user-questions` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/ui-workflow-run`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-workflow-run/package.json)<br>`@deepseek-ai/dsh-client-ui-workflow-run` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-workspace`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-workspace/package.json)<br>`@deepseek-ai/dsh-client-ui-workspace` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
+| [`packages/client/ui-workspace`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-workspace/package.json)<br>`@deepseek-ai/dsh-client-ui-workspace` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
 | [`packages/client/web`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/web/package.json)<br>`@deepseek-ai/dsh-client-web` | P2 | `planned` | 优先迁入连接、状态、启动或渲染契约，视觉可替换 |
 
 ### compaction
@@ -491,7 +504,7 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/compaction/command-compact`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/compaction/command-compact/package.json)<br>`@deepseek-ai/dsh-command-compact` | P1 | `planned` | 迁入上下文压缩及所需实现 |
+| [`packages/compaction/command-compact`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/compaction/command-compact/package.json)<br>`@deepseek-ai/dsh-command-compact` | P2 | `planned` | P2 手动压缩命令与真实回执 |
 | [`packages/compaction/compaction`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/compaction/compaction/package.json)<br>`@deepseek-ai/dsh-compaction` | P1 | `planned` | 迁入上下文压缩及所需实现 |
 | [`packages/compaction/compaction-basic`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/compaction/compaction-basic/package.json)<br>`@deepseek-ai/dsh-compaction-basic` | P1 | `planned` | 迁入上下文压缩及所需实现 |
 | [`packages/compaction/compaction-image-offload`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/compaction/compaction-image-offload/package.json)<br>`@deepseek-ai/dsh-compaction-image-offload` | P1 | `planned` | 迁入上下文压缩及所需实现 |
@@ -515,7 +528,7 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/context/file-reference`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/context/file-reference/package.json)<br>`@deepseek-ai/dsh-file-reference` | P1 | `planned` | 按实际提示与引用能力迁入 |
 | [`packages/context/file-reference-local`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/context/file-reference-local/package.json)<br>`@deepseek-ai/dsh-file-reference-local` | P1 | `planned` | 按实际提示与引用能力迁入 |
 | [`packages/context/harness-dev-context`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/context/harness-dev-context/package.json)<br>`@deepseek-ai/dsh-harness-dev-context` | P1 | `planned` | 按实际提示与引用能力迁入 |
-| [`packages/context/session-reference`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/context/session-reference/package.json)<br>`@deepseek-ai/dsh-session-reference` | P1 | `planned` | 按实际提示与引用能力迁入 |
+| [`packages/context/session-reference`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/context/session-reference/package.json)<br>`@deepseek-ai/dsh-session-reference` | P2 | `planned` | P2 @ 会话引用与授权解析 |
 | [`packages/context/time-context`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/context/time-context/package.json)<br>`@deepseek-ai/dsh-time-context` | P1 | `planned` | 按实际提示与引用能力迁入 |
 | [`packages/context/tmux-context`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/context/tmux-context/package.json)<br>`@deepseek-ai/dsh-tmux-context` | P1 | `planned` | 按实际提示与引用能力迁入 |
 
@@ -576,7 +589,7 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/experimental/agent-team`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/experimental/agent-team/package.json)<br>`@deepseek-ai/dsh-experimental-agent-team` | 后续 | `deferred` | 实验能力不作为首版依赖，配置闭包引用另审 |
 | [`packages/experimental/agent-team-profile`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/experimental/agent-team-profile/package.json)<br>`@deepseek-ai/dsh-experimental-agent-team-profile` | 后续 | `deferred` | 实验能力不作为首版依赖，配置闭包引用另审 |
 | [`packages/experimental/api-speech-to-text`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/experimental/api-speech-to-text/package.json)<br>`@deepseek-ai/dsh-experimental-api-speech-to-text` | 后续 | `deferred` | 实验能力不作为首版依赖，配置闭包引用另审 |
-| [`packages/experimental/auto-review`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/experimental/auto-review/package.json)<br>`@deepseek-ai/dsh-experimental-auto-review` | 后续 | `deferred` | 实验能力不作为首版依赖，配置闭包引用另审 |
+| [`packages/experimental/auto-review`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/experimental/auto-review/package.json)<br>`@deepseek-ai/dsh-experimental-auto-review` | P2 | `planned` | TZ-066：真实自动审查预设／工具前审查／拒绝与失败；修补热卸载隐式扩权；不以菜单占位替代 |
 | [`packages/experimental/badge-skill-bundle`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/experimental/badge-skill-bundle/package.json)<br>`@deepseek-ai/dsh-experimental-badge-skill-bundle` | 后续 | `deferred` | 实验能力不作为首版依赖，配置闭包引用另审 |
 | [`packages/experimental/browser-use-chrome-devtools-mcp`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/experimental/browser-use-chrome-devtools-mcp/package.json)<br>`@deepseek-ai/dsh-experimental-browser-use-chrome-devtools-mcp` | 后续 | `deferred` | 实验能力不作为首版依赖，配置闭包引用另审 |
 | [`packages/experimental/browser-use-playwright-mcp`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/experimental/browser-use-playwright-mcp/package.json)<br>`@deepseek-ai/dsh-experimental-browser-use-playwright-mcp` | 后续 | `deferred` | 实验能力不作为首版依赖，配置闭包引用另审 |
@@ -648,7 +661,7 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/feedback/command-feedback`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/feedback/command-feedback/package.json)<br>`@deepseek-ai/dsh-command-feedback` | 后续 | `deferred` | 反馈服务与产品渠道独立设计 |
+| [`packages/feedback/command-feedback`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/feedback/command-feedback/package.json)<br>`@deepseek-ai/dsh-command-feedback` | P2 | `planned` | P2 当前会话反馈；不接上游遥测或自动外传 |
 | [`packages/feedback/message-feedback`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/feedback/message-feedback/package.json)<br>`@deepseek-ai/dsh-message-feedback` | 后续 | `deferred` | 反馈服务与产品渠道独立设计 |
 
 ### fs
@@ -671,10 +684,10 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/goal/command-goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/goal/command-goal/package.json)<br>`@deepseek-ai/dsh-command-goal` | 后续 | `deferred` | 评估目标驱动，避免与产品任务双重调度 |
-| [`packages/goal/goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/goal/goal/package.json)<br>`@deepseek-ai/dsh-goal` | 后续 | `deferred` | 评估目标驱动，避免与产品任务双重调度 |
-| [`packages/goal/goal-round-driver`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/goal/goal-round-driver/package.json)<br>`@deepseek-ai/dsh-goal-round-driver` | 后续 | `deferred` | 评估目标驱动，避免与产品任务双重调度 |
-| [`packages/goal/tool-goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/goal/tool-goal/package.json)<br>`@deepseek-ai/dsh-tool-goal` | 后续 | `deferred` | 评估目标驱动，避免与产品任务双重调度 |
+| [`packages/goal/command-goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/goal/command-goal/package.json)<br>`@deepseek-ai/dsh-command-goal` | P2 | `planned` | P2 同 Session 有界目标；不替代 TaskRuntime，见 ADR-015 |
+| [`packages/goal/goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/goal/goal/package.json)<br>`@deepseek-ai/dsh-goal` | P2 | `planned` | P2 同 Session 有界目标；不替代 TaskRuntime，见 ADR-015 |
+| [`packages/goal/goal-round-driver`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/goal/goal-round-driver/package.json)<br>`@deepseek-ai/dsh-goal-round-driver` | P2 | `planned` | P2 同 Session 有界目标；不替代 TaskRuntime，见 ADR-015 |
+| [`packages/goal/tool-goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/goal/tool-goal/package.json)<br>`@deepseek-ai/dsh-tool-goal` | P2 | `planned` | P2 同 Session 有界目标；不替代 TaskRuntime，见 ADR-015 |
 
 ### guard
 
@@ -785,7 +798,7 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/plan/plan-mode`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/plan/plan-mode/package.json)<br>`@deepseek-ai/dsh-plan-mode` | P3 | `reference_only` | 这是内核运行模式，区别于个人长期计划 |
+| [`packages/plan/plan-mode`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/plan/plan-mode/package.json)<br>`@deepseek-ai/dsh-plan-mode` | P2 | `planned` | P2 /plan 与规划审阅；不是 P6 Scheduler |
 
 ### preset
 
@@ -850,7 +863,7 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/session/message-quotes`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session/message-quotes/package.json)<br>`@deepseek-ai/dsh-message-quotes` | P1 | `planned` | 迁入日志、格式、投影和恢复；遥测另审 |
+| [`packages/session/message-quotes`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session/message-quotes/package.json)<br>`@deepseek-ai/dsh-message-quotes` | P2 | `planned` | P2 消息引用与结构化草稿，保留公开契约 |
 | [`packages/session/session-checkpoint-policy`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session/session-checkpoint-policy/package.json)<br>`@deepseek-ai/dsh-session-checkpoint-policy` | P1 | `planned` | 迁入日志、格式、投影和恢复；遥测另审 |
 | [`packages/session/session-format`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session/session-format/package.json)<br>`@deepseek-ai/dsh-session-format` | P1 | `planned` | 迁入日志、格式、投影和恢复；遥测另审 |
 | [`packages/session/session-format-catalog`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session/session-format-catalog/package.json)<br>`@deepseek-ai/dsh-session-format-catalog` | P1 | `planned` | 迁入日志、格式、投影和恢复；遥测另审 |
@@ -879,7 +892,7 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/session-query/session-log-export`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session-query/session-log-export/package.json)<br>`@deepseek-ai/dsh-session-log-export` | P2 | `planned` | 随 Session API 所需查询能力迁入 |
+| [`packages/session-query/session-log-export`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session-query/session-log-export/package.json)<br>`@deepseek-ai/dsh-session-log-export` | P2 | `planned` | P2 /export ZIP／Markdown 与鉴权下载 |
 | [`packages/session-query/session-query`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session-query/session-query/package.json)<br>`@deepseek-ai/dsh-session-query` | P2 | `planned` | 随 Session API 所需查询能力迁入 |
 | [`packages/session-query/session-query-sqlite`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/session-query/session-query-sqlite/package.json)<br>`@deepseek-ai/dsh-session-query-sqlite` | P2 | `planned` | 随 Session API 所需查询能力迁入 |
 
@@ -993,8 +1006,8 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/terminal/terminal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/terminal/terminal/package.json)<br>`@deepseek-ai/dsh-terminal` | P1/P7 | `planned` | 按真实终端能力和平台纳入 |
-| [`packages/terminal/terminal-bash`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/terminal/terminal-bash/package.json)<br>`@deepseek-ai/dsh-terminal-bash` | P1/P7 | `planned` | 按真实终端能力和平台纳入 |
+| [`packages/terminal/terminal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/terminal/terminal/package.json)<br>`@deepseek-ai/dsh-terminal` | P2 | `planned` | P2 对话操作闭包；P7 其他平台实机验收 |
+| [`packages/terminal/terminal-bash`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/terminal/terminal-bash/package.json)<br>`@deepseek-ai/dsh-terminal-bash` | P2 | `planned` | P2 对话操作闭包；P7 其他平台实机验收 |
 
 ### test-support
 
@@ -1080,11 +1093,11 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/web/tool-web`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/tool-web/package.json)<br>`@deepseek-ai/dsh-tool-web` | 后续 | `deferred` | 网页搜索抓取按需配置，不替代浏览器 |
-| [`packages/web/web`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web/package.json)<br>`@deepseek-ai/dsh-web` | 后续 | `deferred` | 网页搜索抓取按需配置，不替代浏览器 |
+| [`packages/web/tool-web`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/tool-web/package.json)<br>`@deepseek-ai/dsh-tool-web` | P2 | `planned` | P2 真实搜索／抓取工具与结果 |
+| [`packages/web/web`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web/package.json)<br>`@deepseek-ai/dsh-web` | P2 | `planned` | P2 搜索／抓取服务契约，不替代 P4 浏览器 |
 | [`packages/web/web-deepseek-api`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web-deepseek-api/package.json)<br>`@deepseek-ai/dsh-web-deepseek-api` | 后续 | `deferred` | 网页搜索抓取按需配置，不替代浏览器 |
-| [`packages/web/web-fetch-http`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web-fetch-http/package.json)<br>`@deepseek-ai/dsh-web-fetch-http` | 后续 | `deferred` | 网页搜索抓取按需配置，不替代浏览器 |
-| [`packages/web/web-search-deepseek`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web-search-deepseek/package.json)<br>`@deepseek-ai/dsh-web-search-deepseek` | 后续 | `deferred` | 网页搜索抓取按需配置，不替代浏览器 |
+| [`packages/web/web-fetch-http`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web-fetch-http/package.json)<br>`@deepseek-ai/dsh-web-fetch-http` | P2 | `planned` | P2 抓取 Provider，保留地址与重定向保护 |
+| [`packages/web/web-search-deepseek`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web-search-deepseek/package.json)<br>`@deepseek-ai/dsh-web-search-deepseek` | P2 | `planned` | P2 搜索候选；显式凭据与可用性需核实，不接账户默认项 |
 | [`packages/web/web-search-exa`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web-search-exa/package.json)<br>`@deepseek-ai/dsh-web-search-exa` | 后续 | `deferred` | 网页搜索抓取按需配置，不替代浏览器 |
 | [`packages/web/web-search-perplexity`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/web/web-search-perplexity/package.json)<br>`@deepseek-ai/dsh-web-search-perplexity` | 后续 | `deferred` | 网页搜索抓取按需配置，不替代浏览器 |
 
@@ -1116,8 +1129,8 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 ## 7. 下一步
 
-按 M0 开始建立迁移登记，选取 M1 的明确种子与实际启用 Profile，重新生成闭包并人工核验。
-在第一批运行证据出现前，本附录全部条目继续保持规划状态。
+按总计划的当前任务续接，每项核查实际闭包并更新独立登记。
+原 M0／M1／M3 实际来源和本地补丁保留，表中的 planned 不能替代实施证据。
 
 ## 9. P2 实际迁入索引
 
@@ -1126,3 +1139,13 @@ P2 的实际闭包、源文件哈希、许可、包清单适配与回滚基点�
 共享包身份，生成客户端与 Host codec 随构建生成；产品运行不依赖相邻参考源码。
 前端参考项的采用/包装/重写见[前端参考 §8](前端协议与多端参考.md#8-p2-实施取舍登记)。
 不修改上游基线或原包元数据快照来表示迁移进度。
+
+## 10. P2 换壳补充批次
+
+新增能力分为 M3.1 前端行为、M3.2 会话命令、M3.3 工具与资源，具体种子与
+闭包核查见[P2 对齐附录 §6](P2-DSH换壳对齐需求.md#6-迁移方式与依赖闭包)。
+这些是待实施批次，不能写入旧 M3 登记冒充已经迁入。
+
+原先 ui-chat／conversation／tool 等 reference_only、Goal／Plan／Web 的后续安排
+按本次范围调整为 P2 planned。其余包仍按实际需要核查，不把整个上游包表一次迁入。
+上下游名称、源码哈希及包元数据 JSON 是证据快照，本次不修改；应用进度仅在总计划。
