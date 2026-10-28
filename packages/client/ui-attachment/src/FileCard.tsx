@@ -41,6 +41,7 @@ export function FileCard({
     <div
       className={`${css.card}${retryable ? ` ${css.failed}` : ''}`}
       title={name}
+      data-upload-state={state}
     >
       <span className={css.icon} aria-hidden>
         {state === 'uploading'

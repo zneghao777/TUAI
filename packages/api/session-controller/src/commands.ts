@@ -457,12 +457,24 @@ export class SessionCommandController {
       throw new RemoteError('session/steer-unavailable', 'current turn no longer accepts steering', { itemId: request.itemId })
     }
     switch (request.action.kind) {
-      case 'edit':
+      case 'edit': {
+        // The wire accepts only text. Keep already-admitted attachments on the Host;
+        // clients cannot replace their identities or introduce a foreign reference.
+        const replacement = request.action.content
+        let inserted = false
+        const content = message.content.flatMap<UserMessage['content'][number]>(block => {
+          if (block.type !== 'text') return [block]
+          if (inserted) return []
+          inserted = true
+          return [...replacement]
+        })
+        if (!inserted) content.unshift(...replacement)
         agent.inbox.replace(request.itemId, freezeMessage<UserMessage>({
           ...message,
-          content: [...request.action.content],
+          content,
         }))
         break
+      }
       case 'remove': {
         agent.inbox.remove(request.itemId)
         const source = message.source

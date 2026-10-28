@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "batchId": "M4",
   "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
-  "status": "verified-tools-closure",
-  "scope": "P2 原 UI 与工具闭包；TZ-062/063/064 已验；完整 P2 未放行，未注册插件不表示启用",
+  "status": "verified-p2-interaction-closure",
+  "scope": "P2 原 DSH 对话工作区与天质主题；TZ-062～069 与 TZ-022 已验；不启用 Skill／轨迹／后续产品能力",
   "rollbackRevision": "6d65d4e0657e6035b6f9442545ed4c250bfdb62e",
   "packages": [
     {
@@ -2730,6 +2730,51 @@
           "path": "packages/client/ui-conversation/src/client/index.ts",
           "sha256": "b932d2360bbabc41dbb2e2610f12ec8b42b694df42273f277f3b15055d3c97cf",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/apply.ts",
+          "sha256": "a9c192c3747bfc2d50dcaa29ec004f7540ba80800437759c07490223ff8057ab",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/contract/slots.ts",
+          "sha256": "0ae907f2d337a78fe290595b1aa3500a5be7983bc3fc0325622e497e9b7b0ac1",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/input/hub.ts",
+          "sha256": "9f42e2237d126e652a9dc3f22322a7a8d0b53046c5f38286f28cbc05cb9d681b",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx",
+          "sha256": "74fa0cf4b6197ee38496c94b21f6f6a9d33d9ef92db6e1b721209835b6454c57",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/service.ts",
+          "sha256": "9b550a0faf031c97f2eef69ea4c482aff8a693223c63aaab712ad874a1517e71",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/ConversationContent.tsx",
+          "sha256": "96ec6abc7bcf822054cac135b8022caf3c59fd970d0042e42732a54069417c1d",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/stores.ts",
+          "sha256": "f6882fd6d36aadaf4d97ea55916ce17b6fc7a67b1a587f8a5c4ce58ba39693c0",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/tests/queue-dock.client.spec.tsx",
+          "sha256": "600bcc552bb3f1a3bc58d4567486c87c2b0325b38f1c9ade267a0dac063f52d1",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/tests/user-text-component-fixture.client.tsx",
+          "sha256": "451df6dad58ae2c7618e571efb155658643a261e7c3460ef488e1e58db68cd75",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -2742,6 +2787,11 @@
           "path": "packages/client/ui-conversation/src/client/core.ts",
           "sha256": "b2a4b4647d413ac788139b4ae03581f2665820e1af4bb53f71524f2b70b2d49e",
           "reason": "从原 apply 分离可组合的对话核心入口，复用原 assembly 与 user-text，暂不启用 Composer"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/submission-journal.ts",
+          "sha256": "e162c27d867cb0678768c880639641fd832cc0fac85c2c6d16921133564e9733",
+          "reason": "P2 持久输入恢复适配，按 Host/Session 隔离"
         }
       ]
     },
@@ -4858,6 +4908,11 @@
           "path": "packages/client/ui-chat/src/client/index.ts",
           "sha256": "69ebc147ac28ea4696cb38563c584f59e359f07f80af3ef1ffdb44f730bcc722",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/ChatView.module.css",
+          "sha256": "15a50352a38271c800a6d2aa227b347813662c84b68f5f920f743b8f61b692f8",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -6742,6 +6797,16 @@
           "path": "packages/client/ui-sidebar-documentpreview/package.json",
           "sha256": "c1ce5093c149325e4595e54866228b8b8d31355fb0996d38d92f93bacd126a50",
           "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "sha256": "a27d0a0602b55e030f527c686f64941124f19d18a2d133fa5b2a98e1919c9ae7",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/tests/document-preview-license-bundle.client.spec.ts",
+          "sha256": "079d827e3dec2c1fe4bd88f993d0f9124ee8493448c54000a771136ce55dd73b",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -6919,6 +6984,16 @@
           "path": "packages/api/workspace-files/package.json",
           "sha256": "b916df9dbc4b685b31ad4d6e5ae5dcc06c8dfb84e192df6246536909cacf4c81",
           "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/api/workspace-files/src/changes.ts",
+          "sha256": "566bc6885e316c31153a2be93f405d6ff664ea2a24e7c4de21584d73891a5571",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/workspace-files/src/index.ts",
+          "sha256": "9f849a443ea076dea3cf19b84fb34fa6c26dbf6cec6bb655b67d5bce52004103",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -7280,8 +7355,28 @@
         },
         {
           "path": "packages/client/ui-workspace/src/client/index.ts",
-          "sha256": "29fc9f4a1dd1afacdd3909fb30942a1a9b99b40bd88d9eb5aa0487f167480a43",
+          "sha256": "4a1bdccdef76ba9fbd6b604a6e2db26a3b0ed7a604a71976bfc46f0723e42ed2",
           "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/navigation.ts",
+          "sha256": "8b629d60aa36e2bda42c649d3fdaf7646ccc8bb9affb510f073e6dc5130a848a",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx",
+          "sha256": "19ba0c644c15f7433ec49933cef4e71dcca4f26aedd70c1de95246f18ce5fd75",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx",
+          "sha256": "948f00187188dea2ac7464c744aa1d0bba337fc6138a4094626465a73f17962d",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/tree.ts",
+          "sha256": "e404bcc3a1612e90108537e42b51f3b9beefee69ad16b53bf5393d8d62fab687",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -8301,6 +8396,16 @@
           "path": "packages/client/ui-attachment/src/client/index.ts",
           "sha256": "1cff2ca491252b76ef8339718132f9c78092336304b88b1177dc01aa6fce96d9",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        },
+        {
+          "path": "packages/client/ui-attachment/src/FileCard.tsx",
+          "sha256": "8d76bb48160af30196fe91fbe6a46ff91ecf100542d057511f59600a58693762",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-attachment/src/client/ComposerAttachments.tsx",
+          "sha256": "ea2ccd0d55c3ee4acaaecabfa285f549b84bfc710adb1811d0700caeeb00f723",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -9695,9 +9800,2777 @@
           "reason": "保留来源许可"
         }
       ]
+    },
+    {
+      "path": "packages/client/ui-commands",
+      "name": "@deepseek-ai/dsh-client-ui-commands",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-065",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-commands/README.i18n.yaml",
+          "sha256": "a602c2d2af4d3af2c94b2d6a1f5365b72621f52cf9369f78555b1fc6f25774b5"
+        },
+        {
+          "path": "packages/client/ui-commands/README.md",
+          "sha256": "54850f75fe4ab19fef3108dfb18689c2cb59ee07ac2bd4646ad314cbebd216de"
+        },
+        {
+          "path": "packages/client/ui-commands/README.zh.md",
+          "sha256": "25b9ea23f3bcdf06ddccb98d348c000888ba7fe524c13d5578b6886e4f88fd97"
+        },
+        {
+          "path": "packages/client/ui-commands/locale/de.json",
+          "sha256": "74f091cdde6b5f014b287bb4bebebbd70e39d89bd7fd15537919a0365b3f6394"
+        },
+        {
+          "path": "packages/client/ui-commands/locale/en.json",
+          "sha256": "298f340e5e502afe1cf52a3f87272352238b0a331d0e26b22fefc30fc601fd81"
+        },
+        {
+          "path": "packages/client/ui-commands/locale/es.json",
+          "sha256": "41c1b6e6c2bd3865eeb99cee242710ed81d06a86e6ee22090f7f61494297b335"
+        },
+        {
+          "path": "packages/client/ui-commands/locale/fr.json",
+          "sha256": "29c2472029061bc399832c6b6fac7367e930190dd0761c229d5c0f5c9576285d"
+        },
+        {
+          "path": "packages/client/ui-commands/locale/ja.json",
+          "sha256": "173e20a87914f9629dfac1621ba7aeb07b8d384fa5f65a0aa47bbed9ad437f40"
+        },
+        {
+          "path": "packages/client/ui-commands/locale/pt.json",
+          "sha256": "e2e638c8e7a16632c7e043cbbaffb0b90fbbcedc4496e64a6a92919c1abc2a96"
+        },
+        {
+          "path": "packages/client/ui-commands/locale/ru.json",
+          "sha256": "b3b7e058a1149babf5e815de7e5cc3b720970383437b0451b9a84df8ac9cdf55"
+        },
+        {
+          "path": "packages/client/ui-commands/locale/zh.json",
+          "sha256": "83e61a783fb10db9ff13381d284bec2009214754dbc48d17d27651fcd17879e1"
+        },
+        {
+          "path": "packages/client/ui-commands/package.json",
+          "sha256": "334839b1e1af946e79329478f144084187edcf2a11df1ab23b25ad45cf0c8fc3"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/PopupSelectView.module.css",
+          "sha256": "fb0b6d247299328dd40dea2308eecc565b7303e726012376dafb5874075c88c9"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/PopupSelectView.tsx",
+          "sha256": "1654657e3b1301c998c7a763e05ed4a3c60e0b63ff30a3f547b2be66995fb867"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/contract.ts",
+          "sha256": "5c9e39822da9d1bf764d129d5d7969d18b4b1f453b5e858655bc5426b98e0ca1"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/directory.ts",
+          "sha256": "53534d312e7c297685e7f6c0d5ae8ec4894b3d8546ec440aa3d875867bfeb019"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/index.ts",
+          "sha256": "5ef1f1ed0b6d5ce541077a26fa7e8cb4bb66e21cc85e400dde5fc7fa921fd7b2"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/locales.ts",
+          "sha256": "902b58b926a81e64f089c4f7b0381b38c7ddb70f73ef4bf49ddacec19ce37936"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/option-groups.ts",
+          "sha256": "6c7324db937c13faa13dcccf174b150ee5ca8b5d6f099a075ff0f8c4529bd2e0"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/popup.ts",
+          "sha256": "d4360022df4aeb16400b70b641b852426b8cb4b99a9fed30d3870f78f003dcea"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/presentation.ts",
+          "sha256": "86cc01cfc0392225e8fb8d99b32ef53890e94bbc1de53b41a72b4f22fa2361e1"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/resolution.ts",
+          "sha256": "15d237d7cc22bde193391811c487192964fa2d6522d8ee5a141744b01782693f"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/service.ts",
+          "sha256": "645472d8f9fa30d32c684fce6f127fe97125b7368ad3a1c538422e304d0fb9c6"
+        },
+        {
+          "path": "packages/client/ui-commands/src/css-modules.d.ts",
+          "sha256": "e28410d74a0d763364c04fa690c2ca2202ad3019c74f8f5205e8dc6cba69c02f"
+        },
+        {
+          "path": "packages/client/ui-commands/src/index.ts",
+          "sha256": "4736c026a1afc5ead8ce08e31e1b2c232914ec14fb49f1746ab9901b2afb4c03"
+        },
+        {
+          "path": "packages/client/ui-commands/tests/browser-plugin.client.spec.ts",
+          "sha256": "d63894bbc64afc9946e1ca746f5949f5c513a3bcb51fb4a959c3c8f3b8653117"
+        },
+        {
+          "path": "packages/client/ui-commands/tests/directory.client.spec.ts",
+          "sha256": "9e12ff36270a4b2c10ee64b3d5c7dce67832c86fe7619345164ef0f2096ed854"
+        },
+        {
+          "path": "packages/client/ui-commands/tests/popup-view.client.spec.tsx",
+          "sha256": "4ac2ca242473c0abc76403132624aa0c9f8eb83b85896936f150450c83b032e7"
+        },
+        {
+          "path": "packages/client/ui-commands/tests/popup.client.spec.ts",
+          "sha256": "c6e4f541da37b0c785af5ad9e45d1d740d11468baed1cde358a7b28af4a6587f"
+        },
+        {
+          "path": "packages/client/ui-commands/tests/service.client.spec.ts",
+          "sha256": "8d4ef623800494a56e94e59e504d5405e0854bdc12c892eb445489474301e3d0"
+        },
+        {
+          "path": "packages/client/ui-commands/tsconfig.json",
+          "sha256": "39c597125814e5116572af3ae44bdced0f4703d93065639c873cc679d5dbef32"
+        },
+        {
+          "path": "packages/client/ui-commands/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-commands/package.json",
+          "sha256": "df1197c1272aa0668bd48d56b0fdb27a0d0e7a1be8529fb15a47509f52310ee1",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-commands/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/client/ui-reference",
+      "name": "@deepseek-ai/dsh-client-ui-reference",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-065",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-reference/README.i18n.yaml",
+          "sha256": "e712be3f7bd675008aa1ce8ecc2efe29b586930cc67434e6b34a88d5ef513176"
+        },
+        {
+          "path": "packages/client/ui-reference/README.md",
+          "sha256": "f1168f8d3a475a89dc7c3ae65f5a76c31a642a339eea1cd4b4986c657f8a5467"
+        },
+        {
+          "path": "packages/client/ui-reference/README.zh.md",
+          "sha256": "fed0667eb7d4d0dceee6f596b28cc225678c60a87023f40f68a23029e5f7452a"
+        },
+        {
+          "path": "packages/client/ui-reference/locale/de.json",
+          "sha256": "2ad53e317350b4c1db575651857de2ab9f7f20c571920f71546dad95a6ac7e99"
+        },
+        {
+          "path": "packages/client/ui-reference/locale/en.json",
+          "sha256": "0e713a6ef1762dd1264a32f9362c83cb64b26ebb90f3cbb3596a068748f4e2f9"
+        },
+        {
+          "path": "packages/client/ui-reference/locale/es.json",
+          "sha256": "4db45c807beeb40161a335b78cda75b41c414a3a3c45e5e37c44baa913100752"
+        },
+        {
+          "path": "packages/client/ui-reference/locale/fr.json",
+          "sha256": "d37a154ba70fc570969dc795da9381f015e1e989b14d2724a586566e4a031c56"
+        },
+        {
+          "path": "packages/client/ui-reference/locale/ja.json",
+          "sha256": "456c202db56e4ca8c100e8c1113fdcae7d4986ad809e09f6bfaf75cb3d373c37"
+        },
+        {
+          "path": "packages/client/ui-reference/locale/pt.json",
+          "sha256": "693bb2dce1b74ae1033f55bd228ee3b946f064f4f2a26d4c2c50e0b319ca0331"
+        },
+        {
+          "path": "packages/client/ui-reference/locale/ru.json",
+          "sha256": "2a91cbe871b1c38d7610ea791a1d2b698c475313a16e816840fce5592b3644e6"
+        },
+        {
+          "path": "packages/client/ui-reference/locale/zh.json",
+          "sha256": "cbd2f883d8829ce6f04eda0c09a1eda656a421eee99e6716cf838f048508a4ed"
+        },
+        {
+          "path": "packages/client/ui-reference/package.json",
+          "sha256": "79ee341df7d87c0ac44edabfef48642f9a486a3c9ebccb529b2e46359c07ed90"
+        },
+        {
+          "path": "packages/client/ui-reference/src/client/FileReference.tsx",
+          "sha256": "e117a67a10a370a4829c01abc3511961a6c917858a4c31d1be16aa42a61c6e6b"
+        },
+        {
+          "path": "packages/client/ui-reference/src/client/index.ts",
+          "sha256": "2c9b3b489976c3cbf617f6cb871a4fa1a3875dfc7d31cf8441f228d6bcf61461"
+        },
+        {
+          "path": "packages/client/ui-reference/src/client/locales.ts",
+          "sha256": "00aee6b5cb882791d33261eb359b1401141d0851b29c57bff02f06c2fc5ffd58"
+        },
+        {
+          "path": "packages/client/ui-reference/src/client/user-text-rules.ts",
+          "sha256": "8afe7a527f38b0d27af101fe10c8ba24d0b245983f284206a251ed64fb490933"
+        },
+        {
+          "path": "packages/client/ui-reference/src/index.ts",
+          "sha256": "445113dde5c46c2d726282db23f35e350ab9f567b97c166f00fe7ef34d41b939"
+        },
+        {
+          "path": "packages/client/ui-reference/tests/browser-plugin.client.spec.ts",
+          "sha256": "e4e3e8d9ae27f21d2e6088646f08bf97d103457d526604b709be34171349b65e"
+        },
+        {
+          "path": "packages/client/ui-reference/tests/file-reference.client.spec.tsx",
+          "sha256": "4b5285021fd8cee7c27060d0581e9e7a8a183be5d614b56e33ebd8f7838cf1c9"
+        },
+        {
+          "path": "packages/client/ui-reference/tests/user-text-rules.client.spec.ts",
+          "sha256": "1eeec26f53bfe4243d217e000f84622a227559fe59e7db8e10de818d8f11210c"
+        },
+        {
+          "path": "packages/client/ui-reference/tsconfig.json",
+          "sha256": "8ad361c9fb0f8440db6233a2d335e11c016a961e6f1e04d6bbe7890de4fd2473"
+        },
+        {
+          "path": "packages/client/ui-reference/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-reference/package.json",
+          "sha256": "345b5c842a65502af6c7977eb98c72b9d9324405040c5a83bd37a1148ec5f80e",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-reference/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/context/session-reference",
+      "name": "@deepseek-ai/dsh-session-reference",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-065",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/context/session-reference/README.i18n.yaml",
+          "sha256": "93683e9ba16053f323cbf6e0dc129558847924f2dfba1905633052ff0d93862a"
+        },
+        {
+          "path": "packages/context/session-reference/README.md",
+          "sha256": "ba188f2ac9403780b784033e4dea1ce4351d2fd2581e8a2979cc1ab6fa5b156d"
+        },
+        {
+          "path": "packages/context/session-reference/README.zh.md",
+          "sha256": "349b9dc90ff14a06004f9ed20ad609e3725e11ffa70ce564b7f337b621f7823d"
+        },
+        {
+          "path": "packages/context/session-reference/locale/de.json",
+          "sha256": "f6956c44d550e5b1d0c0a40caf0bbeb5ace31e9a88f935a68a73e20b41b27baa"
+        },
+        {
+          "path": "packages/context/session-reference/locale/en.json",
+          "sha256": "5b3d2302c9395efe845a95a4ce1bfb8e0aeedc2201a1fd4bb6ebbe83ad0d8e89"
+        },
+        {
+          "path": "packages/context/session-reference/locale/es.json",
+          "sha256": "9c700cb5e1e1e4a17b800ad2606020d8d802834b8322bd6e1cab6ea82bbeeab2"
+        },
+        {
+          "path": "packages/context/session-reference/locale/fr.json",
+          "sha256": "22b9d8896f010afb5d4aab08fc9ed7adbf4df0922e80a5d8f22f4e9ee9e94dc2"
+        },
+        {
+          "path": "packages/context/session-reference/locale/ja.json",
+          "sha256": "ef5e7ba2be3d4084bc0a33c35c44e868937c16bd72f207b01e799ce6308bc2b1"
+        },
+        {
+          "path": "packages/context/session-reference/locale/pt.json",
+          "sha256": "9c89a6d92426797cda6683bde09238b611df695764f4e0b095b6833cf4fb179c"
+        },
+        {
+          "path": "packages/context/session-reference/locale/ru.json",
+          "sha256": "e11623d69b23a60c7b60afdbf9cd4abb5f571a264ae346b7511079b9d0a51fbc"
+        },
+        {
+          "path": "packages/context/session-reference/locale/zh.json",
+          "sha256": "dcce73f58ff274ab47b3012f42a22940db1b98fcccc87c0f4da546f63dd895e5"
+        },
+        {
+          "path": "packages/context/session-reference/package.json",
+          "sha256": "6ac2bc2d84664e80a2bf438d6a021d2d432776d44184135bda7864f2533dda3d"
+        },
+        {
+          "path": "packages/context/session-reference/src/config.ts",
+          "sha256": "9f6b6461bc5d6246a4f5006011b3f47c641d101e2bf8277652c1b03c60dc3135"
+        },
+        {
+          "path": "packages/context/session-reference/src/index.ts",
+          "sha256": "4d14b626b8a4ab760ed64aac8627f73f7df87ad41651b5d0c90e6c94fa93edc2"
+        },
+        {
+          "path": "packages/context/session-reference/src/projection.ts",
+          "sha256": "6f623036a0f3dbde87defe417f1f71a4ad7c88e4aff94f6e62df13461bf63426"
+        },
+        {
+          "path": "packages/context/session-reference/src/serialization.ts",
+          "sha256": "4999c342a107edcb34f40d879bc143c74468cd899d47aa9f42f4c867ee086d8b"
+        },
+        {
+          "path": "packages/context/session-reference/src/spill.ts",
+          "sha256": "af8da1d1b7756e94fd003fb9d059100e7de7e593302bf2eb155c6e38ed1ca13e"
+        },
+        {
+          "path": "packages/context/session-reference/src/types.ts",
+          "sha256": "07f207a01d27f9ebf7254b22976858a7a739aeb09993a1a332cc185281de1b80"
+        },
+        {
+          "path": "packages/context/session-reference/src/uri.ts",
+          "sha256": "c0bf358e223730d3c3f363f5c7ae35f85d434ce037d8009b0d299b0ca0923b4c"
+        },
+        {
+          "path": "packages/context/session-reference/tests/fixtures/cordis.yml",
+          "sha256": "25cc208d28917bad91ff19b89bf1d7f2a1926a420a661b895d12504f3a065c8c"
+        },
+        {
+          "path": "packages/context/session-reference/tests/fixtures/source-session.ts",
+          "sha256": "8ec911e88f15f0c0383064ddbfa59f1aaf5d5e3a8848852cfe60ec1b5ffbed25"
+        },
+        {
+          "path": "packages/context/session-reference/tests/loader-composition.spec.ts",
+          "sha256": "65fd5d2483d61f52a7aee5773f4aab9433d77989e138e4f39e7b5f927fadcb52"
+        },
+        {
+          "path": "packages/context/session-reference/tests/session-reference.spec.ts",
+          "sha256": "ea6522046b380fca42b5cf1a96bfcdbc26bcfa71487674b14fa2639ee3e0f93e"
+        },
+        {
+          "path": "packages/context/session-reference/tsconfig.json",
+          "sha256": "e5023075d4a219b74f368c431e7d5771e297adbee8bd27f9728cdb59621c51f4"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/context/session-reference/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/client/ui-model-selection",
+      "name": "@deepseek-ai/dsh-client-ui-model-selection",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-065",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-model-selection/README.i18n.yaml",
+          "sha256": "7136142d2ce4e8d1b388b1995c53f3905359684f77a30caa1998166a921d4122"
+        },
+        {
+          "path": "packages/client/ui-model-selection/README.md",
+          "sha256": "63b1a099f2bb7ec3c27d13a75d429f43e47c4443487a734329e1348ed1415d5f"
+        },
+        {
+          "path": "packages/client/ui-model-selection/README.zh.md",
+          "sha256": "cab4828a48508bea569d39f710737e41d082b8f675ad330eaf07059caa7376d5"
+        },
+        {
+          "path": "packages/client/ui-model-selection/locale/de.json",
+          "sha256": "d2379cdde36c0d97c5e1edbed6273ee2142df29d8ced913f8706ef09742c86c8"
+        },
+        {
+          "path": "packages/client/ui-model-selection/locale/en.json",
+          "sha256": "6c79d7cd3cd99a3c17654f488d9364df441d48fe679348c2fa5745f70eba8cf0"
+        },
+        {
+          "path": "packages/client/ui-model-selection/locale/es.json",
+          "sha256": "2023d7d36ff7cdf379906270d191a65e8cc716adbb063a4d48078407e43e613a"
+        },
+        {
+          "path": "packages/client/ui-model-selection/locale/fr.json",
+          "sha256": "d0cdef5ae4c131d5eca39bb0d7da15d8513c4a5c9f0ff6b1ff6815705363c0e4"
+        },
+        {
+          "path": "packages/client/ui-model-selection/locale/ja.json",
+          "sha256": "29b4ede6d37d470ae2b1582940e37d936962ca138336920cb4aa08243459931e"
+        },
+        {
+          "path": "packages/client/ui-model-selection/locale/pt.json",
+          "sha256": "af500f31580be7596b05a803969bb55d180682b27972b020dd5b112d5a6fdb54"
+        },
+        {
+          "path": "packages/client/ui-model-selection/locale/ru.json",
+          "sha256": "fa0e52236961a1cae413a813c37f8374a991500c2ec2d71155e4ada208ee2635"
+        },
+        {
+          "path": "packages/client/ui-model-selection/locale/zh.json",
+          "sha256": "9e439d00d7c4936d7c618a2b9fc020e8132e36d5b3f8a7051a26b9e69451f01e"
+        },
+        {
+          "path": "packages/client/ui-model-selection/package.json",
+          "sha256": "7cd3cafecb811713f667749f350e90d6870a517334912b2821b7f3ac0cd21102"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/ModelSelect.module.css",
+          "sha256": "58edeaf64fd4f5dd119f16c843ccb8ac91a2b7ea8f38c902e4d02f3833f5f659"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx",
+          "sha256": "2e93e014fbefc867d9312b743576c2aba11542c6847cc5896dfed54b8a5d0d8b"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/catalog.ts",
+          "sha256": "751568938f6918a8e7734b44ab003bdf53e9390d7264dab6501fb582558a955d"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/directory.ts",
+          "sha256": "0057e35eaad9ae974a32efbc12beb91f620490eb61169e069f4ad5e2a919cfb6"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/index.ts",
+          "sha256": "cc3d9a8a06ecb0459527e9931fe206e54fe88b13a817e33663a8ab50765f6c24"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/locales.ts",
+          "sha256": "18d7a56687ff7c6b36d0fb5669af669ef3bb86b5b0c39ab266cacb8f088c5f4a"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/provider-order.ts",
+          "sha256": "4eec9d5c9a7c5224102a6438260ce96d5c52b228bf070faf73258d645cb80638"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/service.ts",
+          "sha256": "488f7634405fe666728ab9687d7bfe57b3d96e2309aebe5fb838e279718472f5"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/slots.ts",
+          "sha256": "861e034b0d527c15469372fd0f27dd5201330bf45deb0b7bf6a0101c6adfef00"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/css-modules.d.ts",
+          "sha256": "e28410d74a0d763364c04fa690c2ca2202ad3019c74f8f5205e8dc6cba69c02f"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/index.ts",
+          "sha256": "4a27dae71056521f33897160de6cf497bb5949bda12f37ea485fb7a5e54d48ff"
+        },
+        {
+          "path": "packages/client/ui-model-selection/tests/browser-plugin.client.spec.ts",
+          "sha256": "0cb3e0fde7ba7e604a6d6bac478f63dc3c058f3abd9460a87cfbbaf122880c87"
+        },
+        {
+          "path": "packages/client/ui-model-selection/tests/catalog.client.spec.ts",
+          "sha256": "38f150d9dae4c68c8d739a84efcc79dc37fbf50b67ab609b3e44c4658b02484b"
+        },
+        {
+          "path": "packages/client/ui-model-selection/tests/expected/account-first.txt",
+          "sha256": "e987458646afc7bdf582505c1e0cc1886c526c9adbd0fb55b4a7ccd415d16ca8"
+        },
+        {
+          "path": "packages/client/ui-model-selection/tests/expected/unselected-model.txt",
+          "sha256": "951a1d94c0d59d09d6b02f543d2ee751c07766e9a0f1abffcf9bb6544ee32bac"
+        },
+        {
+          "path": "packages/client/ui-model-selection/tests/model-select.client.spec.tsx",
+          "sha256": "03e0ff2ee26634e2ecc1a74b0c88269d5dfea10d83bf3faa9da9b988f3fd6644"
+        },
+        {
+          "path": "packages/client/ui-model-selection/tsconfig.json",
+          "sha256": "491fd1c0a76f4d0880dd7640ee7cd0d1e8dc2dc1c7a4f446a46a4a91ec3c0ce7"
+        },
+        {
+          "path": "packages/client/ui-model-selection/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-model-selection/package.json",
+          "sha256": "acc7206d3ff0507866b6c49ff2e71992fb065248e0a4bcd28ec869ac56dd7132",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-model-selection/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/client/ui-permission-presets",
+      "name": "@deepseek-ai/dsh-client-ui-permission-presets",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-permission-presets/README.i18n.yaml",
+          "sha256": "4b0ce8c56ddf578316a2f1dcb389aacb067f34b6a0a4188ef3e032d699d5e94f"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/README.md",
+          "sha256": "b3ff0c59adfaf50e8519d80424abc29112edf5ad2f42f5ea15374916aaab9406"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/README.zh.md",
+          "sha256": "5c8c277daf5dacd5c9b94c335b34563c258100afda3789e3408384b99abd48e6"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/locale/de.json",
+          "sha256": "e5258cdc6c0408ae179d916a7af6d72b437d8eb93a1f73eb3988ab248abc81ed"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/locale/en.json",
+          "sha256": "47542db5e09bae0f9c47caab1666b506feac05a6d28ff67ca994e7f25453fc05"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/locale/es.json",
+          "sha256": "7d24d74e9135833b9afff3bd8083e293f473b5d4d96250a4d309fd15002777d1"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/locale/fr.json",
+          "sha256": "f67fa7451881c24c94738139eb191c31075261ae969c679abe29a928f1e38855"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/locale/ja.json",
+          "sha256": "9f1a678b1aa0db6ddec4b7da3e198669ba300c9b3dc7e0c6fcc53f486c6f8d8e"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/locale/pt.json",
+          "sha256": "7bf06ee3bb97e0e21e91758fbfae28707dc0b0f700d0292900d206fdcb721dd9"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/locale/ru.json",
+          "sha256": "3c5d3cda711e81287765afda653a50dce83b4a345740574a1d176b262a5957ec"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/locale/zh.json",
+          "sha256": "79dabfaf46045473e990aff7f3d734bc92fec9063df75795c0df97e89ff92828"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/package.json",
+          "sha256": "a17b8879bda902397781cd7fb5af38a79fbe2f9dfe17c6109d5c0e65a3129124"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionRow.module.css",
+          "sha256": "6a0f27bbec0871185fe4ed8986d3cc7a054394cf63f73f43e772c78d57f455e0"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionRow.tsx",
+          "sha256": "7815bba5cc2f46dea1189e36c8f25fb9e512e66b554c16c16b5de34117f8badf"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.module.css",
+          "sha256": "101d81ec2a796b95d3e51a1800e3cacdb969715498a9e72a47739a33d1ecdbed"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.tsx",
+          "sha256": "c4c1d3590d683bd07e869e14978615b5999472c2bf94ef752d4bd62f3bdebe82"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/catalog.ts",
+          "sha256": "1e868fea79b5735979e82c96872f6f1ce39d2c3e3fa500b4f625b91759557971"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/index.ts",
+          "sha256": "8820e7bfc0b519fb866dec3d9a335bcd4adc0471ee95ffee2fd4ac170d906e61"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/locales.ts",
+          "sha256": "ec72aa0078bf4bf0ce0f3ac07d87c76d15891fcdd19f3720677a82dfb35338e4"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/presentation.ts",
+          "sha256": "9801807a906ed13af256542a410ae27d0edb2a0ecc646146c9b668f85616e955"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/settings-store.ts",
+          "sha256": "4b0d6decf287f5792742b15ed8c01a713c36b6a768d0d5209c275b4179367565"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/css-modules.d.ts",
+          "sha256": "d4395f8ef04ea16601b9b84979df7de5af4ccfeb7b094c510f1442f3d8d5785a"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/index.ts",
+          "sha256": "62c411f3dd9418d11b13c520158c7e18c8dfe1543790ba53632b6de845ea5c33"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/tests/browser-plugin.client.spec.ts",
+          "sha256": "977a6258191b37afbb60a9158aee567e54cb26cf6601dc35c330db7339e895f5"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/tests/catalog.client.spec.ts",
+          "sha256": "701316ee25ba89009df657f76bb69ce737066a437c82bd13d05c3cf9a54d539e"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/tests/permission-presets-row.client.spec.tsx",
+          "sha256": "6f4ea52e2b0c157db7b76f0950036d8e4133a6c29ff36b90c51502e1691404a8"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/tests/permission-select.client.spec.tsx",
+          "sha256": "0fa73b100ec2b154c2ee59506c2525078fcbf8887ddd0ab5b09eafe803e43188"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/tests/settings-store.client.spec.ts",
+          "sha256": "78ff94d7c2cfa1b7da75cc7fa1a519ca4c0ab87be848e2d5ea3a166180d2abc6"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/tsconfig.json",
+          "sha256": "4b07cb2abbe61fef8025761493adae01d9031fb317a3f4d08964622dc5ee0fa3"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-permission-presets/package.json",
+          "sha256": "afac490d4bfca6d799dc305ad33b6d3881a63940c91bd60586bf957d887b5c3d",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionRow.tsx",
+          "sha256": "c8b160325b4c4cc5e06d797b8d457675c4b539aaa817c43f62a1e4cda69fe6c9",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.tsx",
+          "sha256": "924807e2c21e5cb9c6bc64b624ade66843508cf80b2f2b7b2b99d0d58dd6c56d",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/index.ts",
+          "sha256": "a2c589bb776a3331dd611392e0c8d11b101fdf220dfda7a75ffb3ba3cc3feb67",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/presentation.ts",
+          "sha256": "7ee15f9a808ba519ffbc8b3ec5424cbd2a5b41f8946be3d762bdf5d3259a6e33",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-permission-presets/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/compaction/command-compact",
+      "name": "@deepseek-ai/dsh-command-compact",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/compaction/command-compact/README.i18n.yaml",
+          "sha256": "8c77100bf2eb3e9bb147201a8ff6e055c1d89ec15e89a403285fa42edf845e30"
+        },
+        {
+          "path": "packages/compaction/command-compact/README.md",
+          "sha256": "e38786dd90a468707ef3ae6ed39ddf17c5eedf30698347023b3023b16f4df9e8"
+        },
+        {
+          "path": "packages/compaction/command-compact/README.zh.md",
+          "sha256": "b187b0eec52c39f20f2e240cedc433bda69bdede30e4a8906ee8c2d230502273"
+        },
+        {
+          "path": "packages/compaction/command-compact/locale/de.json",
+          "sha256": "777580c74de7bb990b7d8bd7af9a5522318f60247fb1e256ac9db1d709ab84c7"
+        },
+        {
+          "path": "packages/compaction/command-compact/locale/en.json",
+          "sha256": "1cfd4da2d1a3ad9cb6c02b36df11d822c2f10abc6ba97b168340a94857d61001"
+        },
+        {
+          "path": "packages/compaction/command-compact/locale/es.json",
+          "sha256": "b59664322893eed708ea169311890ec07dee41850d8b230f82a7d96466fef8f7"
+        },
+        {
+          "path": "packages/compaction/command-compact/locale/fr.json",
+          "sha256": "586f9879cad57fd1b4bd19c7054d37027a3ddaad4300c75de8ab89fb83ca2942"
+        },
+        {
+          "path": "packages/compaction/command-compact/locale/ja.json",
+          "sha256": "c3f773fe603855eb88a3d46571b20e0e2a8baca733e758bba4c315479942e851"
+        },
+        {
+          "path": "packages/compaction/command-compact/locale/pt.json",
+          "sha256": "a3baaf16b59411c5a4b1effb1b1b3791291c4675570409a3dd54053990c6a72c"
+        },
+        {
+          "path": "packages/compaction/command-compact/locale/ru.json",
+          "sha256": "a1eb6220e2113da6abdfb856abb22165ab79ac13f7629affd30bc60a6df86c5b"
+        },
+        {
+          "path": "packages/compaction/command-compact/locale/zh.json",
+          "sha256": "7047f17bc4b02118db989a9a62fab1988533816f0484ac4fd93039cd111777b8"
+        },
+        {
+          "path": "packages/compaction/command-compact/package.json",
+          "sha256": "65b7fe45a778dc0e2d5dd9ddbcc1baf592a3d29543b0b0597a2cb87719ea30a5"
+        },
+        {
+          "path": "packages/compaction/command-compact/src/index.ts",
+          "sha256": "fc3be3d7e672a15ec9521148d17ca66466ace34fe7b4ac1ba96aab89dc51730a"
+        },
+        {
+          "path": "packages/compaction/command-compact/tests/command-compact.spec.ts",
+          "sha256": "c5ee2c6fde549a7f3a753b664e21d112ff06a0261c4c9b55645acb424aac40e5"
+        },
+        {
+          "path": "packages/compaction/command-compact/tests/loader-composition.spec.ts",
+          "sha256": "8c105b0d1e6a0e083001daabc0f21b31c047631ca5ba540678f2fdc7bd89dad9"
+        },
+        {
+          "path": "packages/compaction/command-compact/tsconfig.json",
+          "sha256": "25432f9933cddc6745b725360eebb5f602ad13fdb90d221c210fa7fa40a7479d"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/compaction/command-compact/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/goal/goal-round-driver",
+      "name": "@deepseek-ai/dsh-goal-round-driver",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/goal/goal-round-driver/README.i18n.yaml",
+          "sha256": "68367e0acaf4ddbadf4cc60e5bec00e3d2bf651d9385a791bb693f50e1de4115"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/README.md",
+          "sha256": "a0c2c39270b72af4a38c327700d96f126a911b993a4223eaa6b3aa5da5752159"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/README.zh.md",
+          "sha256": "3ffc3140d37fb71ae70c68dc9f8db2340b819f337b1d861f782fc5f46276e3a2"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/locale/de.json",
+          "sha256": "eee8b1bda0342d51221f3319962278d4426c31f5e5bc169e3cee9a80e25332ed"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/locale/en.json",
+          "sha256": "ed8dac74f367173685ff1abb9070787d0142949c84f58ccd212a84c32dc0d73f"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/locale/es.json",
+          "sha256": "fb6b60e704230dc728c1cc4e175652c1103601f89c4be4efaf4546108c8275ca"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/locale/fr.json",
+          "sha256": "8af42f6723ed6e103b97e7e63a50644434d1d634da42325e91916377140738b0"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/locale/ja.json",
+          "sha256": "e0de0bc4785cf9d0578d4a92fc5813cbdceb99e70ed9841e0a7c2b156e50d605"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/locale/pt.json",
+          "sha256": "e1c10d068bef749b1493170b231dfb5e6d4b6c6aac2aee9e3f5577f3340298d8"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/locale/ru.json",
+          "sha256": "35aa0d4fc4c4caa5f67049471c1b810253c4577d08fa3f1f73db5ea952359f10"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/locale/zh.json",
+          "sha256": "94c08744fc2fd682333781b846c6b3fd16057700f32edf12a0dbea8b3c4be6e3"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/package.json",
+          "sha256": "1a75983a4df19cecc55da872609107c7685d12bec72f859e36b0fca3b65da77e"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/src/index.ts",
+          "sha256": "0e64af0eaa7fef5444f92f1664b4d987f8eaae72a86a3945fff75c57a4e4aacc"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/src/prompt.ts",
+          "sha256": "48410d77077e88053cded777736a425534e91b36402ab46dc151ea9867a3db97"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/tests/goal-round-driver.spec.ts",
+          "sha256": "c953e20fd4ba10e518514560c7893b07efadd853a39dd8c7d2d43d00b565d745"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/tsconfig.json",
+          "sha256": "1b248a34bf63da1ceb6bd2d3db14a2d786ab865298a5f0580178eaea5dedc0d6"
+        },
+        {
+          "path": "packages/goal/goal-round-driver/tsdown.config.ts",
+          "sha256": "4b8cdb973c4a15428b72c010024510b76bae3211a620fc5cd726b75e1aaf91f1"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/goal/goal-round-driver/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/goal/tool-goal",
+      "name": "@deepseek-ai/dsh-tool-goal",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/goal/tool-goal/README.i18n.yaml",
+          "sha256": "968fe597f6bd70881ccd9aa3aaee28649444456cbeec144323a5f857c06d11c3"
+        },
+        {
+          "path": "packages/goal/tool-goal/README.md",
+          "sha256": "0b2fe73459640ebc07d3f4d42a2a68251d0817cb8f130d660d3eba7e11d17837"
+        },
+        {
+          "path": "packages/goal/tool-goal/README.zh.md",
+          "sha256": "1a868982010e3123d2efb933717c3a8a3e2c3d75e62783e25c44623d62a367e7"
+        },
+        {
+          "path": "packages/goal/tool-goal/locale/de.json",
+          "sha256": "cb243191358bd884601b5a5713834482404ea8f7c83a79a8278e13724ff4bfdb"
+        },
+        {
+          "path": "packages/goal/tool-goal/locale/en.json",
+          "sha256": "627e67bd93ed5fdcd78778f5566bd8ea3378ed38950025bb0e490f000128924a"
+        },
+        {
+          "path": "packages/goal/tool-goal/locale/es.json",
+          "sha256": "d96c0297971b8bd1cdf8c2df430632beaca0e26f3a190d4e3d9f86927a5a05b6"
+        },
+        {
+          "path": "packages/goal/tool-goal/locale/fr.json",
+          "sha256": "448a84c38e573e4eda3dd0d4de268a2c32f20346fd52353049f195be1bb22f56"
+        },
+        {
+          "path": "packages/goal/tool-goal/locale/ja.json",
+          "sha256": "59a413270911d0e3a60e09c568b00df30a6a637588c3e5142bc2b077de5cd4a4"
+        },
+        {
+          "path": "packages/goal/tool-goal/locale/pt.json",
+          "sha256": "195269cde856e88b97ad1a103925fdc9d807d245786f5e0a37803b9fb53fea65"
+        },
+        {
+          "path": "packages/goal/tool-goal/locale/ru.json",
+          "sha256": "32f1988dbd3a80537a14e188c4b2c6c99ae75427206c1914a8d1c1178b607d0a"
+        },
+        {
+          "path": "packages/goal/tool-goal/locale/zh.json",
+          "sha256": "812548da0c193e0aa94803ca032bfed92a53fc508b42ff9be1665782bea6bb5f"
+        },
+        {
+          "path": "packages/goal/tool-goal/package.json",
+          "sha256": "cd398ed6dd0abd1b954e496272421032d519816d3baa756c320e48a7614ba614"
+        },
+        {
+          "path": "packages/goal/tool-goal/src/authority.ts",
+          "sha256": "12a49c21426b7008b71b03d57351d9602cdac55004420224c2db86988a1e4c39"
+        },
+        {
+          "path": "packages/goal/tool-goal/src/index.ts",
+          "sha256": "06ba153bf5edd455fe444a1ede744f605244b5c7821007edf505f241d9635fa9"
+        },
+        {
+          "path": "packages/goal/tool-goal/src/wrapup.ts",
+          "sha256": "714a2c8ad660e3b7c0aadfe7a8b8122a9329ab2bcff654e40708ff807d924179"
+        },
+        {
+          "path": "packages/goal/tool-goal/tests/tool-goal.spec.ts",
+          "sha256": "eb8a72868581cf3dc60b6e9d10cd760fa55df1dbd9a764b6e08f25e75c3c2a50"
+        },
+        {
+          "path": "packages/goal/tool-goal/tsconfig.json",
+          "sha256": "fffea4f4b8942c8715dc93b037f2437c2843cda6d90a136bb3aba8417eebcbe7"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/goal/tool-goal/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/goal/command-goal",
+      "name": "@deepseek-ai/dsh-command-goal",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/goal/command-goal/README.i18n.yaml",
+          "sha256": "f9d854b3bc01f533fc807b884c75121367647b9dc0ffc36f007acc178bf1877c"
+        },
+        {
+          "path": "packages/goal/command-goal/README.md",
+          "sha256": "5069ea3790e35988abe2729a04eb1119250306cc8a3693eb385e2b0c4e3d3f1b"
+        },
+        {
+          "path": "packages/goal/command-goal/README.zh.md",
+          "sha256": "69d4822cf272cc82698e63db9c0fdd5525b086449ba69012b5a35b612f85282b"
+        },
+        {
+          "path": "packages/goal/command-goal/locale/de.json",
+          "sha256": "5d5bb5ed2cdd6078a077714a7ed17ae122a102b890881619b596747ab26a8668"
+        },
+        {
+          "path": "packages/goal/command-goal/locale/en.json",
+          "sha256": "757b1d79a0421941154142139f388a0e5493c237e3cc475bb33da895650b1c4e"
+        },
+        {
+          "path": "packages/goal/command-goal/locale/es.json",
+          "sha256": "54c0ed20030fe93bc75bd67f77bce5e4a682f12364daba573d618b8d08829be4"
+        },
+        {
+          "path": "packages/goal/command-goal/locale/fr.json",
+          "sha256": "5b9021a59ca4be7ca5eef4efd6ff1d4eb90643a3b0a807445282d66c29fb3526"
+        },
+        {
+          "path": "packages/goal/command-goal/locale/ja.json",
+          "sha256": "dffb0609e6109df2bba1be01c9aeb8264a1fb519636e1c28c94c5c24cd96861e"
+        },
+        {
+          "path": "packages/goal/command-goal/locale/pt.json",
+          "sha256": "d1d4059717f9e93e3ea5365e613fc95b8c6d26f6d8fbdf45ceb626fe3c7c7e09"
+        },
+        {
+          "path": "packages/goal/command-goal/locale/ru.json",
+          "sha256": "3457761d66841ea6ace657356e689dee144451f9704e26d057d81dc708caa7c4"
+        },
+        {
+          "path": "packages/goal/command-goal/locale/zh.json",
+          "sha256": "09930f9a87e96b92b7192fa0d47b3b920856da0c00d5967feefe9380fdda1695"
+        },
+        {
+          "path": "packages/goal/command-goal/package.json",
+          "sha256": "b58ef28e7fcb187cbf2843fe73c6e1c3960cad7b3a7b6b81fcc1d2b36dc07cc7"
+        },
+        {
+          "path": "packages/goal/command-goal/src/index.ts",
+          "sha256": "848444ac23f6a4c1f992fc5b10c1ba11d43106f9ce9a9fcc047973c512c3ce1f"
+        },
+        {
+          "path": "packages/goal/command-goal/tests/command-goal.spec.ts",
+          "sha256": "029d828d100bb0ddc821e3c1baa13677719842ea41fe1b480cac5fbd1bce8e7b"
+        },
+        {
+          "path": "packages/goal/command-goal/tsconfig.json",
+          "sha256": "16c1181897ffde4a45dcd9146f1cd3d4fd4823b963fe010f883619e5bbe33aed"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/goal/command-goal/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/feedback/command-feedback",
+      "name": "@deepseek-ai/dsh-command-feedback",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/feedback/command-feedback/README.i18n.yaml",
+          "sha256": "116f69aa3a4db1a66aaad205690ecd739f438dd06383adb5c3c1f62467f9b986"
+        },
+        {
+          "path": "packages/feedback/command-feedback/README.md",
+          "sha256": "22cc54d7bae3adf92431f21fa29e2a30b665cea000f07bc56e7aaf0f98d81c82"
+        },
+        {
+          "path": "packages/feedback/command-feedback/README.zh.md",
+          "sha256": "2fa451dbd373a8e9e73e00055383bc9a44560b35db13d41408a7cbfd2a22c196"
+        },
+        {
+          "path": "packages/feedback/command-feedback/locale/de.json",
+          "sha256": "001b9c25a8c97ff7432f41f8351ff425389f1d70a5d8331295f7bd4c36c730e8"
+        },
+        {
+          "path": "packages/feedback/command-feedback/locale/en.json",
+          "sha256": "758235488ee7078f9db6a23f7ba6a47641247bee508dc222d0316a20078b2c89"
+        },
+        {
+          "path": "packages/feedback/command-feedback/locale/es.json",
+          "sha256": "b0f35b63b8d96c6880ca7565353fda6a0ca11cbc18fe1444783ca59badb3a6a8"
+        },
+        {
+          "path": "packages/feedback/command-feedback/locale/fr.json",
+          "sha256": "f1b4c2197f4bc98e21a46f1ce4ec0fe38096886f1caa32b2f2b6839d99c4ee7b"
+        },
+        {
+          "path": "packages/feedback/command-feedback/locale/ja.json",
+          "sha256": "0abfc77cb11e8fafe63a377384ce2bca8d8fc90657adb068e51f3f701d1f5254"
+        },
+        {
+          "path": "packages/feedback/command-feedback/locale/pt.json",
+          "sha256": "c8e8afc0fd6c6b19f68ca1799498009c7bee91660057db269a5fa537202fa7d0"
+        },
+        {
+          "path": "packages/feedback/command-feedback/locale/ru.json",
+          "sha256": "2bde49d8ea4caafc9c2c4bacc7720619df10700bdcf403cd3d8eb4af26b3ea3a"
+        },
+        {
+          "path": "packages/feedback/command-feedback/locale/zh.json",
+          "sha256": "e4a937eed5c4d30e387e036cf3576c55fd8283753f8114ef9fc13fc63d1a82d4"
+        },
+        {
+          "path": "packages/feedback/command-feedback/package.json",
+          "sha256": "f2b1cd1f6c9b87cb99dd55132f1f87a07b0840155bbfe5909be3c43bf6a3ba4c"
+        },
+        {
+          "path": "packages/feedback/command-feedback/src/index.ts",
+          "sha256": "03b5729262b3d8813c32f3a5b8f22b12f647ab430f9d1e70f2f2cf86fcb88f98"
+        },
+        {
+          "path": "packages/feedback/command-feedback/src/types.ts",
+          "sha256": "772d59df2473c5212f3d79f5993963232ac68060780a834d00a9f63011d8c458"
+        },
+        {
+          "path": "packages/feedback/command-feedback/tests/command-feedback.spec.ts",
+          "sha256": "b5e73894bee7e99f3703c1eb057d6b8f2d8df60b5d7c62a36f4ac9cd199e8e7b"
+        },
+        {
+          "path": "packages/feedback/command-feedback/tests/loader-composition.spec.ts",
+          "sha256": "86a9696091fc87712d04d49913515010a9d0e2486e7170053d8a8334d75be6b2"
+        },
+        {
+          "path": "packages/feedback/command-feedback/tsconfig.json",
+          "sha256": "6e73bf07d8d18131b779e1b6cd24f69c6e577c68964c8781f69c01e784600b53"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/feedback/command-feedback/src/index.ts",
+          "sha256": "6a6603bddbed3d428086822ea1929a5b367b03a617726a8d47de2ebeb964900a",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/feedback/command-feedback/tests/command-feedback.spec.ts",
+          "sha256": "7fec328799b0555c19ce823eaa6be1511b1a8e0516bc2a913ae3e71466c160b7",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/feedback/command-feedback/tests/loader-composition.spec.ts",
+          "sha256": "f3520032c04ccea6273e7961306d7606313c1ea1eb80fe62e32ce92b2af42c42",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/feedback/command-feedback/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/session-query/session-log-export",
+      "name": "@deepseek-ai/dsh-session-log-export",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/session-query/session-log-export/README.i18n.yaml",
+          "sha256": "d2df13e72a2bd5b9555b637f43cffd7abdf8c611e663021044d4c9216b9708fc"
+        },
+        {
+          "path": "packages/session-query/session-log-export/README.md",
+          "sha256": "f1448611cd9584dca8fff188af6346b4087554dc94af6a17cb86c4b4f60fe4da"
+        },
+        {
+          "path": "packages/session-query/session-log-export/README.zh.md",
+          "sha256": "42a38ad7b5bb4d19a019521056ca4125a76a41a3b6c273effb837898f5a4d3bd"
+        },
+        {
+          "path": "packages/session-query/session-log-export/locale/de.json",
+          "sha256": "ca1164e063332b6584cdba0a11c427185e6f97978e2228422321ee1f0ead7215"
+        },
+        {
+          "path": "packages/session-query/session-log-export/locale/en.json",
+          "sha256": "03ddccbb8abf771bf7202d9af5b48f813eda459519fd6550fa05742e69dfc5da"
+        },
+        {
+          "path": "packages/session-query/session-log-export/locale/es.json",
+          "sha256": "e360cc5705d1dc4c04ff67c88a17ba989d694acfbf67c6d69a7a5bbbd7137d47"
+        },
+        {
+          "path": "packages/session-query/session-log-export/locale/fr.json",
+          "sha256": "b374479b624ccbf9eb32075088cf3b97df6b1f1d712dfcbd764248d24fedf4d0"
+        },
+        {
+          "path": "packages/session-query/session-log-export/locale/ja.json",
+          "sha256": "0785bd1a3cb9bfb32ca8d9c4018acf572d21aba7db9e36977443ec0a1a3483d1"
+        },
+        {
+          "path": "packages/session-query/session-log-export/locale/pt.json",
+          "sha256": "3383906955bcaefe6b6e86a6f422d0543a663e2c41ec0ee6b641226c9934a13d"
+        },
+        {
+          "path": "packages/session-query/session-log-export/locale/ru.json",
+          "sha256": "6783046eccee80d127e2b6131a97855e9c42ef1a5043337900ad076db70d9059"
+        },
+        {
+          "path": "packages/session-query/session-log-export/locale/zh.json",
+          "sha256": "b6a0c790a08190504edf2a20d92b61c4357a1d8bf16f6aecb49df90c8347e7c8"
+        },
+        {
+          "path": "packages/session-query/session-log-export/package.json",
+          "sha256": "acedc9abd53f425c97646dda1a57d47d859322ed5e6617bc2eb367d38263ddb9"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/archive.ts",
+          "sha256": "258cf53c50cfec9995fca90f98300c8f23860e3ade7774bd39bbf1c3aabc65d7"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/client/CopyToast.tsx",
+          "sha256": "dc3a9637f31c4fda8288e95aa0e53c1888ecb9fc237d7377863058c4da93772b"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/client/Dialog.tsx",
+          "sha256": "42c42bd202da3dad67d44831f6eb077bf20866ac2ce2c13b9d85d490f754a00c"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/client/HeaderAction.module.css",
+          "sha256": "b8f965caceed742c978952d3adb1551b5d174a459b40755812c41725a78c9f7b"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/client/HeaderAction.tsx",
+          "sha256": "d4a47138b15336032ce19e8f31de0b53b7cc735a72cda97141cf33ada0ff03da"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/client/controller.ts",
+          "sha256": "db0953a82cb19970a228db0cd12f19f777f59c762d5775bb7a68c70c4af1bd31"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/client/copy-controller.ts",
+          "sha256": "a60828ae97b960d3c580747dc1cc99910877c000ee3c9af2bb173bfcdf7d900c"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/client/index.ts",
+          "sha256": "65c4dc6598dfe714b81ded61b8b0dd70e73dc9bbc740a26c77bd93b19813672a"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/client/locales.ts",
+          "sha256": "a20863920e0c230d54a1749b2b3be53cd259e5dabb337d340777665485894533"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/css-modules.d.ts",
+          "sha256": "e28410d74a0d763364c04fa690c2ca2202ad3019c74f8f5205e8dc6cba69c02f"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/index.ts",
+          "sha256": "0fcfa7fcf6a9b1c6282352c8c78f14f5e6cecc1e1d571b725f304be8b5743007"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/markdown.ts",
+          "sha256": "df31523d62cd8a9d43602d586d1758fbc870a98302f008bdecdea258065d4841"
+        },
+        {
+          "path": "packages/session-query/session-log-export/src/routes.ts",
+          "sha256": "ee79f24fccbc112a6c799fed62b8e673b12aac55be25d0497fe75274582686b7"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/archive.host.spec.ts",
+          "sha256": "55706c52c9c9c84eced10457592b60ad1b57b519a923cc4fb1220b1779b266ca"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/client-apply.client.spec.tsx",
+          "sha256": "b7dba986f76c51324c08534fa4dc3fca09d33355fa416c5009b53cf0910244dc"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/command.host.spec.ts",
+          "sha256": "b3c336c09c94b9291cf2a8e4843059b9ec671fd7166064aaf4f5a5d706ff8933"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/controller.client.spec.ts",
+          "sha256": "2141743cdfac032838738a8635404c3dca67f9483fa1bcdbcbdedba38994ad38"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/copy-controller.client.spec.ts",
+          "sha256": "aff8a5735879255d5b4c0b4e00124a486163eb6cf2cc115e1494a75207429be5"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/copy-toast.client.spec.tsx",
+          "sha256": "e20cac1db206a8db4e57eb5652263fbb163ca5339e44a7c66a1c35f1083b48f6"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/dialog.client.spec.tsx",
+          "sha256": "6550c36c478a7364cf841e3c7d9f0ca84c402e8cea2ef258639fea4d30dd9975"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/header-action.client.spec.tsx",
+          "sha256": "9244d69e0e8abf0bd655fdf717193ac5fb2681d6a6cfbed708c066cfb1518566"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/loader-composition.host.spec.ts",
+          "sha256": "2a0aa7bd6c8843605ad6e84312acc4abeaccd183091d4399c2d8f1c1e176b69d"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/markdown-route.host.spec.ts",
+          "sha256": "59fcd0c5030c495088318397470d3b014a0e81ec3eb4e6d41285f28ab9052822"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/markdown.host.spec.ts",
+          "sha256": "cdf2f23f314e78ff8f5ebe5f465b7ac11579403ac5cfdcdfc48b3be80ba9d5d5"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tests/route.host.spec.ts",
+          "sha256": "5aa782479d7e9c09b97adf5028c035975806bb368b23e586f83f5b84a99b402c"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tsconfig.client.json",
+          "sha256": "a3b787c9d64e832d20770903bc632bab53289bc0037ef9593ad795958283792e"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tsconfig.host.json",
+          "sha256": "845302ce60a1dafbe280a5e739be5e709cd11e916ed50b5798da3771b6910866"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tsconfig.json",
+          "sha256": "9ae2773ce422b78211f4ed8c2d4f6adb6737a9d0f33c4c392b1ea01a41bec759"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tsdown.config.ts",
+          "sha256": "8ec634455961b2ad025f2173622100bdaf4e9d665e9fb27b5afb3bc36cb08451"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/session-query/session-log-export/package.json",
+          "sha256": "7a0f5670dfda45266608947209f6590ae06aca5a34108598b8c770f2a9ca621d",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/session-query/session-log-export/tsconfig.json",
+          "sha256": "ad1b25d36ea100440140e543e2a2af188178934da74eadce1b27ef14e91b335e",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/session-query/session-log-export/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/client/ui-message-feedback",
+      "name": "@deepseek-ai/dsh-client-ui-message-feedback",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-message-feedback/README.i18n.yaml",
+          "sha256": "7f611f91346edf3825ea4f9eb3a22ff8a2db73a20759ef2f18f565047a6312d3"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/README.md",
+          "sha256": "29f99aebef0c37d9a7116c808f5bb7dea1bdef0f850fa4a8279bb0fc6dfc220c"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/README.zh.md",
+          "sha256": "43df364d5352eb4372b9234fce4eec94a62d84908e0f39f6af61203544233d0c"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/locale/de.json",
+          "sha256": "09077257e1001923befe17fc2b74dcbe3ba1987426fe244c3f95175eb44f74c3"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/locale/en.json",
+          "sha256": "fa6a8ba5edf091c394bc5d2986e453e14f6a504ba2cda687bbbd039b9a6d522a"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/locale/es.json",
+          "sha256": "ed0b34b2a167d989c634c834d7d4d1a5c744e7e9cb1227648a1c59afc48cd02e"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/locale/fr.json",
+          "sha256": "1cb05bbc4daba7c567ff394aee72027dd0a64ee51adf2652686d147a62f613ca"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/locale/ja.json",
+          "sha256": "24a6cddf898f7957caf258e83dad7f28ea3714c8d29b3e6269ec20ce5830289e"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/locale/pt.json",
+          "sha256": "609f1b3cf538b7c5941f4662e3bc6d85df0ac8b8969fa3ed085db44dd6d82ef7"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/locale/ru.json",
+          "sha256": "73721829f4dd74e5376059fe1c363894ad58f433ba6bc1b2e32cecc3dab7e3af"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/locale/zh.json",
+          "sha256": "89877043ff2f582c200a8323da68e116265f8b75ffb676e8499298e12d3df604"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/package.json",
+          "sha256": "e40272f5f194a74efcbd2a96462605d7c2fb4ea270728dc4e2dc33d75ebe2710"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/FeedbackDialog.module.css",
+          "sha256": "a4450da5bbc2bf40dc6b61dd4cdc732958379df56c7dcc7be79a35c799f477a8"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/FeedbackDialog.tsx",
+          "sha256": "939d340e3c7a31e21054ba1c936d85b7d2e1983c74c0ea163d5a8068b6a42b1c"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.module.css",
+          "sha256": "897a12e545141c162b60efa16b6fc191db00f2b1e194126e08ee6cae4ccc8b97"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "sha256": "ad475cce5a234e4dacbb2805637033d296d759c5f0c3a19aac6baf237626cd10"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/controller.ts",
+          "sha256": "acdd87af6e5f12027e96f0a4815775a3f0f7f7aea73a7585e0b35c295501da02"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/dialog.ts",
+          "sha256": "5e71e54209d9ef29649a091d6d0e2d790f2438960f49b24a17dc111f81d03878"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/index.ts",
+          "sha256": "34c76a54c3275a40a29ac7adb9fd633c1f386fde381ebae1c0a3be7064f37022"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/locales.ts",
+          "sha256": "41a4b164e8957987084fc261af45bab7c9ee49a2e092c1092ecb6dafd6d36ce0"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/slots.ts",
+          "sha256": "c30b91ee4c80e8d1ad07cc4bcefba0b5fde208c133455898be2537f7014d7a1c"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/surface.ts",
+          "sha256": "c120444d74f4e9cb58361ba06a1c71efaccc0633c96417c54dfca53a48544894"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/css-modules.d.ts",
+          "sha256": "e28410d74a0d763364c04fa690c2ca2202ad3019c74f8f5205e8dc6cba69c02f"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/index.ts",
+          "sha256": "9c903823e0b9f0468a8e38010a615269b5346446706b09cafe10c8197d68759d"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/tests/browser-plugin.client.spec.tsx",
+          "sha256": "d34cd4e07041fe3c5dc49ab0680fd1a68172e3b16c396ea7d870a5935d42c3af"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/tests/controller.client.spec.ts",
+          "sha256": "25e173d83a9a26746ab5621b7534b690bb65fa897b930d5136562f2c4fccbcb7"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/tests/dialog.client.spec.ts",
+          "sha256": "9df736d376a3684860e1c7cde6d1efa6982b2683547388a949fb6e34b36d443e"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/tests/feedback-dialog.client.spec.tsx",
+          "sha256": "04a63473a08594f93823be98b63f15322a1fdea9b5a64704b66ebbdc76c99744"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/tests/message-feedback-actions.client.spec.tsx",
+          "sha256": "4e5d8b13b006e6a59ce357240f13143b2a0cc459e840e8656d5cb63a2c045b48"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/tests/styles.client.spec.ts",
+          "sha256": "b1351e21fa1c184c339fdac4bc57059ed0ed51cdc94ad578b98b6fae8a69fd0b"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/tsconfig.json",
+          "sha256": "e75de02b52df4d68361156c7827e4582e8bf556ee492e2f1006b8ce73b67aef2"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-message-feedback/package.json",
+          "sha256": "5b04f71cfe233029aa68f67389536f5d71f5de93261dadc7c3af7e9f09ab499d",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-message-feedback/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/feedback/message-feedback",
+      "name": "@deepseek-ai/dsh-message-feedback",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/feedback/message-feedback/README.i18n.yaml",
+          "sha256": "b264360fab7e817822aeab4b62dcccb4ae1c480cdc17279fea282df8d5e8eb43"
+        },
+        {
+          "path": "packages/feedback/message-feedback/README.md",
+          "sha256": "289d671a6dd2fa9c059e01aafb9570496add27d74405b6bfae64bf95d0521f5d"
+        },
+        {
+          "path": "packages/feedback/message-feedback/README.zh.md",
+          "sha256": "b3756d71b07541dcc433222c88966d871fac606dd0b060994e8306c3b3550bda"
+        },
+        {
+          "path": "packages/feedback/message-feedback/locale/de.json",
+          "sha256": "b269eca7405b39665be05bf0daa213bcc73ac6c0e1ab26e7bc36b0ae0171b44d"
+        },
+        {
+          "path": "packages/feedback/message-feedback/locale/en.json",
+          "sha256": "1bff79fd3f8ff0a454e9735f82f197fa0ae85d7a781063e9974248ddfc47a998"
+        },
+        {
+          "path": "packages/feedback/message-feedback/locale/es.json",
+          "sha256": "7f2149fa0ee986dafa16430f8ecb019ccb51596264440677ba0ff54084ad2728"
+        },
+        {
+          "path": "packages/feedback/message-feedback/locale/fr.json",
+          "sha256": "35bc3a2c4f42979692762414edc4e144aa188eab3b3f9eaff28c47c5729ff5e3"
+        },
+        {
+          "path": "packages/feedback/message-feedback/locale/ja.json",
+          "sha256": "dcc03ca21901d7f6f1b8eb4778db4c113cf618fcf3311a5d79679361ce7c0d82"
+        },
+        {
+          "path": "packages/feedback/message-feedback/locale/pt.json",
+          "sha256": "3d53a6b01ecf1442a4cdc097c9b515dd221578149c9e453d0b19d607db099c6d"
+        },
+        {
+          "path": "packages/feedback/message-feedback/locale/ru.json",
+          "sha256": "990559c6cdb17c46df296d9c3fda1dcade4481fe68a007d2f26dbd6c55cc797a"
+        },
+        {
+          "path": "packages/feedback/message-feedback/locale/zh.json",
+          "sha256": "ceaa168d817ea9fa6ed97ae76127c7a7295c402043e66ec80587291e475cbacc"
+        },
+        {
+          "path": "packages/feedback/message-feedback/package.json",
+          "sha256": "a2ba60dbd83cd122d2a7c3fa366ded0a18aa757f285e572a393a77e1469079b6"
+        },
+        {
+          "path": "packages/feedback/message-feedback/src/index.ts",
+          "sha256": "a7e332e6897b0a9f3af0c10a6ec2d563a928eee1d97ecf81384e9ee5bbe405d8"
+        },
+        {
+          "path": "packages/feedback/message-feedback/src/types.ts",
+          "sha256": "913679ed1211837042160420a371eeab24ac5842965c8b6ae6024c57fa4f7133"
+        },
+        {
+          "path": "packages/feedback/message-feedback/tests/helpers.ts",
+          "sha256": "af39ac191121c0e54586fa7021cac2aea57ce463e928211ea993f836b541fb5e"
+        },
+        {
+          "path": "packages/feedback/message-feedback/tests/loader-composition.spec.ts",
+          "sha256": "152d2a8ae8abacd6b75cad2df3c011b9de6e3cd6736751d8584ec72106010681"
+        },
+        {
+          "path": "packages/feedback/message-feedback/tests/message-feedback.spec.ts",
+          "sha256": "2bf334778b5198fea9b8a614cf4db5b0cdf15d0d399c793788e3aeb65caea638"
+        },
+        {
+          "path": "packages/feedback/message-feedback/tsconfig.json",
+          "sha256": "416c3e4f510d277a2121b5a85f4c5b30226411c84139f0c64f87e8c7c09eb814"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/feedback/message-feedback/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/experimental/auto-review",
+      "name": "@deepseek-ai/dsh-experimental-auto-review",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/experimental/auto-review/README.i18n.yaml",
+          "sha256": "5a0141bf38f2016d59836ad835b43b205d4aa307f53235104e9923170886a266"
+        },
+        {
+          "path": "packages/experimental/auto-review/README.md",
+          "sha256": "e085d5dcae28a9efce71bc99b5a3d7e8771cbc9b0e65863d3cecaedc5ab32da8"
+        },
+        {
+          "path": "packages/experimental/auto-review/README.zh.md",
+          "sha256": "022173db0762d0fcf43f92f4262aa4c4d4b52885d259e65d6f5ff9e53f1629a6"
+        },
+        {
+          "path": "packages/experimental/auto-review/cordis.patch.yml",
+          "sha256": "21d456d0053b3d52ca8ad4ceef60e4cd5618e8c850ab8fe9e6377dfcdcb3bc2a"
+        },
+        {
+          "path": "packages/experimental/auto-review/docs/DETAIL.md",
+          "sha256": "e0a06017976d24ac63b1029d95bf2a97cc04ecf89786f2f2fff84328e4aa6156"
+        },
+        {
+          "path": "packages/experimental/auto-review/docs/DETAIL.zh.md",
+          "sha256": "9f6fb0b4add25ab0e82ab02136b9dbd8e4e62cc780a0e19e51c78584dbc5c75e"
+        },
+        {
+          "path": "packages/experimental/auto-review/docs/preview.svg",
+          "sha256": "bff905e6ca928f47f5e5e4f68c540144cd01a5485675bf6115b8da7812c38b08"
+        },
+        {
+          "path": "packages/experimental/auto-review/docs/preview.zh.svg",
+          "sha256": "93ec08aeaa7e93609974031c71d8e2451c34583bd851bd85d1dd679d49975572"
+        },
+        {
+          "path": "packages/experimental/auto-review/icon.svg",
+          "sha256": "e79258d0077992379f0a97a1eb38cd66a392e24fc5d3808043531da71b981a93"
+        },
+        {
+          "path": "packages/experimental/auto-review/locale/de.json",
+          "sha256": "3442900c6476aa86d0b379a7f77ec16be8ef0b9c3bb056146f3e3246ae214202"
+        },
+        {
+          "path": "packages/experimental/auto-review/locale/en.json",
+          "sha256": "f34bf1d4fafa3ebed49a6df9355a567163a9478a4224cc18039abb84fc30f15f"
+        },
+        {
+          "path": "packages/experimental/auto-review/locale/es.json",
+          "sha256": "d12e8e080d673a0f795269a2ce67846d27d9ef1055296d19f221c33cbbf79c62"
+        },
+        {
+          "path": "packages/experimental/auto-review/locale/fr.json",
+          "sha256": "f825b9f43949a4c7529b3fe11faa353400088fb91c42a42185b97f2dbe47608e"
+        },
+        {
+          "path": "packages/experimental/auto-review/locale/ja.json",
+          "sha256": "624d9176c7d5e479f5537c59937fb30d41776800aaeee6e07ed242c56cecc22e"
+        },
+        {
+          "path": "packages/experimental/auto-review/locale/pt.json",
+          "sha256": "aff17c177f0d2de10cffcd40033ff1e4f49490115b5765f248fc9aabf6e7b5bf"
+        },
+        {
+          "path": "packages/experimental/auto-review/locale/ru.json",
+          "sha256": "fd161923d192e6424d88670049d2b64c02c7975d1af8b99874ae8c398dee09be"
+        },
+        {
+          "path": "packages/experimental/auto-review/locale/zh.json",
+          "sha256": "bb6945ac38576fcb8646167cec74fd24c67ed1d5a2cb5d41bf47aa0004fd50f9"
+        },
+        {
+          "path": "packages/experimental/auto-review/package.json",
+          "sha256": "8f919cff1880a6dc5db04dc90c632b0cf6f33e7344d2a60a20c56e992a094387"
+        },
+        {
+          "path": "packages/experimental/auto-review/src/index.ts",
+          "sha256": "f3f473cbad020c86ec44b459debb7358d5c08661a7dc9a11610c75dbd6594970"
+        },
+        {
+          "path": "packages/experimental/auto-review/src/locales.ts",
+          "sha256": "4e25cd6742910bbbfcf07ff29844d06c7a5f5ee9f978985cc92a26287b31e4cc"
+        },
+        {
+          "path": "packages/experimental/auto-review/tests/auto-review.e2e.ts",
+          "sha256": "78061e6cf2990303407ef23cddcb79c8bf1394ac7bc506253fcadb7f71fbc563"
+        },
+        {
+          "path": "packages/experimental/auto-review/tests/auto-review.spec.ts",
+          "sha256": "d5fb6a3f0b352aab40cbafec646a82734efe05346f149b6cbf6085472cd913c0"
+        },
+        {
+          "path": "packages/experimental/auto-review/tests/fixtures/headless-reviewer.ts",
+          "sha256": "d59072fe6f19392b22b27196fd7d93ce189e372e7acaa96c65854ba27516c03a"
+        },
+        {
+          "path": "packages/experimental/auto-review/tsconfig.json",
+          "sha256": "cdb162904a61d1aab1c2197bfa9a505bfe6a06422bf6b16cd3c73f2a3f911162"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/experimental/auto-review/package.json",
+          "sha256": "1e5e2e5321e15edd7eae397efb09aa07275f2052a74172db9fef2dd0517a6be0",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/experimental/auto-review/src/index.ts",
+          "sha256": "90ce53228f9ed4e07fc4057041298b3cca2a64c77ac3447ea0f7933444306628",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/experimental/auto-review/tests/auto-review.spec.ts",
+          "sha256": "c94e6bf2137c3e3d580b0479d038e31ddb49b1369e386e696263d5aef4078546",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/experimental/auto-review/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/client/ui-goal",
+      "name": "@deepseek-ai/dsh-client-ui-goal",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-066",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-goal/README.i18n.yaml",
+          "sha256": "13d5dafbca9bc65417c4d912e22d6ef1e2c994992be84a1858a4442d70dff603"
+        },
+        {
+          "path": "packages/client/ui-goal/README.md",
+          "sha256": "f6c36797b4a33adfc06c6bd3951007dc47c28aef74c658a8c5ced4e6479b001f"
+        },
+        {
+          "path": "packages/client/ui-goal/README.zh.md",
+          "sha256": "21e0f28a54188cb9f4f45f29c804b66be2ff77371fb8246f0306ee8d9d8d4cf4"
+        },
+        {
+          "path": "packages/client/ui-goal/locale/de.json",
+          "sha256": "cebfbb62626e655d3970aba12018c42e6b050dde4f3429fd0114e49aff512df3"
+        },
+        {
+          "path": "packages/client/ui-goal/locale/en.json",
+          "sha256": "b151d3b21f8f8cbf04ba2d0f354ffdc98e4bde274f5cdd3cfe6b7fc866ef6917"
+        },
+        {
+          "path": "packages/client/ui-goal/locale/es.json",
+          "sha256": "dfa285281d8f71e4d379007c7a22a8ba698d34ecfda231920265b85673a40ff1"
+        },
+        {
+          "path": "packages/client/ui-goal/locale/fr.json",
+          "sha256": "78e1f4aff1ec543c90dc0a1a5253997853bcd4f0cd9ebc0a21f8baedd798a8c4"
+        },
+        {
+          "path": "packages/client/ui-goal/locale/ja.json",
+          "sha256": "d5b36b5a3854114de3518de93768632af61fae3b440ea78979c04d3ced69651c"
+        },
+        {
+          "path": "packages/client/ui-goal/locale/pt.json",
+          "sha256": "6f4ba689f98d9653e85a684226c25ef11ddf91501e8f3ed4b626e1caf10af19a"
+        },
+        {
+          "path": "packages/client/ui-goal/locale/ru.json",
+          "sha256": "34daa493fde9f696143b51b4a77f5fdd994e907cf6cdbe62ea22debff5e71bc0"
+        },
+        {
+          "path": "packages/client/ui-goal/locale/zh.json",
+          "sha256": "e2e9093d8ff9a2d837173f61f626005ed6617545d97d54f479ff6dfa779a2a5d"
+        },
+        {
+          "path": "packages/client/ui-goal/package.json",
+          "sha256": "9bc600a323ad8c43407e6da4ef17b80d328503adb531b147dcf14f933f5e3838"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/GoalBar.module.css",
+          "sha256": "fb5233c9cb10edb477e770e67c88d36747af7664ccb1f596581fe16258a76813"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/GoalBar.tsx",
+          "sha256": "fcae973c76fa81429296b1094bec1798102601e5292aad933de3f222cc984454"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/GoalCommandInputView.module.css",
+          "sha256": "e6c1951def521891ab134aac416f864d5bceb1ee04ee9682e36230c50b2056c1"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/GoalCommandInputView.tsx",
+          "sha256": "81bb7b7669340ebd946f573d924e8b7c1945d0c7e6291254ca598520444dc1f6"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/GoalCommandReference.tsx",
+          "sha256": "2b3848217a38ec01f59501768fb331a1f37bd17c75cea64dd1518484d65a9389"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/activation-source.ts",
+          "sha256": "11bc87aab98023ead37ade936f3871100f4948c1783c0f61acc8f6bc47b9201b"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/goal-command-input.ts",
+          "sha256": "f589cf3795213418dd438a83fc752da60f9eee86e2b8e04d430acd5572fd77a8"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/index.ts",
+          "sha256": "ee4f8d102512d106d5fb673db21bd427c74716b38f8131c4e713ae3bfedafc3b"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/locales.ts",
+          "sha256": "79df340cf2bfcf9469db4ec884289c8f3bed8f12f3641b16658f02dce1250f10"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/slots.ts",
+          "sha256": "7c9837f79d86a14d479f6691ea072d0ad324357463482753753e0930c3c05ef4"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/user-text-rules.ts",
+          "sha256": "b988e9102e38c6a33a94575906736ef98c071e4c10508c38d6de7292f20b75cf"
+        },
+        {
+          "path": "packages/client/ui-goal/src/css-modules.d.ts",
+          "sha256": "e28410d74a0d763364c04fa690c2ca2202ad3019c74f8f5205e8dc6cba69c02f"
+        },
+        {
+          "path": "packages/client/ui-goal/src/index.ts",
+          "sha256": "a466debeeed6c396015f0d34ec4918d5779d1515c65eaa796a6aaab520275b73"
+        },
+        {
+          "path": "packages/client/ui-goal/tests/activation-source.client.spec.ts",
+          "sha256": "2a4efbdc2835a1d196de907af9783d4ef005cbf7e4824a0ed183b92cfa1818ec"
+        },
+        {
+          "path": "packages/client/ui-goal/tests/browser-plugin.client.spec.tsx",
+          "sha256": "64f4f41c9cb348457bef4e3ba7f4be4e7d67566b91fb2af5468f9ead798132b2"
+        },
+        {
+          "path": "packages/client/ui-goal/tests/goal-command-input-styles.client.spec.ts",
+          "sha256": "53a2182573140d477f7f37673820467135ec7066209c849233f62cdefb3fa5b7"
+        },
+        {
+          "path": "packages/client/ui-goal/tests/goal-command-input.client.spec.tsx",
+          "sha256": "44ef497a1945edf3db5b6b3e37fdd70d66598578430143a0697994a6d0c688dc"
+        },
+        {
+          "path": "packages/client/ui-goal/tests/goalbar.client.spec.tsx",
+          "sha256": "76e9144430edae6a753dab26601ed723a3f75531cd226f91da6f68c3507eca44"
+        },
+        {
+          "path": "packages/client/ui-goal/tests/user-text-rules.client.spec.ts",
+          "sha256": "e9baf28e74bb36f9b85df0d9058c6fd5911a8967ac92f28fe4604481ae1a0e5d"
+        },
+        {
+          "path": "packages/client/ui-goal/tsconfig.json",
+          "sha256": "8a90cafd82f9e83ef71f149769e7b8cc12648905272aa63ef3d9875460b98584"
+        },
+        {
+          "path": "packages/client/ui-goal/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-goal/package.json",
+          "sha256": "24c112f16e510c42b844d225f1d5feecf021577438add1464bfd0e2dbcdefbf3",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-goal/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/client/ui-user-questions",
+      "name": "@deepseek-ai/dsh-client-ui-user-questions",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-067",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-user-questions/README.i18n.yaml",
+          "sha256": "7828d433d49a2b4341a532a5ac72d0e07c0dc4b8b582306eeff7373984af1005"
+        },
+        {
+          "path": "packages/client/ui-user-questions/README.md",
+          "sha256": "fc8fbbc9f8ae02040a06201057a590707ccc18c9f023ff36e8cf468171d6f3eb"
+        },
+        {
+          "path": "packages/client/ui-user-questions/README.zh.md",
+          "sha256": "b8ff1faa9fec6d4e54344ad3a1a5f2e157a7bfaecdf046c2d29327b144350858"
+        },
+        {
+          "path": "packages/client/ui-user-questions/locale/de.json",
+          "sha256": "348e9ceac23de6549e8f3dbb9f2d0f3b437e7c0eedfde3bab5b5703babda29d7"
+        },
+        {
+          "path": "packages/client/ui-user-questions/locale/en.json",
+          "sha256": "cfc66a95756fc3bc7b97d49d45987ed530ea5747bfe9691c7f39f07b0fc7d0d1"
+        },
+        {
+          "path": "packages/client/ui-user-questions/locale/es.json",
+          "sha256": "15aef85981be311da41e7a01e72e72329b401ff95dcc50be30cc270667824e5a"
+        },
+        {
+          "path": "packages/client/ui-user-questions/locale/fr.json",
+          "sha256": "246111697c0d3cc9c2fa04c95fc7ec6ccb59019f27c7e679c4c9073e808fc02d"
+        },
+        {
+          "path": "packages/client/ui-user-questions/locale/ja.json",
+          "sha256": "ce54cbad7836d313441995a460d0aabdfb3e9d83f2164a25fae672fbf2088032"
+        },
+        {
+          "path": "packages/client/ui-user-questions/locale/pt.json",
+          "sha256": "df7775168fb6eb0c7a4a9a8e1e0e2a31faeef374cf491ecc8d73c6660af4a395"
+        },
+        {
+          "path": "packages/client/ui-user-questions/locale/ru.json",
+          "sha256": "73c9d60163cd1eb9b291621083b9f34ed5c9b6c6f8621ff223d563da4974a88a"
+        },
+        {
+          "path": "packages/client/ui-user-questions/locale/zh.json",
+          "sha256": "50398668040a8d7f039b3ce7765f4db1b78c6ad9b62881ed73ce68d3edcf0289"
+        },
+        {
+          "path": "packages/client/ui-user-questions/package.json",
+          "sha256": "cdbce2815e2a219c9f4b07915bd4c9603bd6df6d6e91b9f551b886b72da09052"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/PlanReviewPanel.module.css",
+          "sha256": "01a8d8999ae1d9412a90ca7408fbbc305d579a6a8168b7d958fff6d875d96f7c"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/PlanReviewPanel.tsx",
+          "sha256": "6f87ffcfd15b749e6cfa09c6f2000fdf954cf0935a98f6cdac4f731c1784759f"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.module.css",
+          "sha256": "90480b568c0538081604753af3ed091f55035edc3265c635839cb3c465d441dc"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "sha256": "a5e5316eeaa2b3bbe35e3589bad8739e7c4b2caf62da0d23810f3b836f697260"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionReplyView.module.css",
+          "sha256": "286c51225d3a1b507c3983b7b962dce0f3748dca7ca4d8e61db947b7b2126d35"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionReplyView.tsx",
+          "sha256": "c9e6c645178d75a1f5c425a917040c584db577e29b7fcbda002f0fbb4687af09"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/contract/slots.ts",
+          "sha256": "142e5a2386055933e785390f86769b4c8dbd392ccec532f479085984575ecf0a"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/draft-store.ts",
+          "sha256": "a8b744b00fca9d661598268eeec3933c5a7d64261f542d2ea32455960d26d87c"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/index.ts",
+          "sha256": "780193efc473af2014dfbeacd782947a06a8963d00e4cdbdb882ef29431c5042"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/locales.ts",
+          "sha256": "92afb92fa8f1e1adbef10f952d12668d3588e8a260b9d1d8bf97c0e9a4f59e85"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/question-reply.ts",
+          "sha256": "fabd2395a3b5fff48242499860173dae478e6b5486eb250fda590f4e2fcccdd1"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/css-modules.d.ts",
+          "sha256": "1b119eae282e4981c7ee24bbcf0ceafe34d57f6d5e6b148b2b7cc7c09cd89513"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/index.ts",
+          "sha256": "76a004fd33761675527d201d9870079e6ece96bbf3083037530b0f7679470b69"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/QuestionReplyView.client.spec.tsx",
+          "sha256": "4d5094d3cd5f3ef037d54310da2ac757c0030b693c54836640304d44173d1460"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/browser-plugin.client.spec.ts",
+          "sha256": "46921c99d8f1e06c657e98cdaa738204ed24824f1d4e349e7d02b240345f1710"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/node-plugin.client.spec.ts",
+          "sha256": "c52f09cc700feb87ea76ed1bab60225285e8d33eefe6ca83f9788644c1ae4784"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/pending-question.client.spec.ts",
+          "sha256": "5c6ff23069e22ec07271a01853f5785f8a0610da299f2450e0fd22dd7ba9a5f4"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/plan-review-panel.client.spec.tsx",
+          "sha256": "059b15dbdd64cbf1d3ccc02e9c12a4f12b51e45d026820888caf1db370f0ca29"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/question-composer-styles.client.spec.ts",
+          "sha256": "e77f65cf4bd128ca352cc65289d94cabd95d979deb7c32acbd819f71639a7c96"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/question-draft-store.client.spec.ts",
+          "sha256": "571c8b10fb7df78739d5474a8c2dd58aa1737e83cef21520f8bdc3e831f0f134"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/question-reply.client.spec.ts",
+          "sha256": "c4ef79c1295bc89fbf5ef2e71f583b2090ba879d7dbfe8eb480d6d4d4785436f"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tests/user-questions-composer.client.spec.tsx",
+          "sha256": "394ecd455b09eab2c3924a1a69f8e36e5204f870bf3048edc52e62a633a532a2"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tsconfig.json",
+          "sha256": "d90ff3791faf493b56a33cc923c88236fcf5cda7731b94c931ee78aed54179ef"
+        },
+        {
+          "path": "packages/client/ui-user-questions/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-user-questions/package.json",
+          "sha256": "0ad4ecf773c4eaa268fc579d866b9c85b431bcf89cb41aa5ceb2bb57ffb4135b",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-user-questions/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/client/ui-sidebar-files",
+      "name": "@deepseek-ai/dsh-client-ui-sidebar-files",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-069",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-sidebar-files/README.i18n.yaml",
+          "sha256": "f65d3c2b8c58f104dcc248dceca306f1c2e55356cde97ee3efac9c46529f20ad"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/README.md",
+          "sha256": "9f9f3aacdb8ba7c4b2de29c932855c115c18dd0151f78a22f5d7d9f35ef840d8"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/README.zh.md",
+          "sha256": "8172bf6892e53911491c1a7f0512bb24033fdb8213d2c8f786faaaaac7fe89b7"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/locale/de.json",
+          "sha256": "3fd001326c3090098e21719d85b57795b2bc527649461d6f3cb97c4a096c86f8"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/locale/en.json",
+          "sha256": "a5f502c7d5e096f79d73befe3aa158362ff744ec9d0eb2f66145a30d03ce87e6"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/locale/es.json",
+          "sha256": "290a20bf9001671a240dbe110c2bd8d5ac74f3527afb8226aedfc955ba1289c6"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/locale/fr.json",
+          "sha256": "5a0555aa8cf6304bb7ea3cee7432a527acf6e4b41ce3eb90499a040fc1db15f1"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/locale/ja.json",
+          "sha256": "1a3042001a4a889d7986215ee09da5ac0e0afde88e40db5cb07f8ed540351d9e"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/locale/pt.json",
+          "sha256": "ea6f3e557293f307a9d6d36642f881cc87c589dad063ffa6d63a1ee41049aeca"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/locale/ru.json",
+          "sha256": "882afc7afa83bb6843c030acfbb333f2ea2af3299122be2847dfb51c4faa6474"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/locale/zh.json",
+          "sha256": "27152160a9c1c3070a40eab2ead62bbb692930a0a739bbbed2058515ec3278c7"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/package.json",
+          "sha256": "6fde6e2147b4fd3ea99d03e8d8d5aeef388bb0a4068fe9ceea3c202c2f9e0996"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/FilesBody.module.css",
+          "sha256": "616865059eecb4946e826a6d568ab3fd348654a6c3b110328dae94bdc49b9d72"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx",
+          "sha256": "52ac73a7a921b9702096331c29dd4a8b7f559da6e9d92ea3a225a62f826f52ee"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/FilesTitle.tsx",
+          "sha256": "f5a50fc2d42815e4c392836faa868f902fda9b044e9b889de0475c2fc6f12571"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/definition.tsx",
+          "sha256": "ec6e990e7c726a123f3ce5b15f9e661f6c720fd1c8ac77654b9cbced3aafd3b6"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/directory-node.ts",
+          "sha256": "3da099ed59762f66393727b59d04c9462114fa8ea77d21bdf53e8e33c2f93194"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/face.ts",
+          "sha256": "0ff8c62e4cb940a33afa811838d2c15e57d02f9a44135404c5f0c95106d7594c"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/index.ts",
+          "sha256": "26066e5bb76139bb543048c48e30cc980058bbe5de8ec8acbdd559127d89d422"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/locales.ts",
+          "sha256": "131656c93a96b2c0d81a5d497f9709b01f40e9a2115f4af7c666c42844f3edf8"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/store.ts",
+          "sha256": "e799ba4a770e56670360c485f79c2df8bbc158fc4525720a543dafe5167f410e"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/css-modules.d.ts",
+          "sha256": "e28410d74a0d763364c04fa690c2ca2202ad3019c74f8f5205e8dc6cba69c02f"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/index.ts",
+          "sha256": "2554cf09f77dfbe8c30309a8ac6414b11d18c19bceae4cff24fbbb8b811cafcd"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/apply.client.spec.ts",
+          "sha256": "65a92b897c1bd0336315267619d7e3e3ce2cfca8c274611d941cb4b82b4e6fa0"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/definition.client.spec.ts",
+          "sha256": "e7520d56f8db9ea321fac3fe382be87c5a6bfb858f283478c4b2dde0480aefed"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/directory-node.client.spec.ts",
+          "sha256": "8200fb80bd0f5eb413941556bd46b51a1a2732c4a11ffaf6fec08c75ebf53d3e"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/face.client.spec.ts",
+          "sha256": "19e490aadaabe2f5fb3b3e0c15b051c416ad2c50f0e10d90dd24912f21208aa5"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/files-body.client.spec.tsx",
+          "sha256": "836818986394bcef5cd03c2f1d8f221dea18cd0253808ec1154a2b4c87f506e1"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/files-title.client.spec.tsx",
+          "sha256": "2a9852298b9dd4d2dca3db86d82f8660f84dcbeac6e9ab125df990cc3ee2f606"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/mount.client.tsx",
+          "sha256": "592fad0cc3e634e8cc4f45fc568b4667d95b548e25b9b19ae523eedad7da7648"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/scripted-list.client.ts",
+          "sha256": "9f5765a7bf462da688693b8b554e9fcdd9661b838e0a17ca701e0e3bd7a4ae38"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/scripted-watch.client.ts",
+          "sha256": "d1396ef59046df31867732cd966406a639a426869577534f7a8185e888d5b62f"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/store.client.spec.ts",
+          "sha256": "32e5d326fa9b30b0609543300313d1044f3f9daf2fdbca88a0211299584d119d"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tests/watch.client.spec.ts",
+          "sha256": "47af745767385dbe6b4ec4edf2c35fbd738538ec0d36b59f542d2dec59f4cad2"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tsconfig.json",
+          "sha256": "6fb206e6e6acc14316adeb551c99fdf6fef3596a5146afd53597933475f2d9e0"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-sidebar-files/package.json",
+          "sha256": "e9abba956e10d4962f564e42b4501be448a5b9b8100e43098f56ecbd616613fb",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx",
+          "sha256": "3a5fd8ed456378b8de3df252316b98b0d83511b798970b45dd762fa245e4cbe0",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-sidebar-files/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/subagent/tool-subagent",
+      "name": "@deepseek-ai/dsh-tool-subagent",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-067",
+      "status": "verified-test-only",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/subagent/tool-subagent/README.i18n.yaml",
+          "sha256": "4904f18fd23e44f10ac25859f1b61f5a62b3a9b21413dd9f053645b9faf7cca6"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/README.md",
+          "sha256": "5db04d7dee15de7c88788452962491864a7b02e0b677375e2f101d8463715400"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/README.zh.md",
+          "sha256": "506686855778554f19970b9d039a9ed2b3203262fbf886cf0a6f19fca57cb93d"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/de.json",
+          "sha256": "821e1938218cd110507f161b02ef13088e04c3c8d42137d9e1631daa6a675614"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/en.json",
+          "sha256": "14020f72f2999c7546e33c9abce486f1666585ca3b9225ef370b4a664fd17453"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/es.json",
+          "sha256": "7871baf9347cc931dc5b2c65285720d4828fe557fff4cf8e72bfffb13daf39ee"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/fr.json",
+          "sha256": "cc4130b93de26c34179535b8937e2aed15229d7e47f2e648cac8b8b53db3c652"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/ja.json",
+          "sha256": "3f5fc9f553b3d0ea3166ca2cda0d114f83f7f5975715bc20cbfce07fa0206179"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/model-selection-settings/de.json",
+          "sha256": "c46a4cdb0b4da6bb9a2169e87a7cad5edfe23c8a45babd554d342d974ba49c95"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/model-selection-settings/en.json",
+          "sha256": "94d60461619298da9266a9cee5fd9faadbd168e878f22cd7292142f2f7e147b0"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/model-selection-settings/es.json",
+          "sha256": "5f6e246555b3fe111ad719b59fbdd73e0e3de33a2b75b62acce89357bb3c3c24"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/model-selection-settings/fr.json",
+          "sha256": "e8edabad45a38919fb1d72a8a5b4b3d2852cd192237cab2acb158ba4fc98e276"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/model-selection-settings/ja.json",
+          "sha256": "9febece8942a6f5d7c3b3e74205f2e2ad87945b85a2c314f543634c43dd5ef45"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/model-selection-settings/pt.json",
+          "sha256": "86ad88080693e135c6986406c277ece233880207a37a8c75aac5fd4e2423ce51"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/model-selection-settings/ru.json",
+          "sha256": "5680851be1f2133a513b97b31d77677185b92a2446b77e6aa09b741d0050527a"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/model-selection-settings/zh.json",
+          "sha256": "748b9713b65da1a791833587bdb21f9a233c572540f32fbfac6949dfe3dcb3a9"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/pt.json",
+          "sha256": "de6479db84bd86d30ffa6779393e4ebff0395672582261a49b616bdad31ad7d4"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/ru.json",
+          "sha256": "b018614b244a89f76004079cd4ee75fe79a4a7d5728a62d0b662b6fc08c1c4dd"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/locale/zh.json",
+          "sha256": "307a037580f862648051fda6bc1ae72385daf1884c8df6054c7d796bbc559fc2"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/package.json",
+          "sha256": "e3569a50437a29e5c922729edd6fe75c2a9cc72d54ba320ecbc80c7da0f3877b"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/src/index.ts",
+          "sha256": "e07634b07040a6dd1a4b63404bcd397bb21af9da6ed5eb310c7e277284205a67"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/src/list-models.ts",
+          "sha256": "e0a11f4a71057881489a4dc119f143860f9eeba3801b6e0605b2e8663b42cb68"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/src/model-selection-settings.ts",
+          "sha256": "0b775b181bcfec875db56e40024195586d1501ac8c5d53f5ea590d7bbaf0bf95"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/src/model-selection-state.ts",
+          "sha256": "ab1da61f252ba1ae3a43b086ce932389e115139f1a6236eae443e8ed363f3cd6"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/src/model-selection.ts",
+          "sha256": "65bc7d2ae2aa47a6182f9896e88d25d8e77d46c1cd9531f79ba3cb57c5f0072b"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/src/preset-selection.ts",
+          "sha256": "b3c636e60105e05a0bfb21090d75713bd0cafea04d1df47b9ecdcdf1c5506f8c"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/depth-context.spec.ts",
+          "sha256": "e9299383dc3c7b38eff63be386b30beee02299e80cdf3e17a4d43f5238e880ee"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/harness.ts",
+          "sha256": "bf2b5a438bc8504444670e8adb983bacb30e22a28d44424a5e85373da53f2725"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/list-models.spec.ts",
+          "sha256": "d8236a70591cb4bdc3c5e13aaaf993e5b859240186c00d496d3bca72e8a6824f"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/model-selection-initialization.spec.ts",
+          "sha256": "050a997352fa9be230d002bba3ebf628fca775cb340a3f5d38afee7e89052d82"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/model-selection-settings.spec.ts",
+          "sha256": "aeffa321855a5f8e57b12ef7d03b77b95cec6780d7712da003def7074b9dc2fd"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/model-selection.spec.ts",
+          "sha256": "f67a24c1e136921d95f32c6a77ef8623a17d27f5294da6d18d412b77698b5cbe"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/preset-selection.spec.ts",
+          "sha256": "90c08deba252169775a84cb0d8e89355df2d1e49ddba405a4a5547281de66334"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/scripted-provider.spec.ts",
+          "sha256": "55b2411f490f524fd0a825f916de084f4fa13cb44ed5a14125a853e16008ce7d"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/scripted-provider.ts",
+          "sha256": "0bf4d80bfe8492cb0a9046250f1a5187efe53628a9b03ba402f0501e72507f96"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tests/tool-subagent.spec.ts",
+          "sha256": "573402fe1e3025d119f8826b32ed34621f52b4d920624757f96f3617596d4727"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tsconfig.json",
+          "sha256": "5314a8b3a60e4e27403f98485972c911e48b1920e6f191a66b6ea5ea03db0be5"
+        },
+        {
+          "path": "packages/subagent/tool-subagent/tsdown.config.ts",
+          "sha256": "bbfa782750bc58b129d20f21fe586937db7440625f289b2b5909c9229386c333"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/subagent/tool-subagent/package.json",
+          "sha256": "567e0cbebfce33253aeaec73b67b12c27b59e7914b69308a0fcc672fddc25f88",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/subagent/tool-subagent/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
+    },
+    {
+      "path": "packages/session/message-quotes",
+      "name": "@deepseek-ai/dsh-message-quotes",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-065",
+      "status": "verified-product-interaction",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/session/message-quotes/README.i18n.yaml",
+          "sha256": "c4cdeb7175a29a91d3235a30888c1d384eaf2f5f36a89fd2029405fff16ee4fc"
+        },
+        {
+          "path": "packages/session/message-quotes/README.md",
+          "sha256": "d49a92ec80fc59bb9114b9a6ad27cd8afbb2da80e744c17b8bbb836896e2a3f2"
+        },
+        {
+          "path": "packages/session/message-quotes/README.zh.md",
+          "sha256": "b213d44a01aaeaff48ea7562ab29973a6022092895d0e92cddf91488be4ca04f"
+        },
+        {
+          "path": "packages/session/message-quotes/locale/de.json",
+          "sha256": "8569ba917fbc6fe23baa91d0f5abbc008de540588758b7ea8f2773d02a7ec786"
+        },
+        {
+          "path": "packages/session/message-quotes/locale/en.json",
+          "sha256": "b7cb68853a814d5ed199b4e51b1c0338e04efb5995dffdee12cb3cc4d3ccc674"
+        },
+        {
+          "path": "packages/session/message-quotes/locale/es.json",
+          "sha256": "d4574f80980e95556c15c342b30a03155aeba8d49e59c72757e50225b95aa4fb"
+        },
+        {
+          "path": "packages/session/message-quotes/locale/fr.json",
+          "sha256": "5da6daa92bc8fedc9cf1f2b4e5315e0e3c821d2f45c434eb448b8dbf693b8095"
+        },
+        {
+          "path": "packages/session/message-quotes/locale/ja.json",
+          "sha256": "7674b48badefbee987cff6c2aed430f7bacb99a473476b551e05484dd1b45f00"
+        },
+        {
+          "path": "packages/session/message-quotes/locale/pt.json",
+          "sha256": "1e37567be7b03127f500f39263eb0c24a4324e7a63bae2d6d0acb9707b4e400b"
+        },
+        {
+          "path": "packages/session/message-quotes/locale/ru.json",
+          "sha256": "c0620896955b0f811129cfe441d1e5f97c3c95843555e8e07dd479d909e9de3a"
+        },
+        {
+          "path": "packages/session/message-quotes/locale/zh.json",
+          "sha256": "974b202a749015f221d782305b92b764073987ce5ca818bf3d9a9292666d6313"
+        },
+        {
+          "path": "packages/session/message-quotes/package.json",
+          "sha256": "31cb4db2d7ba6bb82d09c7446076ddd99044b79c4b29889a29611f017a548c7a"
+        },
+        {
+          "path": "packages/session/message-quotes/src/client/QuoteSelection.module.css",
+          "sha256": "7c9e6e0725c620ee1ccd6dada0d21afcd14a96b6e1cd6f639c14d702cdb83c9a"
+        },
+        {
+          "path": "packages/session/message-quotes/src/client/QuoteSelection.tsx",
+          "sha256": "b8ce0819ab472ca04d328d1cb6ae532cc975b6decae0ef155da359eafe356d13"
+        },
+        {
+          "path": "packages/session/message-quotes/src/client/QuotedUserText.tsx",
+          "sha256": "ec6e0748e11d85c9ccd9eac4a8fe247f0cf8d6ddfd4fa2a746ba3c8acfeba08f"
+        },
+        {
+          "path": "packages/session/message-quotes/src/client/index.ts",
+          "sha256": "1ab413850720474cf0809f02724620eece430117c0143142de57c360ee0b8476"
+        },
+        {
+          "path": "packages/session/message-quotes/src/client/locales.ts",
+          "sha256": "0100ef32e5e2e0ff08fcb51121e24fe7ece3cf3ff479b1f9a35ab8766350ac3b"
+        },
+        {
+          "path": "packages/session/message-quotes/src/client/quote-rule.ts",
+          "sha256": "1a3a9c4e04f483378b06bfbc051c101531e76d0fd15eea9b7dc4b2dd8c40b98b"
+        },
+        {
+          "path": "packages/session/message-quotes/src/client/quote-text.ts",
+          "sha256": "81dc50d903e5f44eab4f01da8594ec4bcabcb6d49a269268938fd8869e134251"
+        },
+        {
+          "path": "packages/session/message-quotes/src/css-modules.d.ts",
+          "sha256": "e28410d74a0d763364c04fa690c2ca2202ad3019c74f8f5205e8dc6cba69c02f"
+        },
+        {
+          "path": "packages/session/message-quotes/src/index.ts",
+          "sha256": "8389066f0935cf0c63bd0ea29e96a32d1d24bda61e9f5003925523dbec399185"
+        },
+        {
+          "path": "packages/session/message-quotes/tests/browser-plugin.client.spec.tsx",
+          "sha256": "9af2425e4ab3473d60b6237f07f21547e20464986aff2cde3f017db4fb657a56"
+        },
+        {
+          "path": "packages/session/message-quotes/tests/host-entry.client.spec.ts",
+          "sha256": "c9328dddb957188df026759d875f21c94076d5850e6455afa466700a816392cd"
+        },
+        {
+          "path": "packages/session/message-quotes/tests/quote-selection.client.spec.tsx",
+          "sha256": "6169b9b6dd318ecb327a2cf25359322d8c323c796e57957ded554b9c6004dcc7"
+        },
+        {
+          "path": "packages/session/message-quotes/tests/quote-text.client.spec.ts",
+          "sha256": "370a7c33a8494fce105dd07c174080e6fba2a46d6fe9566f4303a2253b7231cb"
+        },
+        {
+          "path": "packages/session/message-quotes/tests/quote-user-text.client.spec.tsx",
+          "sha256": "363dd2ac126545f312d9cfcd6cec35412774be3273fa345c45e3fbbf1beeac9b"
+        },
+        {
+          "path": "packages/session/message-quotes/tsconfig.json",
+          "sha256": "3d9f6d6d803e83dc12e729a2ebea6360a10e33eacecc18614c91cc0e7f459ca7"
+        },
+        {
+          "path": "packages/session/message-quotes/tsdown.config.ts",
+          "sha256": "eecc62a29cb44e5a66839a9a6a6e0461e4ebd5dc673398bd67dcb3313a516a47"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/session/message-quotes/package.json",
+          "sha256": "c677abcedb72a768b49ae127087a323846e1fb46f6c85dd6a99a7ff1313f60a7",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/session/message-quotes/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ]
     }
   ],
-  "checks": [
+  "localSourcePatch": {
+    "path": "provenance/dsh-p2-ui-foundation-local.patch",
+    "sha256": "fe4375f2e7315ed548312bf5d44a0c2e8f7d0e153f960baffa4a0c8907ee5858",
+    "reason": "M4 独立补丁，不改写 M1/M3 来源和产品适配"
+  },
+  "snapshots": [
+    {
+      "path": "provenance/dsh-m4-ui-foundation.tar.gz",
+      "sha256": "e3827e938043b184269e99c5903eba4ba37b1121494a8b0776553e24beb18a93"
+    },
+    {
+      "path": "provenance/dsh-tz063-conversation.tar.gz",
+      "sha256": "b9af79f9a35f41393a20bac442f2721b268deb45196e4d0f7c43a226b31880fe",
+      "reason": "TZ-063 锁定基线的 27 包原始源码，含附件图库与类型闭包"
+    },
+    {
+      "path": "provenance/dsh-tz063-conversation-local.patch",
+      "sha256": "746b1acf04bfd64caddf98ca23321bd640bf81e76e77b75694a1c4d5c5a90f80",
+      "reason": "TZ-063 可复核的原始基线到迁入源码补丁；保留既有 M3 与 TZ-062 补丁文件"
+    },
+    {
+      "path": "provenance/dsh-tz064-tools.tar.gz",
+      "sha256": "5dfc4454186a8945b929da7cc04fc95219891ae1c980fcfdd5d6d0bb7e9f479f",
+      "reason": "TZ-064 锁定基线的 14 包与原翻译测试 helper"
+    },
+    {
+      "path": "provenance/dsh-tz064-tools-local.patch",
+      "sha256": "ade57ce13a83411a9a0964cb60bdbfe464cc780fa64e2305d74bb70eae59e698",
+      "reason": "TZ-064 本地源码适配；既有批次补丁保持不变"
+    },
+    {
+      "path": "provenance/dsh-p2-completion.tar.gz",
+      "sha256": "8c004b64d86f5ef6cc1f24a25d0ea379904073da58a639d05c6cf696ce61a9a1",
+      "reason": "TZ-065～069 锁定原始源码、测试与依赖补丁闭包"
+    },
+    {
+      "path": "provenance/dsh-p2-completion-local.patch",
+      "sha256": "43864fb023620614424f0ad66b2270b68856c1dfeb5b5e8eae00767865a17078",
+      "reason": "P2 当前迁入源码相对锁定基线的完整本地补丁；历史批次证据不改写"
+    }
+  ],
+  "excludedRuntime": [
+    "skills UI",
+    "trajectory UI",
+    "account",
+    "product-analytics",
+    "updater"
+  ],
+  "acceptanceScope": "TZ-062～069 与 TZ-022；DSH-01～16、PROTO/UI 回归和本机生产组合通过。平台和未启用能力边界见 P2 收口核验。",
+  "support": [
+    {
+      "path": "tests/fixtures/dsh-translate.ts",
+      "sha256": "c05dbe39355916881dd30ab4b0eea00ff3d09ed17480c14e9d2b3e9c5abdc161",
+      "source": "packages/test-support/client-runtime/src/translate.ts",
+      "sourceSha256": "c05dbe39355916881dd30ab4b0eea00ff3d09ed17480c14e9d2b3e9c5abdc161",
+      "reason": "原 MIT 测试 helper，字节不变；避免导入整个上游桌面测试平台"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/workspaces.ts",
+      "sha256": "4476b40f9d5b2051c328c88e656dca4db31d5c8d6ae847f18c3beed5ad933f56",
+      "source": "packages/test-support/client-runtime/src/workspaces.ts",
+      "sourceSha256": "4476b40f9d5b2051c328c88e656dca4db31d5c8d6ae847f18c3beed5ad933f56",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/snapshot.ts",
+      "sha256": "5222ac9cf02a1526a4258eef9713d44483ac24d0503373f4d7d65a3671d414c5",
+      "source": "packages/test-support/client-runtime/src/snapshot.ts",
+      "sourceSha256": "5222ac9cf02a1526a4258eef9713d44483ac24d0503373f4d7d65a3671d414c5",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/fixtures.ts",
+      "sha256": "f27db4b840592d430c5c5756735170a31ef64e69792f28769a2238635c1fe937",
+      "source": "packages/test-support/client-runtime/src/fixtures.ts",
+      "sourceSha256": "f27db4b840592d430c5c5756735170a31ef64e69792f28769a2238635c1fe937",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/locale-env.ts",
+      "sha256": "0f00b9621bcbd0a4f947595018a72166d0fd8f7cf894ca48d577837d9f253ae5",
+      "source": "packages/test-support/client-runtime/src/locale-env.ts",
+      "sourceSha256": "0f00b9621bcbd0a4f947595018a72166d0fd8f7cf894ca48d577837d9f253ae5",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/config-form.ts",
+      "sha256": "3e3c9db081e05076c1be6e04b198ab7756d6814a3ef3094bc33a490b2facd0c3",
+      "source": "packages/test-support/client-runtime/src/config-form.ts",
+      "sourceSha256": "3e3c9db081e05076c1be6e04b198ab7756d6814a3ef3094bc33a490b2facd0c3",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/access.ts",
+      "sha256": "8526fb64f76951f2d5161dc77f1581b2df54cab2b3c02ac23e34e3889b017602",
+      "source": "packages/test-support/client-runtime/src/access.ts",
+      "sourceSha256": "8526fb64f76951f2d5161dc77f1581b2df54cab2b3c02ac23e34e3889b017602",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/remote.ts",
+      "sha256": "adaaaa4acdffc4f7d396fa5d0c688ab467c200ed5ebab222ba7dde53b06d9868",
+      "source": "packages/test-support/client-runtime/src/remote.ts",
+      "sourceSha256": "adaaaa4acdffc4f7d396fa5d0c688ab467c200ed5ebab222ba7dde53b06d9868",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/index.ts",
+      "sha256": "75cf03ea345c55a460fa4197336afad5966de734f51e6681f8e8a6de9214e575",
+      "source": "packages/test-support/client-runtime/src/index.ts",
+      "sourceSha256": "75cf03ea345c55a460fa4197336afad5966de734f51e6681f8e8a6de9214e575",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/translate.ts",
+      "sha256": "c05dbe39355916881dd30ab4b0eea00ff3d09ed17480c14e9d2b3e9c5abdc161",
+      "source": "packages/test-support/client-runtime/src/translate.ts",
+      "sourceSha256": "c05dbe39355916881dd30ab4b0eea00ff3d09ed17480c14e9d2b3e9c5abdc161",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/sessions.ts",
+      "sha256": "2c0beeaa579f00b1abd216e9d3eff13f345ec0fab616f7b1df2737ff0bf6ffc8",
+      "source": "packages/test-support/client-runtime/src/sessions.ts",
+      "sourceSha256": "2c0beeaa579f00b1abd216e9d3eff13f345ec0fab616f7b1df2737ff0bf6ffc8",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-client-runtime/assembly/remote-default-responses.ts",
+      "sha256": "56f56f81f21d79332addeb0c78f98138899e7b92575d52843fadd52e40f78d1c",
+      "source": "packages/test-support/client-runtime/src/assembly/remote-default-responses.ts",
+      "sourceSha256": "56f56f81f21d79332addeb0c78f98138899e7b92575d52843fadd52e40f78d1c",
+      "reason": "原 MIT Slot/Session 测试运行环境，测试专用"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-skill/src/client/SkillReference.tsx",
+      "sha256": "87e79672172b15257250467af209253f5ac734076d9dcb4a1006e9acaa3a00d1",
+      "source": "packages/client/ui-skill/src/client/SkillReference.tsx",
+      "sourceSha256": "87e79672172b15257250467af209253f5ac734076d9dcb4a1006e9acaa3a00d1",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-skill/src/client/user-text-rules.ts",
+      "sha256": "21fbd82f26a318f77b6e597e56ac36e6c2d5a6be7d86f8ec15567325ef711541",
+      "source": "packages/client/ui-skill/src/client/user-text-rules.ts",
+      "sourceSha256": "21fbd82f26a318f77b6e597e56ac36e6c2d5a6be7d86f8ec15567325ef711541",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-secret-mask/src/client/credential-scanner.ts",
+      "sha256": "444952f8ce194ef2278b5b0a618c194d90d453e67273f2801d96ea6dba3a909e",
+      "source": "packages/client/ui-secret-mask/src/client/credential-scanner.ts",
+      "sourceSha256": "444952f8ce194ef2278b5b0a618c194d90d453e67273f2801d96ea6dba3a909e",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-secret-mask/src/client/SecretText.module.css",
+      "sha256": "f6ad95d6c43bfc55e1ec2fe2e5549f6c859b490458eefc8865980f3dd56d5e27",
+      "source": "packages/client/ui-secret-mask/src/client/SecretText.module.css",
+      "sourceSha256": "f6ad95d6c43bfc55e1ec2fe2e5549f6c859b490458eefc8865980f3dd56d5e27",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-secret-mask/src/client/locales.ts",
+      "sha256": "7e4a6d743f70ca8a0a0862a48086f642df051b4b26ac3c75d2c48ba2f8637f0d",
+      "source": "packages/client/ui-secret-mask/src/client/locales.ts",
+      "sourceSha256": "7e4a6d743f70ca8a0a0862a48086f642df051b4b26ac3c75d2c48ba2f8637f0d",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-secret-mask/src/client/credential-formats.ts",
+      "sha256": "27c24929500eff3d76b6637076e9757805d80427220b5f72f3744b81f1492821",
+      "source": "packages/client/ui-secret-mask/src/client/credential-formats.ts",
+      "sourceSha256": "27c24929500eff3d76b6637076e9757805d80427220b5f72f3744b81f1492821",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-secret-mask/src/client/credential-masks.ts",
+      "sha256": "bb9d2e5b7a85621e7e0e163e1d170d4b3a3e5d6f1e30e8c59f12d7b92f7557d1",
+      "source": "packages/client/ui-secret-mask/src/client/credential-masks.ts",
+      "sourceSha256": "bb9d2e5b7a85621e7e0e163e1d170d4b3a3e5d6f1e30e8c59f12d7b92f7557d1",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-secret-mask/src/client/format-tables.ts",
+      "sha256": "ab70f20da34381df476b122fbd971b0d90e877bce37a18220a0bac0009a39cb9",
+      "source": "packages/client/ui-secret-mask/src/client/format-tables.ts",
+      "sourceSha256": "ab70f20da34381df476b122fbd971b0d90e877bce37a18220a0bac0009a39cb9",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-secret-mask/src/client/SecretText.tsx",
+      "sha256": "3d758b9f17e0963d90169eb8016a1e8f55c1b8bdf146514a867209a1418ca03c",
+      "source": "packages/client/ui-secret-mask/src/client/SecretText.tsx",
+      "sourceSha256": "3d758b9f17e0963d90169eb8016a1e8f55c1b8bdf146514a867209a1418ca03c",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-user-text/ui-secret-mask/src/client/secret-rule.ts",
+      "sha256": "b936191240b6b5affe1cdd6747d695b785aa8ab5c75295710103e933ee3b80fa",
+      "source": "packages/client/ui-secret-mask/src/client/secret-rule.ts",
+      "sourceSha256": "b936191240b6b5affe1cdd6747d695b785aa8ab5c75295710103e933ee3b80fa",
+      "reason": "原 UserText 测试闭包；不启用 Skill 或 Secret 插件"
+    },
+    {
+      "path": "tests/fixtures/dsh-dom-environment.ts",
+      "sha256": "b9f090e266d1f35d9a12384a77330a03ae875100940813c9e2a2f37fd238bdb1",
+      "source": "scripts/test-dom-environment.ts",
+      "sourceSha256": "b9f090e266d1f35d9a12384a77330a03ae875100940813c9e2a2f37fd238bdb1",
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+    },
+    {
+      "path": "apps/web/tests/fixtures/office/preview.xls",
+      "sha256": "311df8fcb797cfeffb552f254a054976ab61611d4a2cf68cd11f3ae7e2a73d37",
+      "source": "apps/web/tests/fixtures/office/preview.xls",
+      "sourceSha256": "311df8fcb797cfeffb552f254a054976ab61611d4a2cf68cd11f3ae7e2a73d37",
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+    },
+    {
+      "path": "patches/@fortune-sheet__react@1.0.4.patch",
+      "sha256": "2932e52e79afcd4ced08cfa123b5eded786c85043da32f622f3e80af6fc96c37",
+      "source": "patches/@fortune-sheet__react@1.0.4.patch",
+      "sourceSha256": "2932e52e79afcd4ced08cfa123b5eded786c85043da32f622f3e80af6fc96c37",
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+    },
+    {
+      "path": "patches/lexical@0.49.0.patch",
+      "sha256": "54c4413db208cf234cb68c6a837f2523d3b319aa17911f1da385af08362e1356",
+      "source": "patches/lexical@0.49.0.patch",
+      "sourceSha256": "54c4413db208cf234cb68c6a837f2523d3b319aa17911f1da385af08362e1356",
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+    },
+    {
+      "path": "patches/node-pty@1.2.0-beta.15.patch",
+      "sha256": "9d30053266d0f39d3debe894c675867f6782da6bcadbc94a693b3cfb9eff8ed0",
+      "source": "patches/node-pty@1.2.0-beta.15.patch",
+      "sourceSha256": "9d30053266d0f39d3debe894c675867f6782da6bcadbc94a693b3cfb9eff8ed0",
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+    },
+    {
+      "path": "patches/exceljs@4.4.0.patch",
+      "sha256": "c1bf8ac8f319dab382f08e3a669b715e691d46c703ac5a4163eb383fbedd1d48",
+      "source": "patches/exceljs@4.4.0.patch",
+      "sourceSha256": "c1bf8ac8f319dab382f08e3a669b715e691d46c703ac5a4163eb383fbedd1d48",
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+    },
+    {
+      "path": "patches/@fortune-sheet__core@1.0.4.patch",
+      "sha256": "8791a230763dbf853fd65d627c68c31de37209992851377855e16cf08ea70532",
+      "source": "patches/@fortune-sheet__core@1.0.4.patch",
+      "sourceSha256": "8791a230763dbf853fd65d627c68c31de37209992851377855e16cf08ea70532",
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+    }
+  ],
+  "completionRollbackRevision": "578c5f9f77f174e6c1392684ea93dd882b2aacd4",
+  "historicalChecks": [
     {
       "command": "npx --yes pnpm@11.28.5 build && npx --yes pnpm@11.28.5 build:web",
       "result": "passed",
@@ -9759,52 +12632,32 @@
       "scope": "one final full run; large-history functional checks passed with measured performance regression retained for TZ-067/TZ-022"
     }
   ],
-  "localSourcePatch": {
-    "path": "provenance/dsh-p2-ui-foundation-local.patch",
-    "sha256": "fe4375f2e7315ed548312bf5d44a0c2e8f7d0e153f960baffa4a0c8907ee5858",
-    "reason": "M4 独立补丁，不改写 M1/M3 来源和产品适配"
-  },
-  "snapshots": [
+  "checks": [
     {
-      "path": "provenance/dsh-m4-ui-foundation.tar.gz",
-      "sha256": "e3827e938043b184269e99c5903eba4ba37b1121494a8b0776553e24beb18a93"
+      "command": "npx --yes pnpm@11.28.5 run verify:clean",
+      "result": "passed",
+      "scope": "empty npm and pnpm stores; full format/build/web/docs/workspace/licenses/P0/P1/P2; 5089 P2 unit + 10 P2 Host; first watcher timeout retained in verification record",
+      "runtimeFingerprint": "61fac23bbb36830396fe1b4407967384b62e50c7e93dc57f3cc595ced7703ff5"
     },
     {
-      "path": "provenance/dsh-tz063-conversation.tar.gz",
-      "sha256": "b9af79f9a35f41393a20bac442f2721b268deb45196e4d0f7c43a226b31880fe",
-      "reason": "TZ-063 锁定基线的 27 包原始源码，含附件图库与类型闭包"
+      "command": "node --expose-internals node_modules/@playwright/test/cli.js test --config playwright.config.ts --trace=off",
+      "result": "42 passed; 0 retries",
+      "scope": "single full run; real Host, original controls, PDF/XLS, recovery, queue attachments and 10000 history"
     },
     {
-      "path": "provenance/dsh-tz063-conversation-local.patch",
-      "sha256": "746b1acf04bfd64caddf98ca23321bd640bf81e76e77b75694a1c4d5c5a90f80",
-      "reason": "TZ-063 可复核的原始基线到迁入源码补丁；保留既有 M3 与 TZ-062 补丁文件"
+      "command": "node scripts/verify-conversation-parity.mjs ../deepseek-harness",
+      "result": "passed",
+      "scope": "11 identical fixtures; 220 upstream + 220 product"
     },
     {
-      "path": "provenance/dsh-tz064-tools.tar.gz",
-      "sha256": "5dfc4454186a8945b929da7cc04fc95219891ae1c980fcfdd5d6d0bb7e9f479f",
-      "reason": "TZ-064 锁定基线的 14 包与原翻译测试 helper"
+      "command": "node --expose-internals scripts/verify-p2-real.mjs --run",
+      "result": "passed",
+      "scope": "actual DeepSeek reasoning/Bash/question/approval/Auto; stable turn duration on reload"
     },
     {
-      "path": "provenance/dsh-tz064-tools-local.patch",
-      "sha256": "ade57ce13a83411a9a0964cb60bdbfe464cc780fa64e2305d74bb70eae59e698",
-      "reason": "TZ-064 本地源码适配；既有批次补丁保持不变"
-    }
-  ],
-  "excludedRuntime": [
-    "skills UI",
-    "trajectory UI",
-    "account",
-    "product-analytics",
-    "updater"
-  ],
-  "acceptanceScope": "TZ-062/063/064 各自以总计划和核验记录为准；完整 P2 未放行。",
-  "support": [
-    {
-      "path": "tests/fixtures/dsh-translate.ts",
-      "sha256": "c05dbe39355916881dd30ab4b0eea00ff3d09ed17480c14e9d2b3e9c5abdc161",
-      "source": "packages/test-support/client-runtime/src/translate.ts",
-      "sourceSha256": "c05dbe39355916881dd30ab4b0eea00ff3d09ed17480c14e9d2b3e9c5abdc161",
-      "reason": "原 MIT 测试 helper，字节不变；避免导入整个上游桌面测试平台"
+      "command": "node --expose-internals scripts/verify-real-web.mjs --run",
+      "result": "passed",
+      "scope": "actual search/fetch providers and actual model tool calls"
     }
   ]
 }

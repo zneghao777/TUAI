@@ -27,7 +27,7 @@ export interface UiRendererService {
    * @param container - Application mount point.
    * @returns Disposer that unmounts the React root.
    */
-  mount: (container: HTMLElement) => () => void
+  mount: (container: HTMLElement, wrap?: (app: ReactNode) => ReactNode) => () => void
 }
 
 declare module '@deepseek-ai/cordis' {
@@ -90,8 +90,9 @@ export function apply(ctx: Context): void {
   const slots = new SlotRegistry(ctx)
   slots.install(createSlotRenderer())
   ctx.reflect.provide('uiRenderer', {
-    mount: (container: HTMLElement): (() => void) => {
-      const root = mountApp(container, buildRenderApp({ ctx }))
+    mount: (container: HTMLElement, wrap?: (app: ReactNode) => ReactNode): (() => void) => {
+      const app = buildRenderApp({ ctx })
+      const root = mountApp(container, () => wrap ? wrap(app()) : app())
       return () => { root.unmount() }
     },
   })

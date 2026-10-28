@@ -10,82 +10,10 @@
       "path": "../../../vendor/cordis"
     },
     {
-      "path": "../../credentials/credentials"
-    },
-    {
-      "path": "../host-config"
-    },
-    {
-      "path": "../../llm/llm"
-    },
-    {
-      "path": "../../core/session"
-    },
-    {
-      "path": "../../session/session-projection"
-    },
-    {
-      "path": "../../core/system-prompt"
-    },
-    {
-      "path": "../../core/tools"
-    },
-    {
-      "path": "../../core/tool-executor-native"
-    },
-    {
-      "path": "../../core/agent"
-    },
-    {
-      "path": "../../core/agent-loop"
-    },
-    {
-      "path": "../../llm/llm-deepseek-api-key"
-    },
-    {
-      "path": "../../llm/llm-retry"
-    },
-    {
-      "path": "../../llm/token-meter"
-    },
-    {
-      "path": "../../session/session-persistence-jsonl"
-    },
-    {
-      "path": "../../fs/fs-sandbox"
-    },
-    {
-      "path": "../../fs/fs"
-    },
-    {
       "path": "../../attachment/attachment-local"
     },
     {
-      "path": "../../subprocess/subprocess-local"
-    },
-    {
-      "path": "../../sandbox/sandbox-local"
-    },
-    {
-      "path": "../../sandbox/sandbox-policy"
-    },
-    {
-      "path": "../../fs/tool-fs"
-    },
-    {
-      "path": "../../session/working-directory"
-    },
-    {
-      "path": "../../session/tool-working-directory"
-    },
-    {
-      "path": "../../shell/bash-sandbox"
-    },
-    {
-      "path": "../../shell/tool-bash"
-    },
-    {
-      "path": "../../shell/shell-env"
+      "path": "../../compaction/command-compact"
     },
     {
       "path": "../../compaction/compaction-basic"
@@ -103,7 +31,64 @@
       "path": "../../context/file-reference-local"
     },
     {
+      "path": "../../context/session-reference"
+    },
+    {
       "path": "../../context/time-context"
+    },
+    {
+      "path": "../../core/agent"
+    },
+    {
+      "path": "../../core/agent-loop"
+    },
+    {
+      "path": "../../core/session"
+    },
+    {
+      "path": "../../core/system-prompt"
+    },
+    {
+      "path": "../../core/tool-executor-native"
+    },
+    {
+      "path": "../../core/tools"
+    },
+    {
+      "path": "../../credentials/credentials"
+    },
+    {
+      "path": "../../experimental/auto-review"
+    },
+    {
+      "path": "../../experimental/tool-terminal/tsconfig.json"
+    },
+    {
+      "path": "../../feedback/command-feedback"
+    },
+    {
+      "path": "../../fs/fs"
+    },
+    {
+      "path": "../../fs/fs-sandbox"
+    },
+    {
+      "path": "../../fs/tool-fs"
+    },
+    {
+      "path": "../../fs/tool-fs-search/tsconfig.json"
+    },
+    {
+      "path": "../../goal/command-goal"
+    },
+    {
+      "path": "../../goal/goal"
+    },
+    {
+      "path": "../../goal/goal-round-driver"
+    },
+    {
+      "path": "../../goal/tool-goal"
     },
     {
       "path": "../../guard/repeat-tool-reminder"
@@ -112,10 +97,10 @@
       "path": "../../guard/timeout-policy"
     },
     {
-      "path": "../../spill/spill-local"
+      "path": "../../interaction/permission-presets"
     },
     {
-      "path": "../../spill/spill-policy"
+      "path": "../../interaction/tool-ask-user"
     },
     {
       "path": "../../interaction/user-approval"
@@ -124,31 +109,76 @@
       "path": "../../interaction/user-questions"
     },
     {
-      "path": "../../interaction/tool-ask-user"
-    },
-    {
-      "path": "../../interaction/permission-presets"
-    },
-    {
-      "path": "../../llm/llm-deepseek"
-    },
-    {
       "path": "../../jobs/jobs-local/tsconfig.json"
     },
     {
       "path": "../../jobs/tool-jobs/tsconfig.json"
     },
     {
-      "path": "../../terminal/terminal/tsconfig.json"
+      "path": "../../llm/llm"
+    },
+    {
+      "path": "../../llm/llm-deepseek"
+    },
+    {
+      "path": "../../llm/llm-deepseek-api-key"
+    },
+    {
+      "path": "../../llm/llm-retry"
+    },
+    {
+      "path": "../../llm/token-meter"
+    },
+    {
+      "path": "../../plan/plan-mode"
+    },
+    {
+      "path": "../../sandbox/sandbox-local"
+    },
+    {
+      "path": "../../sandbox/sandbox-policy"
+    },
+    {
+      "path": "../../session-query/session-log-export/tsconfig.host.json"
+    },
+    {
+      "path": "../../session/session-persistence-jsonl"
+    },
+    {
+      "path": "../../session/session-projection"
+    },
+    {
+      "path": "../../session/tool-working-directory"
+    },
+    {
+      "path": "../../session/working-directory"
+    },
+    {
+      "path": "../../shell/bash-sandbox"
+    },
+    {
+      "path": "../../shell/shell-env"
+    },
+    {
+      "path": "../../shell/tool-bash"
+    },
+    {
+      "path": "../../spill/spill-local"
+    },
+    {
+      "path": "../../spill/spill-policy"
+    },
+    {
+      "path": "../../subprocess/subprocess-local"
     },
     {
       "path": "../../terminal/terminal-bash/tsconfig.json"
     },
     {
-      "path": "../../experimental/tool-terminal/tsconfig.json"
+      "path": "../../terminal/terminal/tsconfig.json"
     },
     {
-      "path": "../../web/web/tsconfig.json"
+      "path": "../../todo/tool-todo/tsconfig.json"
     },
     {
       "path": "../../web/tool-web/tsconfig.json"
@@ -160,10 +190,10 @@
       "path": "../../web/web-search-deepseek/tsconfig.json"
     },
     {
-      "path": "../../fs/tool-fs-search/tsconfig.json"
+      "path": "../../web/web/tsconfig.json"
     },
     {
-      "path": "../../todo/tool-todo/tsconfig.json"
+      "path": "../host-config"
     }
   ]
 }

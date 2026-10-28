@@ -11,16 +11,14 @@ test.beforeEach(async ({ page }) => {
   )
   await page.goto(host.login)
   await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeVisible()
-  await expect(page.getByRole('button', { name: '模型与推理强度', exact: true })).toContainText(
-    'P2 受控验收模型',
-  )
+  await expect(page.getByRole('button', { name: /^选择模型/ })).toContainText('P2 受控验收模型')
 })
 test.afterEach(async ({ page }) => {
   await page.close()
   await host?.dispose()
 })
 async function send(page, text) {
-  await page.getByRole('textbox', { name: '消息', exact: true }).fill(text)
+  await page.locator('[contenteditable="true"][role="textbox"]').fill(text)
   await page.getByRole('button', { name: '发送消息', exact: true }).click()
 }
 test('真实发送、流式、草稿、刷新与唯一最终回答', async ({ page }) => {
@@ -29,9 +27,9 @@ test('真实发送、流式、草稿、刷新与唯一最终回答', async ({ pa
   await expect(
     page.locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])'),
   ).toHaveText(/已通过真实 Host 接收：你好，真实会话/)
-  await page.getByRole('textbox', { name: '消息', exact: true }).fill('保留的中文草稿')
+  await page.locator('[contenteditable="true"][role="textbox"]').fill('保留的中文草稿')
   await page.reload()
-  await expect(page.getByRole('textbox', { name: '消息', exact: true })).toHaveValue(
+  await expect(page.locator('[contenteditable="true"][role="textbox"]')).toHaveText(
     '保留的中文草稿',
   )
   await expect(
@@ -58,9 +56,9 @@ test('实际工具执行与错误回执可展开', async ({ page }) => {
 })
 test('真实审批批准与拒绝', async ({ page }) => {
   await send(page, '审批批准')
-  await expect(page.getByRole('region', { name: '操作审批' })).toBeVisible()
+  await expect(page.locator('[data-approval-key]')).toBeVisible()
   await page.screenshot({ path: 'reports/p2/04-等待审批.png' })
-  await page.getByRole('button', { name: '仅允许本次' }).click()
+  await page.getByRole('button', { name: '允许一次' }).click()
   await expect(page.locator('[data-sample="bash"][data-state="ok"]').first()).toBeVisible()
   const shellRow = page.locator('[data-sample="bash"][data-state="ok"]').first()
   if ((await shellRow.getAttribute('aria-expanded')) === 'false') await shellRow.click()
@@ -71,35 +69,39 @@ test('真实审批批准与拒绝', async ({ page }) => {
 })
 test('审批等待可追加队列，批准前不执行，回执后继续', async ({ page }) => {
   await send(page, '审批批准')
-  await expect(page.getByRole('region', { name: '操作审批' })).toBeVisible()
-  await page.getByRole('textbox', { name: '消息', exact: true }).fill('批准后处理这条队列')
+  await expect(page.locator('[data-approval-key]')).toBeVisible()
+  await page.locator('[contenteditable="true"][role="textbox"]').fill('批准后处理这条队列')
   await page.getByRole('button', { name: '排队发送', exact: true }).click()
-  await expect(page.getByText('排队中 · 批准后处理这条队列')).toBeVisible()
-  await expect(page.getByRole('region', { name: '操作审批' })).toBeVisible()
+  await expect(
+    page.locator('[data-queue-dock]').getByText('批准后处理这条队列', { exact: true }),
+  ).toBeVisible()
+  await expect(page.locator('[data-approval-key]')).toBeVisible()
   const before = host.runtime.ctx.sessions.list().flatMap((s) => s.snapshotEvents())
   expect(before.some((e) => e.type === 'tool/result')).toBe(false)
   expect(before.some((e) => e.type === 'approval/decided')).toBe(false)
-  await page.getByRole('button', { name: '仅允许本次' }).click()
+  await page.getByRole('button', { name: '允许一次' }).click()
   await expect(page.locator('[data-sample="bash"][data-state="ok"]').first()).toBeVisible()
   await expect(
     page
       .locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])')
       .last(),
   ).toContainText('批准后处理这条队列')
-  await expect(page.getByText('排队中 · 批准后处理这条队列')).toHaveCount(0)
+  await expect(
+    page.locator('[data-queue-dock]').getByText('批准后处理这条队列', { exact: true }),
+  ).toHaveCount(0)
 })
 test('审批等待断线后恢复同一请求，重连本身不批准', async ({ page, context }) => {
   await send(page, '审批批准')
-  await expect(page.getByRole('region', { name: '操作审批' })).toBeVisible()
+  await expect(page.locator('[data-approval-key]')).toBeVisible()
   await context.setOffline(true)
   await expect(page.getByRole('button', { name: '重新连接', exact: true })).toBeVisible()
   await context.setOffline(false)
   await page.getByRole('button', { name: '重新连接', exact: true }).click()
-  await expect(page.getByRole('region', { name: '操作审批' })).toBeVisible()
+  await expect(page.locator('[data-approval-key]')).toBeVisible()
   const before = host.runtime.ctx.sessions.list().flatMap((s) => s.snapshotEvents())
   expect(before.filter((e) => e.type === 'approval/asked')).toHaveLength(1)
   expect(before.some((e) => e.type === 'tool/result')).toBe(false)
-  await page.getByRole('button', { name: '仅允许本次' }).click()
+  await page.getByRole('button', { name: '允许一次' }).click()
   await expect(page.locator('[data-sample="bash"][data-state="ok"]').first()).toBeVisible()
   const after = host.runtime.ctx.sessions.list().flatMap((s) => s.snapshotEvents())
   expect(after.filter((e) => e.type === 'approval/decided')).toHaveLength(1)
@@ -107,9 +109,9 @@ test('审批等待断线后恢复同一请求，重连本身不批准', async ({
 })
 test('真实问题选择、自由回答与取消', async ({ page }) => {
   await send(page, '用户问题')
-  await page.getByLabel('简洁').check()
-  await page.getByRole('textbox', { name: '补充要求 自由输入' }).fill('用中文')
-  await page.getByRole('button', { name: '提交回答' }).click()
+  await page.getByRole('radio', { name: '简洁', exact: true }).click()
+  await page.getByPlaceholder('输入你的答案').fill('用中文')
+  await page.getByRole('button', { name: '提交', exact: true }).click()
   await expect(
     page
       .locator(
@@ -118,8 +120,8 @@ test('真实问题选择、自由回答与取消', async ({ page }) => {
       .first(),
   ).toBeVisible()
   await send(page, '再次问题')
-  await page.getByRole('button', { name: '取消当前执行', exact: true }).click()
-  await expect(page.getByRole('region', { name: '用户问题' })).toHaveCount(0)
+  await page.getByRole('button', { name: '放弃整组问题', exact: true }).click()
+  await expect(page.getByRole('button', { name: '放弃整组问题' })).toHaveCount(0)
 })
 test('文件图片上传、会话引用、鉴权下载与跨会话拒绝', async ({ page, context }) => {
   await page.locator('input[type=file]').setInputFiles([
@@ -136,7 +138,8 @@ test('文件图片上传、会话引用、鉴权下载与跨会话拒绝', async
   await expect(page.locator('[data-upload-state=ready]')).toHaveCount(2)
   await send(page, '请查看附件')
   await expect(page.getByRole('img', { name: '像素.png', exact: true })).toBeVisible()
-  await page.getByRole('button', { name: '文件与产物' }).click()
+  await page.getByRole('button', { name: '打开右侧边栏' }).click()
+  await page.getByRole('button', { name: /会话产物/ }).click()
   await expect(page.getByRole('button', { name: '下载', exact: true })).toHaveCount(2)
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: '下载', exact: true }).first().click()
@@ -151,8 +154,8 @@ test('文件图片上传、会话引用、鉴权下载与跨会话拒绝', async
   const path = `api/artifact?${new URLSearchParams({ sessionId: id, artifactId: ref.attachmentId })}`
   expect((await fetch(new URL(path, host.base))).status).toBe(401)
   expect((await context.request.get(new URL(path, host.base).href)).status()).toBe(200)
-  await page.getByRole('button', { name: '关闭', exact: true }).click()
-  await page.getByRole('button', { name: '新会话', exact: true }).click()
+  await page.getByRole('button', { name: '收起右侧边栏', exact: true }).click()
+  await page.getByRole('button', { name: '新建会话', exact: true }).last().click()
   const different = host.runtime.ctx.sessions.list().find((s) => s.id !== id)?.id
   expect(
     (
@@ -167,19 +170,43 @@ test('文件图片上传、会话引用、鉴权下载与跨会话拒绝', async
 })
 test('真实排队、编辑、移除、插话与停止', async ({ page }) => {
   await send(page, '持续运行')
-  await expect(page.getByRole('button', { name: '停止当前执行' })).toBeVisible()
-  await page.getByRole('textbox', { name: '消息', exact: true }).fill('队列第一条')
+  await expect(page.getByRole('button', { name: '停止生成' })).toBeVisible()
+  await page.locator('input[type=file]').setInputFiles({
+    name: '排队附件.txt',
+    mimeType: 'text/plain',
+    buffer: Buffer.from('编辑队列必须保留的内容'),
+  })
+  await expect(page.locator('[data-upload-state=ready]')).toBeVisible()
+  await page.locator('[contenteditable="true"][role="textbox"]').fill('队列第一条')
   await page.getByRole('button', { name: '排队发送', exact: true }).click()
-  await expect(page.getByText('排队中 · 队列第一条')).toBeVisible()
-  await page.getByRole('button', { name: '编辑', exact: true }).click()
+  await expect(
+    page.locator('[data-queue-dock]').getByText('队列第一条', { exact: true }),
+  ).toBeVisible()
+  const agent = host.runtime.ctx.agents.get(host.runtime.ctx.sessions.list()[0].id)
+  // The optimistic strip appears before Host admission. Only an admitted row is editable.
+  await expect(page.getByRole('button', { name: '编辑排队消息', exact: true })).toBeEnabled()
+  await expect.poll(() => agent.inbox.nextTurn.length).toBe(1)
+  const admitted = agent.inbox.nextTurn[0].content.filter((block) => block.type !== 'text')
+  expect(admitted).toHaveLength(1)
+  await page.getByRole('button', { name: '编辑排队消息', exact: true }).click()
   await page.getByRole('textbox', { name: '编辑排队消息' }).fill('队列修改后')
-  await page.getByRole('button', { name: '保存纯文本', exact: true }).click()
-  await expect(page.getByText('排队中 · 队列修改后')).toBeVisible()
+  await page.getByRole('button', { name: '保存排队消息', exact: true }).click()
+  await expect(
+    page.locator('[data-queue-dock]').getByText('队列修改后', { exact: true }),
+  ).toBeVisible()
+  expect(agent.inbox.nextTurn[0].content.filter((block) => block.type !== 'text')).toEqual(admitted)
+  await expect(
+    page.locator('[data-queue-dock]').getByText('排队附件.txt', { exact: true }),
+  ).toBeVisible()
   await page.screenshot({ path: 'reports/p2/05-真实队列.png' })
-  await page.getByRole('button', { name: '移除', exact: true }).click()
-  await expect(page.getByText('排队中 · 队列修改后')).toHaveCount(0)
-  await page.getByRole('textbox', { name: '消息', exact: true }).fill('新的插话')
-  await page.getByRole('button', { name: '插话到下一步', exact: true }).click()
+  await page.getByRole('button', { name: '删除排队消息', exact: true }).click()
+  await expect(
+    page.locator('[data-queue-dock]').getByText('队列修改后', { exact: true }),
+  ).toHaveCount(0)
+  await page.locator('[contenteditable="true"][role="textbox"]').fill('新的插话')
+  await page
+    .locator('[contenteditable="true"][role="textbox"]')
+    .press(process.platform === 'darwin' ? 'Meta+Enter' : 'Control+Enter')
   host.model.continueRuns()
   await expect(
     page
@@ -187,8 +214,8 @@ test('真实排队、编辑、移除、插话与停止', async ({ page }) => {
       .last(),
   ).toContainText('新的插话')
   await send(page, '持续运行')
-  await page.getByRole('button', { name: '停止当前执行' }).click()
-  await expect(page.getByRole('button', { name: '停止当前执行' })).toHaveCount(0)
+  await page.getByRole('button', { name: '停止生成' }).click()
+  await expect(page.getByRole('button', { name: '停止生成' })).toHaveCount(0)
 })
 test('离线后流式恢复、草稿不重发且最终回答唯一', async ({ page, context }) => {
   const started = performance.now()
@@ -196,7 +223,7 @@ test('离线后流式恢复、草稿不重发且最终回答唯一', async ({ pa
   await expect(page.locator('[data-chat-running]')).toBeVisible()
   const firstVisibleMs = performance.now() - started
   await context.setOffline(true)
-  await page.getByRole('textbox', { name: '消息', exact: true }).fill('离线保留草稿')
+  await page.locator('[contenteditable="true"][role="textbox"]').fill('离线保留草稿')
   await expect(page.getByRole('button', { name: '重新连接', exact: true })).toBeVisible()
   await page.screenshot({ path: 'reports/p2/06-断线恢复.png' })
   const recoveryStarted = performance.now()
@@ -208,7 +235,7 @@ test('离线后流式恢复、草稿不重发且最终回答唯一', async ({ pa
   await expect(
     page.locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])'),
   ).toContainText('流式恢复的真实内容。')
-  await expect(page.getByRole('textbox', { name: '消息', exact: true })).toHaveValue('离线保留草稿')
+  await expect(page.locator('[contenteditable="true"][role="textbox"]')).toHaveText('离线保留草稿')
   const all = host.runtime.ctx.sessions
     .list()
     .flatMap((s) => host.runtime.ctx.sessions.get(s.id).snapshotEvents())
@@ -238,7 +265,7 @@ test('安全 Markdown、窄屏、IME、键盘与焦点', async ({ page }) => {
   })
   await page.setViewportSize({ width: 390, height: 844 })
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  const box = page.getByRole('textbox', { name: '消息', exact: true })
+  const box = page.locator('[contenteditable="true"][role="textbox"]')
   await box.fill('中文输入中')
   await box.dispatchEvent('keydown', {
     key: 'Enter',
@@ -246,10 +273,10 @@ test('安全 Markdown、窄屏、IME、键盘与焦点', async ({ page }) => {
     isComposing: true,
     keyCode: 229,
   })
-  await expect(box).toHaveValue('中文输入中')
+  await expect(box).toHaveText('中文输入中')
   expect(host.model.calls).toHaveLength(0)
   await box.press('Shift+Enter')
-  await expect(box).toHaveValue('中文输入中\n')
+  await expect(box).toHaveText('中文输入中\n')
   await send(page, '恶意内容')
   await expect(page.getByText('可读内容', { exact: true })).toBeVisible()
   expect(await page.evaluate(() => Reflect.get(window, 'p2Injected'))).toBeUndefined()
@@ -258,7 +285,7 @@ test('安全 Markdown、窄屏、IME、键盘与焦点', async ({ page }) => {
   ).toBe(0)
   expect(externalImageRequests).toBe(0)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  await page.getByRole('button', { name: '打开导航' }).click()
+  await page.getByRole('button', { name: '打开侧边栏' }).click()
   await page.getByRole('button', { name: '设置', exact: true }).click()
   await expect(page.getByRole('button', { name: '对话显示', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: '连接与工作区', exact: true })).toHaveCount(0)
@@ -269,17 +296,17 @@ test('安全 Markdown、窄屏、IME、键盘与焦点', async ({ page }) => {
 test('多窗口审批竞争与取消后的旧回答隔离', async ({ page, context }) => {
   const second = await context.newPage()
   await second.goto(host.base)
-  await expect(second.getByRole('textbox', { name: '消息', exact: true })).toBeVisible()
+  await expect(second.locator('[contenteditable="true"][role="textbox"]')).toBeVisible()
   await send(page, '审批竞争')
-  await expect(page.getByRole('region', { name: '操作审批' })).toBeVisible()
-  await expect(second.getByRole('region', { name: '操作审批' })).toBeVisible()
+  await expect(page.locator('[data-approval-key]')).toBeVisible()
+  await expect(second.locator('[data-approval-key]')).toBeVisible()
   await page.getByRole('button', { name: '拒绝', exact: true }).click()
-  await expect(second.getByRole('region', { name: '操作审批' })).toHaveCount(0)
+  await expect(second.locator('[data-approval-key]')).toHaveCount(0)
   await expect(page.locator('[data-sample="bash"][data-state="error"]').first()).toBeVisible()
   await send(page, '审批取消')
-  await expect(second.getByRole('region', { name: '操作审批' })).toBeVisible()
-  await second.getByRole('button', { name: '取消当前执行', exact: true }).click()
-  await expect(page.getByRole('region', { name: '操作审批' })).toHaveCount(0)
+  await expect(second.locator('[data-approval-key]')).toBeVisible()
+  await second.getByRole('button', { name: '停止生成', exact: true }).click()
+  await expect(page.locator('[data-approval-key]')).toHaveCount(0)
   const events = host.runtime.ctx.sessions.list().flatMap((s) => s.snapshotEvents())
   expect(
     events
@@ -291,8 +318,8 @@ test('多窗口审批竞争与取消后的旧回答隔离', async ({ page, conte
 test('真实审批超时失效，不执行过期操作', async ({ page }) => {
   test.setTimeout(45000)
   await send(page, '审批等待过期')
-  await expect(page.getByRole('region', { name: '操作审批' })).toBeVisible()
-  await expect(page.getByRole('region', { name: '操作审批' })).toHaveCount(0, { timeout: 35000 })
+  await expect(page.locator('[data-approval-key]')).toBeVisible()
+  await expect(page.locator('[data-approval-key]')).toHaveCount(0, { timeout: 35000 })
   const events = host.runtime.ctx.sessions.list().flatMap((s) => s.snapshotEvents())
   expect(events.some((e) => e.type === 'approval/decided' && e.data.outcome === 'cancelled')).toBe(
     true,
@@ -306,7 +333,8 @@ test('大工具输出与受鉴权完整产物，清理后明确失败', async ({
     .first()
   await expect(tool).toBeVisible()
   if ((await tool.getAttribute('aria-expanded')) === 'false') await tool.click()
-  await page.getByRole('button', { name: '文件与产物' }).click()
+  await page.getByRole('button', { name: '打开右侧边栏' }).click()
+  await page.getByRole('button', { name: /会话产物/ }).click()
   await expect(page.getByRole('button', { name: '下载', exact: true })).toHaveCount(1)
   const id = host.runtime.ctx.sessions.list()[0].id
   const { clientFor } = await import('../client.mjs')
@@ -340,10 +368,10 @@ test('附件草稿切换会话与刷新保留，未接受失败可编辑', async
     .locator('input[type=file]')
     .setInputFiles({ name: '草稿.txt', mimeType: 'text/plain', buffer: Buffer.from('草稿附件') })
   await expect(page.locator('[data-upload-state=ready]')).toBeVisible()
-  await page.getByRole('textbox', { name: '消息', exact: true }).fill('附件草稿')
+  await page.locator('[contenteditable="true"][role="textbox"]').fill('附件草稿')
   await page.reload()
-  await expect(page.getByRole('listitem', { name: '草稿.txt · 已上传，尚未发送' })).toBeVisible()
-  await expect(page.getByRole('textbox', { name: '消息', exact: true })).toHaveValue('附件草稿')
+  await expect(page.getByRole('button', { name: '移除文件 草稿.txt' })).toBeVisible()
+  await expect(page.locator('[contenteditable="true"][role="textbox"]')).toHaveText('附件草稿')
   await page.getByRole('button', { name: '发送消息', exact: true }).click()
   await expect(page.getByText('草稿.txt', { exact: true })).toBeVisible()
 })
@@ -363,7 +391,7 @@ test('真实 Host 已接受但 HTTP 回执丢失，刷新不重复提交', async
     page.locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])'),
   ).toContainText('回执丢失验收')
   await page.reload()
-  await expect(page.getByRole('textbox', { name: '消息', exact: true })).toHaveValue('')
+  await expect(page.locator('[contenteditable="true"][role="textbox"]')).toHaveText('')
   await expect(
     page.locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])'),
   ).toHaveCount(1)
@@ -372,7 +400,7 @@ test('真实 Host 已接受但 HTTP 回执丢失，刷新不重复提交', async
     events.filter((e) => e.type === 'user/message' && e.data.source.kind === 'user'),
   ).toHaveLength(1)
 })
-test('发送前断网保留身份，用户重试同一请求只接受一次', async ({ page }) => {
+test('发送前传输失败，有限重试沿用同一身份只接受一次', async ({ page }) => {
   let dropped = false,
     ids: string[] = []
   await page.route('**/api/session/prompt', async (route) => {
@@ -384,35 +412,36 @@ test('发送前断网保留身份，用户重试同一请求只接受一次', as
     } else await route.continue()
   })
   await send(page, '传输失败重试')
-  await expect(page.getByRole('button', { name: '重试本次输入' })).toBeVisible()
-  await page.getByRole('button', { name: '重试本次输入' }).click()
   await expect(
     page.locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])'),
   ).toContainText('传输失败重试')
   expect(ids).toHaveLength(2)
   expect(ids[0]).toBe(ids[1])
 })
-test('窄屏导航键盘隔离、返回焦点与触屏降级', async ({ page, browser }) => {
+test('原侧栏窄屏展开收起与触摸设置，弹窗隔离键盘焦点', async ({ page, browser }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await expect(page.locator('aside')).toHaveAttribute('inert', '')
-  const opener = page.getByRole('button', { name: '打开导航' })
+  const opener = page.getByRole('button', { name: '打开侧边栏', exact: true })
+  await expect(opener).toBeVisible()
   await opener.click()
-  await expect(page.locator('main')).toHaveAttribute('inert', '')
-  for (let index = 0; index < 12; index++) {
-    await page.keyboard.press('Tab')
-    expect(await page.evaluate(() => !!document.activeElement?.closest('aside'))).toBe(true)
-  }
-  await page.keyboard.press('Escape')
-  await expect(opener).toBeFocused()
-  await expect(page.locator('aside')).toHaveAttribute('inert', '')
+  await expect(page.getByRole('tree', { name: '会话' })).toBeVisible()
+  await page.getByRole('button', { name: '收起侧边栏', exact: true }).click()
+  await expect(opener).toBeVisible()
   const touch = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true })
   const mobile = await touch.newPage()
   try {
     await mobile.goto(host.login)
-    await expect(mobile.getByRole('textbox', { name: '消息', exact: true })).toBeVisible()
-    await expect(mobile.locator('aside')).toHaveCSS('transition-duration', '0s')
-    await expect(mobile.locator('[class*="glow_"]')).toHaveCSS('display', 'none')
+    await mobile.getByRole('button', { name: '设置', exact: true }).tap()
+    const dialog = mobile.getByRole('dialog', { name: '设置', exact: true })
+    await expect(dialog).toBeInViewport()
+    for (let n = 0; n < 10; n++) {
+      await mobile.keyboard.press('Tab')
+      expect(
+        await mobile.evaluate(() => !!document.activeElement?.closest('[role="dialog"]')),
+      ).toBe(true)
+    }
+    await mobile.keyboard.press('Escape')
+    await expect(mobile.getByRole('button', { name: '设置', exact: true })).toBeFocused()
   } finally {
     await touch.close()
   }
@@ -429,13 +458,13 @@ test('Host 明确拒绝后草稿仍可编辑，粘贴附件走真实上传', asy
   )
   await send(page, '被拒绝的输入')
   await expect(page.getByText(/Host 已拒绝/)).toBeVisible()
-  await expect(page.getByRole('textbox', { name: '消息', exact: true })).toBeEditable()
-  await page.getByRole('textbox', { name: '消息', exact: true }).evaluate((el) => {
+  await expect(page.locator('[contenteditable="true"][role="textbox"]')).toBeEditable()
+  await page.locator('[contenteditable="true"][role="textbox"]').evaluate((el) => {
     const data = new DataTransfer()
     data.items.add(new File(['粘贴的真实内容'], '粘贴.txt', { type: 'text/plain' }))
     el.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, clipboardData: data }))
   })
-  await expect(page.getByRole('listitem', { name: '粘贴.txt · 已上传，尚未发送' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '移除文件 粘贴.txt' })).toBeVisible()
   await send(page, '修正后发送')
   await expect(page.getByText('粘贴.txt', { exact: true })).toBeVisible()
 })

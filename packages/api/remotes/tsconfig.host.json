@@ -15,7 +15,10 @@
       "path": "../../../vendor/cordis"
     },
     {
-      "path": "../gateway/tsconfig.host.json"
+      "path": "../../context/session-reference"
+    },
+    {
+      "path": "../../core/scope"
     },
     {
       "path": "../../core/session"
@@ -24,10 +27,25 @@
       "path": "../../credentials/credentials"
     },
     {
+      "path": "../../feedback/command-feedback"
+    },
+    {
+      "path": "../../feedback/message-feedback"
+    },
+    {
+      "path": "../../goal/goal"
+    },
+    {
       "path": "../../interaction/commands"
     },
     {
       "path": "../../interaction/permission-presets"
+    },
+    {
+      "path": "../../interaction/user-approval"
+    },
+    {
+      "path": "../../interaction/user-questions"
     },
     {
       "path": "../../llm/llm"
@@ -39,7 +57,7 @@
       "path": "../../settings/settings"
     },
     {
-      "path": "../../core/scope"
+      "path": "../../typert/protocol"
     },
     {
       "path": "../../util/deque"
@@ -48,16 +66,10 @@
       "path": "../../util/values"
     },
     {
-      "path": "../../interaction/user-approval"
-    },
-    {
-      "path": "../../interaction/user-questions"
+      "path": "../gateway/tsconfig.host.json"
     },
     {
       "path": "../session-controller/tsconfig.host.json"
-    },
-    {
-      "path": "../../typert/protocol"
     }
   ]
 }

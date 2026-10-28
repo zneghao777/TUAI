@@ -16,14 +16,61 @@ import {
   ChatSettingsFields,
 } from '@deepseek-ai/dsh-client-ui-chat/src/chat-settings.ts'
 import { z } from 'zod'
+import type {} from '@deepseek-ai/dsh-permission-presets'
+import Schema from '@deepseek-ai/schemastery'
+import {
+  ConversationSettingsSchema,
+  ConversationSettingsFields,
+} from '@deepseek-ai/dsh-client-ui-conversation/src/submission-settings.ts'
+import { ThemeSettingsSchema } from '@deepseek-ai/dsh-client-ui-theme/src/theme-settings.ts'
 
-const namespace =
-  brandString<import('@deepseek-ai/dsh-settings/types').SettingsNamespace>(CHAT_SETTINGS_NAMESPACE)
+type Namespace = import('@deepseek-ai/dsh-settings/types').SettingsNamespace
+interface PreferenceDefinition {
+  ns: Namespace
+  schema: SettingsDescriptor['schema']
+  base: Record<string, unknown>
+  fields: readonly string[]
+  validate(value: Record<string, unknown>): void
+}
+const definitions: PreferenceDefinition[] = [
+  {
+    ns: brandString<Namespace>(CHAT_SETTINGS_NAMESPACE),
+    schema: ChatSettingsSchema.toJSON(),
+    base: ChatSettingsSchema({ transcriptView: 'standard', linkOpening: 'new-tab' }),
+    fields: Object.keys(ChatSettingsFields),
+    validate: (value) => {
+      ChatSettingsSchema(value)
+    },
+  },
+  {
+    ns: brandString<Namespace>('ui-conversation'),
+    schema: ConversationSettingsSchema.toJSON(),
+    base: { ...ConversationSettingsSchema({}) },
+    fields: Object.keys(ConversationSettingsFields),
+    validate: (value) => {
+      ConversationSettingsSchema(value)
+    },
+  },
+  {
+    ns: brandString<Namespace>('ui-theme'),
+    schema: ThemeSettingsSchema.toJSON(),
+    base: {
+      ...Schema.resolve(
+        { preference: 'light', fontSize: 15, codeFontSize: 12 },
+        ThemeSettingsSchema,
+        {},
+      )[0],
+    },
+    fields: Object.keys(Schema.resolve({}, ThemeSettingsSchema, {})[0]),
+    validate: (value) => {
+      Schema.resolve(value, ThemeSettingsSchema, {})
+    },
+  },
+]
 const storedSchema = z.strictObject({
   revision: z.number().int().nonnegative(),
   user: z.record(z.string(), z.unknown()),
 })
-const base = ChatSettingsSchema({ transcriptView: 'standard', linkOpening: 'new-tab' })
 
 class ChatPreferences implements SettingsProvider {
   readonly writable = true
@@ -32,6 +79,7 @@ class ChatPreferences implements SettingsProvider {
   constructor(
     private readonly ctx: Context,
     readonly documentPath: string,
+    private readonly definition: PreferenceDefinition,
   ) {}
   async load() {
     try {
@@ -44,11 +92,11 @@ class ChatPreferences implements SettingsProvider {
   describe(): SettingsDescriptor[] {
     return [
       {
-        ns: namespace,
+        ns: this.definition.ns,
         autoGenerate: false,
-        schema: ChatSettingsSchema.toJSON(),
-        value: ChatSettingsSchema({ ...base, ...this.current.user }),
-        base,
+        schema: this.definition.schema,
+        value: { ...this.definition.base, ...this.current.user },
+        base: this.definition.base,
         user: { ...this.current.user },
         applies: 'live',
         secrets: [],
@@ -71,7 +119,7 @@ class ChatPreferences implements SettingsProvider {
       for (const op of ops) {
         if (op.path.length === 0) next = op.op === 'unset' ? {} : this.section(op.value)
         else {
-          if (op.path.length !== 1 || !Object.hasOwn(ChatSettingsFields, op.path[0]!))
+          if (op.path.length !== 1 || !this.definition.fields.includes(op.path[0]!))
             throw new Error('不支持的对话偏好字段')
           const field = op.path[0]!
           if (op.op === 'unset') delete next[field]
@@ -86,8 +134,8 @@ class ChatPreferences implements SettingsProvider {
   }
   private validate(user: Record<string, unknown>) {
     for (const field of Object.keys(user))
-      if (!Object.hasOwn(ChatSettingsFields, field)) throw new Error('不支持的对话偏好字段')
-    ChatSettingsSchema({ ...base, ...user })
+      if (!this.definition.fields.includes(field)) throw new Error('不支持的对话偏好字段')
+    this.definition.validate({ ...this.definition.base, ...user })
   }
   private write(
     ns: string,
@@ -95,9 +143,9 @@ class ChatPreferences implements SettingsProvider {
     change: (value: Record<string, unknown>) => Record<string, unknown>,
   ) {
     const operation = this.pending.then(async () => {
-      if (ns !== namespace) throw new Error('当前 Host 未启用该设置域')
+      if (ns !== this.definition.ns) throw new Error('当前 Host 未启用该设置域')
       if (revision !== undefined && revision !== this.current.revision)
-        throw new SettingsConflictError(namespace, revision, this.current.revision)
+        throw new SettingsConflictError(this.definition.ns, revision, this.current.revision)
       const user = change(this.current.user)
       this.validate(user)
       const next = { revision: this.current.revision + 1, user }
@@ -111,7 +159,7 @@ class ChatPreferences implements SettingsProvider {
         })
       }
       this.current = next
-      this.ctx.emit('settings/document-updated', namespace, next.revision)
+      this.ctx.emit('settings/document-updated', this.definition.ns, next.revision)
     })
     this.pending = operation.catch(() => {})
     return operation
@@ -122,12 +170,56 @@ class ChatPreferences implements SettingsProvider {
 }
 
 export async function mountChatSettings(ctx: Context) {
-  const provider = new ChatPreferences(
-    ctx,
-    join(ctx.tianzhiaiHost.paths.config, 'chat-preferences.json'),
+  const permission: PreferenceDefinition = {
+    ns: brandString<Namespace>('permission'),
+    schema: Schema.object({
+      defaultPreset: Schema.union(['readonly', 'workspace-write', 'full-access']).required(),
+    }).toJSON(),
+    base: { defaultPreset: ctx.tianzhiaiHost.settings.defaultPermissionPreset ?? 'readonly' },
+    fields: ['defaultPreset'],
+    validate: (value) => {
+      z.strictObject({
+        defaultPreset: z.enum(['readonly', 'workspace-write', 'full-access']),
+      }).parse(value)
+    },
+  }
+  const sections = [...definitions, permission].map(
+    (definition) =>
+      new ChatPreferences(
+        ctx,
+        join(
+          ctx.tianzhiaiHost.paths.config,
+          definition.ns === CHAT_SETTINGS_NAMESPACE
+            ? 'chat-preferences.json'
+            : `${definition.ns}-preferences.json`,
+        ),
+        definition,
+      ),
   )
-  await provider.load()
-  ctx.effect(() => () => provider.dispose())
+  for (const section of sections) await section.load()
+  const permissionSection = sections.find((section) => section.describe()[0]?.ns === 'permission')!
+  ctx.effect(() =>
+    ctx.permissionPresets.useDefaultSettings(() => {
+      const value = permissionSection.describe()[0]!.value
+      return z.object({ defaultPreset: z.string() }).parse(value)
+    }),
+  )
+  ctx.effect(() => async () => {
+    for (const section of sections) await section.dispose()
+  })
+  const sectionOf = (ns: string) => {
+    const section = sections.find((section) => section.describe()[0]?.ns === ns)
+    if (!section) throw new Error('当前 Host 未启用该设置域')
+    return section
+  }
+  const provider: SettingsProvider = {
+    writable: true,
+    describe: () => sections.flatMap((section) => section.describe()),
+    prepareDocument: () => sections[0]!.prepareDocument(),
+    update: (ns, patch, rev) => sectionOf(ns).update(ns, patch, rev),
+    replace: (ns, value, rev) => sectionOf(ns).replace(ns, value, rev),
+    mutate: (ns, ops, rev) => sectionOf(ns).mutate(ns, ops, rev),
+  }
   await ctx.plugin({
     name: 'tianzhiai-chat-settings',
     apply(scope: Context) {

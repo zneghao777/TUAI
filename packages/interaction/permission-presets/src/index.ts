@@ -389,6 +389,28 @@ export class PermissionPresetService extends TypertRemoteService {
     return { value: name, name: spec.name ?? name, ...spec.description !== undefined ? { description: spec.description } : {} }
   }
 
+  /** Bind a deployment's durable default reader; existing Session facts stay pinned. */
+  useDefaultSettings(reader: () => PermissionSettings): () => void {
+    const previous = this.defaultSettings
+    this.defaultSettings = () => {
+      const value = reader()
+      if (!Object.hasOwn(this.presets, value.defaultPreset)) throw new Error('permission: invalid default preset')
+      return value
+    }
+    return () => { this.defaultSettings = previous }
+  }
+
+  /** Fail closed when a live review integration is removed. */
+  restrict(session: Session): void {
+    const name = Object.keys(this.presets).find(key => this.presets[key]?.sandbox === 'read-only' && this.presets[key]?.approval === 'ask')
+    if (name) this.set(session, name)
+    else {
+      session.append('permission/preset', { preset: CUSTOM_PRESET })
+      setSandboxMode(session, 'read-only')
+      setApprovalPolicy(session, 'ask')
+    }
+  }
+
   /**
    * Record a changed preset, then update each changed knob through its own
    * setter. Selecting the effective preset again appends nothing.

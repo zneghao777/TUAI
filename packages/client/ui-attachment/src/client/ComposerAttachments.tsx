@@ -93,7 +93,7 @@ export function ComposerAttachments({
                 ? uploadFailureText(upload.reason)
                 : undefined
               return (
-                <div className={css.imageItem}>
+                <div className={css.imageItem} data-upload-state={upload?.status ?? "uploading"}>
                   {refusal !== undefined
                     ? (
                       <Tooltip label={refusal} side="top" delayMs={300} portal openOnClick>

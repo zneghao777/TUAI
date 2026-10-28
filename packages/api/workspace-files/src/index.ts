@@ -390,7 +390,7 @@ export class WorkspaceFiles extends TypertRemoteService {
   ): Promise<{ root: FsTarget; workspaceRoot: string; entry: FsPathInfo }> {
     if (path.length === 0) throw new RemoteError('gateway/bad-request', 'path is required', {})
     const { workspaceRoot } = workspaceFileScope
-    const root = await this.ctx.fs.resolve(workspaceRoot, { signal })
+    const root = await this.ctx.fs.resolve(workspaceRoot, { cwd: workspaceRoot, signal })
     // Gate on the path itself before anything follows it.
     const entry = await this.ctx.fs.lstat(path, { cwd: workspaceRoot }, signal)
     if (entry === undefined) {

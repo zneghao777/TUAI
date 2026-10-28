@@ -831,6 +831,11 @@
           "path": "packages/client/store/package.json",
           "sha256": "816049f839f5101513fd25d0196a9bb96bec533aaf65313bd507e2438ad2348b",
           "reason": "实际浏览器产物不使用上游构建内联方式；将 Zustand/Immer/React/共享绑定运行依赖明确声明，保持单份身份"
+        },
+        {
+          "path": "packages/client/store/src/index.ts",
+          "sha256": "113fb91c8572f4d3ecc8293306cab4e6ac40bf6959225ae1d1c445b2f7d3d2d9",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -1001,6 +1006,11 @@
           "path": "packages/client/ui-renderer/package.json",
           "sha256": "14c851e1e7d68cc72580db4f050ae87c9ed4c2c2756ffdf71321944e4f36f06f",
           "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/index.ts",
+          "sha256": "61b9fab1a44beb27c8ae95aa39c132ecaef49e320be9d5db39456ea13e8a6d03",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -2165,6 +2175,36 @@
           "path": "packages/api/session-controller/src/index.ts",
           "sha256": "c107048514d6ee520a03e6c3de2fbad946df3a2be815ae6991eea3773abeefdb",
           "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/contract/session.ts",
+          "sha256": "b9ca74eb4ded08d0b208965815f6a23f5e207eeab070e7305f576ef97aedd881",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/service.ts",
+          "sha256": "e6c6e11aa1e0c6819fe1096e23676f4baa7f20519ba2bb6e23c480bbb5dc9ce4",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/session.ts",
+          "sha256": "6ced8508c7ea643e2e20977922e2fb6932c110ffd6f946fc4654ac9dc29c916a",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/src/commands.ts",
+          "sha256": "455d4afea1cd4cade2ad932c81af16aacbddf5d6b6df39b1f1cdd612fc971323",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/src/types.ts",
+          "sha256": "3dee0e497660956abb520d331d95fa123c355cc5c554c2f57a41b00f5c48cfd4",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/tests/commands-queue-attachment.host.spec.ts",
+          "sha256": "41e36c71271ea86654031ec89e88fa5d4100e3b7f8d2ef005e1ce3f953944e1a",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -3561,17 +3601,17 @@
       "localPatches": [
         {
           "path": "packages/api/remotes/package.json",
-          "sha256": "1470aaa77b4452ee3acbb3fd791e45ba1fa6845acfdad3f4fc2b2c7c43ed1263",
+          "sha256": "53cf6713d25cf35450704d6eb960234ccc671d1eef40d809677d8aa25875ee0d",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
         },
         {
           "path": "packages/api/remotes/tsconfig.host.json",
-          "sha256": "b26e86aa0795f2f6ef5990beb25fccb7195d3a38f2a13b61956b1384da32e912",
+          "sha256": "4f4c618674fd21012ce293598059135a5988c7985ade5ef69c94cbbe1967a93b",
           "reason": "P2 双端类型闭包，不依赖未迁入模块"
         },
         {
           "path": "packages/api/remotes/tsconfig.client.json",
-          "sha256": "20c665413fdd82559a9a97963c59a8f4c191a124a3c5d3ae5458ca808dd95738",
+          "sha256": "90bb5461a65d686505e3ba5765947addfa1c7968b91497ea140ddc71f56d60d6",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
         },
         {
@@ -3581,12 +3621,12 @@
         },
         {
           "path": "packages/api/remotes/src/remote-events.ts",
-          "sha256": "d27eae2d48de936eae8c9754291c39ca689ce95cee1c5435e74e8daf5467bbbd",
+          "sha256": "6e99632f13d2cf420fb111ead03ae71a116386bfe7624ea0101111612237fdc2",
           "reason": "保留原转发队列和请求生命周期，仅组合 P2 已启用的 Session/问题/审批/上传/模型契约；移除账户、遥测及 P3+ 业务事件"
         },
         {
           "path": "packages/api/remotes/src/client/index.ts",
-          "sha256": "c72d00e7befb3615096e9646a16f455776eed969cc3bae36502fc839428201ae",
+          "sha256": "8724f8755e7ec676a9e364324bce7b165f025b5a994e3ab6fa5cf78afb2977f0",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
         }
       ],

@@ -1,6 +1,7 @@
 import type {} from '@deepseek-ai/dsh-user-approval/types'
 import type {} from '@deepseek-ai/dsh-credentials/types'
 import type {} from '@deepseek-ai/dsh-settings/types'
+import type {} from '@deepseek-ai/dsh-goal/types'
 /**
  * The one home of this application's forwarded-Host-event allowlist. Both
  * compiler faces list this file, so the Host forwarding loop and the consumer
@@ -30,6 +31,7 @@ export const API_REMOTE_FORWARDED_EVENTS = [
   { event: 'api-session/error', mode: 'emit', resources: { session: (sessionId): SessionId => sessionId } },
   { event: 'api-session/removed', mode: 'emit', resources: { session: (sessionId): SessionId => sessionId } },
   { event: 'api-session/status', mode: 'emit', resources: { session: (sessionId): SessionId => sessionId } },
+  { event: 'goal/activation-changed', mode: 'emit' },
   { event: 'commands/change', mode: 'emit' },
   { event: 'credentials/record-updated', mode: 'emit' },
   { event: 'credentials/reference-updated', mode: 'emit' },

@@ -14,8 +14,12 @@ export default defineConfig({
   resolve: {
     alias: [
       {
+        find: /^@deepseek-ai\/dsh-client-test-runtime\/src\/(.*)$/,
+        replacement: resolve('tests/fixtures/dsh-client-runtime') + '/$1',
+      },
+      {
         find: '@deepseek-ai/dsh-client-test-runtime',
-        replacement: resolve('tests/fixtures/dsh-translate.ts'),
+        replacement: resolve('tests/fixtures/dsh-client-runtime/index.ts'),
       },
       ...Object.entries(paths)
         .sort(([a], [b]) => b.length - a.length)
@@ -35,7 +39,18 @@ export default defineConfig({
       : [
           'tests/p2/**/*.spec.ts',
           ...conversationTests,
+          'packages/client/ui-conversation/tests/queue-dock.client.spec.tsx',
+          'packages/session/message-quotes/tests/**/*.spec.{ts,tsx}',
           'packages/client/ui-tool/tests/**/*.spec.ts',
+          'packages/client/ui-{commands,input-trigger,reference,model-selection,permission-presets,user-questions,approval,workspace,sidebar-files,sidebar-documentpreview}/tests/**/*.spec.{ts,tsx}',
+          'packages/goal/*/tests/**/*.spec.ts',
+          'packages/plan/plan-mode/tests/**/*.spec.ts',
+          'packages/feedback/*/tests/**/*.spec.ts',
+          'packages/compaction/command-compact/tests/**/*.spec.ts',
+          'packages/session-query/session-log-export/tests/**/*.spec.ts',
+          'packages/experimental/auto-review/tests/**/*.spec.ts',
+          'packages/context/session-reference/tests/**/*.spec.ts',
+          'packages/api/workspace-files/tests/**/*.spec.ts',
           'packages/web/*/tests/**/*.spec.ts',
           'packages/jobs/*/tests/**/*.spec.ts',
           'packages/fs/tool-fs-search/tests/**/*.spec.ts',
@@ -64,6 +79,6 @@ export default defineConfig({
     maxWorkers: 4,
     testTimeout: 15000,
     hookTimeout: 15000,
-    setupFiles: ['tests/fixtures/network-guard.ts'],
+    setupFiles: ['tests/fixtures/network-guard.ts', 'tests/fixtures/dsh-dom-environment.ts'],
   },
 })

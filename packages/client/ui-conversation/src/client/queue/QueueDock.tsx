@@ -22,8 +22,8 @@ const QUEUE_TEXT_FACTS: Readonly<Partial<UserTextFacts>> = {
 }
 
 function textOf(content: InboxState['next-turn'][number]['content']): string | null {
-  if (!content.every(block => block.type === 'text')) return null
-  return content.map(block => block.text).join('')
+  if (!content.every(block => ['text', 'file', 'image'].includes(block.type))) return null
+  return content.filter(block => block.type === 'text').map(block => block.text).join('')
 }
 
 /** Queue operations injected by the session-scoped registration. */

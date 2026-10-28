@@ -1,3 +1,8 @@
+import Goal from '@deepseek-ai/dsh-goal'
+import * as GoalDriver from '@deepseek-ai/dsh-goal-round-driver'
+import * as GoalTools from '@deepseek-ai/dsh-tool-goal'
+import Plan from '@deepseek-ai/dsh-plan-mode'
+import * as AutoReview from '@deepseek-ai/dsh-experimental-auto-review'
 import { mountWebTools } from './web-tools.ts'
 import type { Context } from '@deepseek-ai/cordis'
 import LlmRuntime, { createUserMessage } from '@deepseek-ai/dsh-llm'
@@ -51,6 +56,14 @@ export async function apply(ctx: Context) {
   await mountContext(ctx)
   await mountPermissions(ctx)
   await mountWebTools(ctx)
+  await ctx.plugin(Goal, { defaultMaxGoalRounds: 32 })
+  await ctx.plugin(GoalDriver)
+  await ctx.plugin(GoalTools)
+  await ctx.plugin(Plan, {
+    section:
+      '你处于计划模式。先分析需求和读取必要信息，提出可执行计划。在实施前调用 exit_plan_mode 向用户提交计划，批准后再实施。计划模式不扩大工具权限，仍遵守当前沙箱与审批策略。',
+  })
+  await ctx.plugin(AutoReview)
   await ctx.plugin({
     name: 'tianzhiai-basic-tools',
     inject: ['tools', 'tianzhiaiHost'],

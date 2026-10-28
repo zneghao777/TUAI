@@ -1,6 +1,6 @@
+import { migrateUiState } from './migrate-ui-state'
 import * as Workspaces from '@deepseek-ai/dsh-api-workspace-controller/client'
 import workspaceRemote from '@deepseek-ai/dsh-api-workspace-controller/remote'
-import { workspaceZh, workspaceEn } from '@deepseek-ai/dsh-client-ui-workspace/client'
 import { createRemotePlatform, parseClientConfig, type PlatformAdapter } from '@tianzhiai/platform'
 import type {} from '@deepseek-ai/dsh-api-session-controller/remote'
 import type {} from '@deepseek-ai/dsh-permission-presets/remote'
@@ -18,13 +18,12 @@ import platform from '@tianzhiai/web-host/remote'
 import type { HostStatus } from '@tianzhiai/web-host/types'
 import type { ModelCatalog } from '@deepseek-ai/dsh-api-session-controller/types'
 import type { PermissionCatalog } from '@deepseek-ai/dsh-permission-presets/types'
-import type { TypertClientEventListener } from '@deepseek-ai/dsh-typert-protocol'
 import type { ApprovalOutcome } from '@deepseek-ai/dsh-user-approval/types'
 import type {
   AskUserQuestionAnswer,
   AskUserQuestionItem,
 } from '@deepseek-ai/dsh-user-questions/types'
-import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
+import { createSnapshotStore, setPersistenceScope } from '@deepseek-ai/dsh-client-store'
 import type { SessionId } from '@deepseek-ai/dsh-session/types'
 import { mountUiFoundation } from './ui-foundation'
 import { mountChatRuntime } from './chat-runtime'
@@ -72,48 +71,35 @@ export class AppClient {
     })
     await this.ctx.remote.$mount(workspaceRemote)
     await this.ctx.plugin(Workspaces)
-    await mountUiFoundation(this.ctx)
-    this.ctx.locale.register('workspace', {
-      zh: {
-        ...workspaceZh,
-        'archive.confirm.desc':
-          '“{title}”仍有正在进行的工作。归档会先停止这些工作；之后可从侧栏“已归档”恢复会话，被停止的工作不会自动继续。',
-      },
-      en: workspaceEn,
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        stop()
+        reject(new Error('Host 连接超时'))
+      }, 20000)
+      const ready = () => {
+        if (this.connection.generation.getSnapshot()) {
+          clearTimeout(timeout)
+          stop()
+          resolve()
+        }
+      }
+      const stop = this.connection.generation.subscribe(ready)
+      ready()
     })
+    await this.load()
+    const host = this.facts.getSnapshot().host
+    if (!host) throw new Error(this.facts.getSnapshot().error ?? 'Host 身份尚未就绪')
+    setPersistenceScope(`tianzhiai:${host.id}`)
+    migrateUiState(host.id, this.ctx.sessions.list.getSnapshot().ids)
+    await mountUiFoundation(this.ctx)
     await mountChatRuntime(this.ctx, {
       showUsage: false,
-      openSession: (id) => {
-        void this.openSession?.(id)
+      openSession: (id) => this.ctx.uiWorkspace.openSession(id),
+      openFile: async (id, path) => {
+        const cwd = this.ctx.sessions.list.getSnapshot().byId[id]?.cwd
+        const { fileAddressFor } = await import('@deepseek-ai/dsh-util-workspace-path')
+        this.ctx.sidebarRight.openResource(fileAddressFor(id, cwd, path))
       },
-      openFile: async () => {
-        throw new Error('无法打开文件预览，请从“文件与产物”下载当前会话文件')
-      },
-    })
-    const root = this
-    this.ctx.remote.$on('approval/request', function (request, next) {
-      const id = root.ctx.sessions.scopeOf(this)
-      if (!id) return next()
-      return root.wait<Awaited<ReturnType<TypertClientEventListener<'approval/request'>>>>(
-        id,
-        'approval',
-        request.toolName,
-        request.reason,
-        undefined,
-        request.signal,
-      )
-    })
-    this.ctx.remote.$on('user-questions/request', function (request, next) {
-      const id = root.ctx.sessions.scopeOf(this)
-      if (!id) return next()
-      return root.wait<AskUserQuestionAnswer>(
-        id,
-        'question',
-        '需要你补充信息',
-        undefined,
-        request.questions,
-        request.signal,
-      )
     })
     this.ctx.effect(() =>
       this.connection.generation.subscribe(() => {
@@ -128,55 +114,6 @@ export class AppClient {
       return () => window.removeEventListener('focus', refresh)
     })
     await this.load()
-  }
-  private wait<T extends ApprovalOutcome | AskUserQuestionAnswer>(
-    sessionId: SessionId,
-    kind: Interaction['kind'],
-    title: string,
-    detail: string | undefined,
-    questions: AskUserQuestionItem[] | undefined,
-    signal?: AbortSignal,
-  ): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-      const id = crypto.randomUUID()
-      const remove = () =>
-        this.interactions.set(this.interactions.getSnapshot().filter((i) => i.id !== id))
-      const expire = () => {
-        remove()
-        reject(signal?.reason ?? new Error('请求已失效'))
-      }
-      const item: Interaction = {
-        id,
-        sessionId,
-        kind,
-        title,
-        detail,
-        questions,
-        state: 'pending',
-        answer: (value) => {
-          if (
-            signal?.aborted ||
-            !this.interactions.getSnapshot().some((i) => i.id === id && i.state === 'pending')
-          )
-            return
-          if (
-            (kind === 'approval' && typeof value !== 'string') ||
-            (kind === 'question' && typeof value === 'string')
-          )
-            throw new Error('回答类型不匹配')
-          signal?.removeEventListener('abort', expire)
-          remove()
-          // The generic is selected solely by the typed Remote event listener above.
-          resolve(value as T)
-        },
-      }
-      if (signal?.aborted) {
-        expire()
-        return
-      }
-      this.interactions.set([...this.interactions.getSnapshot(), item])
-      signal?.addEventListener('abort', expire, { once: true })
-    })
   }
   async load() {
     if (!this.connection.generation.getSnapshot()) return

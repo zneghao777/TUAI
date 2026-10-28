@@ -1,3 +1,4 @@
+import { buildPreviewAssets } from './build-preview-assets.mjs'
 import { build } from 'esbuild'
 import { workspacePackages } from './workspace.mjs'
 import { execFileSync } from 'node:child_process'
@@ -24,6 +25,14 @@ for (const pkg of workspacePackages()) {
       'ui-primitives',
       'ui-conversation',
       'ui-chat',
+      'ui-commands',
+      'ui-reference',
+      'ui-model-selection',
+      'ui-permission-presets',
+      'ui-user-questions',
+      'ui-goal',
+      'ui-message-feedback',
+      'ui-sidebar-files',
       'ui-attachment',
       'ui-tool',
       'ui-layout',
@@ -39,7 +48,8 @@ for (const pkg of workspacePackages()) {
       'ui-sidebar',
       'ui-approval',
       'product-analytics',
-    ].some((name) => pkg.dir === `packages/client/${name}`)
+    ].some((name) => pkg.dir === `packages/client/${name}`) ||
+    pkg.dir === 'packages/session/message-quotes'
   ) {
     const typeDir = `${pkg.dir}/lib/types`
     await build({
@@ -53,12 +63,24 @@ for (const pkg of workspacePackages()) {
       target: 'es2022',
       format: 'esm',
     })
+    if (pkg.dir === 'packages/client/ui-sidebar-documentpreview') {
+      await build({
+        entryPoints: [`${pkg.dir}/src/client/excel/worker.ts`],
+        outfile: `${pkg.dir}/lib/esm/client/excel/worker.ts`,
+        bundle: true,
+        platform: 'browser',
+        format: 'iife',
+        target: 'es2022',
+        minify: true,
+      })
+    }
     for (const file of globSync(`${pkg.dir}/src/**/*`)) {
       if (!/\.(css|svg|png|jpg|jpeg|webp|woff2?)$/.test(file)) continue
       const destination = `${pkg.dir}/lib/esm/${relative(`${pkg.dir}/src`, file)}`
       mkdirSync(dirname(destination), { recursive: true })
       cpSync(file, destination)
     }
+    if (pkg.dir === 'packages/client/ui-sidebar-documentpreview') buildPreviewAssets()
     for (const entry of Object.values(pkg.exports)) {
       if (typeof entry !== 'object' || !entry?.types?.startsWith('./lib/types/')) continue
       if (!entry.default?.endsWith('.js')) continue

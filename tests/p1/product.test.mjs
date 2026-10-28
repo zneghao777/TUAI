@@ -23,7 +23,9 @@ import { readdir } from 'node:fs/promises'
 
 async function boot(root) {
   const paths = resolveHostPaths({ env: { TIANZHIAI_HOME: root } })
-  const settings = await loadHostSettings(paths)
+  // P1 regression fixtures exercise the existing read-only Profile. Fresh P2
+  // workspace-write defaults are covered separately by remaining-host.test.mjs.
+  const settings = { ...(await loadHostSettings(paths)), defaultPermissionPreset: 'readonly' }
   return bootProfile('profiles/production.json', {
     prepare(ctx) {
       ctx.provide('tianzhiaiHost', { paths, settings, credentials: new EnvironmentCredentials({}) })

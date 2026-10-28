@@ -19,6 +19,7 @@ const hostSettingsSchema = z.strictObject({
     .max(128)
     .regex(/^[A-Za-z0-9._-]+$/),
   profile: z.enum(['production', 'development']),
+  defaultPermissionPreset: z.enum(['readonly', 'workspace-write', 'full-access']).optional(),
   credentialReferences: z.record(z.string().regex(/^[A-Za-z][A-Za-z0-9_-]*$/), credentialRefSchema),
 })
 
@@ -72,6 +73,7 @@ export async function loadHostSettings(paths: HostPaths): Promise<HostSettings> 
       version: 1,
       hostId: randomUUID(),
       profile: 'production',
+      defaultPermissionPreset: 'workspace-write',
       credentialReferences: {},
     }
     const temporary = `${paths.hostConfig}.${randomUUID()}.tmp`

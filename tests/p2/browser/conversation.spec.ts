@@ -12,9 +12,7 @@ test.beforeEach(async ({ page }) => {
       errors.push(message.text())
   })
   await page.goto(host.login)
-  await expect(page.getByRole('button', { name: '模型与推理强度', exact: true })).toContainText(
-    'P2 受控验收模型',
-  )
+  await expect(page.getByRole('button', { name: /^选择模型/ })).toContainText('P2 受控验收模型')
 })
 test.afterEach(async ({ page }, info) => {
   if (info.status !== info.expectedStatus && !page.isClosed())
@@ -25,7 +23,7 @@ test.afterEach(async ({ page }, info) => {
   expect(errors).toEqual([])
 })
 async function send(page: Page, text: string) {
-  await page.getByRole('textbox', { name: '消息', exact: true }).fill(text)
+  await page.locator('[contenteditable="true"][role="textbox"]').fill(text)
   await page.getByRole('button', { name: '发送消息', exact: true }).click()
 }
 const answer = 'TZ063 验收回答：资料已读取，失败已记录，结果完整。'
@@ -118,7 +116,7 @@ test('纯思考与停止、断线重连不重复；无思考回答不造过程',
   await context.setOffline(false)
   await page.getByRole('button', { name: '重新连接', exact: true }).click()
   await expect(page.locator('[data-variant=think]')).toHaveCount(1)
-  await page.getByRole('button', { name: '停止当前执行' }).click()
+  await page.getByRole('button', { name: '停止生成' }).click()
   await expect(turn(page)).toContainText('已停止')
   await expect(page.locator('[data-chat-running]')).toHaveCount(0)
   await page.reload()

@@ -1,3 +1,15 @@
+import * as Compact from '@deepseek-ai/dsh-command-compact'
+import * as GoalCommand from '@deepseek-ai/dsh-command-goal'
+import * as Export from '@deepseek-ai/dsh-session-log-export'
+import * as Feedback from '@deepseek-ai/dsh-command-feedback'
+import MessageFeedback from '@deepseek-ai/dsh-message-feedback'
+import { TYPERT as contribution15 } from '@deepseek-ai/dsh-goal/typert'
+import { TYPERT as contribution16 } from '@deepseek-ai/dsh-command-feedback/typert'
+import { TYPERT as contribution17 } from '@deepseek-ai/dsh-message-feedback/typert'
+import WorkspaceFiles from '@deepseek-ai/dsh-api-workspace-files'
+import SessionReferences from '@deepseek-ai/dsh-session-reference'
+import { TYPERT as contribution12 } from '@deepseek-ai/dsh-api-workspace-files/typert'
+import { TYPERT as contribution14 } from '@deepseek-ai/dsh-session-reference/typert'
 import { ManagedSessionController, ManagedWorkspaceController } from './managed-workspaces.ts'
 import { TYPERT as contribution11 } from '@deepseek-ai/dsh-api-workspace-controller/typert'
 import { mountChatSettings } from './chat-settings.ts'
@@ -115,6 +127,11 @@ export const REMOTE_PACKAGES = [
   '@tianzhiai/web-host',
   '@deepseek-ai/dsh-api-settings-controller',
   '@deepseek-ai/dsh-api-workspace-controller',
+  '@deepseek-ai/dsh-api-workspace-files',
+  '@deepseek-ai/dsh-session-reference',
+  '@deepseek-ai/dsh-goal',
+  '@deepseek-ai/dsh-command-feedback',
+  '@deepseek-ai/dsh-message-feedback',
 ]
 
 /** Mount the real transport and Session owners over the existing P1 runtime. */
@@ -124,6 +141,11 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
   await ctx.plugin(Access)
   await ctx.plugin(Gateway)
   await ctx.plugin(Commands)
+  await ctx.plugin(Compact)
+  await ctx.plugin(GoalCommand)
+  await ctx.plugin(Export)
+  await ctx.plugin(Feedback)
+  await ctx.plugin(MessageFeedback, { maxNoteBytes: 16384 })
   await ctx.plugin(Storage)
   await ctx.plugin(JsonStorage, { root: join(ctx.tianzhiaiHost.paths.data, 'workspace-index') })
   await ctx.plugin(Domain, { backend: 'json' })
@@ -135,6 +157,8 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
     provider: options.provider ?? 'deepseek-official',
     model: options.model ?? 'deepseek-flash',
   })
+  await ctx.plugin(WorkspaceFiles)
+  await ctx.plugin(SessionReferences)
   await ctx.plugin(Uploads)
   await ctx.plugin(ManagedWorkspaceController)
   await ctx.plugin(ManagedSessionController)
@@ -161,6 +185,11 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
     contribution9,
     contribution10,
     contribution11,
+    contribution12,
+    contribution14,
+    contribution15,
+    contribution16,
+    contribution17,
   ].entries())
     ctx.effect(() =>
       ctx.typert.register(validateTypertManifest(REMOTE_PACKAGES[index]!, contribution)),

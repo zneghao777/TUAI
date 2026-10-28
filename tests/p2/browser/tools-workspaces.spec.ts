@@ -3,10 +3,10 @@ import { fixtureHost } from '../fixture-host.mjs'
 import { SessionId } from '../../../packages/core/session/lib/types/types.js'
 
 async function showMenu(page) {
+  await page.locator('[aria-current="page"][data-session-id]').hover()
   await page
     .locator('[aria-current="page"][data-session-id]')
-    .locator('..')
-    .getByRole('button', { name: /的会话操作/ })
+    .getByRole('button', { name: /^会话.*的操作/ })
     .click()
 }
 test('TZ-064 original Session menu, managed directories, archive/restore and left settings', async ({
@@ -17,9 +17,13 @@ test('TZ-064 original Session menu, managed directories, archive/restore and lef
   page.on('pageerror', (error) => errors.push(error.message))
   try {
     await page.goto(host.login)
-    const input = page.getByRole('textbox', { name: '消息', exact: true })
+    const input = page.locator('[contenteditable="true"][role="textbox"]')
     await expect(input).toBeVisible()
-    await expect(page.getByRole('heading', { name: '新会话', exact: true })).toBeVisible()
+    await input.fill('工作区管理验收')
+    await input.press('Enter')
+    await expect(
+      page.getByText('已通过真实 Host 接收：工作区管理验收。', { exact: true }),
+    ).toBeVisible()
     await expect(
       page.locator('header').getByRole('button', { name: '重命名', exact: true }),
     ).toHaveCount(0)
@@ -28,9 +32,11 @@ test('TZ-064 original Session menu, managed directories, archive/restore and lef
     await showMenu(page)
     await expect(page.getByRole('menuitem', { name: '复制 Session ID' })).toBeVisible()
     await page.getByRole('menuitem', { name: '重命名', exact: true }).click()
-    await page.getByRole('textbox', { name: '会话名称' }).fill('工具与工作区验收')
+    await page.getByRole('dialog').getByRole('textbox').fill('工具与工作区验收')
     await page.getByRole('dialog').getByRole('button', { name: '重命名', exact: true }).click()
-    await expect(page.getByRole('heading', { name: '工具与工作区验收', exact: true })).toBeVisible()
+    await expect(
+      page.locator('header').getByText('工具与工作区验收', { exact: true }),
+    ).toBeVisible()
     const id = await page
       .locator('[data-session-id][aria-current=page]')
       .getAttribute('data-session-id')
@@ -41,11 +47,14 @@ test('TZ-064 original Session menu, managed directories, archive/restore and lef
     await page.screenshot({ path: 'reports/p2/064-session-menu.png' })
     await page.getByRole('menuitem', { name: '归档会话' }).click()
     await expect(page.locator(`[data-session-id="${id}"]`)).toHaveCount(0)
-    await page.getByRole('button', { name: '已归档', exact: true }).click()
-    const archived = page.locator(`[data-session-id="${id}"]`).locator('..')
-    await archived.getByRole('button', { name: /的会话操作/ }).click()
+    await page.getByRole('button', { name: '视图选项' }).click()
+    await page.getByRole('menuitem', { name: '仅显示已归档' }).click()
+    const archived = page.locator(`[data-session-id="${id}"]`)
+    await archived.hover()
+    await archived.getByRole('button', { name: /^会话.*的操作/ }).click()
     await page.getByRole('menuitem', { name: /恢复|取消归档/ }).click()
-    await page.getByRole('button', { name: '返回会话' }).click()
+    await page.getByRole('button', { name: '视图选项' }).click()
+    await page.getByRole('menuitem', { name: '隐藏已归档' }).click()
     await page.locator(`[data-session-id="${id}"]`).click()
     await page.getByRole('button', { name: '设置', exact: true }).click()
     await page.getByRole('button', { name: '对话显示', exact: true }).click()
@@ -58,7 +67,9 @@ test('TZ-064 original Session menu, managed directories, archive/restore and lef
     await page.keyboard.press('Escape')
     await page.getByRole('button', { name: '关闭', exact: true }).click()
     await page.reload()
-    await expect(page.getByRole('heading', { name: '工具与工作区验收', exact: true })).toBeVisible()
+    await expect(
+      page.locator('header').getByText('工具与工作区验收', { exact: true }),
+    ).toBeVisible()
     const dirs = host.runtime.ctx.sessions.list().map((session) => session.header.cwd)
     expect(new Set(dirs).size).toBe(dirs.length)
     expect(errors).toEqual([])
@@ -79,13 +90,13 @@ test('TZ-064 real tool results use original diff/read/search/todo/terminal/error
       undefined,
     )
     await page.goto(host.login)
-    await expect(page.getByRole('textbox', { name: '消息', exact: true })).toBeVisible()
+    await expect(page.locator('[contenteditable="true"][role="textbox"]')).toBeVisible()
     const id = await page
       .locator('[data-session-id][aria-current=page]')
       .getAttribute('data-session-id')
     const agent = host.runtime.ctx.agents.get(SessionId(id!))
     host.runtime.ctx.permissionPresets.set(agent.session, 'workspace-write')
-    await page.getByRole('textbox', { name: '消息', exact: true }).fill('TZ064 展示工具结果')
+    await page.locator('[contenteditable="true"][role="textbox"]').fill('TZ064 展示工具结果')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
     await expect(page.getByText('TZ064 工具执行验收完成。', { exact: true })).toBeVisible()
     const events = agent.session.snapshotEvents().filter((event) => event.type === 'tool/result')
@@ -109,7 +120,7 @@ test('TZ-064 original fork and stop-before-archive confirmation', async ({ page 
   const host = await fixtureHost()
   try {
     await page.goto(host.login)
-    const input = page.getByRole('textbox', { name: '消息', exact: true })
+    const input = page.locator('[contenteditable="true"][role="textbox"]')
     await input.fill('分叉验收消息')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
     await expect(page.locator('[data-turn-process]')).toBeVisible()
@@ -119,6 +130,12 @@ test('TZ-064 original fork and stop-before-archive confirmation', async ({ page 
     await showMenu(page)
     await page.getByRole('menuitem', { name: '分叉会话', exact: true }).click()
     await expect(page.locator('[data-session-id]')).toHaveCount(2)
+    // Original DSH creates the sidebar branch without switching the current view.
+    await expect(page.locator('[data-session-id][aria-current=page]')).toHaveAttribute(
+      'data-session-id',
+      original!,
+    )
+    await page.locator(`[data-session-id]:not([data-session-id="${original}"])`).click()
     const child = await page
       .locator('[data-session-id][aria-current=page]')
       .getAttribute('data-session-id')
@@ -128,12 +145,12 @@ test('TZ-064 original fork and stop-before-archive confirmation', async ({ page 
     )
     await input.fill('持续运行')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
-    await expect(page.getByRole('button', { name: '停止当前执行' })).toBeVisible()
+    await expect(page.getByRole('button', { name: '停止生成' })).toBeVisible()
     await showMenu(page)
     await page.getByRole('menuitem', { name: '归档会话', exact: true }).click()
     await expect(page.getByRole('dialog', { name: '停止并归档此会话？' })).toBeVisible()
     await page.getByRole('dialog').getByRole('button', { name: '取消', exact: true }).click()
-    await expect(page.getByRole('button', { name: '停止当前执行' })).toBeVisible()
+    await expect(page.getByRole('button', { name: '停止生成' })).toBeVisible()
     await showMenu(page)
     await page.getByRole('menuitem', { name: '归档会话', exact: true }).click()
     await page.getByRole('dialog').getByRole('button', { name: '停止并归档', exact: true }).click()

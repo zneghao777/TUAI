@@ -191,6 +191,7 @@ class UiWorkspaceService extends Service implements UiWorkspace {
     private readonly sessions: ISessions,
     private readonly view: Pick<WorkspaceViewStoreActions, 'pinSessionOrder'>,
     private readonly notify: (toast: RowToast) => void,
+    private readonly managedSessions = false,
   ) {
     super(ctx, 'uiWorkspace')
     ctx.effect(() => {
@@ -233,6 +234,12 @@ class UiWorkspaceService extends Service implements UiWorkspace {
 
   /** Name the first reusable member blank; a requested preset also skips blanks listing another preset. */
   private createInWorkspace(workspace: WorkspaceView, options: Pick<StartSessionOptions, 'agentPreset'>): Promise<SessionId> {
+    if (this.managedSessions) {
+      const archived = this.workspaces.list.getSnapshot().archivedSessionIds
+      const id = workspace.sessionIds.find(id => !archived.includes(id))
+      if (id !== undefined) return Promise.resolve(id)
+      return this.sessions.create({ ...options })
+    }
     const archived = this.workspaces.list.getSnapshot().archivedSessionIds
     const sessions = this.sessions.list.getSnapshot()
     const blank = sessions.ids.find((id) => {
@@ -335,6 +342,16 @@ class UiWorkspaceService extends Service implements UiWorkspace {
   }
 
   startSession(workspaceId?: WorkspaceId, options?: StartSessionOptions): void {
+    if (this.managedSessions) {
+      const navigation = AbortSignal.any([this.ctx.layout.beginNavigation(), this.lifetime.signal])
+      void this.sessions.create(options?.agentPreset ? { agentPreset: options.agentPreset } : {}).then(id => {
+        if (!navigation.aborted) this.replaceMain(id, navigation, 'reveal', options ? next => {
+          const binding = this.sessions.binding(next)
+          if (binding) this.prepareDraft(binding, options)
+        } : undefined)
+      }).catch(error => { if (!navigation.aborted) this.notify({ kind: 'createFailed', message: creationFailureMessage(error) }) })
+      return
+    }
     const { agentPreset, ...draft } = options ?? {}
     const draftOptions = options === undefined ? undefined : draft
     const initializeDraft = draftOptions !== undefined && (draftOptions.prompt !== undefined
@@ -464,6 +481,13 @@ class UiWorkspaceService extends Service implements UiWorkspace {
 
   private async restoreSelection(workspaces: WorkspaceSnapshot, sessions: SessionListState): Promise<void> {
     const saved = this.selection.getSnapshot()
+    if (this.managedSessions) {
+      const id = saved.sessionId && sessions.byId[saved.sessionId] && !workspaces.archivedSessionIds.includes(saved.sessionId)
+        ? saved.sessionId : sessions.ids.find(id => !workspaces.archivedSessionIds.includes(id))
+      if (id) this.replaceMain(id, this.lifetime.signal, 'preserve')
+      else this.startSession()
+      return
+    }
     if (saved.subagentAddress !== undefined) {
       this.replaceMain(saved.subagentAddress, this.lifetime.signal, 'preserve')
       return

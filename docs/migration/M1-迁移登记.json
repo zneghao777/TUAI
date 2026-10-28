@@ -5916,6 +5916,11 @@
           "path": "packages/session/working-directory/package.json",
           "sha256": "5f48261bd66f047dd336dd2c3d23e5489fec3bae93bb08ed0820324e121dc10a",
           "reason": "按 P1 实际运行和测试闭包收敛清单、TS references；源码行为保持"
+        },
+        {
+          "path": "packages/session/working-directory/src/index.ts",
+          "sha256": "16b95ed021214f2760c4c37bcd893da6c363aada4c7be1c460a7bbecfee83caa",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [
@@ -8398,6 +8403,11 @@
           "path": "packages/interaction/permission-presets/package.json",
           "sha256": "cb7a256b18882e882a6ee4d12420c3c0f2b9ab2fbd6e22ffd4d9effbe470ca8e",
           "reason": "按 P1 实际运行和测试闭包收敛清单、TS references；源码行为保持"
+        },
+        {
+          "path": "packages/interaction/permission-presets/src/index.ts",
+          "sha256": "8ef6f6ca0e37265dc6f4bf283d20ae39b9cfc2534e6938e3c724a59256961ec4",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
         }
       ],
       "additionalFiles": [

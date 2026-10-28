@@ -24,11 +24,6 @@ body {
   --dsw-alias-state-error-primary: #b5473e;
   --dsw-alias-state-success-primary: #28755c;
 }
-[data-slot='conversation.view'] {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-}
 [data-slot='settings.general.item'] {
   min-width: 0;
 }
@@ -39,4 +34,92 @@ body {
 }
 [data-turn-process]:disabled {
   opacity: 1;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  --dsw-menu-surface-fill: #fff;
+  --dsw-menu-backdrop-filter: none;
+}
+.tz-settings-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  padding: 10px 14px;
+  text-align: left;
+  color: var(--dsw-alias-label-secondary);
+}
+.tz-settings-trigger:hover {
+  background: #e9edf3;
+  color: #282d35;
+}
+.tz-artifacts {
+  padding: 16px;
+  overflow: auto;
+  height: 100%;
+}
+.tz-pane-action {
+  border: 0;
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: inherit;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.tz-pane-action:hover {
+  background: var(--dsw-specific-bubble);
+}
+.tz-pane-action:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary);
+}
+.tz-artifact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--dsw-alias-border-l3);
+}
+.tz-artifact > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.tz-artifact small {
+  display: block;
+  color: var(--dsw-alias-label-secondary);
+  margin-top: 4px;
+}
+.tz-connection {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: calc(100vw - 24px);
+  padding: 8px 14px;
+  border: 1px solid var(--dsw-alias-border-l3);
+  border-radius: 12px;
+  background: var(--dsw-alias-bg-overlay);
+  color: var(--dsw-alias-label-primary);
+  box-shadow: 0 4px 20px #18293c20;
+}
+
+@media (any-pointer: coarse), (hover: none) {
+  [role='tree'] [data-session-id] button {
+    min-width: 32px;
+    min-height: 32px;
+    height: 32px;
+  }
 }

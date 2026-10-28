@@ -91,7 +91,7 @@ export function TextPreview({
   const storedScrollTopRef = useRef(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const absolutePath = meta.value?.absolutePath ?? current?.complete?.absolutePath
-  const displayPath = absolutePath ?? file.path
+  const displayPath = (absolutePath ?? file.path).replace(/^.*[\\/]data[\\/]workspaces[\\/][^\\/]+[\\/]/, '')
   // Contributions that hand the file to the Host wait for its Host path.
   const fileOwner = absolutePath === undefined ? undefined : { absolutePath }
   // Every tab of this type is a `file` resource address, so its params are the

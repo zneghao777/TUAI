@@ -16,7 +16,7 @@ export async function mountPermissions(ctx: Context) {
         'workspace-write': { sandbox: 'workspace-write', approval: 'ask', name: '工作区内修改' },
         'full-access': { sandbox: 'danger-full-access', approval: 'never', name: '完全权限' },
       },
-      defaultPreset: 'readonly',
+      defaultPreset: ctx.tianzhiaiHost.settings.defaultPermissionPreset ?? 'readonly',
     })
   await ctx.plugin({
     name: 'tianzhiai-final-tool-permissions',

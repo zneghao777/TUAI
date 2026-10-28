@@ -501,7 +501,7 @@ describe('QueueDock', () => {
     })
   })
 
-  it('renders active actions and disables editing for mixed-content rows', () => {
+  it('renders active actions and allows text editing without replacing admitted attachments', () => {
     const snap = snapshotWith([
       row('i-1', '第一条排队消息'),
       row('i-2', null, 'image [image]'),
@@ -518,9 +518,9 @@ describe('QueueDock', () => {
     expect(container.querySelectorAll('[aria-label="删除排队消息"]')).toHaveLength(2)
     expect(container.querySelectorAll('[aria-label="插话发送"]')).toHaveLength(2)
     expect((container.querySelectorAll('[aria-label="编辑排队消息"]')[0] as HTMLButtonElement).disabled).toBe(false)
-    expect((container.querySelectorAll('[aria-label="编辑排队消息"]')[1] as HTMLButtonElement).disabled).toBe(true)
+    expect((container.querySelectorAll('[aria-label="编辑排队消息"]')[1] as HTMLButtonElement).disabled).toBe(false)
     expect(container.querySelectorAll('[aria-label="编辑排队消息"]')[1]?.getAttribute('title'))
-      .toBe('包含非文本内容，暂不支持编辑')
+      .toBeNull()
   })
 
   it('renders queued image thumbnails from durable references beside the text preview', async () => {

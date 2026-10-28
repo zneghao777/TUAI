@@ -9,7 +9,7 @@ test('实际 Host PTC 调度的父子工具记录可逐层展开', async ({ page
       undefined,
     )
     await page.goto(host.login)
-    await page.getByRole('textbox', { name: '消息', exact: true }).fill('嵌套工具验收')
+    await page.locator('[contenteditable="true"][role="textbox"]').fill('嵌套工具验收')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
     const outer = page
       .locator('[data-tool="run_code"][data-state="ok"] [data-disclosure-row][aria-expanded]')

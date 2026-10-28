@@ -231,10 +231,16 @@ describe('Session queue commands', () => {
       source: { kind: 'user', rpcId: 'file-rpc' as never },
     })
     inbox.append('next-turn', queuedFile)
+    await controller.updateQueue({
+      sessionId: agent.id, itemId: queuedFile.id, action: { kind: 'edit', content: [{ type: 'text', text: 'edited with admitted file' }] },
+    })
+    const editedFile = inbox.nextTurn.find(item => item.id === queuedFile.id)!
+    expect(editedFile.content).toEqual([{ type: 'text', text: 'edited with admitted file' }, ...queuedFile.content])
+    expect(editedFile.source).toEqual(queuedFile.source)
     expect(await controller.updateQueue({
       sessionId: agent.id, itemId: queuedFile.id, action: { kind: 'steer' },
     })).toEqual({ accepted: true })
-    expect(steer).toHaveBeenLastCalledWith(queuedFile)
+    expect(steer).toHaveBeenLastCalledWith(editedFile)
     expect(queuedFile).toMatchObject({
       source: { kind: 'user', rpcId: 'file-rpc' },
       content: [{ type: 'file', attachment: { name: 'queued.txt', bytes: 6 } }],

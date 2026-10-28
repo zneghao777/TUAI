@@ -231,9 +231,10 @@ function sessionVisible(
   current: SessionId | undefined,
   archived: ReadonlySet<SessionId>,
   archivedFilter: ArchivedFilter,
+  includeBlankSessions = false,
 ): boolean {
   if (session.origin === 'subagent') return false
-  if (session.blank && session.id !== current) return false
+  if (!includeBlankSessions && session.blank && session.id !== current) return false
   switch (archivedFilter) {
     case 'default':
       return !archived.has(session.id)
@@ -249,6 +250,7 @@ function sessionVisible(
 
 /** Registry-global row state consumed by every tree derivation. */
 export interface SessionRowState {
+  includeBlankSessions?: boolean
   /** Registry-global pin ids; pinned rows lead their section in the local order. */
   pinnedSessionIds: readonly SessionId[]
   /** Archive set; members keep their slots and show grayed while visible. */
@@ -328,6 +330,7 @@ function groupByWorkspace(
   archived: ReadonlySet<SessionId>,
   archivedFilter: ArchivedFilter,
   ungroupedOrder: readonly string[] | undefined,
+  includeBlankSessions = false,
 ): Group[] {
   const current = mainSessionId(list)
   const groups: Group[] = []
@@ -338,7 +341,7 @@ function groupByWorkspace(
       const summary = list.byId[id]
       if (summary === undefined) continue // account may lead the list pull; the row appears when the summary lands
       accounted.add(id)
-      if (!sessionVisible(summary, current, archived, archivedFilter)) continue
+      if (!sessionVisible(summary, current, archived, archivedFilter, includeBlankSessions)) continue
       members.push(summary)
     }
     // The archived-only view lists archives, not the Workspace inventory, so
@@ -352,7 +355,7 @@ function groupByWorkspace(
   const stray = list.ids
     .map(id => list.byId[id])
     .filter((s): s is SessionSummary =>
-      s !== undefined && !accounted.has(s.id) && sessionVisible(s, current, archived, archivedFilter))
+      s !== undefined && !accounted.has(s.id) && sessionVisible(s, current, archived, archivedFilter, includeBlankSessions))
   if (stray.length > 0) {
     groups.push(buildGroup(
       UNGROUPED_KEY,
@@ -440,7 +443,7 @@ export function deriveGroups(
     ? undefined
     : owningGroupKey(workspaces, current)
   const groups: GroupNode[] = []
-  for (const g of groupByWorkspace(list, workspaces, archived, rowState.archivedFilter, view.ungroupedOrder)) {
+  for (const g of groupByWorkspace(list, workspaces, archived, rowState.archivedFilter, view.ungroupedOrder, rowState.includeBlankSessions)) {
     const expanded = expandedGroups.has(g.key)
     groups.push({
       key: g.key,
@@ -465,8 +468,8 @@ export function deriveGroups(
  * @param list - sessions list snapshot.
  * @returns known ordinary Session ids, including archives and only the current blank.
  */
-export function sessionMemberIds(list: SessionListState): SessionId[] {
-  return visibleSessionIds(list, [], 'show')
+export function sessionMemberIds(list: SessionListState, includeBlankSessions = false): SessionId[] {
+  return visibleSessionIds(list, [], 'show', includeBlankSessions)
 }
 
 /**
@@ -480,12 +483,13 @@ export function visibleSessionIds(
   list: SessionListState,
   archivedSessionIds: readonly SessionId[],
   archivedFilter: ArchivedFilter,
+  includeBlankSessions = false,
 ): SessionId[] {
   const archived = new Set(archivedSessionIds)
   const current = mainSessionId(list)
   return list.ids.filter((id) => {
     const s = list.byId[id]
-    return s !== undefined && sessionVisible(s, current, archived, archivedFilter)
+    return s !== undefined && sessionVisible(s, current, archived, archivedFilter, includeBlankSessions)
   })
 }
 
@@ -509,7 +513,7 @@ export function deriveFlat(
   const current = mainSessionId(list)
   const members = sessionIds.flatMap((id) => {
     const session = list.byId[id]
-    return session !== undefined && sessionVisible(session, current, archived, rowState.archivedFilter)
+    return session !== undefined && sessionVisible(session, current, archived, rowState.archivedFilter, rowState.includeBlankSessions)
       ? [session]
       : []
   })

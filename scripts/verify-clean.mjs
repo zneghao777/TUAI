@@ -42,6 +42,8 @@ const excluded = new Set([
 ])
 const runtimeFiles = globSync([
   'apps/*/src/**/*',
+  'apps/*/public/**/*',
+  'patches/*',
   'apps/*/index.html',
   'apps/*/vite.config.ts',
   'packages/*/*/src/**/*.ts',
@@ -73,6 +75,7 @@ report.runtimeFingerprint = createHash('sha256')
   .digest('hex')
 async function run(args) {
   const started = Date.now()
+  const timeoutMs = args[0] === 'run' && args[1] === 'check' ? 600_000 : 180_000
   const child = spawn('npx', ['--yes', 'pnpm@11.28.5', ...args], {
     cwd: checkout,
     detached: process.platform !== 'win32',
@@ -104,10 +107,10 @@ async function run(args) {
   }
   let force
   const timer = setTimeout(() => {
-    failure = 'Independent acceptance exceeded 180 seconds'
+    failure = `Independent acceptance exceeded ${timeoutMs / 1000} seconds`
     terminate('SIGTERM')
     force = setTimeout(() => terminate('SIGKILL'), 1000)
-  }, 180_000)
+  }, timeoutMs)
   let status
   try {
     status = await new Promise((resolve, reject) => {

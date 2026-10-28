@@ -1,21 +1,23 @@
-import { MarkdownDelegateProvider } from '@deepseek-ai/dsh-client-ui-primitives'
-import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
-import type {} from '@deepseek-ai/dsh-client-ui-chat/client'
+import {
+  MarkdownDelegateProvider,
+  IconSettingsOutlineRegular,
+} from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ComposedProps } from '@deepseek-ai/dsh-client-ui-slots'
-import type {} from '@deepseek-ai/dsh-client-ui-session/client'
-import { App, Workspace } from './App'
+import type {} from '@deepseek-ai/dsh-client-ui-sidebar/client'
+import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
+import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
+import { useSource } from './bindings'
+import { SettingsDialog } from './components/SettingsDialog'
 import type { AppClient } from './model/client'
+import s from './App.module.css'
+import { mountArtifactPane } from './components/ArtifactPane'
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
   interface SlotMap {
-    'tianzhiai.workspace': {
-      kind: 'single'
-      scope: 'session'
-      owner: { onModels(): void }
-    }
+    'tianzhiai.workspace': { kind: 'single'; scope: 'session'; owner: { onModels(): void } }
   }
 }
-
+// Compatibility type for the retired product shell; it no longer enters the bundle.
 export type AppSlots = ComposedProps<
   'root',
   string,
@@ -23,71 +25,101 @@ export type AppSlots = ComposedProps<
   undefined,
   object
 >
-type WorkspaceSlots = ComposedProps<
-  'tianzhiai.workspace',
+type SettingsProps = ComposedProps<
+  'shell.overlay',
   string,
-  'conversation.view',
+  'settings.general.item',
   undefined,
   object
 >
 
-/** The shell owns visual layout; DSH owns scope, hooks and teardown. */
+/** Product branding and settings surround original DSH Layout/Conversation/Workspace owners. */
 export function mountProductUi(client: AppClient, container: HTMLElement) {
   const { ctx } = client
-  const root = ctx.slots.register(
-    {
-      name: 'root',
-      children: {
-        'tianzhiai.workspace': { kind: 'single', scope: 'session' },
-        'settings.general.item': { kind: 'list', scope: 'root' },
-        'shell.overlay': { kind: 'list', scope: 'root' },
-      },
-    },
-    (props: AppSlots) => (
-      <MarkdownDelegateProvider allowRemoteImages={false}>
-        <App client={client} {...props} />
-      </MarkdownDelegateProvider>
+  mountArtifactPane(client)
+  const colors: Record<string, [string, string]> = {
+    '--dsw-alias-bg-base': ['#f5f6f8', '#191d24'],
+    '--dsw-specific-sidebar-fill': ['#f9fafb', '#20252e'],
+    '--dsw-alias-bg-layer-1': ['#ffffff', '#262d38'],
+    '--dsw-alias-bg-layer-2': ['#ffffff', '#303946'],
+    '--dsw-alias-bg-overlay': ['#ffffff', '#262d38'],
+    '--dsw-alias-label-primary': ['#282d35', '#edf0f4'],
+    '--dsw-alias-label-secondary': ['#666e7b', '#b8c2d0'],
+    '--dsw-alias-brand-primary': ['#536985', '#a6bedc'],
+    '--dsw-specific-bubble': ['#e9eff6', '#303c4d'],
+    '--dsw-alias-border-l3': ['#e2e6ec', '#3c4552'],
+  }
+  const resetTheme = ctx.theme.overrideTokens(
+    'tianzhiai',
+    Object.fromEntries(
+      Object.entries(colors).map(([key, [light, dark]]) => [key, { light, dark }]),
     ),
   )
-  const workspace = ctx.slots.register(
-    {
-      name: 'tianzhiai.workspace',
-      children: { 'conversation.view': { kind: 'list', scope: 'session' } },
-    },
-    function SessionWorkspace({ sessionId, useSession, onModels, renderSlot }: WorkspaceSlots) {
-      const state = useSession((snapshot) => snapshot)
-      const binding = ctx.sessions.binding(sessionId)
-      if (!binding) return null
-      return (
-        <Workspace client={client} binding={binding} state={state} onModels={onModels}>
-          {renderSlot(
-            'conversation.view',
-            {
-              inspectCall: undefined,
-              viewRequest: null,
-              openView: (view) => {
-                if (view !== 'chat') throw new Error('当前仅启用对话视图')
-              },
-              completeViewRequest: () => {},
-            },
-            { only: 'chat' },
-          )}
-        </Workspace>
-      )
-    },
-  )
-  let unmount: (() => void) | undefined
-  try {
-    unmount = ctx.uiRenderer.mount(container)
-  } catch (error) {
-    workspace()
-    root()
-    throw error
-  }
+  const settingsOpen = createSnapshotStore(false)
+  const disposers = [
+    ctx.slots.inject('shell.overlay', () =>
+      ctx.slots.register(
+        { name: 'shell.overlay', id: 'tianzhiai-connection' },
+        function ConnectionNotice() {
+          const state = useSource(client.connection.state)
+          const facts = useSource(client.facts)
+          return state !== 'connected' || facts.error ? (
+            <div className="tz-connection" role="alert">
+              <span>{facts.error ?? '连接中断，正在恢复…'}</span>
+              <button className="tz-pane-action" onClick={() => client.connection.reconnect()}>
+                重新连接
+              </button>
+            </div>
+          ) : null
+        },
+      ),
+    ),
+    ctx.slots.inject('sidebar.brand.mark', () =>
+      ctx.slots.register({ name: 'sidebar.brand.mark' }, () => (
+        <span className={s.brandIcon} aria-hidden>
+          ✧
+        </span>
+      )),
+    ),
+    ctx.slots.inject('sidebar.brand.name', () =>
+      ctx.slots.register({ name: 'sidebar.brand.name' }, () => <strong>天质 AI</strong>),
+    ),
+    ctx.slots.inject('sidebar.settings', () =>
+      ctx.slots.register({ name: 'sidebar.settings' }, ({ wide }) => (
+        <button
+          className="tz-settings-trigger"
+          aria-label="设置"
+          onClick={() => settingsOpen.set(true)}
+        >
+          <IconSettingsOutlineRegular size={18} />
+          {wide ? <span>设置</span> : null}
+        </button>
+      )),
+    ),
+    ctx.slots.inject('shell.overlay', () =>
+      ctx.slots.register(
+        {
+          name: 'shell.overlay',
+          id: 'tianzhiai-settings',
+          children: { 'settings.general.item': { kind: 'list', scope: 'root' } },
+        },
+        function ProductSettings({ renderSlot }: SettingsProps) {
+          const open = useSource(settingsOpen)
+          return open ? (
+            <SettingsDialog client={client} onClose={() => settingsOpen.set(false)}>
+              {renderSlot('settings.general.item', {})}
+            </SettingsDialog>
+          ) : null
+        },
+      ),
+    ),
+  ]
+  const unmount = ctx.uiRenderer.mount(container, (app) => (
+    <MarkdownDelegateProvider allowRemoteImages={false}>{app}</MarkdownDelegateProvider>
+  ))
   return () => {
-    unmount?.()
-    unmount = undefined
-    workspace()
-    root()
+    unmount()
+    resetTheme()
+    for (const dispose of disposers.reverse()) dispose()
   }
 }

@@ -87,6 +87,14 @@ class ScenarioModel extends MockAdapter {
         ?.filter((b) => b.type === 'text')
         .map((b) => b.text)
         .join('') ?? ''
+    if (requestText.includes('P2 规划审阅')) {
+      if (last?.role === 'tool') yield* textResponse('规划审阅已完成。')
+      else
+        yield* toolCallResponse(crypto.randomUUID(), 'exit_plan_mode', {
+          plan: '# 验收计划\n\n1. 检查当前目录\n2. 汇总结果',
+        })
+      return
+    }
     if (requestText.includes('TZ064')) {
       const step = messages
         .slice(messages.lastIndexOf(request))
@@ -271,6 +279,11 @@ export async function fixtureHost(options = {}) {
         )
       },
     )
+    // Regression scenarios explicitly exercise the legacy readonly policy.
+    // Fresh-install defaults are verified separately in remaining-host.test.mjs.
+    await runtime.ctx.settingsController.update('permission', {
+      defaultPreset: options.defaultPreset ?? 'readonly',
+    })
     const base = `http://127.0.0.1:${runtime.ctx.webServer.port}/`
     return {
       runtime,

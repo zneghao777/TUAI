@@ -103,6 +103,9 @@
     },
     {
       "path": "packages/product/platform"
+    },
+    {
+      "path": "packages/session-query/session-log-export/tsconfig.client.json"
     }
   ]
 }

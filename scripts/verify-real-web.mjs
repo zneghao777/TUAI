@@ -57,7 +57,7 @@ try {
     runtime.ctx.connection.authenticatedUrl(`http://127.0.0.1:${runtime.ctx.webServer.port}/`),
   )
   await page
-    .getByRole('textbox', { name: '消息', exact: true })
+    .locator('[contenteditable="true"][role="textbox"]')
     .fill(
       'TZ064 真实 Web 工具验收：先实际调用 web_search 搜索 TypeScript 官方文档，然后调用 web_fetch 获取 https://example.com/，最后用一句中文回答网页标题。只使用这两个 Web 工具，不执行 Shell 或其他工具。',
     )

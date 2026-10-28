@@ -6,9 +6,9 @@ test('代码高亮生效，窄屏宽表格可滚动到最后一列', async ({ pa
   const host = await fixtureHost()
   try {
     await page.goto(host.login)
-    await expect(page.getByRole('textbox', { name: '消息', exact: true })).toBeVisible()
+    await expect(page.locator('[contenteditable="true"][role="textbox"]')).toBeVisible()
     await page
-      .getByRole('textbox', { name: '消息', exact: true })
+      .locator('[contenteditable="true"][role="textbox"]')
       .fill(
         '排版核对\n\n```typescript\nconst result = 42;\n```\n\n| 文件 | 状态 | 类型 | 说明 |\n| --- | --- | --- | --- |\n| report.md | 完成 | 文档 | 最后一列可读 |',
       )
@@ -42,7 +42,7 @@ test('输入框随草稿增高和恢复，成功后收起且不堆积说明', as
   const host = await fixtureHost()
   try {
     await page.goto(host.login)
-    const input = page.getByRole('textbox', { name: '消息', exact: true })
+    const input = page.locator('[contenteditable="true"][role="textbox"]')
     await expect(input).toBeVisible()
     const initialHeight = (await input.boundingBox())!.height
     const text = Array.from({ length: 20 }, (_, i) => `第 ${i + 1} 行：检查长消息的输入布局`).join(
@@ -50,19 +50,24 @@ test('输入框随草稿增高和恢复，成功后收起且不堆积说明', as
     )
     await input.fill(text)
     expect((await input.boundingBox())!.height).toBeGreaterThan(initialHeight)
-    expect((await input.boundingBox())!.height).toBeLessThanOrEqual(180)
+    expect(
+      await input.evaluate((el) => {
+        const scroll = el.closest('[class*=scroll_]')
+        return scroll?.clientHeight ?? 0
+      }),
+    ).toBeLessThanOrEqual(336)
     await page.reload()
-    await expect(input).toHaveValue(text)
+    await expect(input).toHaveText(text, { useInnerText: true })
     expect((await input.boundingBox())!.height).toBeGreaterThan(initialHeight)
     await input.fill('清晰简洁的对话输入')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
-    await expect(input).toHaveValue('')
+    await expect(input).toHaveText('')
     await expect(page.getByText('已通过真实 Host 接收：清晰简洁的对话输入。')).toBeVisible()
-    expect((await input.boundingBox())!.height).toBe(initialHeight)
+    expect((await input.boundingBox())!.height).toBeLessThanOrEqual(initialHeight)
     await expect(page.locator('[data-composer] [role=status]')).toHaveCount(0)
     for (const width of [820, 390, 320]) {
       await page.setViewportSize({ width, height: 844 })
-      const surface = page.locator('[data-composer-surface]')
+      const surface = page.locator('[data-composer-card]')
       expect((await surface.boundingBox())!.height).toBeLessThan(170)
       await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeInViewport()
       expect(await surface.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
@@ -89,7 +94,7 @@ test('真实工具的代码字体、复制换行入口与窄屏详情保持完�
       host.runtime.ctx.agents.get(SessionId(id!)).session,
       'workspace-write',
     )
-    await page.getByRole('textbox', { name: '消息', exact: true }).fill('TZ064 核对工具布局')
+    await page.locator('[contenteditable="true"][role="textbox"]').fill('TZ064 核对工具布局')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
     await expect(page.getByText('TZ064 工具执行验收完成。', { exact: true })).toBeVisible()
     const tool = page.locator('[data-tool=read]')

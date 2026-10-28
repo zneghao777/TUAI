@@ -53,7 +53,7 @@ export class WorkspaceChangeFeed {
     let unwatch: (() => Promise<void>) | undefined
     try {
       // Setup shares cancellation, so a late resolution cannot acquire a watcher.
-      const root = await this.ctx.fs.resolve(workspaceRoot, { signal }).catch((error: unknown) => {
+      const root = await this.ctx.fs.resolve(workspaceRoot, { cwd: workspaceRoot, signal }).catch((error: unknown) => {
         if (aborted()) return undefined
         throw error
       })

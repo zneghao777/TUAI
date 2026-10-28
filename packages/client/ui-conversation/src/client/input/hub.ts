@@ -1,3 +1,4 @@
+import { pendingInputs, finishInput } from '../submission-journal.ts'
 /**
  * Session-bound input registry and default-send routing for Conversation.
  * Each retained Session binding owns one shell, its input listeners, and its
@@ -50,6 +51,8 @@ interface ConversationAttachmentFace {
     signal?: AbortSignal,
   ): Promise<SubmitOutcome>
   serializeDraftAttachments(attachmentIds: readonly DraftAttachmentId[]): Promise<DraftAttachmentSerializationResult>
+  restoreDraftFiles?(id: SessionId): readonly DraftAttachmentId[]
+  trackDraftFiles?(id: SessionId, state: SessionInputShell['state']): () => void
   releaseDraftAttachment(id: DraftAttachmentId): void
 }
 
@@ -180,6 +183,31 @@ export class InputHub implements SessionInputResolver {
       }, 'conversation.input: reference catalogs')
     })
     shell.setDraft(readConversationDraft(binding.sessionId))
+    actx.inject(['conversation'], scope => {
+      const attachments = this.conversation()
+      shell.addAttachments(attachments.restoreDraftFiles?.(binding.sessionId) ?? [])
+      scope.effect(() => attachments.trackDraftFiles?.(binding.sessionId, shell.state) ?? (() => {}))
+      scope.effect(() => {
+        const reconcile = () => {
+          const pendingRows = pendingInputs(binding.sessionId)
+          if (pendingRows.length === 0) return
+          const ids = new Set(binding.eventSource.getSnapshot().entries.flatMap(({ event }) =>
+            event.type === 'user/message' && event.data.source.kind === 'user' && 'rpcId' in event.data.source ? [event.data.source.rpcId] : []))
+          const inbox = session.projections.faceOf('inbox').getSnapshot() as InboxState | undefined
+          for (const row of [...inbox?.['next-turn'] ?? [], ...inbox?.['next-step'] ?? []])
+            if (row.source.kind === 'user' && 'rpcId' in row.source) ids.add(row.source.rpcId)
+          for (const pending of pendingRows) if (ids.has(pending.requestId)) {
+            if (shell.snapshot.draft === pending.text) shell.setDraft('')
+            for (const id of pending.attachments) shell.removeAttachment(id)
+            finishInput(binding.sessionId, pending.requestId)
+          }
+        }
+        reconcile()
+        const a = binding.eventSource.subscribe(reconcile)
+        const b = session.projections.faceOf('inbox').subscribe(reconcile)
+        return () => { a(); b() }
+      })
+    })
     return shell
   }
 
@@ -279,13 +307,13 @@ export class InputHub implements SessionInputResolver {
   }
 
   private controller(actx: Context): InputTriggerController | undefined {
-    if (this.sessions().sessionOf(actx) === undefined) return undefined
+    if (this.rootCtx.get('sessions')?.sessionOf(actx) === undefined) return undefined
     const inputTriggers = this.rootCtx.get('inputTriggers') as InputTriggerServiceFace | undefined
     return inputTriggers?.sessionOf(actx)
   }
 
   private popup(actx: Context): PopupDismissFace | undefined {
-    if (this.sessions().sessionOf(actx) === undefined) return undefined
+    if (this.rootCtx.get('sessions')?.sessionOf(actx) === undefined) return undefined
     const command = this.rootCtx.get('commandUi') as CommandFace | undefined
     return command?.popupFor(actx)
   }

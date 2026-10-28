@@ -74,6 +74,16 @@
     "@deepseek-ai/dsh-web-fetch-http": "workspace:*",
     "@deepseek-ai/dsh-web-search-deepseek": "workspace:*",
     "@deepseek-ai/dsh-tool-fs-search": "workspace:*",
-    "@deepseek-ai/dsh-tool-todo": "workspace:*"
+    "@deepseek-ai/dsh-tool-todo": "workspace:*",
+    "@deepseek-ai/dsh-command-compact": "workspace:*",
+    "@deepseek-ai/dsh-goal": "workspace:*",
+    "@deepseek-ai/dsh-goal-round-driver": "workspace:*",
+    "@deepseek-ai/dsh-tool-goal": "workspace:*",
+    "@deepseek-ai/dsh-command-goal": "workspace:*",
+    "@deepseek-ai/dsh-plan-mode": "workspace:*",
+    "@deepseek-ai/dsh-command-feedback": "workspace:*",
+    "@deepseek-ai/dsh-session-log-export": "workspace:*",
+    "@deepseek-ai/dsh-experimental-auto-review": "workspace:*",
+    "@deepseek-ai/dsh-session-reference": "workspace:*"
   }
 }

@@ -68,3 +68,9 @@ packages/web/
 packages/terminal/
 packages/experimental/
 tests/fixtures/dsh-translate.ts
+
+packages/feedback/
+tests/fixtures/dsh-client-runtime/
+patches/
+tests/fixtures/dsh-dom-environment.ts
+tests/fixtures/dsh-user-text/

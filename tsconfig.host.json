@@ -553,6 +553,63 @@
     },
     {
       "path": "packages/experimental/tool-session-query"
+    },
+    {
+      "path": "packages/client/ui-commands"
+    },
+    {
+      "path": "packages/client/ui-model-selection"
+    },
+    {
+      "path": "packages/client/ui-reference"
+    },
+    {
+      "path": "packages/context/session-reference"
+    },
+    {
+      "path": "packages/client/ui-goal"
+    },
+    {
+      "path": "packages/client/ui-message-feedback"
+    },
+    {
+      "path": "packages/client/ui-permission-presets"
+    },
+    {
+      "path": "packages/compaction/command-compact"
+    },
+    {
+      "path": "packages/experimental/auto-review"
+    },
+    {
+      "path": "packages/feedback/command-feedback"
+    },
+    {
+      "path": "packages/feedback/message-feedback"
+    },
+    {
+      "path": "packages/goal/command-goal"
+    },
+    {
+      "path": "packages/goal/goal-round-driver"
+    },
+    {
+      "path": "packages/goal/tool-goal"
+    },
+    {
+      "path": "packages/session-query/session-log-export/tsconfig.host.json"
+    },
+    {
+      "path": "packages/client/ui-user-questions"
+    },
+    {
+      "path": "packages/client/ui-sidebar-files"
+    },
+    {
+      "path": "packages/subagent/tool-subagent"
+    },
+    {
+      "path": "packages/session/message-quotes"
     }
   ]
 }

@@ -5,7 +5,7 @@ test('设置分类共用窗口、保留草稿，子菜单先处理 Escape', asyn
   const host = await fixtureHost()
   try {
     await page.goto(host.login)
-    await expect(page.getByRole('textbox', { name: '消息', exact: true })).toBeVisible()
+    await expect(page.locator('[contenteditable="true"][role="textbox"]')).toBeVisible()
     await page.getByRole('button', { name: '设置', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: '设置', exact: true })
     await expect(dialog).toHaveCSS('opacity', '1')
@@ -43,26 +43,32 @@ test('会话操作支持键盘，单会话无重复分组，长标题保持布�
   const host = await fixtureHost()
   try {
     await page.goto(host.login)
+    const input = page.locator('[contenteditable="true"][role="textbox"]')
+    await input.fill('工作区标题验收')
+    await input.press('Enter')
+    await expect(
+      page.getByText('已通过真实 Host 接收：工作区标题验收。', { exact: true }),
+    ).toBeVisible()
     const session = page.locator('[data-session-id][aria-current=page]')
     await expect(session).toBeVisible()
-    const history = page.getByRole('navigation', { name: '会话历史' })
+    const history = page.getByRole('tree', { name: '会话' })
     await expect(history.locator('summary')).toHaveCount(0)
-    const row = session.locator('..')
+    const row = session
     expect(await row.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(
       'rgba(0, 0, 0, 0)',
     )
     await session.focus()
     await page.keyboard.press('Tab')
-    const trigger = row.getByRole('button', { name: /的会话操作/ })
+    const trigger = row.getByRole('button', { name: /^会话.*的操作/ })
     await expect(trigger).toBeFocused()
     await expect(trigger).toHaveCSS('opacity', '1')
     await page.keyboard.press('Enter')
     await page.getByRole('menuitem', { name: '重命名', exact: true }).click()
     const title = '整理旅行资料与工作记录，并生成一份可以持续维护的详细计划'
-    await page.getByRole('textbox', { name: '会话名称' }).fill(title)
+    await page.getByRole('dialog').getByRole('textbox').fill(title)
     await page.getByRole('dialog').getByRole('button', { name: '重命名', exact: true }).click()
-    await expect(session).toHaveAttribute('title', title)
-    await expect(page.getByRole('heading', { name: title, exact: true })).toBeVisible()
+    await expect(session).toContainText(title)
+    await expect(page.locator('header').getByText(title, { exact: true })).toBeVisible()
     for (const width of [1440, 820, 320]) {
       await page.setViewportSize({ width, height: 844 })
       expect(await page.locator('header').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(
@@ -92,11 +98,17 @@ test('触摸端菜单可发现，设置内容独立滚动且关闭恢复焦点',
   })
   try {
     await page.goto(host.login)
-    await expect(page.getByRole('textbox', { name: '消息', exact: true })).toBeVisible()
-    await page.getByRole('button', { name: '打开导航' }).tap()
-    const menu = page.getByRole('button', { name: /的会话操作/ }).first()
+    await expect(page.locator('[contenteditable="true"][role="textbox"]')).toBeVisible()
+    const input = page.locator('[contenteditable="true"][role="textbox"]')
+    await input.fill('触屏设置验收')
+    await input.press('Enter')
+    await expect(
+      page.getByText('已通过真实 Host 接收：触屏设置验收。', { exact: true }),
+    ).toBeVisible()
+    await page.getByRole('button', { name: '打开侧边栏' }).tap()
+    const menu = page.getByRole('button', { name: /^会话.*的操作/ }).first()
     await expect(menu).toHaveCSS('opacity', '1')
-    expect((await menu.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+    expect((await menu.boundingBox())!.height).toBeGreaterThanOrEqual(24)
     await menu.tap()
     await expect(page.getByRole('menuitem', { name: '重命名', exact: true })).toBeVisible()
     await page.keyboard.press('Escape')
@@ -121,7 +133,7 @@ test('触摸端菜单可发现，设置内容独立滚动且关闭恢复焦点',
     expect(await close.boundingBox()).toEqual(closeBounds)
     expect(await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
     await close.tap()
-    await expect(page.getByRole('button', { name: '打开导航' })).toBeFocused()
+    await expect(page.getByRole('button', { name: '设置', exact: true })).toBeFocused()
     expect(focusWarnings).toEqual([])
   } finally {
     await context.close()

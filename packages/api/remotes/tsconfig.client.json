@@ -15,28 +15,46 @@
       "path": "../../../vendor/cordis"
     },
     {
-      "path": "../gateway/tsconfig.client.json"
-    },
-    {
       "path": "../../client/connection/tsconfig.client.json"
     },
     {
       "path": "../../client/file-upload/tsconfig.client.json"
     },
     {
-      "path": "../../credentials/credentials"
-    },
-    {
       "path": "../../context/file-reference"
     },
     {
+      "path": "../../context/session-reference"
+    },
+    {
       "path": "../../core/session"
+    },
+    {
+      "path": "../../credentials/credentials"
+    },
+    {
+      "path": "../../document/office-to-pdf"
+    },
+    {
+      "path": "../../feedback/command-feedback"
+    },
+    {
+      "path": "../../feedback/message-feedback"
+    },
+    {
+      "path": "../../goal/goal"
     },
     {
       "path": "../../interaction/commands"
     },
     {
       "path": "../../interaction/permission-presets"
+    },
+    {
+      "path": "../../interaction/user-approval"
+    },
+    {
+      "path": "../../interaction/user-questions"
     },
     {
       "path": "../../llm/llm"
@@ -51,28 +69,22 @@
       "path": "../../subagent/subagent"
     },
     {
-      "path": "../../interaction/user-approval"
+      "path": "../../typert/protocol"
     },
     {
-      "path": "../../interaction/user-questions"
+      "path": "../gateway/tsconfig.client.json"
     },
     {
       "path": "../session-controller/tsconfig.client.json"
     },
     {
-      "path": "../../typert/protocol"
+      "path": "../settings-controller"
     },
     {
       "path": "../workspace-controller/tsconfig.client.json"
     },
     {
       "path": "../workspace-files/tsconfig.client.json"
-    },
-    {
-      "path": "../../document/office-to-pdf"
-    },
-    {
-      "path": "../settings-controller"
     }
   ]
 }

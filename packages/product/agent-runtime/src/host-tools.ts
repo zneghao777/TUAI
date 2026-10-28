@@ -39,7 +39,7 @@ class WorkspaceFileSystem extends SandboxedFileSystem {
   ): Promise<FsTarget> {
     const exec = toolOwner.getStore()
     const agent = exec?.agent ?? this.ctx.get('agents')?.currentInitiator()
-    const root = realpathSync(agent?.session.header.cwd ?? process.cwd())
+    const root = realpathSync(agent?.session.header.cwd ?? opts?.cwd ?? process.cwd())
     const target = await super.resolve(path, { ...opts, cwd: opts?.cwd ?? root })
     const physical = this.processPath(target)
     const paths = this.ctx.tianzhiaiHost.paths

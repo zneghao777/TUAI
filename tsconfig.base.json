@@ -737,6 +737,112 @@
       ],
       "@deepseek-ai/dsh-tool-session-query/src/*": [
         "./packages/experimental/tool-session-query/src/*"
+      ],
+      "@deepseek-ai/dsh-client-ui-commands": ["./packages/client/ui-commands/src/index.ts"],
+      "@deepseek-ai/dsh-client-ui-commands/client": [
+        "./packages/client/ui-commands/src/client/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-commands/src/*": ["./packages/client/ui-commands/src/*"],
+      "@deepseek-ai/dsh-client-ui-model-selection": [
+        "./packages/client/ui-model-selection/src/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-model-selection/client": [
+        "./packages/client/ui-model-selection/src/client/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-model-selection/src/*": [
+        "./packages/client/ui-model-selection/src/*"
+      ],
+      "@deepseek-ai/dsh-client-ui-reference": ["./packages/client/ui-reference/src/index.ts"],
+      "@deepseek-ai/dsh-client-ui-reference/client": [
+        "./packages/client/ui-reference/src/client/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-reference/src/*": ["./packages/client/ui-reference/src/*"],
+      "@deepseek-ai/dsh-session-reference": ["./packages/context/session-reference/src/index.ts"],
+      "@deepseek-ai/dsh-session-reference/types": [
+        "./packages/context/session-reference/src/types.ts"
+      ],
+      "@deepseek-ai/dsh-session-reference/src/*": ["./packages/context/session-reference/src/*"],
+      "@deepseek-ai/dsh-client-ui-goal": ["./packages/client/ui-goal/src/index.ts"],
+      "@deepseek-ai/dsh-client-ui-goal/client": ["./packages/client/ui-goal/src/client/index.ts"],
+      "@deepseek-ai/dsh-client-ui-goal/src/*": ["./packages/client/ui-goal/src/*"],
+      "@deepseek-ai/dsh-client-ui-message-feedback": [
+        "./packages/client/ui-message-feedback/src/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-message-feedback/client": [
+        "./packages/client/ui-message-feedback/src/client/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-message-feedback/src/*": [
+        "./packages/client/ui-message-feedback/src/*"
+      ],
+      "@deepseek-ai/dsh-client-ui-permission-presets": [
+        "./packages/client/ui-permission-presets/src/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-permission-presets/client": [
+        "./packages/client/ui-permission-presets/src/client/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-permission-presets/src/*": [
+        "./packages/client/ui-permission-presets/src/*"
+      ],
+      "@deepseek-ai/dsh-command-compact": ["./packages/compaction/command-compact/src/index.ts"],
+      "@deepseek-ai/dsh-command-compact/src/*": ["./packages/compaction/command-compact/src/*"],
+      "@deepseek-ai/dsh-experimental-auto-review": [
+        "./packages/experimental/auto-review/src/index.ts"
+      ],
+      "@deepseek-ai/dsh-experimental-auto-review/src/*": [
+        "./packages/experimental/auto-review/src/*"
+      ],
+      "@deepseek-ai/dsh-command-feedback": ["./packages/feedback/command-feedback/src/index.ts"],
+      "@deepseek-ai/dsh-command-feedback/types": [
+        "./packages/feedback/command-feedback/src/types.ts"
+      ],
+      "@deepseek-ai/dsh-command-feedback/src/*": ["./packages/feedback/command-feedback/src/*"],
+      "@deepseek-ai/dsh-message-feedback": ["./packages/feedback/message-feedback/src/index.ts"],
+      "@deepseek-ai/dsh-message-feedback/types": [
+        "./packages/feedback/message-feedback/src/types.ts"
+      ],
+      "@deepseek-ai/dsh-message-feedback/src/*": ["./packages/feedback/message-feedback/src/*"],
+      "@deepseek-ai/dsh-command-goal": ["./packages/goal/command-goal/src/index.ts"],
+      "@deepseek-ai/dsh-command-goal/src/*": ["./packages/goal/command-goal/src/*"],
+      "@deepseek-ai/dsh-goal-round-driver": ["./packages/goal/goal-round-driver/src/index.ts"],
+      "@deepseek-ai/dsh-goal-round-driver/src/*": ["./packages/goal/goal-round-driver/src/*"],
+      "@deepseek-ai/dsh-tool-goal": ["./packages/goal/tool-goal/src/index.ts"],
+      "@deepseek-ai/dsh-tool-goal/src/*": ["./packages/goal/tool-goal/src/*"],
+      "@deepseek-ai/dsh-session-log-export": [
+        "./packages/session-query/session-log-export/src/index.ts"
+      ],
+      "@deepseek-ai/dsh-session-log-export/client": [
+        "./packages/session-query/session-log-export/src/client/index.ts"
+      ],
+      "@deepseek-ai/dsh-session-log-export/src/*": [
+        "./packages/session-query/session-log-export/src/*"
+      ],
+      "@deepseek-ai/dsh-client-ui-user-questions": [
+        "./packages/client/ui-user-questions/src/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-user-questions/client": [
+        "./packages/client/ui-user-questions/src/client/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-user-questions/src/*": [
+        "./packages/client/ui-user-questions/src/*"
+      ],
+      "@deepseek-ai/dsh-client-ui-sidebar-files": [
+        "./packages/client/ui-sidebar-files/src/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-sidebar-files/client": [
+        "./packages/client/ui-sidebar-files/src/client/index.ts"
+      ],
+      "@deepseek-ai/dsh-client-ui-sidebar-files/src/*": [
+        "./packages/client/ui-sidebar-files/src/*"
+      ],
+      "@deepseek-ai/dsh-tool-subagent": ["./packages/subagent/tool-subagent/src/index.ts"],
+      "@deepseek-ai/dsh-tool-subagent/model-selection-settings": [
+        "./packages/subagent/tool-subagent/src/model-selection-settings.ts"
+      ],
+      "@deepseek-ai/dsh-tool-subagent/src/*": ["./packages/subagent/tool-subagent/src/*"],
+      "@deepseek-ai/dsh-message-quotes": ["./packages/session/message-quotes/src/index.ts"],
+      "@deepseek-ai/dsh-message-quotes/src/*": ["./packages/session/message-quotes/src/*"],
+      "@deepseek-ai/dsh-message-quotes/client": [
+        "./packages/session/message-quotes/src/client/index.ts"
       ]
     }
   }

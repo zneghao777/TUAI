@@ -1,3 +1,5 @@
+import { createElement } from 'react'
+import { WorkspacePathsVisible } from './rows/Rows.tsx'
 // Preserve generated Remote declaration merges in this independent compilation face.
 export type {} from '@deepseek-ai/dsh-api-workspace-controller/remote'
 export type {} from '@deepseek-ai/dsh-api-session-controller/remote'
@@ -112,7 +114,8 @@ export const inject = [
  * framework's global hooks.
  * @param ctx - client root context.
  */
-export function apply(ctx: Context): void {
+export interface Config { managedSessions?: boolean }
+export function apply(ctx: Context, config: Config = {}): void {
   const sessions = ctx.get('sessions') as ISessions
   const workspaces = ctx.get('workspaces') as IWorkspaces
   // One viewing-store instance, created here as ui-layout does for its layout
@@ -125,7 +128,7 @@ export function apply(ctx: Context): void {
   let toastSeq = 0
   const notify = (toast: RowToast): void => { rowToast.set({ ...toast, seq: ++toastSeq }) }
   const uiWorkspace = new UiWorkspaceService(
-    ctx, ctx.remote.directoryPicker, workspaces, sessions, viewInstance.actions, notify,
+    ctx, ctx.remote.directoryPicker, workspaces, sessions, viewInstance.actions, notify, config.managedSessions,
   )
   ctx.slots.provideRoot({
     hooks: { workspaces: workspaces.list },
@@ -312,7 +315,7 @@ export function apply(ctx: Context): void {
       inject: browserInjected,
       locale: NS,
     },
-    WorkspaceBrowser,
+    config.managedSessions ? props => createElement(WorkspacePathsVisible.Provider, { value: false }, createElement(WorkspaceBrowser, props)) : WorkspaceBrowser,
   ))
   // The shipped row actions take the same route as a plugin's: `slots.inject`
   // waits for the browser registration above to declare each list, and the
@@ -342,7 +345,7 @@ export function apply(ctx: Context): void {
       children: { 'workspace.toast': { kind: 'keyed', scope: 'root' } },
     }, RowActionToast)
   })
-  ctx.slots.inject('conversation.hero.workspace', () => ctx.slots.register(
+  if (!config.managedSessions) ctx.slots.inject('conversation.hero.workspace', () => ctx.slots.register(
     {
       name: 'conversation.hero.workspace',
       children: { 'conversation.hero.workspace.directoryFlow': { kind: 'single', scope: 'root' } },

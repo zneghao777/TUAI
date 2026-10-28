@@ -10,7 +10,7 @@
       "path": "../../../vendor/cordis"
     },
     {
-      "path": "../../core/agent-default-model"
+      "path": "../../../vendor/schemastery"
     },
     {
       "path": "../../api/gateway/tsconfig.host.json"
@@ -25,13 +25,52 @@
       "path": "../../api/session-controller/tsconfig.host.json"
     },
     {
+      "path": "../../api/settings-controller"
+    },
+    {
+      "path": "../../api/workspace-controller/tsconfig.host.json"
+    },
+    {
+      "path": "../../api/workspace-files/tsconfig.host.json"
+    },
+    {
       "path": "../../client/connection/tsconfig.host.json"
     },
     {
       "path": "../../client/file-upload/tsconfig.host.json"
     },
     {
-      "path": "../../interaction/commands"
+      "path": "../../client/ui-chat/tsconfig.host.json"
+    },
+    {
+      "path": "../../client/ui-conversation/tsconfig.host.json"
+    },
+    {
+      "path": "../../client/ui-theme/tsconfig.host.json"
+    },
+    {
+      "path": "../../compaction/command-compact"
+    },
+    {
+      "path": "../../context/file-reference-local"
+    },
+    {
+      "path": "../../context/session-reference"
+    },
+    {
+      "path": "../../core/agent-default-model"
+    },
+    {
+      "path": "../../feedback/command-feedback"
+    },
+    {
+      "path": "../../feedback/message-feedback"
+    },
+    {
+      "path": "../../goal/command-goal"
+    },
+    {
+      "path": "../../goal/goal"
     },
     {
       "path": "../../host/frontend-static"
@@ -40,10 +79,22 @@
       "path": "../../host/webserver"
     },
     {
+      "path": "../../interaction/commands"
+    },
+    {
+      "path": "../../session-query/session-log-export/tsconfig.host.json"
+    },
+    {
       "path": "../../session-query/session-query-sqlite"
     },
     {
+      "path": "../../session/session-projection-cache"
+    },
+    {
       "path": "../../session/session-title"
+    },
+    {
+      "path": "../../settings/settings"
     },
     {
       "path": "../../storage/storage"
@@ -68,21 +119,6 @@
     },
     {
       "path": "../agent-runtime"
-    },
-    {
-      "path": "../../session/session-projection-cache"
-    },
-    {
-      "path": "../../client/ui-chat/tsconfig.host.json"
-    },
-    {
-      "path": "../../api/settings-controller"
-    },
-    {
-      "path": "../../settings/settings"
-    },
-    {
-      "path": "../../api/workspace-controller/tsconfig.host.json"
     }
   ]
 }

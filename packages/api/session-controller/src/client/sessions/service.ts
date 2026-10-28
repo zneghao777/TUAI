@@ -123,6 +123,7 @@ export { scopeOf } from '../scope.ts'
 function displayTitleOf(title: string | undefined, cwd: string | undefined, id: SessionId): string {
   if (title !== undefined) return title
   if (cwd !== undefined && cwd !== '') {
+    if (/[/\\]data[/\\]workspaces[/\\][A-Za-z0-9._-]+$/.test(cwd)) return '新会话'
     const base = workspaceTitleOf(cwd)
     if (base !== '') return base
   }

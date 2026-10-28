@@ -63,12 +63,20 @@ export const inject = [
 
 /** Conversation runtime configuration. */
 export interface Config {
+  /** Managed workspaces omit directory selection and upstream promotional chrome. */
+  managedWorkspaces?: boolean
+  /** Keep the resident input reachable while a tool waits for human approval. */
+  approvalInput?: boolean
+  persistDraftUploads?: boolean
   /** Maximum generic-file uploads allowed to run concurrently in browser Workers. */
   maxConcurrentFileUploads?: number
 }
 
 /** Validated Conversation runtime configuration. */
 export const Config: z<Config> = z.object({
+  managedWorkspaces: z.boolean().default(false),
+  approvalInput: z.boolean().default(false),
+  persistDraftUploads: z.boolean().default(false),
   maxConcurrentFileUploads: z.natural().min(1).default(2),
 })
 
@@ -358,6 +366,8 @@ export function apply(ctx: Context, config: Config = Config({})): void {
       widthControls: { scope: 'root' },
     },
     inject: (sessionId: SessionId | undefined): ConversationInjected => ({
+      managedWorkspaces: config.managedWorkspaces ?? false,
+      approvalInput: config.approvalInput ?? false,
       hooks: {
         composerBlock: sessionId === undefined ? ABSENT_BLOCK : composerBlocks.storeFor(sessionId),
       },
@@ -588,6 +598,7 @@ export function apply(ctx: Context, config: Config = Config({})): void {
     input: inputHub,
     blocks: composerBlocks,
     maxConcurrentFileUploads,
+    persistDraftUploads: config.persistDraftUploads ?? false,
   })
   ctx.plugin(todoDockEntry)
   ctx.plugin(queueDockEntry)

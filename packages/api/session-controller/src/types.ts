@@ -139,7 +139,7 @@ export interface ModelCatalog {
 export type QueueAction =
   | {
     readonly kind: 'edit'
-    /** Non-empty text-only replacement content. */
+    /** Non-empty replacement text; Host retains already-admitted non-text blocks. */
     readonly content: readonly TextBlock[]
   }
   | { readonly kind: 'remove' }

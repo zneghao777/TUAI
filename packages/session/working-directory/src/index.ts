@@ -134,7 +134,7 @@ export class WorkingDirectoryService extends Service {
   ensure(agent: Agent, signal?: AbortSignal): Promise<string> {
     return this.serialize(agent, signal, async (control) => {
       const current = this.get(agent.session)
-      const target = await this.ctx.fs.resolve(current, { signal: control })
+      const target = await this.ctx.fs.resolve(current, { cwd: agent.session.header.cwd ?? this.defaultDirectory, signal: control })
       const info = await this.ctx.fs.stat(target, control)
       control.throwIfAborted()
       agent.ctx.fiber.assertActive()

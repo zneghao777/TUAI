@@ -65,6 +65,18 @@
     "@deepseek-ai/dsh-api-settings-controller": "workspace:*",
     "@deepseek-ai/dsh-settings": "workspace:*",
     "@deepseek-ai/dsh-client-ui-chat": "workspace:*",
-    "@deepseek-ai/dsh-api-workspace-controller": "workspace:*"
+    "@deepseek-ai/dsh-api-workspace-controller": "workspace:*",
+    "@deepseek-ai/dsh-api-workspace-files": "workspace:*",
+    "@deepseek-ai/dsh-client-ui-conversation": "workspace:*",
+    "@deepseek-ai/dsh-client-ui-theme": "workspace:*",
+    "@deepseek-ai/dsh-session-reference": "workspace:*",
+    "@deepseek-ai/dsh-file-reference-local": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:*",
+    "@deepseek-ai/dsh-command-compact": "workspace:*",
+    "@deepseek-ai/dsh-command-goal": "workspace:*",
+    "@deepseek-ai/dsh-session-log-export": "workspace:*",
+    "@deepseek-ai/dsh-command-feedback": "workspace:*",
+    "@deepseek-ai/dsh-message-feedback": "workspace:*",
+    "@deepseek-ai/dsh-goal": "workspace:*"
   }
 }

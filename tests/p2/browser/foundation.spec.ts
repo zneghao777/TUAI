@@ -11,8 +11,8 @@ test('DSH Slot 切换隔离草稿，快捷键只创建一次且尊重弹窗', as
   })
   try {
     await page.goto(host.login)
-    const input = page.getByRole('textbox', { name: '消息', exact: true })
-    const create = page.getByRole('button', { name: /新会话/ }).first()
+    const input = page.locator('[contenteditable="true"][role="textbox"]')
+    const create = page.getByRole('button', { name: /新(?:建)?会话/ }).first()
     await expect(input).toBeVisible()
     const first = await page
       .locator('[data-session-id][aria-current=page]')
@@ -24,11 +24,11 @@ test('DSH Slot 切换隔离草稿，快捷键只创建一次且尊重弹窗', as
       await expect(create).toBeEnabled()
       await page.keyboard.press(shortcut)
       await expect(page.locator('[data-session-id]')).toHaveCount(count + 1)
-      await expect(input).toHaveValue('')
+      await expect(input).toHaveText('')
       await input.fill(`另一会话草稿 ${round}`)
     }
     await page.locator(`[data-session-id="${first}"]`).click()
-    await expect(input).toHaveValue('第一个会话的草稿')
+    await expect(input).toHaveText('第一个会话的草稿')
     await page.getByRole('button', { name: '设置', exact: true }).click()
     await expect(page.getByRole('dialog')).toBeVisible()
     const count = await page.locator('[data-session-id]').count()
@@ -37,7 +37,7 @@ test('DSH Slot 切换隔离草稿，快捷键只创建一次且尊重弹窗', as
     await expect(page.locator('[data-session-id]')).toHaveCount(count)
     await page.getByRole('button', { name: '关闭', exact: true }).click()
     await page.reload()
-    await expect(input).toHaveValue('第一个会话的草稿')
+    await expect(input).toHaveText('第一个会话的草稿')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
     await expect(
       page.locator(

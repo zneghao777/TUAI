@@ -91,6 +91,7 @@ test(
       const agent = ctx.agents.get(a),
         other = ctx.agents.get(b)
       const cwd = agent.session.header.cwd
+      ctx.permissionPresets.set(agent.session, 'readonly')
       const denied = await call(ctx, agent, 'write', { file_path: 'sample.txt', content: 'before' })
       assert.equal(denied.isError, true, text(denied))
       ctx.permissionPresets.set(agent.session, 'workspace-write')

@@ -1,3 +1,5 @@
+import { createContext, useContext } from 'react'
+export const WorkspacePathsVisible = createContext(true)
 /**
  * Workspace browser tree row components (figma Cell set 14:3080): pure presentational —
  * all data and callbacks arrive via props. Hover swaps (folder->chevron,
@@ -274,6 +276,7 @@ function ProjectRow({
   group, containsCurrentDescendant = false, onToggle, onCreate, actions, drag: offeredDrag, home, newShortcut, t, access,
 }: ProjectRowItemProps & { access: ProjectRowAccess }) {
   const drag = access.reorder ? offeredDrag : undefined
+  const pathsVisible = useContext(WorkspacePathsVisible)
   const row = group
   // The ungrouped bucket has no workspace title: its label is dictionary copy.
   const label = row.workspaceId === undefined ? t('group.ungrouped') : row.label
@@ -363,14 +366,14 @@ function ProjectRow({
       anchor={ownRow}
       content={<WorkspaceHoverContent
         label={row.label}
-        cwd={row.cwd === undefined ? undefined : abbreviateHomePath(row.cwd, home)}
+        cwd={!pathsVisible || row.cwd === undefined ? undefined : abbreviateHomePath(row.cwd, home)}
         createdAt={row.createdAt}
         t={t}
       />}
       openDelayMs={800}
       grouped
       disabled={menuOpen}
-      copyText={row.cwd}
+      copyText={pathsVisible ? row.cwd : undefined}
       copyLabel={t('copy')}
       copiedLabel={t('hover.copied')}
     />
@@ -628,6 +631,7 @@ export function SessionNodeItem({
   | 'sidebar.session.row.leading'
   | 'sidebar.session.row.hover'
 >) {
+  const pathsVisible = useContext(WorkspacePathsVisible)
   const row = node
   const title = displayTitle(node, t)
   const selected = node.id === currentId
@@ -664,6 +668,8 @@ export function SessionNodeItem({
     <div
       ref={rowRef}
       data-row-key={`session:${node.id}`}
+      data-session-id={node.id}
+      aria-current={selected ? 'page' : undefined}
       className={clsx(
         css.sessionRow, selected && css.selected, menuOpen && css.menuOpen,
         row.archived && css.archived,
@@ -791,7 +797,7 @@ export function SessionNodeItem({
       anchor={ownRow}
       content={<SessionHoverContent
         node={node}
-        cwd={row.cwd === undefined ? undefined : abbreviateHomePath(row.cwd, home)}
+        cwd={!pathsVisible || row.cwd === undefined ? undefined : abbreviateHomePath(row.cwd, home)}
         now={now}
         renderSlot={renderSlot}
         t={t}

@@ -1,3 +1,6 @@
+import { reserveInput, finishInput, pendingInputs } from './submission-journal.ts'
+import { brandString } from '@deepseek-ai/dsh-brand'
+import type { FileUploadReceiptId } from '@deepseek-ai/dsh-client-file-upload/client'
 /**
  * Scope-addressed conversation send, cancel, and history orchestration.
  *
@@ -14,12 +17,12 @@ import { randomUUID } from '@deepseek-ai/dsh-util-crypto'
 // error, so scope resolution goes through the sessions service (scopeOf
 // method) instead of the standalone helper.
 import type {
-  ISessions, PendingSubmissionRetirement, SessionFace,
+  ISessions, PendingSubmissionAttachment, PendingSubmissionRetirement, SessionFace,
 } from '@deepseek-ai/dsh-api-session-controller/client'
 import type {} from '@deepseek-ai/dsh-client-file-upload/client'
 import type { SessionId } from '@deepseek-ai/dsh-session/types'
 import type { FileAttachmentRef, ImageMediaType } from '@deepseek-ai/dsh-attachment'
-import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
+import { createSnapshotStore, scopedPersistenceKey } from '@deepseek-ai/dsh-client-store'
 import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
 import type {
   ComposerAttachment, ComposerFileAttachment, ComposerImageAttachment, DraftFileUpload,
@@ -169,6 +172,8 @@ export class ConversationController extends Service implements IConversation {
   }> = []
   private activeFileUploads = 0
   private readonly maxConcurrentFileUploads: number
+  private readonly persistDraftUploads: boolean
+  private readonly recoveredDrafts = new Set<DraftAttachmentId>()
 
   /**
    * @param ctx - owning root context (the plugin apply context; the service
@@ -181,11 +186,13 @@ export class ConversationController extends Service implements IConversation {
     input: SessionInputResolver
     blocks: ComposerBlocks
     maxConcurrentFileUploads: number
+    persistDraftUploads?: boolean
   }) {
     super(ctx, 'conversation')
     this.input = config.input
     this.blocks = config.blocks
     this.maxConcurrentFileUploads = config.maxConcurrentFileUploads
+    this.persistDraftUploads = config.persistDraftUploads ?? false
     ctx.effect(() => async () => {
       const operations = [...this.fileUploadOperations.values()]
       for (const operation of operations) operation.controller.abort()
@@ -246,13 +253,15 @@ export class ConversationController extends Service implements IConversation {
       return upload
     }
     // A file draft's upload always stores a file; only image drafts store an image.
-    const storedFileOf = (attachment: ComposerFileAttachment): FileAttachmentRef =>
-      (uploadFor(attachment) as Extract<DraftFileUpload, { readonly file: FileAttachmentRef }>).file
+    const storedFileOf = (attachment: ComposerFileAttachment): FileAttachmentRef | undefined => {
+      const upload = uploadFor(attachment)
+      return 'file' in upload ? upload.file : undefined
+    }
     // An image draft without an upload, such as a subagent continuation's, sends its bytes inline.
     const imageReceipts = new Map(attachments.flatMap(attachment => attachment.kind === 'image'
       && uploads[attachment.id] !== undefined ? [[attachment.id, uploadFor(attachment).receiptId] as const] : []))
-    const pendingAttachments = attachments.map(attachment => attachment.kind === 'image'
-      ? {
+    const pendingAttachments = attachments.flatMap<PendingSubmissionAttachment>(attachment => attachment.kind === 'image'
+      ? [{
         type: 'image' as const,
         value: {
           previewUrl: attachment.previewUrl,
@@ -260,8 +269,11 @@ export class ConversationController extends Service implements IConversation {
           ...(attachment.width === undefined ? {} : { width: attachment.width }),
           ...(attachment.height === undefined ? {} : { height: attachment.height }),
         },
-      }
-      : { type: 'file' as const, value: storedFileOf(attachment) })
+      }]
+      : (() => {
+        const value = storedFileOf(attachment)
+        return value === undefined ? [] : [{ type: 'file' as const, value }]
+      })())
     const serializeAttachments = (): Promise<Parameters<SessionFace['prompt']>[0]> => Promise.all(
       attachments.map(async (attachment) => {
         if (attachment.kind === 'file') return { type: 'file' as const, receiptId: uploadFor(attachment).receiptId }
@@ -275,7 +287,9 @@ export class ConversationController extends Service implements IConversation {
     const retirement = attachments.length === 0
       ? undefined
       : new Promise<PendingSubmissionRetirement>((resolve) => { finishRetirement = resolve })
+    const journalId = this.persistDraftUploads ? reserveInput(session.sessionId, text, mode, attachmentIds) : undefined
     const submission = session.beginSubmission({
+      ...(journalId === undefined ? {} : { requestId: journalId }),
       mode,
       text,
       attachments: pendingAttachments,
@@ -288,14 +302,29 @@ export class ConversationController extends Service implements IConversation {
     try {
       await nextPaint()
       const uploaded = await serializeAttachments()
-      content = [...uploaded, ...(text === '' ? [] : [{ type: 'text' as const, text }])]
+      const textParts = text === '' ? [] : [{ type: 'text' as const, text }]
+      content = pendingInputs(session.sessionId).find(row => row.requestId === journalId)?.textFirst
+        ? [...textParts, ...uploaded] : [...uploaded, ...textParts]
     } catch (error) {
       submission.abandon()
       throw error
     }
-    const result = await session.prompt(content, mode, signal, submission.requestId)
-    if (!result.ok) return { kind: 'error' }
-    if (retirement !== undefined && (await retirement).reason !== 'observed') return { kind: 'error' }
+    let result = await session.prompt(content, mode, signal, submission.requestId)
+    // Prompt admission is idempotent by requestId. Retry only the uncertain carrier branch once.
+    if (journalId !== undefined && !result.ok && result.error.code === 'gateway/internal' && !signal?.aborted)
+      result = await session.prompt(content, mode, signal, submission.requestId)
+    if (!result.ok) {
+      const uncertain = ['gateway/internal', 'gateway/cancelled'].includes(result.error.code)
+      if (journalId !== undefined && !uncertain) finishInput(session.sessionId, journalId)
+      return { kind: 'error', text: uncertain ? '发送状态尚未确认，请检查连接后再次发送；原请求身份已保留。' : `${result.error.message}。Host 已拒绝，请编辑后重新提交。` }
+    }
+    if (journalId !== undefined) finishInput(session.sessionId, journalId)
+    if (retirement !== undefined && (await retirement).reason !== 'observed') {
+      if (journalId === undefined) return { kind: 'error' }
+      // The same request was admitted on retry after its first echo retired.
+      // Canonical references now own the bytes; release draft resources once.
+      for (const attachment of attachments) this.releaseDraftAttachment(attachment.id)
+    }
     return { kind: 'success' }
   }
 
@@ -332,12 +361,54 @@ export class ConversationController extends Service implements IConversation {
     })
   }
 
+  /** Persist receipt identities, never browser file bytes or Host credentials. */
+  trackDraftFiles(sessionId: SessionId, source: { getSnapshot(): { attachmentIds: readonly DraftAttachmentId[] }; subscribe(fn: () => void): () => void }): () => void {
+    if (!this.persistDraftUploads || typeof localStorage === 'undefined') return () => {}
+    const key = scopedPersistenceKey(`dsh.draft-files.${sessionId}`)
+    const save = () => {
+      const uploads = this.fileUploads.getSnapshot()
+      const records = source.getSnapshot().attachmentIds.flatMap(id => {
+        const attachment = this.draftAttachments.get(id)
+        if (!attachment) return []
+        const upload = uploads[id]
+        return [{ id, name: attachment.file.name, ...(upload?.status === 'ready' ? { receiptId: upload.receiptId } : {}) }]
+      })
+      try { localStorage.setItem(key, JSON.stringify(records)) } catch { /* Storage quota cannot discard the live draft. */ }
+    }
+    const stopInput = source.subscribe(save)
+    const stopUpload = this.fileUploads.subscribe(save)
+    save()
+    return () => { save(); stopInput(); stopUpload() }
+  }
+
+  /** A receipt is reauthorized by the Host on send; an interrupted upload must be picked again. */
+  restoreDraftFiles(sessionId: SessionId): readonly DraftAttachmentId[] {
+    if (!this.persistDraftUploads || typeof localStorage === 'undefined') return []
+    try {
+      const rows: unknown = JSON.parse(localStorage.getItem(scopedPersistenceKey(`dsh.draft-files.${sessionId}`)) ?? '[]')
+      if (!Array.isArray(rows) || rows.length > 64) return []
+      return rows.flatMap((row: unknown) => {
+        if (typeof row !== 'object' || row === null || !('id' in row) || typeof row.id !== 'string'
+          || !('name' in row) || typeof row.name !== 'string' || row.name.length > 512) return []
+        const id = brandString<DraftAttachmentId>(row.id)
+        this.draftAttachments.set(id, { kind: 'file', id, file: new File([], row.name) })
+        this.recoveredDrafts.add(id)
+        const state: DraftFileUpload = 'receiptId' in row && typeof row.receiptId === 'string'
+          ? { status: 'ready', receiptId: brandString<FileUploadReceiptId>(row.receiptId) }
+          : { status: 'error', message: '上传未完成，请移除此项并重新选择文件' }
+        this.fileUploads.update(draft => { draft[id] = state })
+        return [id]
+      })
+    } catch { return [] }
+  }
+
   /**
    * Restart one failed file or image upload.
    * @param sessionId - target Agent-scope identity.
    * @param id - draft attachment id whose upload previously failed.
    */
   retryFileUpload(sessionId: SessionId, id: DraftAttachmentId): void {
+    if (this.recoveredDrafts.has(id)) return
     const attachment = this.draftAttachments.get(id)
     if (attachment === undefined) return
     if (this.fileUploads.getSnapshot()[id]?.status !== 'error') return

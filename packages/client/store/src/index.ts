@@ -100,13 +100,18 @@ function rafBatch(notify: () => void): () => void {
  * @param opts - flush mode and opt-in persistence (localStorage, keyed by name).
  * @returns the store.
  */
+let persistenceScope = ''
+/** Set before mounting one product Host; existing stores retain their captured keys. */
+export function setPersistenceScope(scope: string): void { persistenceScope = scope }
+export function scopedPersistenceKey(name: string): string { return persistenceScope ? `${persistenceScope}:${name}` : name }
+
 export function createSnapshotStore<T>(
   init: T, opts?: { flush?: 'raf' | 'sync'; persist?: { name: string } }): SnapshotStore<T> {
   // Immer enters through produce() in update() below (identical semantics to
   // the immer middleware without its setState-signature mutator generics).
   const withSelector = subscribeWithSelector(() => init)
   const api: StoreApi<T> = createStore<T>()(withSelector)
-  if (opts?.persist) attachPersistence(api, opts.persist.name)
+  if (opts?.persist) attachPersistence(api, scopedPersistenceKey(opts.persist.name))
 
   let subscribe = (fn: () => void) => api.subscribe(() => {
     notifySubscribers([fn], '[client-store]')
@@ -222,6 +227,7 @@ export function defineStore<T, A extends ActionsDecl<T>>(
       const persistKey = decl.persist === undefined
         ? undefined
         : scopeKey === undefined ? decl.persist : `${decl.persist}.${scopeKey}`
+      const storageKey = persistKey === undefined ? undefined : scopedPersistenceKey(persistKey)
       const store = createSnapshotStore<T>(
         decl.init(),
         persistKey !== undefined ? { persist: { name: persistKey } } : undefined)
@@ -238,7 +244,7 @@ export function defineStore<T, A extends ActionsDecl<T>>(
         clearPersisted: () => {
           if (persistKey === undefined || typeof localStorage === 'undefined') return
           try {
-            localStorage.removeItem(persistKey)
+            localStorage.removeItem(storageKey ?? persistKey)
           } catch {
             // Storage failures (private mode, quota teardown races) only skip
             // cleanup — the same non-fatal contract as attachPersistence.

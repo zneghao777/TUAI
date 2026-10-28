@@ -74,11 +74,13 @@
    `hidden="until-found"` retains a searchable zero-height box; hidden and empty
    Seats do not contribute spacing. The older-history control precedes the anchor;
    an ancestor :has() here also invalidates the history on unrelated descendant edits. */
-:is(.column, :global([data-slot="conversation.chat.flow"])) > :not([hidden]):not(.textInteraction):not(.flowItem:is(:empty, :has(> [data-slot="conversation.chat.node"]:empty)))
-  ~ :not([hidden]):not(.textInteraction):not(.flowItem:is(:empty, :has(> [data-slot="conversation.chat.node"]:empty))),
-.column > .older + :global([data-slot="conversation.chat.flow"])
-  > :not([hidden]):not(.textInteraction):not(.flowItem:is(:empty, :has(> [data-slot="conversation.chat.node"]:empty))) {
-  margin-top: var(--dsh-chat-flow-gap, 4px);
+:is(.column, :global([data-slot="conversation.chat.flow"])) > :not([hidden]):not(.textInteraction):not(.flowItem:is(:empty, :has(> [data-slot="conversation.chat.node"]:empty))) { margin-top: var(--dsh-chat-flow-gap, 4px); }
+:is(.column, :global([data-slot="conversation.chat.flow"])) > :first-child { margin-top: 0; }
+/* Retain every historical row for browser find/navigation, but avoid laying
+   out off-screen user bubbles again on each streamed mutation. */
+.flowItem[data-chat-flow-kind="user"] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 72px;
 }
 
 /* Process rows sit 4px apart; an Assistant response is separated from its

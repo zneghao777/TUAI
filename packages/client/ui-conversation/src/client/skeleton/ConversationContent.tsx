@@ -21,7 +21,7 @@ function NoConversationWidthControls() {
  */
 export function ConversationContent(props: ConversationContentProps) {
   const {
-    sessionId, phase, hero, useSession, useSessions, useSessionStatus,
+    managedWorkspaces, approvalInput, sessionId, phase, hero, useSession, useSessions, useSessionStatus,
     useWorkspaces, useInput, useComposerBlock, renderSlot, renderSlotChain,
     selectWorkspace, t, useFactorySlot,
   } = props
@@ -163,17 +163,18 @@ export function ConversationContent(props: ConversationContentProps) {
 
   const composerBar = (
     <div className={clsx(css.composerStack, hero && css.composerHero)}>
-      {hero && <HeroShell t={t} renderSlot={renderSlot} />}
-      {hero && heroWorkspaceRow}
+      {hero && !managedWorkspaces && <HeroShell t={t} renderSlot={renderSlot} />}
+      {hero && !managedWorkspaces && heroWorkspaceRow}
       {zone !== undefined && renderSlot('conversation.input.dock', zone)}
       {inputBar}
     </div>
   )
 
+  const inlineApproval = approvalInput === true && pendingInteraction?.kind === 'approval'
   const composer = renderSlotChain(
     'conversation.composer',
     { sessionId, session, pendingInteraction },
-    { fallback: composerBar, fallbackOnly: sessionId === undefined, overlay: true },
+    { fallback: composerBar, fallbackOnly: sessionId === undefined, overlay: !inlineApproval },
   )
 
   // Sticky wraps the whole chain output (fallback + elected overlay), not
@@ -183,6 +184,7 @@ export function ConversationContent(props: ConversationContentProps) {
   const composerSeat = (
     <div ref={seatResizeRef} className={css.composerSeat} data-composer-seat="" data-conversation-region="composer">
       {composer}
+      {inlineApproval && composerBar}
     </div>
   )
 
