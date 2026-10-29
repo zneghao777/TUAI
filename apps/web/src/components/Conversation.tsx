@@ -23,7 +23,7 @@ export function Conversation({ binding, client }: { binding: SessionBinding; cli
     getItemKey: (index) => rootRows[index].id,
     overscan: 6,
   })
-  const olderAnchor = useRef<{ key: string; offset: number }>()
+  const olderAnchor = useRef<{ key: string; offset: number } | undefined>(undefined)
   useLayoutEffect(() => {
     if (olderAnchor.current) {
       const target = rootRows.findIndex((r) => r.id === olderAnchor.current!.key)

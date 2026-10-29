@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 // Shared IconActions chrome for user and assistant messages: copy
 // live, optional branch wiring, and an optional date-aware clock.
 
@@ -58,15 +59,15 @@ export function MessageIconActions({
     <div className={className === undefined ? css.actions : `${css.actions} ${className}`} data-clock={clock}>
       {clock === 'start' ? clockEl : null}
       <Tooltip label={copied ? t('copied') : t('copy')} side="bottom">
-        <button type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
+        <ActionButton type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
           {copied ? <IconCheckOutlineRegular /> : <IconCopyOutlineRegular />}
-        </button>
+        </ActionButton>
       </Tooltip>
       {extraActions}
       {onBranch !== undefined && (
         <Tooltip label={branchUnavailable ? t('message.branchUnavailable') : t('message.branch')} side="bottom" openOnClick={branchUnavailable}>
           {/* Native disabled buttons do not deliver the hover/focus events Tooltip needs. */}
-          <button
+          <ActionButton
             type="button"
             className={css.action}
             aria-label={t('message.branch')}
@@ -76,7 +77,7 @@ export function MessageIconActions({
             onClick={branchUnavailable ? undefined : onBranch}
           >
             <IconBranchOutlineRegular />
-          </button>
+          </ActionButton>
         </Tooltip>
       )}
       {onBranch !== undefined && branchUnavailable && (

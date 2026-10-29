@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The feedback dialog and its acknowledgement and failure toasts, rendered as one entry
  * of `conversation.input.overlay` so each Session owns exactly one of each.
@@ -102,7 +103,7 @@ export function FeedbackDialog({
       >
         <div className={css.categories} role="group" aria-label={t('dialog.categories')}>
           {CATEGORIES.map(category => (
-            <button
+            <ActionButton
               key={category}
               type="button"
               className={state.category === category ? `${css.chip} ${css.chipActive}` : css.chip}
@@ -111,7 +112,7 @@ export function FeedbackDialog({
               onClick={() => { edit({ category: state.category === category ? null : category }) }}
             >
               {t(`category.${category}`)}
-            </button>
+            </ActionButton>
           ))}
         </div>
         <textarea

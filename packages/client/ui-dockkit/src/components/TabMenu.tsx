@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The per-tab context menu, opened by a secondary press on the chip. It carries
  * the close gesture and whatever the embedder appends; the copy and float
@@ -112,9 +113,9 @@ export function TabMenu({ labels, anchor, onClose, onDismiss, extras }: TabMenuP
       onAuxClick={(event) => { event.stopPropagation() }}
     >
       {onClose !== undefined && (
-        <button type="button" role="menuitem" className={css.menuItem} data-dockkit-menu-close onClick={onClose}>
+        <ActionButton type="button" role="menuitem" className={css.menuItem} data-dockkit-menu-close onClick={onClose}>
           {labels.closeTab}
-        </button>
+        </ActionButton>
       )}
       {/* Embedder items last: the kit's own item is the same in every menu, so
           a reader looks for it in the same place every time. */}

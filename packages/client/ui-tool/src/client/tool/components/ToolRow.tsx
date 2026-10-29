@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import { memo, useCallback, useMemo, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
 import clsx from 'clsx'
 import {
@@ -214,14 +215,14 @@ export const ToolRow = memo(function ToolRow({
     <>
       <span className={css.sep} data-shimmer-decoration aria-hidden />
       {exitLabel === null && openFile !== undefined ? (
-        <button
+        <ActionButton
           type="button"
           className={css.fileLink}
           onClick={openFile}
           onKeyDown={summaryLinkKeyDown}
         >
           <TextShimmer>{summaryText}</TextShimmer>
-        </button>
+        </ActionButton>
       ) : exitLabel === null && linkHref !== undefined ? (
         <a
           className={css.fileLink}
@@ -355,14 +356,14 @@ export const ToolRow = memo(function ToolRow({
                         </>
                       )}
       {inspect !== undefined && (
-        <button
+        <ActionButton
           type="button"
           className={css.inspectButton}
           onClick={inspect}
         >
           <IconInspectOutlineRegular />
           {t('row.inspect')}
-        </button>
+        </ActionButton>
       )}
     </div>
   ) : undefined, [

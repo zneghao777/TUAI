@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * Per-message feedback controls: the Like/Dislike pair inside the assistant
  * message's IconActions row, between copy and branch. Either rating opens the
@@ -82,7 +83,7 @@ function FeedbackRatingButtons({
   return (
     <>
       <Tooltip label={likeLabel} side="bottom">
-        <button
+        <ActionButton
           type="button"
           className={css.action}
           aria-label={likeLabel}
@@ -94,10 +95,10 @@ function FeedbackRatingButtons({
           onClick={onLike}
         >
           {rating === 'positive' ? <IconLikeFillRegular /> : <IconLikeOutlineRegular />}
-        </button>
+        </ActionButton>
       </Tooltip>
       <Tooltip label={dislikeLabel} side="bottom">
-        <button
+        <ActionButton
           type="button"
           className={css.action}
           aria-label={dislikeLabel}
@@ -109,7 +110,7 @@ function FeedbackRatingButtons({
           onClick={onDislike}
         >
           {rating === 'negative' ? <IconDislikeFillRegular /> : <IconDislikeOutlineRegular />}
-        </button>
+        </ActionButton>
       </Tooltip>
       {failure === null && loadFailed && (
         <span className={css.failure} role="status">{t('error.load')}</span>

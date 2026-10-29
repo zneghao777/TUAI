@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * Font-size preference row: title + role description + stepper pill (centered value; hover
  * reveals the up/down arrow column anchored to the pill's right edge) + a px
@@ -59,7 +60,7 @@ export function FontSizeRow({ t, role, setFontSize, useStore, expander }: FontSi
         <div className={css.stepper}>
           <span className={css.value}>{fontSize}</span>
           <span className={css.arrows}>
-            <button
+            <ActionButton
               type="button"
               className={css.arrow}
               aria-label={t(`fontSize.${role}.increase`)}
@@ -67,8 +68,8 @@ export function FontSizeRow({ t, role, setFontSize, useStore, expander }: FontSi
               onClick={() => { setFontSize(fontSize + 1) }}
             >
               <IconChevronUpOutlineRegular size={9} />
-            </button>
-            <button
+            </ActionButton>
+            <ActionButton
               type="button"
               className={css.arrow}
               aria-label={t(`fontSize.${role}.decrease`)}
@@ -76,12 +77,12 @@ export function FontSizeRow({ t, role, setFontSize, useStore, expander }: FontSi
               onClick={() => { setFontSize(fontSize - 1) }}
             >
               <IconChevronDownOutlineRegular size={9} />
-            </button>
+            </ActionButton>
           </span>
         </div>
         <span className={css.unit}>{t('fontSize.unit')}</span>
         {expander !== undefined && (
-          <button
+          <ActionButton
             type="button"
             className={css.expander}
             aria-label={t('fontSize.more')}
@@ -91,7 +92,7 @@ export function FontSizeRow({ t, role, setFontSize, useStore, expander }: FontSi
             onClick={expander.onToggle}
           >
             <IconChevronDownOutlineRegular size={12} />
-          </button>
+          </ActionButton>
         )}
       </div>
     </div>

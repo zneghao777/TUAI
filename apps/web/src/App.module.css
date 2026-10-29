@@ -1253,7 +1253,7 @@
   transition: none;
 }
 .settingsNav .button[aria-current='page'] {
-  background: #e6ebf1;
+  background: var(--mist);
   color: var(--accent-pressed);
   font-weight: 600;
 }
@@ -1330,7 +1330,7 @@
   flex: none;
 }
 .providerActions .button {
-  background: #fff;
+  background: var(--glass);
   border: 1px solid var(--line);
 }
 .settingsContent .addProvider {

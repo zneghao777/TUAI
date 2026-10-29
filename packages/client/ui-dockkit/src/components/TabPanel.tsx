@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * One pane: its tab strip (drag source, drop target, split control) and the
  * active tab's body with the dock preview overlay. Presentational; every gesture
@@ -373,7 +374,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
                 <TabTitle>{callbacks.renderTabTitle?.(tab) ?? tab.title}</TabTitle>
                 {closable && (
                   <Tooltip disabled={menu !== undefined} label={callbacks.labels.closeTab} shortcutKeys={callbacks.labels.closeTabKeys} side="bottom" delayMs={500}>
-                    <button
+                    <ActionButton
                       type="button"
                       className={css.tabClose}
                       aria-label={callbacks.labels.closeTab}
@@ -388,7 +389,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
                       }}
                     >
                       <IconCloseFillRegular size={14} />
-                    </button>
+                    </ActionButton>
                   </Tooltip>
                 )}
                 {menu?.tabId === tabId && (
@@ -408,7 +409,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
       </div>
       {callbacks.canAddTab(pane.id) && (
         <Tooltip label={callbacks.labels.addTab} side="bottom" delayMs={500}>
-          <button
+          <ActionButton
             type="button"
             className={css.addTab}
             aria-label={callbacks.labels.addTab}
@@ -419,7 +420,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
             }}
           >
             <IconPlusOutlineRegular size={14} />
-          </button>
+          </ActionButton>
         </Tooltip>
       )}
       <div className={css.stripFill} data-dockkit-strip-fill />
@@ -430,7 +431,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
             aria-label={block === undefined ? undefined : splitBlockedTitle(callbacks.labels, block)}
             onClick={(event) => { if (block !== undefined) event.stopPropagation() }}
           >
-            <button
+            <ActionButton
               type="button"
               className={css.iconButton}
               aria-label={callbacks.labels.splitPane}
@@ -444,7 +445,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
               }}
             >
               <SplitGlyph />
-            </button>
+            </ActionButton>
           </span>
         </Tooltip>
       )}

@@ -44,8 +44,8 @@
     "@deepseek-ai/cordis": "workspace:~",
     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
     "@types/use-sync-external-store": "^1.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "use-sync-external-store": "1.6.0"
   },
   "files": [
@@ -57,7 +57,7 @@
   "dependencies": {
     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
     "use-sync-external-store": "1.6.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

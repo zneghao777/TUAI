@@ -9,7 +9,7 @@ describe('Switch', () => {
   it('exposes its state and its caller-owned name to assistive technology', () => {
     render(<Switch checked label="Subagent model selection" onChange={() => {}} />)
     const control = screen.getByRole('switch', { name: 'Subagent model selection' })
-    expect(control.getAttribute('aria-checked')).toBe('true')
+    expect((control as HTMLInputElement).checked).toBe(true)
   })
 
   it('reports the state the click asks for, not the state it has', () => {
@@ -28,14 +28,14 @@ describe('Switch', () => {
     const onChange = vi.fn()
     render(<Switch checked={false} disabled label="Toggle" onChange={onChange} />)
     const control = screen.getByRole('switch')
-    expect((control as HTMLButtonElement).disabled).toBe(true)
+    expect((control as HTMLInputElement).disabled).toBe(true)
     fireEvent.click(control)
     expect(onChange).not.toHaveBeenCalled()
   })
 
   it('carries a lock reason as the hover title when the owner names one', () => {
     render(<Switch checked={false} disabled label="Toggle" title="Managed by policy" onChange={() => {}} />)
-    expect(screen.getByRole('switch').getAttribute('title')).toBe('Managed by policy')
+    expect(screen.getByRole('switch').closest('[data-slot=switch]')?.getAttribute('title')).toBe('Managed by policy')
   })
 
   it('never submits a surrounding form', () => {
@@ -48,7 +48,7 @@ describe('Switch', () => {
   it('keeps a caller class alongside its own so a render site can place it', () => {
     render(<Switch checked={false} className="placed" label="Toggle" onChange={() => {}} />)
     const control = screen.getByRole('switch')
-    expect(control.classList.contains('placed')).toBe(true)
-    expect(control.classList.length).toBeGreaterThan(1)
+    expect(control.closest('[data-slot=switch]')?.classList.contains('placed')).toBe(true)
+    expect(control.closest('[data-slot=switch]')?.classList.length).toBeGreaterThan(1)
   })
 })

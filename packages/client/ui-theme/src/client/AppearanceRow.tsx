@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * Appearance preference row registered into the General section item slot
  * (figma 501:30012 'Frame 2117131228'): title + three preference cubes.
@@ -46,7 +47,7 @@ export function AppearanceRow({ t, setTheme, useStore }: AppearanceRowComponentP
       <div className={css.title}>{t('appearance.title')}</div>
       <div className={css.cubeRow}>
         {CUBES.map(({ id, labelKey, Icon }) => (
-          <button
+          <ActionButton
             key={id}
             type="button"
             className={clsx(css.themeCube, preference === id && css.selected)}
@@ -55,7 +56,7 @@ export function AppearanceRow({ t, setTheme, useStore }: AppearanceRowComponentP
           >
             <Icon />
             {t(labelKey)}
-          </button>
+          </ActionButton>
         ))}
       </div>
     </div>

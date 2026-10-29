@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+import { Spinner } from '@heroui/react'
 import type { PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import { FileTypeIcon, IconRefreshOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ArtifactInfo } from '@tianzhiai/web-host/types'
@@ -45,9 +47,13 @@ export function mountArtifactPane(client: AppClient) {
           }
           return (
             <>
-              <button className="tz-pane-action" disabled={busy} onClick={() => void download()}>
+              <ActionButton
+                className="tz-pane-action"
+                disabled={busy}
+                onClick={() => void download()}
+              >
                 下载文件
-              </button>
+              </ActionButton>
               {error && <span role="alert">{error}</span>}
             </>
           )
@@ -74,9 +80,12 @@ export function mountArtifactPane(client: AppClient) {
   ctx.effect(() =>
     ctx.slots.inject('sidebar.right.tab.files.actions', () =>
       ctx.slots.register({ name: 'sidebar.right.tab.files.actions', id: key }, () => (
-        <button className="tz-pane-action" onClick={() => ctx.sidebarRight.openTab('artifacts')}>
+        <ActionButton
+          className="tz-pane-action"
+          onClick={() => ctx.sidebarRight.openTab('artifacts')}
+        >
           会话产物
-        </button>
+        </ActionButton>
       )),
     ),
   )
@@ -135,16 +144,19 @@ export function mountArtifactPane(client: AppClient) {
           }
           return (
             <section className="tz-artifacts" aria-label="会话产物">
-              <button
+              <ActionButton
                 className="tz-pane-action"
                 aria-label="刷新会话产物"
                 onClick={() => setRevision((value) => value + 1)}
               >
                 <IconRefreshOutlineRegular />
-              </button>
+              </ActionButton>
               {error && <p role="alert">{error}</p>}
               {loading ? (
-                <p role="status">正在加载…</p>
+                <p role="status">
+                  <Spinner size="sm" />
+                  正在加载…
+                </p>
               ) : items.length === 0 ? (
                 <p>暂无产物</p>
               ) : (
@@ -157,9 +169,9 @@ export function mountArtifactPane(client: AppClient) {
                         {item.bytes.toLocaleString()} B
                       </small>
                     </span>
-                    <button className="tz-pane-action" onClick={() => void download(item)}>
+                    <ActionButton className="tz-pane-action" onClick={() => void download(item)}>
                       下载
-                    </button>
+                    </ActionButton>
                   </div>
                 ))
               )}

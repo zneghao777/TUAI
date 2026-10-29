@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * Sidebar shell: column geometry and global panel navigation.
  * Collapse is a slide plus crossfade:
@@ -68,7 +69,7 @@ function PanelRow({ id, label, wide, usePanelInfo, selectPanel, trackEntryClick,
   const active = usePanelInfo(info => info.activePanelId === id)
   return (
     <Tooltip label={label} delayMs={500} disabled={wide}>
-      <button
+      <ActionButton
         type="button"
         className={clsx(css.panelRow, active && css.panelActive)}
         aria-label={label}
@@ -87,7 +88,7 @@ function PanelRow({ id, label, wide, usePanelInfo, selectPanel, trackEntryClick,
             {label}
           </span>
         )}
-      </button>
+      </ActionButton>
     </Tooltip>
   )
 }
@@ -107,14 +108,14 @@ function PanelMoreMenu({ wide, label, entries, onOpen, onPinnedChange, trackEntr
     <Menu open={open} onClose={onDismiss} portal autoFocus className={css.moreAnchor} listClassName={css.moreMenu}
       anchor={(
         <Tooltip label={label} delayMs={500} disabled={wide}>
-          <button type="button" className={css.panelRow} aria-label={label} aria-haspopup="menu" aria-expanded={open}
+          <ActionButton type="button" className={css.panelRow} aria-label={label} aria-haspopup="menu" aria-expanded={open}
             onClick={() => {
               trackEntryClick({ menu_name: 'more', position: 'sidebar' })
               setOpen(value => !value)
             }}>
             <span className={css.panelGlyph} aria-hidden="true"><IconAppsAddOutlineRegular size={wide ? 16 : 18} /></span>
             {wide && <span className={clsx(css.panelTitle, css.wide)}>{label}</span>}
-          </button>
+          </ActionButton>
         </Tooltip>
       )}>
       {renderSlot('sidebar.panellist.actions', { entries, onOpen, onPinnedChange, onDismiss })}
@@ -244,7 +245,7 @@ export function SidebarRoot({
   // panel icon.
   const toggle = (
     <Tooltip label={toggleLabel} shortcutKeys={shortcut?.keys} delayMs={500} side={captionTooltipSide}>
-      <button
+      <ActionButton
         type="button"
         className={clsx(css.iconButton, css.toggle)}
         aria-label={toggleLabel}
@@ -259,7 +260,7 @@ export function SidebarRoot({
         {/* Rail icons render at 18 (figma rail spec); expanded keeps the glyph-native sizes. */}
         <IconPanelLeftOutlineRegular className={css.panelIcon} size={wide || windowsTitlebar ? 16 : 18} />
         {!wide && renderSlot('sidebar.toggle.badge', {})}
-      </button>
+      </ActionButton>
     </Tooltip>
   )
 
@@ -314,7 +315,7 @@ export function SidebarRoot({
           return darwinDesktop || !canStartSession
             ? <span className={clsx(css.brand, css.wide)}>{identity}</span>
             : (
-              <button
+              <ActionButton
                 type="button"
                 className={clsx(css.brand, css.wide)}
                 aria-label={t('session.new.label')}
@@ -325,7 +326,7 @@ export function SidebarRoot({
                 }}
               >
                 {identity}
-              </button>
+              </ActionButton>
             )
         })()}
         {!darwinDesktop && toggle}
@@ -334,7 +335,7 @@ export function SidebarRoot({
       {/* The label fades before the hover/focus shortcut, including on translucent backgrounds. */}
       {canStartSession && (
         <Tooltip label={t('session.new.label')} shortcutKeys={newShortcut?.keys} delayMs={500} side={captionTooltipSide} disabled={wide}>
-          <button
+          <ActionButton
             type="button"
             className={css.newSession}
             aria-label={t('session.new.label')}
@@ -350,7 +351,7 @@ export function SidebarRoot({
             {wide && newShortcut !== undefined && newShortcut.keys.length > 0 && <span className={css.newSessionShortcut} aria-hidden="true">
               <ShortcutKeys keys={newShortcut.keys} />
             </span>}
-          </button>
+          </ActionButton>
         </Tooltip>
       )}
 

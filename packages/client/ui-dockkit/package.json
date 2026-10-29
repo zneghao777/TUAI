@@ -27,8 +27,8 @@
     "@deepseek-ai/dsh-brand": "workspace:*",
     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
     "@testing-library/react": "^16.3.3",
-    "react-dom": "^18.2.0",
-    "react": "^18.2.0",
+    "react-dom": "^19.0.0",
+    "react": "^19.0.0",
     "clsx": "^2.0.0"
   },
   "files": [
@@ -40,10 +40,10 @@
     "@deepseek-ai/cordis": "workspace:~"
   },
   "dependencies": {
-    "react": "^18.2.0",
+    "react": "^19.0.0",
     "@deepseek-ai/dsh-brand": "workspace:*",
     "clsx": "^2.0.0",
     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
-    "react-dom": "^18.2.0"
+    "react-dom": "^19.0.0"
   }
 }

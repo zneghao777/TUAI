@@ -2,6 +2,7 @@
 import { forwardRef, useId, useLayoutEffect, useRef, type ComponentPropsWithoutRef, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
+import { Surface } from '@heroui/react'
 import css from './MenuSurface.module.css'
 
 /** Menu containers preserve native div props and refs. */
@@ -32,11 +33,11 @@ export const MenuSurface = forwardRef<HTMLDivElement, MenuSurfaceProps>(function
     '--dsh-menu-anchor': `--dsh-menu-${id.replaceAll(':', '')}`,
   }
   return <>
-    <div {...props} ref={ref} data-menu-material="translucent"
+    <Surface {...props} ref={ref} data-menu-material="translucent"
       className={clsx(css.surface, compact && css.compact, className)} style={{ ...style, ...anchorStyle }}>
       <div aria-hidden="true" className={css.material} />
       {children}
-    </div>
+    </Surface>
     {createPortal(
       <div ref={backingRef} aria-hidden="true" data-menu-backing="" className={clsx(css.backing, compact && css.compact)}
         style={{ ...anchorStyle, visibility: style?.visibility }} />,

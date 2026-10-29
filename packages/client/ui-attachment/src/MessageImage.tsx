@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
 import { IconLoadingOutlineRegular, IconRefreshOutlineRegular, DraggableImage, ImageLightbox, type FileDragActions } from '@deepseek-ai/dsh-client-ui-primitives'
@@ -112,7 +113,7 @@ export function MessageImage({ image, load, variant, labels, fileDrag }: {
     ?? preview?.name ?? attachment?.name ?? labels.image
   const loadingThumbnail = variant === 'thumbnail' && src === null
   if (error) return (
-    <button
+    <ActionButton
       type="button"
       className={css.error}
       data-variant={variant}
@@ -123,11 +124,11 @@ export function MessageImage({ image, load, variant, labels, fileDrag }: {
       {variant === 'thumbnail'
         ? <span aria-hidden="true"><IconRefreshOutlineRegular /></span>
         : labels.loadFailed}
-    </button>
+    </ActionButton>
   )
   return (
     <>
-      <button
+      <ActionButton
         type="button"
         className={css.frame}
         data-variant={variant}
@@ -145,7 +146,7 @@ export function MessageImage({ image, load, variant, labels, fileDrag }: {
           )
           : <DraggableImage fileDrag={fileDrag} src={src} alt={label} name={preview?.name ?? attachment?.name ?? 'image'}
             style={fit === undefined ? undefined : { objectPosition: fit.objectPosition }} />}
-      </button>
+      </ActionButton>
       {open && src !== null && <ImageLightbox src={src} alt={label} labels={labels.lightbox} onClose={close} />}
     </>
   )

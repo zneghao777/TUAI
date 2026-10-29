@@ -95,8 +95,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-session/package.json",
-          "sha256": "23734b6b580f4834217c49e80c470f330fdbd2880e6e9a06dda12d5252b8c5ae",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "sha256": "52fb036b4be9ddb332d709abf0ff501ffce522c41cfd186b3a32b914ad4252b3",
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
         }
       ],
       "additionalFiles": [
@@ -288,8 +288,8 @@
       "localPatches": [
         {
           "path": "packages/client/locale/package.json",
-          "sha256": "c29f5ef40fabc3b979784d1e145c97ce95dd69807dc26c74936d04275e41ab63",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "sha256": "ce1321b1f7aaa2fe9c5f62e594ffc1678521b9c7857d6940bdbef19fe0691356",
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/locale/src/client/LanguageRow.tsx",
@@ -455,8 +455,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-settings/package.json",
-          "sha256": "1cede2edc786432911ddd1e1a66cc11732eefe56198da4fb29ae68bb317ccbbc",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "sha256": "003508a2e3bd3e29d8892eecff3faca053bd55fa758d5e6b2a35e6a8cff81775",
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-settings/src/client/config-form-types.ts",
@@ -1665,8 +1665,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-primitives/package.json",
-          "sha256": "f299c97592cc874397fc640bc9fc06306da78ea65d330430528f2cab468556f0",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "sha256": "f7a0ad30e1753edefffb877cdda3bbaed30f5167ba5deb91464588a34d6dee07",
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现；TZ-070 适配 React 19；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-primitives/src/markdown/MarkdownDelegate.tsx",
@@ -1677,6 +1677,126 @@
           "path": "packages/client/ui-primitives/src/markdown/render.tsx",
           "sha256": "be8cc85d57fe2a4f4dcd30ffa6cbe8e56a99df456554d35bd8f501810ce25df7",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/JsonTree.tsx",
+          "sha256": "51ffbd5745b360f5d9a721de405e600d80c39f1c4c20ae2b9f2a2647d5f63373",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/TextShimmer.tsx",
+          "sha256": "992f62bd675058115ff877d68272daacb19ed8e50aedf40ce410af5d05c3c8f3",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/image-drag.ts",
+          "sha256": "72a511e68ae8d7cda2c35846639bf6e207b5512531c29e4227bbdf6b40dbb4bb",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/markdown/useViewportHighlighting.ts",
+          "sha256": "a22c460ccfaa81a05d5fd82d53583987dbc716de9bd8f7a5b9d0f2e701050a23",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/useAnchoredMaxHeight.ts",
+          "sha256": "af1f7a46a53959d9d4cd9d2fab15edd4cc0317138172817453b3dc66e670112a",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/Button.tsx",
+          "sha256": "7e413feecf8c5ebf9ccf00d82c5c193f10897acb4fc2682f22afc0464ee85e1f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/Checkbox.tsx",
+          "sha256": "db365d5334ddbf0e1fc8fed92a523333c7ed52dd9eed175fbb5c6b9024965778",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/CodeToolbar.tsx",
+          "sha256": "06c3b35ca589a17a433a471c48ae486580f4a50f917264e7f40d422995bcd0e8",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/ConnectionIndicator.tsx",
+          "sha256": "0a2d0b178a5aade7b81a4f07432d72c6fe74d55fd4a5dc65d237f05ee0c74b34",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/DisclosureRow.tsx",
+          "sha256": "b9cbbb76d054fa59845933238b7a4353186e84ea21de62843215ec2b5442becf",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/Input.tsx",
+          "sha256": "ce3655b8acbf9ab7427dbb95dc0a4250726bd35fa437a4bbfc2a19d2160a4a0c",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/Menu.tsx",
+          "sha256": "d35d3b6db5f1f78b0bfdca7b9552d7b293cb418ec437f01f1cd3824bdd40206f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/MenuSurface.tsx",
+          "sha256": "50ae55082883d3492598acf30a2ae5f2c832942d28e28e77149c21ee373b4cf9",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/Modal.tsx",
+          "sha256": "98f93a4035adade1ef6f49d8c68a241110e6f7e37cac6c46d7b923bbc7b22caf",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/SegmentedControl.tsx",
+          "sha256": "8234d9ef3203ef597c0a2478cb875b9f5240ed72e48d05365e20f38fc5e12ce7",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/Switch.tsx",
+          "sha256": "76af483ea2b77ac0e6aa570e6b3e62d864537bb68195374164a38de48c180a46",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/index.ts",
+          "sha256": "5edc9238a4a0103466c7e1b2cb2cf3d78bd6462e887f110562c2223480002d93",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/useModalLayer.ts",
+          "sha256": "d3123631647e6ee259396c95a3f8f515e4ae6dca710b751648958e6662f4723b",
+          "reason": "TZ-071：通过 data-shortcut-modal 识别 HeroUI Dialog／AlertDialog，保持单一焦点所有者"
+        },
+        {
+          "path": "packages/client/ui-primitives/tests/checkbox.client.spec.tsx",
+          "sha256": "9b5b4a385ce8bac5f26ee2228c26a6d343be95452f48ca1eeef8f72ff2e12510",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/tests/code-block.client.spec.tsx",
+          "sha256": "a729d52321f7fa15f2e8e0c27d671e326b6b023d42a554a6b4a32210027d95f1",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/tests/read-block.client.spec.tsx",
+          "sha256": "39bc7796e2d67df42895012ad214a69011983b9b98695f9ebcf8c043b0b02a56",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/tests/search-block.client.spec.tsx",
+          "sha256": "ff8abc304675c1a573668d71cfc4c604badd2e23ed7c2de2aa482d48fa79b83f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/tests/switch.client.spec.tsx",
+          "sha256": "a7f53185a0a5bbc16b7365820c45e8931b0840f83c655be7734caac81d721c72",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/tests/terminal-block.client.spec.tsx",
+          "sha256": "b519b99f65c35a7c78949987ee81f3f6deec395d4fc13e5783a9a12ac3a56303",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -1684,6 +1804,11 @@
           "path": "packages/client/ui-primitives/LICENSE",
           "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
           "reason": "保留来源许可"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/defined-props.ts",
+          "sha256": "1f5780c42df4676be1c389732c153b330743c42b7ba64327cdd6348cd923e592",
+          "reason": "React 原生属性到 HeroUI 严格可选属性转换，运行时移除 undefined"
         }
       ]
     },
@@ -1914,8 +2039,8 @@
         },
         {
           "path": "packages/client/shortcuts/src/client/dom.ts",
-          "sha256": "9a583b4044c9517863b122e05181a38c9a7989e5684bd67406b7ccff1aab7fc5",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "sha256": "b95090fe59ee3fd8e8e0f8611147808cb3e9bdd7d1ec6ea61430c261178d2a66",
+          "reason": "TZ-071：观察显式弹窗作用域，阻止后台快捷键穿透并同步上下文变化"
         },
         {
           "path": "packages/client/shortcuts/src/client/native.ts",
@@ -1926,6 +2051,11 @@
           "path": "packages/client/shortcuts/src/client/storage.ts",
           "sha256": "4942bdc0a19b5c2f242e30bb40aec44fb71c84bc5c2068638110a44cf3a994d0",
           "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+        },
+        {
+          "path": "packages/client/shortcuts/tests/dom.client.spec.ts",
+          "sha256": "952e862f1ae22faa930f5db56a77414a624690265c4ed5827cb024da623b6fc0",
+          "reason": "TZ-071：回归 React Aria 将窗口外内容标为 inert 时的快捷键作用域"
         }
       ],
       "additionalFiles": [
@@ -2723,8 +2853,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-conversation/package.json",
-          "sha256": "7a1fc1c24a8a21aaa52a7daf85f13cef0e06f742b678411596cc452f6c533d4b",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "1e25dca793b3bc48a91f0b9d40848d64b6f3e15072371593c4c2a5f39467add3",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-conversation/src/client/index.ts",
@@ -2738,8 +2868,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/contract/slots.ts",
-          "sha256": "0ae907f2d337a78fe290595b1aa3500a5be7983bc3fc0325622e497e9b7b0ac1",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "60f06de81d0b36dac6ea2496ada1ba0cec877f27b5bc62236d02661a796faa78",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-conversation/src/client/input/hub.ts",
@@ -2748,8 +2878,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx",
-          "sha256": "74fa0cf4b6197ee38496c94b21f6f6a9d33d9ef92db6e1b721209835b6454c57",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "ab10487d101b46968275da9a43a8bed8efa6c49d48d16102397978d47d7ef553",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-conversation/src/client/service.ts",
@@ -2775,6 +2905,46 @@
           "path": "packages/client/ui-conversation/tests/user-text-component-fixture.client.tsx",
           "sha256": "451df6dad58ae2c7618e571efb155658643a261e7c3460ef488e1e58db68cd75",
           "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx",
+          "sha256": "cd57ca27bf566fc821e7393aaa647720901814de5cd2ab3564d22f294128c139",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/input/editor/view-binding.ts",
+          "sha256": "375c9d4bbdafd588cca5d15ad52a7e10d9bc2db52b907ce44829aefa77bc16a1",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx",
+          "sha256": "99d39310b7fbe5699e43424d7a7f515bdae6d37dc50ffb6c680f86a3bde7142f",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/settings/EnterBehaviorRow.tsx",
+          "sha256": "bc01c1357514689efc3467d38f3e1df750b70d6bd2c8fabe115003a75bb2fdf5",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx",
+          "sha256": "871afe998396d051173eb422bd6904fcc20012d55d3dcf03fc423ef5b706d31f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx",
+          "sha256": "ad3998f78750551d908c45a1f5da91f80fb777b4fcf994523e8a17c59b748658",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx",
+          "sha256": "65b43c321f6fa5cea31f243c13113fb40a597de9bff9e967dc16f47d6831e6a2",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx",
+          "sha256": "eebec72394780b5e87f0a14abbf56aff0fa90c4bd8156fabaa5e82f421a8734b",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -3769,8 +3939,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-layout/package.json",
-          "sha256": "91a948486d1f710049654acdb79d32bcae8bcd4ec2d5f76a9bf182c16d132e05",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "02cf4d2ce2aaa1b5c714a71738db4aadadbe7e65022574473279fbd85dc924bd",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         }
       ],
       "additionalFiles": [
@@ -4074,13 +4244,23 @@
       "localPatches": [
         {
           "path": "packages/client/ui-theme/package.json",
-          "sha256": "d17366b1cc84350cd5fbdfb934f4d3362b5a4a226e3c9f0892ee11a9ab61ad7d",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "72773ee67c5767874c014d30eefded304ab539a0b4f9d3f1ef0097eb653dfd19",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-theme/src/client/index.ts",
           "sha256": "6d73cdad1921e14c075bdb27cfda89feaf8bd9ae5cc097d5f4eac063f91a37a6",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        },
+        {
+          "path": "packages/client/ui-theme/src/client/AppearanceRow.tsx",
+          "sha256": "5798c03ce5cf5266bb1b09a10743732ed9ce611f8d2cd3130a4bcada0bcbf13c",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-theme/src/client/FontSizeRow.tsx",
+          "sha256": "8d5eee45c1ada4b614034f99323984eaf21bd49bdf3508f3aaeaf997aabb0bc7",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -4896,8 +5076,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-chat/package.json",
-          "sha256": "9b645b573580185ce2c281d0b33ebac011318b0fef2f770c3a421a4369303c17",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "e7b35158edd8865c388e1d9be7c5f17b1521391c3221618e0a82ae0b41c7baff",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-chat/src/client/apply.ts",
@@ -4913,6 +5093,81 @@
           "path": "packages/client/ui-chat/src/client/chat/ChatView.module.css",
           "sha256": "15a50352a38271c800a6d2aa227b347813662c84b68f5f920f743b8f61b692f8",
           "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/flow-motion.ts",
+          "sha256": "78a579bbb61c986ac46ee1e834795d95e8eafb6867211577eb33ab42773c0a01",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/searchable-hidden.ts",
+          "sha256": "5903ec5cc2c882e2f1234636c08aa56fe18cd0f4c1a58f39b545bb9a86e4e981",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/text-interaction.ts",
+          "sha256": "d09e17bff63fcf6b0326f825bf5c14865611971b460c98a7c3c4df5f1254d9ed",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/use-chat-scroll.ts",
+          "sha256": "4f97701408fd7c9ea090c95a854e0fa9421bdfc478385a193e5123fa61314803",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/use-chat-viewport.ts",
+          "sha256": "f97c96b5d099eec4821049168cf18c8fa6258c63290e742b7e6d11e4d8a84cb4",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/use-process-scroll.ts",
+          "sha256": "d00fcb83dc80974b399d890506c877960f808cc86a72826e3bd95c1cafc04395",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/contract/slots.ts",
+          "sha256": "5555eae2d7c3635eacfb6e0e1b00f9b4b0200a490a12130129268afe2d996a4e",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx",
+          "sha256": "f5f0b68ce290d909cbd293a740109a0a54fed982ef24693ab6844d4546ab2e6f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/ChatView.tsx",
+          "sha256": "eea91c639b80069847c006a29926cd1c04375d36fda276793783956941bd95e3",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/CompactionItem.tsx",
+          "sha256": "9a34bb3e21a4f4d1ee027e0b786e5cb4852f84d8384441f0f06b8916376f6e2f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/MessageIconActions.tsx",
+          "sha256": "c0264d2b036c81fb022703068eb841237eaf4a17fa4c2dde36daf01a54f8882d",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/TurnNavigator.tsx",
+          "sha256": "a5b4ff6f5a792d510d992c2c43e903f9f5d28295641a149daf7a01752cb2eeeb",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx",
+          "sha256": "c8146a688fc0d514ab6886eaf148def7c69aafca4c8a84d7f9c8d21776675e6f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx",
+          "sha256": "d413bb2764976bf0a2386effcf25b743588e6753f235099581bb4fd37396b279",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/settings/PreferenceRow.tsx",
+          "sha256": "e17ed62faf26c819174e3603f0d774dfc279310ea583ea15a5f85ac50f9b866e",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -5020,8 +5275,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-file-drag/package.json",
-          "sha256": "b14227fa2225be2bcfff40173e6c2997aa12f2aae1ae6f9309739b33068c4b41",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "82643b1b51693e400a899b6d5d250d374bbbff71396de62f38d43f891ba362af",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         }
       ],
       "additionalFiles": [
@@ -5293,8 +5548,18 @@
       "localPatches": [
         {
           "path": "packages/client/ui-sidebar-right/package.json",
-          "sha256": "f242f1546f9e16f3df6973ec6088242f1ed048843e8c12261c195c5cad865254",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "9aac3389131a5938231019b23b0f861fa7a6115e07aaba7268e18335afff1741",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-sidebar-right/src/client/shell/SidebarRight.tsx",
+          "sha256": "48ff3d68764559fa2e71530e7d281285e0a04a3831ad0adbfbdf5d37dca09348",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+        },
+        {
+          "path": "packages/client/ui-sidebar-right/src/client/tabs/guide/GuideBody.tsx",
+          "sha256": "c474abc905d02c9d4f8d9670076b7b6d8f991ad9f2cbc3a4185e9714e6977121",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -5478,8 +5743,28 @@
       "localPatches": [
         {
           "path": "packages/client/ui-dockkit/package.json",
-          "sha256": "022a28fc3844dee5e8310b0cbc1980b039b3df7a244042d14c4392d776a5f219",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "22a41d7e2195065f1d0ac4671057a0c6cd448a34fe62af781540b46ff4964cac",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-dockkit/src/components/TabLayout.tsx",
+          "sha256": "9aaca4e00a7b2cd4f3d798e1403941f90fcf3b9caf0b0fa0db871e42d4c3b331",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-dockkit/src/components/FloatLayer.tsx",
+          "sha256": "d1b38abf8e321efe4482e23e5432033b9bcba87942d3922ac1b2ef18280e7716",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-dockkit/src/components/TabMenu.tsx",
+          "sha256": "1ff1f848cb223e219be0f93af080757743c936eaeee4bec4a2aca2737f3ecb02",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-dockkit/src/components/TabPanel.tsx",
+          "sha256": "9399312617f154b858fd5aeb9aedfdb29f8b409c17924cbe61f254ba352c6a37",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -5820,8 +6105,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-sidebar-browser/package.json",
-          "sha256": "d0b84190dea171f3c15bcc82c5e8b5639ccb89d5efddd1bd9638964b6125df83",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "0337911e169f29a29692c91c6303c6b2f894d17e0c12e809b0e9eb63781e6221",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-sidebar-browser/tsconfig.json",
@@ -5982,8 +6267,13 @@
       "localPatches": [
         {
           "path": "packages/client/ui-input-trigger/package.json",
-          "sha256": "cec07485713b25da4d4e0cba961fa83d053d30f59fbd09e93d33bc4f6575aeba",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "22e7e242920053aca87135e0271ed18c5cc8ed25c9a307f64451f6620fd182b5",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-input-trigger/src/client/MenuView.tsx",
+          "sha256": "d8e4f5bd625cd999c664c49f3494333e8ea4b8768ad3cc1f055ddf0d27645d44",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -6795,18 +7085,48 @@
       "localPatches": [
         {
           "path": "packages/client/ui-sidebar-documentpreview/package.json",
-          "sha256": "c1ce5093c149325e4595e54866228b8b8d31355fb0996d38d92f93bacd126a50",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "53c5d5f3d888dd9fcdc3ed8487818efa5975ba342ce955ff016ad7b52a63f9c3",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
-          "sha256": "a27d0a0602b55e030f527c686f64941124f19d18a2d133fa5b2a98e1919c9ae7",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "a523af498c6232c0f45229ec332eb48e34d88130415c0346a39b4102848a5759",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-sidebar-documentpreview/tests/document-preview-license-bundle.client.spec.ts",
           "sha256": "079d827e3dec2c1fe4bd88f993d0f9124ee8493448c54000a771136ce55dd73b",
           "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/image/ImageBody.tsx",
+          "sha256": "db73b5307a763049b5e54f64cc60318a53d274b34db5587ec4e763d4c0561428",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/pdf/pdf.tsx",
+          "sha256": "1d00723e76a3f269701d3c175b6e7b2d5813d043e9b678d453743d420b5097b2",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/zoom/ZoomViewport.tsx",
+          "sha256": "00e97c6629f219534bfe470062f988704c166fbaf537d4c72d613e61a10a7303",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/excel/excel.tsx",
+          "sha256": "0ee98e5ca223617810592049fac8b76f1b2260153d3534de4f0a9c3b2c8ca5f5",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx",
+          "sha256": "16c32b5389f6f443e6e9a83905cdca1afb5dc4afd672cbaa83be8fd9365abbe7",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/tests/text-preview.client.spec.tsx",
+          "sha256": "3f45bf3aaaa819bd1eb33a00b0bf510d3ec0ba587d4ab4f50c92e32576b8bc49",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -7350,8 +7670,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-workspace/package.json",
-          "sha256": "66092049a93377022e1b38cf279d85175aa341118d748ffef4ce87918e41ff94",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "36e7f41619844ffe268da36ef8d37d2b6150d7a430960b1ffc86dd113f0a239e",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-workspace/src/client/index.ts",
@@ -7365,18 +7685,28 @@
         },
         {
           "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx",
-          "sha256": "19ba0c644c15f7433ec49933cef4e71dcca4f26aedd70c1de95246f18ce5fd75",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "158d545f5c04fbc2062788fc2bf8cda4f9ca396f579a0aeed8bb5cbfec47e31c",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx",
-          "sha256": "948f00187188dea2ac7464c744aa1d0bba337fc6138a4094626465a73f17962d",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "63dec6286110545b62110517776aed0018a9a0c9c1dd918b334268e12ebcb830",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-workspace/src/client/tree.ts",
           "sha256": "e404bcc3a1612e90108537e42b51f3b9beefee69ad16b53bf5393d8d62fab687",
           "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx",
+          "sha256": "33dfab9ae3c519425256d466c5e3b80cb22dab4b85ad597ddab88c781b5a01e2",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/PinSession.tsx",
+          "sha256": "068fa979cc79d4243f243940d7c426676d3c2af6daa38bc124e76e0d230a8550",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -7723,8 +8053,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-sidebar/package.json",
-          "sha256": "1122d1e1f67e2d73ff2da2c3c646e938bba033a7223b31a630a238ca75558dae",
-          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+          "sha256": "1eb9bd54266a6f67d8a0f51c46ae8ccf1651e0d387f81dc2f2988f46242b450b",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-sidebar/src/client/index.ts",
@@ -7735,6 +8065,16 @@
           "path": "packages/client/ui-sidebar/tsconfig.json",
           "sha256": "521044cb262c2eabc48c409f2017c6e67b918b6ff4ded0c13cd6c3244e50b080",
           "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        },
+        {
+          "path": "packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx",
+          "sha256": "78831903313d6de0a0c1f397bc1e84415289604989ea7f3a2399c8ebce8ade30",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx",
+          "sha256": "4f9afafd2314ebb9f31a3edc761bb45040f110da4fa41664ec8ac6d60723df0a",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -7850,8 +8190,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-approval/package.json",
-          "sha256": "498ebbe46c7364dd225521e75af3a9efd22d00832019094e06ff16a964aedfaf",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "8d3598e060d8c85076dfba7d53a9863bcfb94e57fb1124cd10b24fca3b1acc28",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         }
       ],
       "additionalFiles": [
@@ -8215,8 +8555,23 @@
       "localPatches": [
         {
           "path": "packages/client/ui-tool/package.json",
-          "sha256": "450cc4152ff74d16eb1eb12824a4f5f08a08ccf21ae84c731a9775f22a0dfeb2",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "155caa37f833bfadef8b3755dbddd9132692edacd9adfcb665312c26230b1373",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx",
+          "sha256": "f682fbeef4a5f815e14810b9b70e00ccfc038247a0010c684621d9bdabee1ccb",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx",
+          "sha256": "be3621dc293b6d1a02e95ae655db9fff51ad4a035143d0ee0c8fe9b29d86b7c0",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/ToolRow.tsx",
+          "sha256": "3f76daa6f145701cc3194ae0587a43e78689f699a63af105c16ed1f51f94bae3",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -8384,8 +8739,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-attachment/package.json",
-          "sha256": "f8f0a0d7b537e0b020911015aa7adbb9512d37ecaf6e277336377926323abd2f",
-          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+          "sha256": "42b2adf1b9a14c5a47f66e06126b632569b8fc376bee28119331e130f4ccee6b",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-attachment/tsconfig.json",
@@ -8399,13 +8754,23 @@
         },
         {
           "path": "packages/client/ui-attachment/src/FileCard.tsx",
-          "sha256": "8d76bb48160af30196fe91fbe6a46ff91ecf100542d057511f59600a58693762",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "b7743ace5f8684ea6df4ecd51bca2d73aa35dfc66c5aed64679e7956b46c53cf",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-attachment/src/client/ComposerAttachments.tsx",
-          "sha256": "ea2ccd0d55c3ee4acaaecabfa285f549b84bfc710adb1811d0700caeeb00f723",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "89256dd1cb586c8c900dabd941b81678491dba88080f8da5ae410d4409dd869d",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+        },
+        {
+          "path": "packages/client/ui-attachment/src/AttachmentRail.tsx",
+          "sha256": "6dc3db5d5042a1590fc96eb24da0ddf149c29650a47715a216bc6855231f7952",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-attachment/src/MessageImage.tsx",
+          "sha256": "50ffc16a4a4b565ba5cada459baf44ebbc6312282d9b2b1cc162cb01e0c3086c",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -9942,8 +10307,13 @@
       "localPatches": [
         {
           "path": "packages/client/ui-commands/package.json",
-          "sha256": "df1197c1272aa0668bd48d56b0fdb27a0d0e7a1be8529fb15a47509f52310ee1",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "2ed8543aa59eca884c9eaa1790c64916aaf4eb85e0cd2ee2a64503bd2d2a04fc",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/PopupSelectView.tsx",
+          "sha256": "383df6cdbb3120144cfd44168bd6af5c4c7122633f814432f0fbbcb1fcd7f27b",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -10055,8 +10425,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-reference/package.json",
-          "sha256": "345b5c842a65502af6c7977eb98c72b9d9324405040c5a83bd37a1148ec5f80e",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "993929011309b7ecae23a52905ba0d597d032f5202cc14de66fc88be8e8b4630",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         }
       ],
       "additionalFiles": [
@@ -10315,8 +10685,18 @@
       "localPatches": [
         {
           "path": "packages/client/ui-model-selection/package.json",
-          "sha256": "acc7206d3ff0507866b6c49ff2e71992fb065248e0a4bcd28ec869ac56dd7132",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "13526cbeddbeafb48a555772837423c0a1adc1a392763d6d0c60312d5ab0d9b7",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-model-selection/src/client/catalog.ts",
+          "sha256": "f4cb80120770e63a1338d3792caad9ef282da8b65208618997ce7709e87b4530",
+          "reason": "TZ-070：部分提供商失败时允许目录重试，保留可用分组与并发请求复用"
+        },
+        {
+          "path": "packages/client/ui-model-selection/tests/catalog.client.spec.ts",
+          "sha256": "0c20d47e4d969387dc5957a39fc31f0e55ce9bde7120f7ade64bd62bf0859c76",
+          "reason": "TZ-070：覆盖部分目录失败、重试恢复及成功缓存"
         }
       ],
       "additionalFiles": [
@@ -10460,18 +10840,18 @@
       "localPatches": [
         {
           "path": "packages/client/ui-permission-presets/package.json",
-          "sha256": "afac490d4bfca6d799dc305ad33b6d3881a63940c91bd60586bf957d887b5c3d",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "cabc6669715f50a90f7d053128daf122bafef6000461cda83eddb0451430739a",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/PermissionRow.tsx",
-          "sha256": "c8b160325b4c4cc5e06d797b8d457675c4b539aaa817c43f62a1e4cda69fe6c9",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "299071bb2deaae3359da71c7b5964ac08c8fd7de793c49cccaf704f1559e162f",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.tsx",
-          "sha256": "924807e2c21e5cb9c6bc64b624ade66843508cf80b2f2b7b2b99d0d58dd6c56d",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "21a688ceba01ef7ad0997b8fb1cecc0523ab6fdafefda35b36ca778a841c5290",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/index.ts",
@@ -11108,8 +11488,8 @@
       "localPatches": [
         {
           "path": "packages/session-query/session-log-export/package.json",
-          "sha256": "7a0f5670dfda45266608947209f6590ae06aca5a34108598b8c770f2a9ca621d",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "d5bdbbdcf8e5eae207276ebb65ec13c4a458165d8e0b507182dad230a395a159",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/session-query/session-log-export/tsconfig.json",
@@ -11266,8 +11646,18 @@
       "localPatches": [
         {
           "path": "packages/client/ui-message-feedback/package.json",
-          "sha256": "5b04f71cfe233029aa68f67389536f5d71f5de93261dadc7c3af7e9f09ab499d",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "69932c533d00621502090b98184020b783e53edd93fda8b7c8d4be69a92ab0a8",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/FeedbackDialog.tsx",
+          "sha256": "0248af931e9764fef96c6cd8707c24b82dd4acaff88a4f8286a7de7ccfde65ef",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "sha256": "695a7af6f385cb4876d2d40f330f78d38fa6c7bdb5c6a79656a296a76ca25bd3",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -11645,8 +12035,13 @@
       "localPatches": [
         {
           "path": "packages/client/ui-goal/package.json",
-          "sha256": "24c112f16e510c42b844d225f1d5feecf021577438add1464bfd0e2dbcdefbf3",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "31c4513d9837f8454680187b1f23900d62793383313d98f2d715c069db1bf753",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-goal/src/client/GoalBar.tsx",
+          "sha256": "ca0201be54182171149655de01981152b2dd31ca2ef12d9dbf150f101b7a387f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -11814,8 +12209,18 @@
       "localPatches": [
         {
           "path": "packages/client/ui-user-questions/package.json",
-          "sha256": "0ad4ecf773c4eaa268fc579d866b9c85b431bcf89cb41aa5ceb2bb57ffb4135b",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "6b07d84fc7022c81464eed74d3277b84d47897ff1336d1ba6c047e99ca3c0f0e",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "sha256": "524c10cbc6d838cd17b3df34043fdbfb57e61e4508bdc377a3b095b36a216f25",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionReplyView.tsx",
+          "sha256": "b8818e9692cddf82e7043e51f51e3d37884a127ac821d1ae0bb505a062270abb",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
         }
       ],
       "additionalFiles": [
@@ -11983,13 +12388,13 @@
       "localPatches": [
         {
           "path": "packages/client/ui-sidebar-files/package.json",
-          "sha256": "e9abba956e10d4962f564e42b4501be448a5b9b8100e43098f56ecbd616613fb",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "6531e1ab92de28409209679d9f50dcf7b4bf481b78f8b4e9f68caaaf183ccc62",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx",
-          "sha256": "3a5fd8ed456378b8de3df252316b98b0d83511b798970b45dd762fa245e4cbe0",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "d4184b9ee362b798a9ef1ccbc7b35040cf468e78941e675b3f01d488d0adad21",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         }
       ],
       "additionalFiles": [
@@ -12302,8 +12707,8 @@
       "localPatches": [
         {
           "path": "packages/session/message-quotes/package.json",
-          "sha256": "c677abcedb72a768b49ae127087a323846e1fb46f6c85dd6a99a7ff1313f60a7",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "b13c2028e29f7125344c05f35b62e03d4d3a3782dec8ed0316be631046d110d4",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         }
       ],
       "additionalFiles": [
@@ -12354,6 +12759,16 @@
       "path": "provenance/dsh-p2-completion-local.patch",
       "sha256": "43864fb023620614424f0ad66b2270b68856c1dfeb5b5e8eae00767865a17078",
       "reason": "P2 当前迁入源码相对锁定基线的完整本地补丁；历史批次证据不改写"
+    },
+    {
+      "path": "provenance/dsh-tz070-react19-local.patch",
+      "sha256": "296069b795b0fca94e3894e0b842776b20e07033588589b27e482a1db553a6ca",
+      "reason": "TZ-070 基于现有产品基线的 React 19 增量补丁"
+    },
+    {
+      "path": "provenance/dsh-p2-heroui-local.patch",
+      "sha256": "0d98a8c61ac651bd8c7ea3ea96826fcf8b0a0ea8a86a3d0d009e2761f2cfa779",
+      "reason": "TZ-070～074 相对 a53c3f0 的完整前端增量，含 React 19 适配；历史来源快照和补丁保持不变"
     }
   ],
   "excludedRuntime": [

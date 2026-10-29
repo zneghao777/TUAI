@@ -40,6 +40,9 @@ export default defineConfig({
           'tests/p2/**/*.spec.ts',
           ...conversationTests,
           'packages/client/ui-conversation/tests/queue-dock.client.spec.tsx',
+          // HeroUI adapters and modal shortcut boundaries are part of the P2 surface.
+          'packages/client/{shortcuts,ui-primitives,ui-message-feedback}/tests/**/*.spec.{ts,tsx}',
+          'packages/client/ui-theme/tests/{apply,appearance-row,boot-theme,font-family-row,font-settings-group,font-size-row,icon-sprite,settings-store,theme}.client.spec.{ts,tsx}',
           'packages/session/message-quotes/tests/**/*.spec.{ts,tsx}',
           'packages/client/ui-tool/tests/**/*.spec.ts',
           'packages/client/ui-{commands,input-trigger,reference,model-selection,permission-presets,user-questions,approval,workspace,sidebar-files,sidebar-documentpreview}/tests/**/*.spec.{ts,tsx}',

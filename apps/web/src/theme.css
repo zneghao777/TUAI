@@ -1,17 +1,17 @@
 :root {
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans SC', sans-serif;
-  color: #282d35;
-  background: #f5f6f8;
+  color: #293631;
+  background: #f4f6f3;
   font-size: 15px;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
-  --canvas: #f5f6f8;
-  --mist: #edf0f4;
-  --ink: #282d35;
-  --muted: #666e7b;
-  --accent: #536985;
-  --accent-pressed: #445a75;
-  --glass: rgba(255, 255, 255, 0.78);
+  --canvas: #f4f6f3;
+  --mist: #eaf0eb;
+  --ink: #293631;
+  --muted: #63726a;
+  --accent: #58786d;
+  --accent-pressed: #46665b;
+  --glass: rgba(255, 255, 255, 0.9);
   --line: rgba(49, 61, 80, 0.09);
   --shadow: 0 8px 30px -8px rgba(40, 48, 60, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.96);
 }
@@ -53,7 +53,7 @@ select {
   caret-color: var(--accent);
 }
 ::selection {
-  background: #d7e2ef;
+  background: #dce9df;
   color: var(--ink);
 }
 a {
@@ -96,12 +96,12 @@ input:not([type='radio']):not([type='checkbox']):not([type='range']),
 select {
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--field-background, var(--glass));
   padding: 9px 12px;
 }
 input:focus,
 select:focus {
-  outline: 2px solid #53698566;
+  outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
 button:disabled {

@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import {
   useEffect, useId, useMemo, useRef, useState,
   type ChangeEvent, type FocusEvent, type KeyboardEvent,
@@ -494,7 +495,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
               <span className={css.waitStatus}>{t('wait.held')}</span>
             )}
             {review !== undefined && <span className={css.waitStatus}>{t('review.status')}</span>}
-            <button
+            <ActionButton
               type="button" className={css.iconButton}
               aria-label={t(minimized ? 'nav.maximize' : 'nav.minimize')}
               title={t(minimized ? 'nav.maximize' : 'nav.minimize')}
@@ -503,15 +504,15 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
               onClick={() => { setMinimized(current => !current) }}
             >
               {minimized ? <IconChevronUpOutlineRegular /> : <IconChevronDownOutlineRegular />}
-            </button>
-            <button
+            </ActionButton>
+            <ActionButton
               type="button" className={css.iconButton}
               aria-label={t(pending.dismissal === 'hide' ? 'nav.close' : 'nav.cancel')}
               title={t(pending.dismissal === 'hide' ? 'nav.close' : 'nav.cancel')}
               disabled={busy !== null} onClick={dismissFlow}
             >
               <IconCloseOutlineRegular />
-            </button>
+            </ActionButton>
           </div>
         </header>
 
@@ -532,7 +533,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
                   {question.question}
                 </h2>
                 <Tooltip label={questionToggleLabel} side="top" portal>
-                  <button
+                  <ActionButton
                     type="button"
                     className={clsx(css.iconButton, css.copyToggle, css.questionToggle)}
                     aria-label={questionToggleLabel}
@@ -542,7 +543,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
                     onClick={() => { toggleCopy('question') }}
                   >
                     {expanded.has('question') ? <IconChevronUpOutlineRegular /> : <IconChevronDownOutlineRegular />}
-                  </button>
+                  </ActionButton>
                 </Tooltip>
               </div>
               {question.detail !== undefined && (
@@ -567,7 +568,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
                       data-option-row
                       data-expanded={descriptionExpanded || undefined}
                     >
-                      <button
+                      <ActionButton
                         type="button"
                         className={css.option}
                         role={question.multiSelect === true ? 'checkbox' : 'radio'}
@@ -602,10 +603,10 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
                             </span>
                           )}
                         </span>
-                      </button>
+                      </ActionButton>
                       {hasDescription && (
                         <Tooltip label={descriptionToggleLabel} side="top" portal>
-                          <button
+                          <ActionButton
                             type="button"
                             className={clsx(css.iconButton, css.copyToggle, css.descriptionToggle)}
                             aria-label={descriptionToggleLabel}
@@ -615,7 +616,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
                             onClick={() => { toggleCopy(optionIndex) }}
                           >
                             {descriptionExpanded ? <IconChevronUpOutlineRegular /> : <IconChevronDownOutlineRegular />}
-                          </button>
+                          </ActionButton>
                         </Tooltip>
                       )}
                     </div>
@@ -681,21 +682,21 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
 
             <footer className={css.footer}>
               <div className={css.pager}>
-                <button
+                <ActionButton
                   type="button" className={css.iconButton} aria-label={t('nav.prev')}
                   disabled={index === 0 || busy !== null}
                   onClick={() => { replaceProgress(index - 1, drafts); setError(null) }}
                 >
                   <IconChevronLeftOutlineRegular />
-                </button>
+                </ActionButton>
                 <span className={css.progress}>{index + 1} / {questions.length}</span>
-                <button
+                <ActionButton
                   type="button" className={css.iconButton} aria-label={t('nav.next')}
                   disabled={index === questions.length - 1 || busy !== null}
                   onClick={() => { replaceProgress(index + 1, drafts); setError(null) }}
                 >
                   <IconChevronRightOutlineRegular />
-                </button>
+                </ActionButton>
               </div>
               <div className={css.feedback} role="status">
                 {error === null ? null : 'key' in error ? t(error.key) : error.text}

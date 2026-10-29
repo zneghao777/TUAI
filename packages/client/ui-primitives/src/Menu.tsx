@@ -1,3 +1,4 @@
+import { ActionButton } from './Button.tsx'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode, SyntheticEvent } from 'react'
 import { createPortal } from 'react-dom'
@@ -90,7 +91,7 @@ export function MenuItemButton({
   return (
     <div className={css.itemWrap}>
       {separatorBefore && <div className={css.separator} role="separator" />}
-      <button
+      <ActionButton
         type="button"
         role="menuitem"
         className={clsx(css.item, danger && css.danger)}
@@ -102,7 +103,7 @@ export function MenuItemButton({
         {icon !== undefined && <span className={css.itemIcon}>{icon}</span>}
         <span className={css.itemLabel}>{children}</span>
         {shortcut !== undefined && <span aria-hidden="true" className={css.shortcut}><ShortcutKeys keys={shortcut.keys} className={css.shortcutKeys} /></span>}
-      </button>
+      </ActionButton>
     </div>
   )
 }
@@ -464,7 +465,7 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
         onMouseEnter={hasSub ? () => { setOpenSubmenuId(entry.id) } : undefined}
         onMouseLeave={() => { setOpenSubmenuId(null) }}
       >
-        <button
+        <ActionButton
           type="button"
           role="menuitem"
           className={clsx(css.item, selected && (selection === 'fill' ? css.selectedFill : css.selected), entry.danger === true && css.danger)}
@@ -486,11 +487,11 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
           {entry.shortcut !== undefined && <span aria-hidden="true" className={css.shortcut}><ShortcutKeys keys={entry.shortcut.keys} className={css.shortcutKeys} /></span>}
           {/* Selection marker is a trailing check (figma .Menu_cell) unless the fill mode carries it. */}
           {selected && selection === 'check' && <IconCheckOutlineRegular className={css.check} />}
-        </button>
+        </ActionButton>
         {subOpen && entry.submenu !== undefined && (
           <MenuSurface compact={compact} className={clsx(css.submenu, compact && css.compactList)} role="menu">
             {entry.submenu.map(sub => (
-              <button
+              <ActionButton
                 key={sub.id}
                 type="button"
                 role="menuitem"
@@ -502,7 +503,7 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
                 {sub.icon !== undefined && <span className={css.itemIcon}>{sub.icon}</span>}
                 <span className={css.itemLabel}>{sub.label}</span>
                 {sub.shortcut !== undefined && <span aria-hidden="true" className={css.shortcut}><ShortcutKeys keys={sub.shortcut.keys} className={css.shortcutKeys} /></span>}
-              </button>
+              </ActionButton>
             ))}
           </MenuSurface>
         )}
@@ -525,6 +526,8 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
   // this pre-render in the same commit, so the first painted frame is
   // already at the final position (with getAnchorRect returning null the
   // list simply stays hidden).
+  // Keep a portaled menu inside its dialog focus/inert boundary. Fixed placement
+  // still uses the viewport, and ordinary menus continue to portal to the body.
   const list = open && (
     <MenuSurface compact={compact}
       ref={listRef}
@@ -569,7 +572,7 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
       onPointerLeave={closeOnPointerLeave ? () => { if (open) armClose() } : undefined}
     >
       {anchor}
-      {portal ? (list !== false && createPortal(list, document.body)) : list}
+      {portal ? (list !== false && createPortal(list, rootRef.current?.closest('[role="dialog"], [role="alertdialog"]') ?? document.body)) : list}
     </span>
   )
 }

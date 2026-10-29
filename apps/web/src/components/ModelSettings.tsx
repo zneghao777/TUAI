@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Input, Form, Spinner, AlertDialog } from '@heroui/react'
 import type {
   ModelProviderDraft,
   ModelProviderInfo,
@@ -126,7 +127,12 @@ export function ModelSettings({
           </Button>
         ) : null}
       </div>
-      {!data ? <p role="status">{error ? '模型配置暂不可用' : '正在读取模型配置…'}</p> : null}
+      {!data ? (
+        <p role="status">
+          {!error ? <Spinner size="sm" /> : null}
+          {error ? '模型配置暂不可用' : '正在读取模型配置…'}
+        </p>
+      ) : null}
       {!draft && data ? (
         <>
           <div className={s.providerList}>
@@ -157,34 +163,51 @@ export function ModelSettings({
             ))}
           </div>
           {deleting ? (
-            <div className={s.removeProvider} role="alert">
-              <p>
-                移除 {deleting.name} 的配置和已保存密钥？已有会话会保留，下次发送前需选择可用模型。
-              </p>
-              <Button disabled={busy} onClick={() => setDeleting(undefined)}>
-                取消
-              </Button>
-              <Button
-                busy={busy}
-                className={s.danger}
-                onClick={() => {
-                  setBusy(true)
-                  setError('')
-                  void client.ctx.remote.platform
-                    .removeModelProvider({ id: deleting.id, revision: data.revision })
-                    .then(unwrap)
-                    .then(async (next) => {
-                      setData(next)
-                      setDeleting(undefined)
-                      await client.load()
-                    })
-                    .catch((e) => setError(describe(e)))
-                    .finally(() => setBusy(false))
-                }}
-              >
-                确认移除
-              </Button>
-            </div>
+            <AlertDialog.Backdrop
+              isOpen
+              isDismissable={!busy}
+              isKeyboardDismissDisabled={busy}
+              onOpenChange={(open) => {
+                if (!open && !busy) setDeleting(undefined)
+              }}
+            >
+              <AlertDialog.Container>
+                <AlertDialog.Dialog
+                  data-shortcut-modal="model-delete"
+                  aria-label="移除模型提供商"
+                  className="tz-confirm-dialog"
+                >
+                  <AlertDialog.Heading>移除 {deleting.name}</AlertDialog.Heading>
+                  <p>
+                    移除 {deleting.name}{' '}
+                    的配置和已保存密钥？已有会话会保留，下次发送前需选择可用模型。
+                  </p>
+                  <Button disabled={busy} onClick={() => setDeleting(undefined)}>
+                    取消
+                  </Button>
+                  <Button
+                    busy={busy}
+                    className={s.danger}
+                    onClick={() => {
+                      setBusy(true)
+                      setError('')
+                      void client.ctx.remote.platform
+                        .removeModelProvider({ id: deleting.id, revision: data.revision })
+                        .then(unwrap)
+                        .then(async (next) => {
+                          setData(next)
+                          setDeleting(undefined)
+                          await client.load()
+                        })
+                        .catch((e) => setError(describe(e)))
+                        .finally(() => setBusy(false))
+                    }}
+                  >
+                    确认移除
+                  </Button>
+                </AlertDialog.Dialog>
+              </AlertDialog.Container>
+            </AlertDialog.Backdrop>
           ) : null}
           <Button
             className={s.addProvider}
@@ -208,7 +231,7 @@ export function ModelSettings({
         </>
       ) : null}
       {draft && data ? (
-        <form
+        <Form
           className={s.providerForm}
           onSubmit={(e) => {
             e.preventDefault()
@@ -254,7 +277,7 @@ export function ModelSettings({
             <div className={s.fieldGrid}>
               <label className={s.field}>
                 提供商标识
-                <input
+                <Input
                   ref={firstInput}
                   value={draft.id}
                   disabled={busy || Boolean(editing)}
@@ -267,7 +290,7 @@ export function ModelSettings({
               </label>
               <label className={s.field}>
                 显示名称
-                <input
+                <Input
                   value={draft.name}
                   disabled={busy}
                   required
@@ -280,7 +303,7 @@ export function ModelSettings({
           ) : null}
           <label className={s.field}>
             API 地址
-            <input
+            <Input
               value={draft.baseURL}
               disabled={busy || builtin}
               type="url"
@@ -293,7 +316,7 @@ export function ModelSettings({
           <label className={s.field}>
             API Key
             <div className={s.keyField}>
-              <input
+              <Input
                 ref={builtin ? firstInput : undefined}
                 aria-label="API Key"
                 value={key}
@@ -345,7 +368,7 @@ export function ModelSettings({
                   <div className={s.modelFields}>
                     <label className={s.field}>
                       模型 ID
-                      <input
+                      <Input
                         aria-label={`模型 ID ${i + 1}`}
                         required
                         value={model.id}
@@ -363,7 +386,7 @@ export function ModelSettings({
                     </label>
                     <label className={s.field}>
                       模型名称
-                      <input
+                      <Input
                         aria-label={`模型名称 ${i + 1}`}
                         required
                         value={model.name}
@@ -396,7 +419,7 @@ export function ModelSettings({
                       {(['contextWindow', 'maxTokens'] as const).map((field) => (
                         <label className={s.field} key={field}>
                           {field === 'contextWindow' ? '上下文窗口' : '最大输出 Token'}
-                          <input
+                          <Input
                             type="number"
                             min={1}
                             max={field === 'contextWindow' ? 10000000 : 1000000}
@@ -446,7 +469,7 @@ export function ModelSettings({
               </Button>
             </div>
           </div>
-        </form>
+        </Form>
       ) : null}
       {error ? (
         <p role="alert" className={s.error}>
@@ -454,7 +477,7 @@ export function ModelSettings({
           <Button
             disabled={busy}
             onClick={() => {
-              clear()
+              setError('')
               void client.ctx.remote.platform
                 .modelProviders()
                 .then(unwrap)

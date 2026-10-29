@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * Official popupSelect shell: renders one session's PopupSelectController
  * store into the conversation.input.overlay anchor. Unlike the slash menu
@@ -176,7 +177,7 @@ export function PopupSelectView({ popup, t }: PopupSelectViewProps) {
             <div className={css.error} role="alert">
               <span className={css.errorText}>{state.error}</span>
               {state.status === 'failed' && (
-                <button type="button" className={css.retry} onClick={() => { popup.retry() }}>{t('retry')}</button>
+                <ActionButton type="button" className={css.retry} onClick={() => { popup.retry() }}>{t('retry')}</ActionButton>
               )}
             </div>
           )}

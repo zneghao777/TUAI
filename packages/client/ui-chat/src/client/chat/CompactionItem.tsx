@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 // A compaction marker does not replace shadowed transcript rows. It is
 // expandable only when the current window includes its cited summary.
 
@@ -47,7 +48,7 @@ export const CompactionItem = memo(function CompactionItem({
       ?? (expandable ? t('message.compaction.expand') : t('message.compaction.unavailable'))
   return (
     <div className={css.compactionRow}>
-      <button
+      <ActionButton
         type="button"
         className={css.compactionButton}
         disabled={!expandable}
@@ -68,7 +69,7 @@ export const CompactionItem = memo(function CompactionItem({
         <span className={css.compactionTitle}>{title ?? t('message.compaction')}</span>
         <span className={css.compactionSep} aria-hidden />
         <span className={css.compactionSummary}>{summary}</span>
-      </button>
+      </ActionButton>
       {open && node.summary !== null
         && <div className={css.compactionBody}><MarkdownText text={node.summary} labels={labels} /></div>}
     </div>

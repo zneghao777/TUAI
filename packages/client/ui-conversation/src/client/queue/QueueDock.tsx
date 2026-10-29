@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { Context } from '@deepseek-ai/cordis'
 import { useEffect, useId, useMemo, useState } from 'react'
 import type { FileAttachmentRef, ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
@@ -169,7 +170,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
     <div className={css.dock} data-queue-dock="">
       <div className={css.panel}>
         {rowCount > 1 && (
-          <button
+          <ActionButton
             type="button"
             className={css.header}
             aria-controls={listId}
@@ -185,7 +186,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
             <span className={css.chevron} aria-hidden>
               {expanded ? <IconChevronDownOutlineRegular /> : <IconChevronUpOutlineRegular />}
             </span>
-          </button>
+          </ActionButton>
         )}
         <ul id={listId} className={css.list} hidden={!listVisible}>
           {listVisible && queue.map((row) => {
@@ -239,7 +240,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                     ? (
                       <>
                         <Tooltip portal label={t('queue.save')} side="bottom" delayMs={500}>
-                          <button
+                          <ActionButton
                             type="button"
                             className={css.action}
                             aria-label={t('queue.save')}
@@ -247,10 +248,10 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                             onClick={() => { void saveEdit() }}
                           >
                             <IconCheckOutlineRegular size={14} />
-                          </button>
+                          </ActionButton>
                         </Tooltip>
                         <Tooltip portal label={t('queue.cancelEdit')} side="bottom" delayMs={500}>
-                          <button
+                          <ActionButton
                             type="button"
                             className={css.action}
                             aria-label={t('queue.cancelEdit')}
@@ -258,14 +259,14 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                             onClick={() => { setEditing(null) }}
                           >
                             <IconCloseOutlineRegular size={14} />
-                          </button>
+                          </ActionButton>
                         </Tooltip>
                       </>
                     )
                     : (
                       <>
                         <Tooltip portal label={t('queue.edit')} side="bottom" delayMs={500} disabled={text === null}>
-                          <button
+                          <ActionButton
                             type="button"
                             className={css.action}
                             aria-label={t('queue.edit')}
@@ -278,10 +279,10 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                             }}
                           >
                             <IconEditOutlineRegular size={14} />
-                          </button>
+                          </ActionButton>
                         </Tooltip>
                         <Tooltip portal label={t('queue.remove')} side="bottom" delayMs={500}>
-                          <button
+                          <ActionButton
                             type="button"
                             className={css.action}
                             aria-label={t('queue.remove')}
@@ -295,10 +296,10 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                             }}
                           >
                             <IconTrashOutlineRegular size={14} />
-                          </button>
+                          </ActionButton>
                         </Tooltip>
                         <Tooltip portal label={t('queue.steer')} side="bottom" delayMs={500} disabled={!running}>
-                          <button
+                          <ActionButton
                             type="button"
                             className={css.action}
                             aria-label={t('queue.steer')}
@@ -313,7 +314,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                             }}
                           >
                             <IconSendOutlineRegular />
-                          </button>
+                          </ActionButton>
                         </Tooltip>
                       </>
                     )}
@@ -352,7 +353,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                 })}</span>
                 <span className={css.status} role="status">{t('queue.sending')}</span>
                 {queueMutable && <div className={css.actions}>
-                  <button
+                  <ActionButton
                     type="button"
                     className={css.action}
                     aria-label={t('queue.edit')}
@@ -360,8 +361,8 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                     disabled
                   >
                     <IconEditOutlineRegular size={14} />
-                  </button>
-                  <button
+                  </ActionButton>
+                  <ActionButton
                     type="button"
                     className={css.action}
                     aria-label={t('queue.remove')}
@@ -369,8 +370,8 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                     disabled
                   >
                     <IconTrashOutlineRegular size={14} />
-                  </button>
-                  <button
+                  </ActionButton>
+                  <ActionButton
                     type="button"
                     className={css.action}
                     aria-label={t('queue.steer')}
@@ -378,7 +379,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
                     disabled
                   >
                     <IconSendOutlineRegular />
-                  </button>
+                  </ActionButton>
                 </div>}
               </li>
             )

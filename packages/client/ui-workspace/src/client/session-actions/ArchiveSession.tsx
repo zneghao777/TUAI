@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The archive action: a `sidebar.workspaces.session.menu.item` row and a
  * `sidebar.workspaces.session.row.action` button over one injected behavior,
@@ -65,14 +66,14 @@ export function ArchiveSessionRowButton({
   if (!allowed) return null
   return (
     <Tooltip label={t(archived ? 'actions.unarchive' : 'actions.archive')} side="bottom" align="end" delayMs={500} portal>
-      <button
+      <ActionButton
         type="button"
         className={css.iconButton}
         aria-label={t(archived ? 'menu.unarchiveSession' : 'menu.archiveSession')}
         onClick={() => { (archived ? unarchiveSession : archiveSession)(sessionId) }}
       >
         {archived ? <IconUnarchiveOutlineRegular size={14} /> : <IconArchiveOutlineRegular size={14} />}
-      </button>
+      </ActionButton>
     </Tooltip>
   )
 }

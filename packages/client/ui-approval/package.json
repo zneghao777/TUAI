@@ -60,7 +60,7 @@
     "@deepseek-ai/dsh-llm": "workspace:*",
     "@deepseek-ai/dsh-session": "workspace:*",
     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
-    "react": "^18.2.0",
+    "react": "^19.0.0",
     "@deepseek-ai/dsh-client-shortcuts": "workspace:*"
   },
   "files": [
@@ -78,7 +78,7 @@
     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
     "@deepseek-ai/dsh-client-locale": "workspace:*",
     "@deepseek-ai/dsh-client-shortcuts": "workspace:*",
-    "react": "^18.2.0",
+    "react": "^19.0.0",
     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
     "@deepseek-ai/dsh-llm": "workspace:*",

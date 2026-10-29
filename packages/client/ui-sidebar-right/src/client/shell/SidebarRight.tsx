@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The Sidebar's seat in the frame, and the panel it draws.
  *
@@ -270,7 +271,7 @@ function PanelChrome({ sessionId, fullscreen, actions, t, shortcuts, toggleFulls
   return (
     <>
       <Tooltip label={modeLabel} shortcutKeys={mode?.keys} side="bottom" delayMs={500}>
-        <button
+        <ActionButton
           type="button"
           className={css.iconButton}
           aria-label={modeLabel}
@@ -279,10 +280,10 @@ function PanelChrome({ sessionId, fullscreen, actions, t, shortcuts, toggleFulls
           onClick={toggleFullscreen}
         >
           {fullscreen ? <ExitFullscreenGlyph /> : <FullscreenGlyph />}
-        </button>
+        </ActionButton>
       </Tooltip>
       <Tooltip label={t('chrome.collapse')} shortcutKeys={toggle?.keys} side="bottom" delayMs={500}>
-        <button
+        <ActionButton
           type="button"
           className={css.iconButton}
           aria-label={t('chrome.collapseAria')}
@@ -291,7 +292,7 @@ function PanelChrome({ sessionId, fullscreen, actions, t, shortcuts, toggleFulls
           onClick={() => { actions.toggleExpanded(sessionId) }}
         >
           <IconPanelLeftOutlineRegular className={css.collapseGlyph} />
-        </button>
+        </ActionButton>
       </Tooltip>
     </>
   )
@@ -301,7 +302,7 @@ function PanelChrome({ sessionId, fullscreen, actions, t, shortcuts, toggleFulls
  * The panel: the docked surface with the two controls in its top-right strip,
  * anchored to the frame's right edge and slid off it while collapsed.
  */
-function SidebarPanel(panel: PanelProps & { width: number; panelRef: RefObject<HTMLDivElement> }): ReactNode {
+function SidebarPanel(panel: PanelProps & { width: number; panelRef: RefObject<HTMLDivElement | null> }): ReactNode {
   const { sessionId, surface, actions, t, renderSlot, openTab, width, reportRoom, fullscreen, panelRef } = panel
   const { expanded } = surface.layout
   const types = panel.useTabTypes(value => value)

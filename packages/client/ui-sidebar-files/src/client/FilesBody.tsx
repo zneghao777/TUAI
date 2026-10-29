@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The file tree's body: the session's workspace root, listed one level at a time.
  *
@@ -84,10 +85,10 @@ function Entry({ parent, entry, tree }: { parent: string; entry: WorkspaceDirect
     const expanded = tree.state.expanded.includes(path)
     return (
       <li className={css.item} data-files-entry="directory" data-files-path={path}>
-        <button type="button" className={css.row} aria-expanded={expanded} onClick={() => { tree.onToggle(parent, path) }}>
+        <ActionButton type="button" className={css.row} aria-expanded={expanded} onClick={() => { tree.onToggle(parent, path) }}>
           {expanded ? <IconFolderOpenRegular className={css.icon} /> : <IconFolderCloseRegular className={css.icon} />}
           <span className={css.name}>{entry.name}</span>
-        </button>
+        </ActionButton>
         {expanded && <ul className={css.level}><Level path={path} tree={tree} /></ul>}
       </li>
     )
@@ -95,10 +96,10 @@ function Entry({ parent, entry, tree }: { parent: string; entry: WorkspaceDirect
   if (entry.type === 'file') {
     return (
       <li className={css.item} data-files-entry="file" data-files-path={path}>
-        <button type="button" className={css.row} onClick={() => { tree.onOpen(path) }}>
+        <ActionButton type="button" className={css.row} onClick={() => { tree.onOpen(path) }}>
           <FileTypeIcon kind={classifyFileType(entry.name)} size={16} className={css.fileIcon} />
           <span className={css.name}>{entry.name}</span>
-        </button>
+        </ActionButton>
       </li>
     )
   }
@@ -195,15 +196,15 @@ export function FilesBody({
       <div className={css.header}>
         {/[/\\]data[/\\]workspaces[/\\][A-Za-z0-9._-]+$/.test(state.root) ? null : <PathLabel path={state.root} className={css.path} data-files-path />}
         <span hidden>
-          <button type="button" className={css.tool} aria-label={t('autoRefresh')}
+          <ActionButton type="button" className={css.tool} aria-label={t('autoRefresh')}
             aria-pressed={state.autoRefresh} data-files-auto-refresh
             title={t(state.autoRefresh ? 'autoRefresh.disable' : 'autoRefresh.enable')}
             onClick={() => { setAutoRefresh(tab.id, !state.autoRefresh) }}>
             {state.autoRefresh ? <IconPauseOutlineRegular /> : <IconPlayOutlineRegular />}
-          </button>
+          </ActionButton>
         </span>
         <Tooltip label={t('reload')} shortcutKeys={tab.refreshShortcut?.keys} side="bottom" delayMs={500}>
-          <button
+          <ActionButton
             type="button"
             className={css.tool}
             aria-label={t('reload')}
@@ -212,7 +213,7 @@ export function FilesBody({
             onClick={reload}
           >
             <IconRefreshOutlineRegular />
-          </button>
+          </ActionButton>
         </Tooltip>
         {renderSlot('sidebar.right.tab.files.actions', {
           absolutePath: state.root,

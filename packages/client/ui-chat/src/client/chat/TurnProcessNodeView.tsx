@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import { memo } from 'react'
 import { IconChevronDownOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ChatNodeViewProps } from '../contract/slots.ts'
@@ -34,7 +35,7 @@ export const TurnProcessNodeView = memo(function TurnProcessNodeView({
   return (
     <>
       <span className={a11yCss.visuallyHidden} role="status" aria-live="polite" aria-atomic="true">{announcement}</span>
-      <button
+      <ActionButton
         type="button"
         className={css.root}
         data-open={open || undefined}
@@ -56,7 +57,7 @@ export const TurnProcessNodeView = memo(function TurnProcessNodeView({
           ))}
         </span>
         {canCollapse && <IconChevronDownOutlineRegular className={css.chevron} />}
-      </button>
+      </ActionButton>
     </>
   )
 })

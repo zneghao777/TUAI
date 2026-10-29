@@ -1,7 +1,6 @@
 /** Controlled native checkbox with a caller-owned visible and accessible label. */
 
-import clsx from 'clsx'
-import css from './Checkbox.module.css'
+import { Checkbox as HeroCheckbox, Label } from '@heroui/react'
 
 /**
  * Render a labeled checkbox with native keyboard and form semantics.
@@ -22,10 +21,8 @@ export function Checkbox({ checked, onChange, label, disabled = false, title, cl
   className?: string | undefined
 }) {
   return (
-    <label className={clsx(css.checkbox, className)} title={title}>
-      <input type="checkbox" checked={checked} disabled={disabled}
-        onChange={(event) => { onChange(event.target.checked) }} />
-      <span>{label}</span>
-    </label>
+    <HeroCheckbox isSelected={checked} onChange={(next) => { if (!disabled) onChange(next) }} isDisabled={disabled} render={(props) => <div {...props} title={title} />} className={className ?? ''}>
+      <HeroCheckbox.Content><HeroCheckbox.Control><HeroCheckbox.Indicator /></HeroCheckbox.Control><Label>{label}</Label></HeroCheckbox.Content>
+    </HeroCheckbox>
   )
 }

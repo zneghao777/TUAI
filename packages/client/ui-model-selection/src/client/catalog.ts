@@ -46,7 +46,9 @@ export class ModelCatalogDirectory {
    */
   load(): Promise<ModelCatalog> {
     const state = this.store.getSnapshot()
-    if (state.status === 'ready' && state.value !== null) return Promise.resolve(state.value)
+    // A successful RPC can still contain failed providers. An explicit retry must
+    // ask the Host again while keeping the usable groups visible during loading.
+    if (state.status === 'ready' && state.value !== null && state.value.failures.length === 0) return Promise.resolve(state.value)
     if (this.inflight !== undefined) return this.inflight
     const generation = this.generation
     this.store.update((draft) => {

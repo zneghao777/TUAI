@@ -767,8 +767,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-slots/package.json",
-          "sha256": "304ee39aa6707df67e6c9b30312cdca998b83ea5592ad55fe9b62c1be332a800",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "02714a1f13a50b7c858c6f1ce58adbbcb71c61eb80470e3e4458dfd788a2f1ea",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         }
       ],
       "additionalFiles": [
@@ -1004,8 +1004,8 @@
       "localPatches": [
         {
           "path": "packages/client/ui-renderer/package.json",
-          "sha256": "14c851e1e7d68cc72580db4f050ae87c9ed4c2c2756ffdf71321944e4f36f06f",
-          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+          "sha256": "9caaba8bae89e29a53a4ce243b79fc597a399d02b1f6caa2996ef81db5b8fdd6",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-renderer/src/client/index.ts",

@@ -9,6 +9,9 @@ React Web 工作区、类型化协议、上传、审批、队列和恢复；持�
 Composer 指令与引用、四项权限、问题审批、完整工作区管理及文件预览接入生产，保留天质主题。
 真实文件／沙箱／Web 工具和后台独立工作区可用；用量统计暂时隐藏。
 新范围验证、万条历史优化与剩余平台边界见[P2 收口核验](docs/verification/P2-DSH换壳收口验收.md)。
+2026-10-29，用户将 [HeroUI 界面改造](docs/specs/appendices/P2-HeroUI组件改造需求.md)
+纳入 P2；TZ-070～075 已完成本机验收，模型面板精简、连续拖动吸附、鼠标柔光及通用控件进入生产路径。
+范围、48 项浏览器回归与平台限制见 [HeroUI 验收](docs/verification/P2-HeroUI组件改造验收.md)。
 
 ## 安装与运行
 
@@ -116,8 +119,9 @@ Electron 已确认；当前只验证受控桥的调用方、Host、代次和资�
 - Profile 与 Patch 是用户维护的可信本机代码配置。未接入上游账户、匿名身份收集、遥测或更新服务。
   模型协议的原始包归属字段保留，产品不生成上游匿名身份。
 
-Host 与 Client 类型分别检查；Web 使用 React 18.3.1、TypeScript 6.0.3 和 Vite 6.4.3，
-使用 CSS Modules、设计变量与独立客户端对象/订阅绑定。
+Host 与 Client 类型分别检查；Web 当前使用 React 19.2.9、TypeScript 6.0.3 和 Vite 6.4.3，
+已接入 HeroUI 3.2.6、Tailwind CSS 4.3.3，并使用设计变量与独立客户端对象／订阅绑定。
+HeroUI 组件与保留专用实现的清单见本轮验收记录，业务对象仍由 DSH 与产品 Host 管理。
 来源包保留 DSH 名称和许可，产品适配位于 `packages/product/agent-runtime`。
 不引入第二套模型循环，也不使用 Session 的运行标志冒充产品任务成功。
 

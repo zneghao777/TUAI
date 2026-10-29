@@ -6,6 +6,7 @@ import {
   type ButtonHTMLAttributes,
   type ReactNode,
 } from 'react'
+import { Button as HeroButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import s from '../App.module.css'
@@ -15,14 +16,15 @@ export function Button({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { busy?: boolean }) {
   return (
-    <button
+    <HeroButton
       {...props}
+      variant="ghost"
       className={`${s.button} ${props.className ?? ''}`}
       disabled={props.disabled || busy}
       aria-busy={busy}
     >
       {children}
-    </button>
+    </HeroButton>
   )
 }
 export function Icon({

@@ -31,6 +31,7 @@ test('DSH Slot 切换隔离草稿，快捷键只创建一次且尊重弹窗', as
     await expect(input).toHaveText('第一个会话的草稿')
     await page.getByRole('button', { name: '设置', exact: true }).click()
     await expect(page.getByRole('dialog')).toBeVisible()
+    await expect(page.getByRole('dialog')).toHaveAttribute('data-shortcut-modal', 'settings')
     const count = await page.locator('[data-session-id]').count()
     await page.keyboard.press(shortcut)
     await expect(page.getByRole('dialog')).toBeVisible()

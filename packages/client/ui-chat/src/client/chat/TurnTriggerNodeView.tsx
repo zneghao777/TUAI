@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** An independent, expandable notice explaining a non-human Turn trigger. */
 import { useId, useState, type ComponentType } from 'react'
 import {
@@ -35,12 +36,12 @@ export function TurnTriggerNodeView({ node, t }: Pick<ChatNodeViewProps<'turn-tr
   const time = formatMessageClock(node.data.time, t)
   return (
     <section className={css.root} data-turn-trigger>
-      <button className={css.header} type="button" aria-expanded={open} aria-controls={bodyId} onClick={() => { setOpen(!open) }}>
+      <ActionButton className={css.header} type="button" aria-expanded={open} aria-controls={bodyId} onClick={() => { setOpen(!open) }}>
         <span className={css.icon} aria-hidden><TriggerIcon size={14} /></span>
         <span className={css.title}>{t(details.title)}</span>
         <time className={css.time} dateTime={date.toISOString()}>{time}</time>
         <IconChevronDownOutlineRegular size={12} className={open ? css.openChevron : css.chevron} />
-      </button>
+      </ActionButton>
       {open && <div id={bodyId} className={css.body}>
         <p className={css.explanation}>{t('message.trigger.explanation')}</p>
         <div className={css.content}><NoticeBody content={node.data.content} source={node.data.source} t={t} /></div>

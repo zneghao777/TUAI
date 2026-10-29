@@ -1,3 +1,4 @@
+import { ActionButton } from './Button.tsx'
 import { memo, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
 import clsx from 'clsx'
 import { IconChevronDownOutlineRegular, IconChevronUpOutlineRegular } from './icons/index.tsx'
@@ -97,7 +98,7 @@ export const DisclosureRow = memo(function DisclosureRow({
           onKeyDown={rowExpands ? toggleFromKeyboard : undefined}
         >
           {expandable && !rowExpands ? (
-            <button
+            <ActionButton
               type="button"
               className={clsx(css.leading, leadingClassName)}
               aria-label={title}
@@ -105,7 +106,7 @@ export const DisclosureRow = memo(function DisclosureRow({
               onClick={toggleFromLeading}
             >
               {leading}
-            </button>
+            </ActionButton>
           ) : (
             <span className={clsx(css.leading, leadingClassName)}>
               {leading}

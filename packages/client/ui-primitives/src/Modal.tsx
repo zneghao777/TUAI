@@ -1,3 +1,5 @@
+import { Surface } from '@heroui/react'
+import { ActionButton } from './Button.tsx'
 import { useRef } from 'react'
 import type { KeyboardEventHandler, ReactNode } from 'react'
 import { createPortal } from 'react-dom'
@@ -57,7 +59,7 @@ export function Modal({
   return createPortal((
     <div className={css.root} role="presentation" onKeyDownCapture={onKeyDownCapture}>
       <div className={css.mask} style={backdropBlur ? undefined : { backdropFilter: 'none' }} aria-hidden="true" onClick={onClose} />
-      <div
+      <Surface
         ref={dialog}
         tabIndex={-1}
         data-shortcut-modal={shortcutModal}
@@ -73,9 +75,9 @@ export function Modal({
               <div className={clsx(css.content, contentClassName)}>
                 <div className={css.header}>
                   <h2 className={css.title}>{title}</h2>
-                  <button type="button" className={css.close} aria-label={closeLabel} onClick={onClose}>
+                  <ActionButton type="button" className={css.close} aria-label={closeLabel} onClick={onClose}>
                     <IconCloseOutlineRegular size={14} />
-                  </button>
+                  </ActionButton>
                 </div>
                 {description !== undefined && description !== '' && (
                   <p className={css.description}>{description}</p>
@@ -85,7 +87,7 @@ export function Modal({
               {footer !== undefined && <div className={css.footer}>{footer}</div>}
             </>
           )}
-      </div>
+      </Surface>
     </div>
   ), document.body)
 }

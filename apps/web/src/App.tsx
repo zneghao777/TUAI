@@ -35,7 +35,7 @@ export function App({
     [panel, setPanel] = useState<'artifacts' | 'settings'>()
   const narrow = useMediaQuery('(max-width:760px)'),
     navigation = useRef<HTMLElement>(null)
-  const owned = useRef<SessionReference>(),
+  const owned = useRef<SessionReference | undefined>(undefined),
     version = useRef(0),
     initialized = useRef('')
   useEffect(() => {
@@ -178,7 +178,7 @@ export function App({
       ) : null}
       <aside
         ref={navigation}
-        {...(narrow && !sidebar ? { inert: '' } : {})}
+        {...(narrow && !sidebar ? { inert: true } : {})}
         className={`${s.sidebar} ${sidebar ? s.sidebarOpen : ''}`}
       >
         <div className={s.brand}>
@@ -232,7 +232,7 @@ export function App({
           </Button>
         </div>
       </aside>
-      <main {...(narrow && sidebar ? { inert: '' } : {})} className={s.main}>
+      <main {...(narrow && sidebar ? { inert: true } : {})} className={s.main}>
         <header className={s.header}>
           <Button className={s.mobileMenu} aria-label="打开导航" onClick={() => setSidebar(true)}>
             <Icon name="menu" />

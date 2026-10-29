@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 // An enclosing `[data-conversation-scroll]` owns scrolling when present;
 // otherwise this view owns it. Each row subscribes to one stable node key.
 
@@ -224,9 +225,9 @@ export function ChatView({
             )}
             {hasMore && (
               <div className={css.older}>
-                <button type="button" disabled={loadingOlder} onClick={scroll.loadEarlier}>
+                <ActionButton type="button" disabled={loadingOlder} onClick={scroll.loadEarlier}>
                   {loadingOlder ? t('loading') : t('chat.loadOlder')}
-                </button>
+                </ActionButton>
               </div>
             )}
             <MarkdownDelegateProvider openFile={requestOpenFile} openExternalLink={openExternalLink} fileImages={fileImages}>
@@ -252,14 +253,14 @@ export function ChatView({
       </div>
       {!scroll.followingTail && (
         <div className={css.toBottomSlot}>
-          <button
+          <ActionButton
             type="button"
             className={css.toBottom}
             aria-label={t('chat.toBottom')}
             onClick={scroll.returnToBottom}
           >
             <IconChevronDownOutlineRegular />
-          </button>
+          </ActionButton>
         </div>
       )}
       {fileOpenError !== null && (

@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Read-only spreadsheet surface backed by browser-parsed workbook data. */
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Workbook } from '@fortune-sheet/react'
@@ -56,9 +57,9 @@ export function ExcelBody({ content, format, limits, t, loading }: LoadedExcelBo
     </div>}
     <div ref={workbookRef} className={`${css.workbook} ${hasFormulas ? css.withFormulaWarning : ''}`}>
       {hasFormulas && <Tooltip portal openOnClick label={t('formulaWarning')} side="bottom" delayMs={500}>
-        <button type="button" className={css.formulaWarning} aria-label={t('formulaWarning')} data-excel-formula-warning>
+        <ActionButton type="button" className={css.formulaWarning} aria-label={t('formulaWarning')} data-excel-formula-warning>
           <IconWarningTriangleOutlineRegular size={14} />
-        </button>
+        </ActionButton>
       </Tooltip>}
       <Workbook key={`${attempt}:${t('language')}`} data={state.value.sheets} lang={t('language')}
         allowEdit={false} showToolbar={false} showFormulaBar showSheetTabs forceCalculation={false}

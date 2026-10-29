@@ -16,6 +16,10 @@ strictPeerDependencies: true
 # Upstream telemetry is a type closure only; keep its peer ranges compatible.
 overrides:
   '@opentelemetry/api': '1.9.0'
+  'react': '19.2.9'
+  'react-dom': '19.2.9'
+  '@types/react': '19.2.17'
+  '@types/react-dom': '19.2.7'
 
 patchedDependencies:
   '@fortune-sheet/core@1.0.4': patches/@fortune-sheet__core@1.0.4.patch

@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import { createContext, useContext } from 'react'
 export const WorkspacePathsVisible = createContext(true)
 /**
@@ -332,20 +333,20 @@ function ProjectRow({
             portal
             closeOnPointerLeave
             anchor={(
-              <button
+              <ActionButton
                 type="button"
                 className={css.iconButton}
                 aria-label={t('actions.workspace.aria', { name: label })}
                 onClick={(e) => { e.stopPropagation(); setMenuOpen(v => !v) }}
               >
                 <IconEllipsisOutlineRegular />
-              </button>
+              </ActionButton>
             )}
           />
         )}
         {access.create && (
           <Tooltip label={t('actions.newSession')} shortcutKeys={newShortcut?.keys} side="bottom" align="end" delayMs={500} portal>
-            <button
+            <ActionButton
               type="button"
               className={css.iconButton}
               aria-keyshortcuts={newShortcut?.aria}
@@ -353,7 +354,7 @@ function ProjectRow({
               onClick={(e) => { e.stopPropagation(); onCreate() }}
             >
               <IconNewChatOutlineRegular />
-            </button>
+            </ActionButton>
           </Tooltip>
         )}
       </span>
@@ -559,14 +560,14 @@ export function SearchResultItem({
         {result.archived && canUnarchive && (
           <span className={css.rowActions}>
             <Tooltip label={t('actions.unarchive')} side="bottom" align="end" delayMs={500} portal>
-              <button
+              <ActionButton
                 type="button"
                 className={css.iconButton}
                 aria-label={t('menu.unarchiveSession')}
                 onClick={(e) => { e.stopPropagation(); onUnarchive(result.id) }}
               >
                 <IconUnarchiveOutlineRegular size={14} />
-              </button>
+              </ActionButton>
             </Tooltip>
           </span>
         )}
@@ -769,14 +770,14 @@ export function SessionNodeItem({
             portal
             closeOnPointerLeave
             anchor={(
-              <button
+              <ActionButton
                 type="button"
                 className={css.iconButton}
                 aria-label={t('actions.session.aria', { name: title })}
                 onClick={() => { setMenuOpen(v => !v) }}
               >
                 <IconEllipsisOutlineRegular />
-              </button>
+              </ActionButton>
             )}
           >
             {renderSlot(

@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The guide tab's body: a chain host, and the guide it falls back to.
  *
@@ -71,7 +72,7 @@ function EntryBox({ entry, described, onPick, shortcut }: {
   const Icon = entry.icon ?? CubeGlyph
   const description = described ? entry.description?.() : undefined
   return (
-    <button
+    <ActionButton
       type="button"
       className={css.entry}
       data-sidebar-right-guide-entry={entry.kind}
@@ -87,7 +88,7 @@ function EntryBox({ entry, described, onPick, shortcut }: {
         {description !== undefined && <span className={css.entryDescription}>{description}</span>}
       </span>
       {shortcut !== undefined && shortcut.keys.length > 0 && <ShortcutKeys keys={shortcut.keys} />}
-    </button>
+    </ActionButton>
   )
 }
 
@@ -104,11 +105,11 @@ function GuideMoreMenu({ label, entries, onOpen, onPinnedChange, renderSlot }: G
     <Menu open={open} onClose={onDismiss} portal autoFocus minWidthFromAnchor align="end"
       className={css.moreAnchor} listClassName={css.moreMenu}
       anchor={(
-        <button type="button" className={css.entry} aria-label={label} aria-haspopup="menu" aria-expanded={open}
+        <ActionButton type="button" className={css.entry} aria-label={label} aria-haspopup="menu" aria-expanded={open}
           onClick={() => { setOpen(value => !value) }}>
           <span className={css.entryIcon}><GuideMoreIcon /></span>
           <span className={css.entryText}><span className={css.entryTitle}>{label}</span></span>
-        </button>
+        </ActionButton>
       )}>
       {renderSlot('sidebar.right.tab.guide.actions', { entries, onOpen, onPinnedChange, onDismiss })}
     </Menu>

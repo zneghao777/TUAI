@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Settled question batches rendered with the shared user-message surface. */
 import { memo } from 'react'
 import type {} from '@deepseek-ai/dsh-client-ui-chat/client'
@@ -52,9 +53,9 @@ export function QuestionReplyBubble({ data, t }: { data: QuestionReplyData; t: P
           {new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hour12: false }).format(data.time)}
         </span>
         <Tooltip label={copied ? t('copied') : t('copy')} side="bottom">
-          <button type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
+          <ActionButton type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
             {copied ? <IconCheckOutlineRegular /> : <IconCopyOutlineRegular />}
-          </button>
+          </ActionButton>
         </Tooltip>
       </div>
     </div>

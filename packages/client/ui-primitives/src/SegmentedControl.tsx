@@ -1,3 +1,4 @@
+import { ActionButton } from './Button.tsx'
 // SegmentedControl: a tablist of two or more equal-width segments with one
 // sliding indicator, for switching a card or panel between a few modes. The
 // owner holds the selection; `label` is required so the tablist never ships
@@ -117,7 +118,7 @@ export function SegmentedControl<Value extends string>({
       {options.map((option) => {
         const active = option.value === value
         return (
-          <button
+          <ActionButton
             key={option.value}
             id={`${id}-${option.value}`}
             type="button"
@@ -132,7 +133,7 @@ export function SegmentedControl<Value extends string>({
             onKeyDown={onKeyDown}
           >
             {option.label}
-          </button>
+          </ActionButton>
         )
       })}
     </div>

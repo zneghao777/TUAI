@@ -16,6 +16,21 @@ function directory(models: () => Promise<unknown>): ModelCatalogDirectory {
 }
 
 describe('ModelCatalogDirectory', () => {
+  it('retries provider-local failures and then caches the recovered catalog', async () => {
+    const partial: ModelCatalog = { ...catalog('usable'), failures: [{ id: 'offline', name: 'Offline', message: 'Unavailable' }] }
+    const models = vi.fn()
+      .mockResolvedValueOnce({ ok: true, value: partial })
+      .mockResolvedValueOnce({ ok: true, value: catalog('recovered') })
+    const subject = directory(models)
+    await subject.load()
+    const retry = subject.load()
+    expect(subject.load()).toBe(retry)
+    expect(subject.store.getSnapshot().value).toEqual(partial)
+    await expect(retry).resolves.toEqual(catalog('recovered'))
+    await subject.load()
+    expect(models).toHaveBeenCalledTimes(2)
+  })
+
   it('shares one failing request, exposes the RPC error, and permits a retry', async () => {
     const models = vi.fn()
       .mockResolvedValueOnce({

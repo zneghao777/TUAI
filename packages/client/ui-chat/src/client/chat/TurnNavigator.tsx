@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Fixed-pitch virtual turn rail with independent activation and scroll controls. */
 import {
   forwardRef, memo, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState,
@@ -58,7 +59,7 @@ const TurnMark = memo(function TurnMark({
   else if (previewId !== undefined) classes.push(css.markPreview)
   if (busy) classes.push(css.markBusy)
   return (
-    <button
+    <ActionButton
       ref={registerElement}
       data-index={index}
       type="button"

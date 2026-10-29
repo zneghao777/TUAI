@@ -148,7 +148,7 @@ test('TZ-065/068 original drafts, references, workspace menu, archive filters an
     await archived.getByRole('button', { name: /^会话.*的操作/ }).click()
     await page.getByRole('menuitem', { name: /取消归档|恢复/ }).click()
     await page.getByRole('button', { name: '设置', exact: true }).click()
-    await page.getByRole('button', { name: '对话显示', exact: true }).click()
+    await page.getByRole('tab', { name: '对话显示', exact: true }).click()
     await expect(page.getByText('选择新会话的默认权限模式', { exact: false })).toBeVisible()
     await page.screenshot({ path: 'reports/p2/068-workspace-settings.png' })
   } finally {
@@ -221,11 +221,13 @@ test('TZ-066/067 original goal actions and plan review use real Host projections
     await expect(editor(page)).toBeVisible()
     const id = await current(page).getAttribute('data-session-id')
     const agent = host.runtime.ctx.agents.get(SessionId(id!))
+    host.model.holdGoalRounds = true
     await send(page, '/goal 验证目标生命周期')
     await expect.poll(() => host.runtime.ctx.goals.get(agent)?.objective).toBe('验证目标生命周期')
     await expect(page.getByRole('button', { name: '编辑目标', exact: true })).toBeVisible()
     await send(page, '/goal pause')
     await expect.poll(() => host.runtime.ctx.goals.get(agent)?.phase).toBe('paused')
+    host.model.holdGoalRounds = false
     await page.getByRole('button', { name: '编辑目标', exact: true }).click()
     await page.getByRole('textbox', { name: '目标内容', exact: true }).fill('修改后的验收目标')
     await page.getByRole('button', { name: '保存目标', exact: true }).click()

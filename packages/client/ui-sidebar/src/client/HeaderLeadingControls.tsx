@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Window-chrome controls for the fully hidden sidebar (frame shell.leading seat). */
 import {
   IconNewChatOutlineRegular, IconPanelLeftOutlineRegular, Tooltip,
@@ -33,7 +34,7 @@ export function HeaderLeadingControls({
   return (
     <div className={css.controls}>
       <Tooltip label={t('toggle.open')} shortcutKeys={shortcut?.keys} delayMs={500}>
-        <button
+        <ActionButton
           type="button"
           className={css.iconButton}
           aria-label={t('toggle.open')}
@@ -41,11 +42,11 @@ export function HeaderLeadingControls({
           onClick={() => { toggleSidebar() }}
         >
           <IconPanelLeftOutlineRegular size={16} />
-        </button>
+        </ActionButton>
       </Tooltip>
       {canStartSession && (
         <Tooltip label={t('session.new.label')} shortcutKeys={newShortcut?.keys} delayMs={500}>
-          <button
+          <ActionButton
             type="button"
             className={css.iconButton}
             aria-label={t('session.new.label')}
@@ -56,7 +57,7 @@ export function HeaderLeadingControls({
             }}
           >
             <IconNewChatOutlineRegular size={16} />
-          </button>
+          </ActionButton>
         </Tooltip>
       )}
     </div>

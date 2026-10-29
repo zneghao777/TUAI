@@ -1,3 +1,4 @@
+import { ActionButton } from './Button.tsx'
 import { useEffect, useState } from 'react'
 import { IconCheckOutlineRegular, IconRefreshOutlineRegular } from './icons/index.tsx'
 import { StateDot } from './StateDot.tsx'
@@ -72,7 +73,7 @@ export function ConnectionIndicator({
 
   const connecting = rendered === 'connecting'
   return (
-    <button
+    <ActionButton
       type="button"
       className={`${css.indicator} ${css.warning}${leavingClass}`}
       data-phase={rendered}
@@ -98,6 +99,6 @@ export function ConnectionIndicator({
           )
           : disconnectedLabel}
       </span>
-    </button>
+    </ActionButton>
   )
 }

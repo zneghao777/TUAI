@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -9,6 +10,7 @@ export default defineConfig({
   base: './',
   plugins: [
     react(),
+    tailwindcss(),
     {
       name: 'tianzhiai-ui-closure',
       generateBundle(_options, bundle) {

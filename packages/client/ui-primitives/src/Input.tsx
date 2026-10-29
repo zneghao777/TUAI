@@ -1,8 +1,10 @@
+import { definedProps } from './defined-props.ts'
 // Input: single-line text input atom (search boxes, inline forms). Multi-line
 // inline edits use InlineEditor; the composer is owned by the conversation package.
 
 import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react'
 import clsx from 'clsx'
+import { Input as HeroInput } from '@heroui/react'
 import css from './Input.module.css'
 
 /**
@@ -18,7 +20,7 @@ export const Input = forwardRef<HTMLInputElement, {
   return (
     <span className={clsx(css.wrap, className)}>
       {icon != null && <span className={css.icon}>{icon}</span>}
-      <input ref={ref} className={css.input} {...rest} />
+      <HeroInput ref={ref} className={css.input ?? ''} {...definedProps(rest)} />
     </span>
   )
 })

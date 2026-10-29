@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** General Settings row for the Composer's busy-state Enter preference. */
 import { useState } from 'react'
 import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
@@ -59,7 +60,7 @@ export function EnterBehaviorRow({ useBusyEnter, setBusyEnter, t }: EnterBehavio
         align="end"
         portal
         anchor={(
-          <button
+          <ActionButton
             type="button"
             className={css.selector}
             aria-haspopup="menu"
@@ -68,7 +69,7 @@ export function EnterBehaviorRow({ useBusyEnter, setBusyEnter, t }: EnterBehavio
           >
             {t(selectedLabel)}
             <IconChevronDownOutlineRegular className={css.chevron} />
-          </button>
+          </ActionButton>
         )}
       />
     </div>

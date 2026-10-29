@@ -5,7 +5,9 @@ import { observeComposition } from './keyboard-composition.ts'
 import { focusWithoutRing } from './focus.ts'
 
 /** Dialog and menu elements whose document order determines foreground shortcut ownership. */
-export const modalSelector = '[role="dialog"][aria-modal="true"], [role="menu"]'
+// React Aria uses inert outside its dialogs and omits aria-modal. Explicit
+// shortcut scopes bridge that focus owner without installing a second trap.
+export const modalSelector = '[role="dialog"][aria-modal="true"], [role="menu"], [role="dialog"][data-shortcut-modal], [role="alertdialog"][data-shortcut-modal]'
 
 const layers = new WeakMap<Document, { element: HTMLElement; close: () => void }[]>()
 

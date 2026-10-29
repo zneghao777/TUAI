@@ -1,3 +1,4 @@
+import { ActionButton } from './Button.tsx'
 /** Shared language, wrapping, and clipboard controls for code cards. */
 import {
   IconCheckOutlineRegular, IconCopyOutlineRegular, IconNowrapFillRegular, IconWrapFillRegular,
@@ -47,14 +48,14 @@ export function CodeToolbar({ lang, title, status, labels, copyLabel, copiedLabe
       <div className={css.actions}>
         {status !== undefined && <span className={css.status}>{status}</span>}
         {onWrap !== undefined && <Tooltip label={wrapLabel} side="top" portal>
-          <button type="button" className={css.action} aria-label={labels.wrapLabel} aria-pressed={wrapped} onClick={onWrap}>
+          <ActionButton type="button" className={css.action} aria-label={labels.wrapLabel} aria-pressed={wrapped} onClick={onWrap}>
             {wrapped ? <IconNowrapFillRegular size={14} /> : <IconWrapFillRegular size={14} />}
-          </button>
+          </ActionButton>
         </Tooltip>}
         {onCopy !== undefined && <Tooltip label={clipboardLabel} side="top" portal>
-          <button type="button" className={css.action} aria-label={clipboardLabel} onClick={onCopy}>
+          <ActionButton type="button" className={css.action} aria-label={clipboardLabel} onClick={onCopy}>
             {copied ? <IconCheckOutlineRegular size={14} /> : <IconCopyOutlineRegular size={14} />}
-          </button>
+          </ActionButton>
         </Tooltip>}
       </div>
     </div>

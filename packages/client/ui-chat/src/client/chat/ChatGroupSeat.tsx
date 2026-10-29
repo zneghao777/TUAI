@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Stable process container; display policy changes visibility, never member parents. */
 import { memo, useCallback, useEffect, useId, useRef, useState, type ComponentProps, type ReactNode } from 'react'
 import {
@@ -113,7 +114,7 @@ const ProcessGroupHeader = memo(function ProcessGroupHeader({ groupKey, useChatG
   const title = detail === '' ? label : `${label}${t('message.turnProcess.separator')}${detail}`
   const activity = data.closed ? data.summary.counts[0]?.kind ?? 'thinking' : live.activity
   return (
-    <button type="button" className={css.title} aria-expanded={open} aria-controls={bodyId}
+    <ActionButton type="button" className={css.title} aria-expanded={open} aria-controls={bodyId}
       data-process-activity={activity} onClick={(event) => { event.currentTarget.focus(); toggle() }}>
       <span className={css.leading} aria-hidden="true">
         <span className={css.activityIcon} data-step-process-icon>{PROCESS_ICONS[activity]}</span>
@@ -124,7 +125,7 @@ const ProcessGroupHeader = memo(function ProcessGroupHeader({ groupKey, useChatG
       <TextShimmer active={!data.closed}>
         <TextShimmer className={css.label}>{title}</TextShimmer>
       </TextShimmer>
-    </button>
+    </ActionButton>
   )
 })
 

@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The workspace/session browsing region filling the sidebar shell's
  * `sidebar.workspaces` hole: section header (title + view options + add
@@ -188,14 +189,14 @@ function ViewOptionsMenu({ groupBy, orderBy, archivedFilter, onGroupPick, onOrde
       portal
       anchor={(
         <Tooltip label={t('viewOptions.label')} side="bottom" delayMs={500}>
-          <button
+          <ActionButton
             type="button"
             className={clsx(css.iconButton, css.wide)}
             aria-label={t('viewOptions.label')}
             onClick={() => { setOpen(v => !v) }}
           >
             <IconSlidersTwoOutlineRegular />
-          </button>
+          </ActionButton>
         </Tooltip>
       )}
     />
@@ -306,9 +307,9 @@ function EmptySessions({ rowState, onLeaveArchivedOnly, t }: Pick<SessionTreePro
       {archivedOnly ? <IconArchiveOutlineRegular size={24} /> : <IconQueueOutlineRegular size={24} />}
       <div>{archivedOnly ? t('empty.noneArchived') : t('empty.none')}</div>
       {archivedOnly && (
-        <button type="button" className={css.emptyAction} onClick={onLeaveArchivedOnly}>
+        <ActionButton type="button" className={css.emptyAction} onClick={onLeaveArchivedOnly}>
           {t('empty.viewOthers')}
-        </button>
+        </ActionButton>
       )}
     </div>
   )
@@ -643,7 +644,7 @@ function SessionTree({
           )
         })}
         {collapsed.hiddenCount > 0 && (
-          <button
+          <ActionButton
             type="button"
             className={css.sessionOverflowButton}
             data-row-key={`overflow:${group.key}`}
@@ -663,7 +664,7 @@ function SessionTree({
             {sessionsExpanded
               ? t('sessions.collapse')
               : t('sessions.expand', { n: visible.hiddenCount })}
-          </button>
+          </ActionButton>
         )}
       </div>
     )
@@ -1300,7 +1301,7 @@ export function WorkspaceBrowser({
               }}
             >
               <Tooltip label={t('search')} shortcutKeys={searchShortcut?.keys} side="bottom" delayMs={500} disabled={searchExpanded}>
-                <button
+                <ActionButton
                   type="button"
                   className={css.searchButton}
                   aria-label={t('search.sessions.aria')}
@@ -1311,7 +1312,7 @@ export function WorkspaceBrowser({
                   }}
                 >
                   <IconSearchOutlineRegular size={searchExpanded ? 11 : 14} />
-                </button>
+                </ActionButton>
               </Tooltip>
               <input
                 ref={searchInput}
@@ -1329,7 +1330,7 @@ export function WorkspaceBrowser({
                 }}
               />
               {searchExpanded && (
-                <button
+                <ActionButton
                   type="button"
                   className={css.clearButton}
                   aria-label={t('search.clear')}
@@ -1340,7 +1341,7 @@ export function WorkspaceBrowser({
                   }}
                 >
                   <IconCloseFillRegular />
-                </button>
+                </ActionButton>
               )}
             </div>
           </div>
@@ -1362,7 +1363,7 @@ export function WorkspaceBrowser({
               button rather than leaving a dead one in the header. */}
           {directoryFlowAvailable && (
             <Tooltip label={t('workspace.add')} shortcutKeys={addShortcut?.keys} side="bottom" delayMs={500}>
-              <button
+              <ActionButton
                 ref={wsPlusRef}
                 type="button"
                 className={css.iconButton}
@@ -1373,7 +1374,7 @@ export function WorkspaceBrowser({
                 }}
               >
                 <IconProjectAddOutlineRegular size={wide ? 16 : 18} />
-              </button>
+              </ActionButton>
             </Tooltip>
           )}
         </div>
@@ -1400,7 +1401,7 @@ export function WorkspaceBrowser({
       {/* The collapsed rail keeps search as its own 36px control. */}
       {!wide && <div className={css.search}>
         <Tooltip label={t('search')} shortcutKeys={searchShortcut?.keys}>
-          <button
+          <ActionButton
             type="button"
             className={css.searchButton}
             aria-label={t('search.sessions.aria')}
@@ -1410,7 +1411,7 @@ export function WorkspaceBrowser({
             }}
           >
             <IconSearchOutlineRegular size={18} />
-          </button>
+          </ActionButton>
         </Tooltip>
       </div>}
 

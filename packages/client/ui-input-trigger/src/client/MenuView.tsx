@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * Trigger candidate menu: renders the InputTriggerService menu store into the
  * conversation.input.overlay anchor. Closed state renders null (the overlay
@@ -108,7 +109,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
             {trail.map((crumb, index) => (
               <Fragment key={`${String(index)}-${crumb.value}`}>
                 {index > 0 && <span className={css.crumbSeparator} aria-hidden><IconChevronRightOutlineRegular /></span>}
-                <button
+                <ActionButton
                   type="button"
                   className={clsx(css.crumb, crumb.current === true && css.crumbCurrent)}
                   aria-current={crumb.current === true ? 'location' : undefined}
@@ -120,7 +121,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
                   }}
                 >
                   {crumb.label}
-                </button>
+                </ActionButton>
               </Fragment>
             ))}
           </nav>
@@ -158,7 +159,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
                       {item.section !== undefined && item.section !== group.items[index - 1]?.section
                         ? <div className={css.sectionTitle} role="presentation">{item.section}</div>
                         : null}
-                      <button
+                      <ActionButton
                         id={optionId(group.source, index)}
                         type="button"
                         role="option"
@@ -210,7 +211,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
                             </span>
                           </span>
                         )}
-                      </button>
+                      </ActionButton>
                     </Fragment>
                   )
                 })}

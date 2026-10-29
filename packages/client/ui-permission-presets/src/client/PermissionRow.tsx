@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * Permission preference row: the default preset for subsequently created
  * sessions. Current-session switches remain on the composer `/permission`
@@ -88,7 +89,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
           align="end"
           portal
           anchor={(
-            <button
+            <ActionButton
               type="button"
               className={css.selector}
               aria-haspopup="menu"
@@ -98,7 +99,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
             >
               {label}
               <IconChevronDownOutlineRegular className={css.chevron} />
-            </button>
+            </ActionButton>
           )}
         />
       </div>

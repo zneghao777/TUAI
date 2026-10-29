@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Strict per-session header/body content inserted into the resident conversation layout. */
 
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
@@ -138,13 +139,13 @@ export function ConversationSessionHeader({
                       </span>
                     )
                     : (
-                      <button
+                      <ActionButton
                         type="button"
                         className={clsx(css.crumb, summary.subagent && css.crumbSubagent)}
                         onClick={() => { open(summary.id) }}
                       >
                         {summary.displayTitle}
-                      </button>
+                      </ActionButton>
                     )
                   const lineage = last || summary.subagent
                   const lineageOwner = {
@@ -197,7 +198,7 @@ export function ConversationSessionHeader({
         <div ref={tabRow} className={css.tabs}>
           <div className={css.viewTabs} role="tablist" data-conversation-tabs="">
             {visibleTabs.map(viewTab => (
-              <button
+              <ActionButton
                 key={viewTab.id}
                 type="button"
                 role="tab"
@@ -206,7 +207,7 @@ export function ConversationSessionHeader({
                 onClick={() => { selectView(viewTab.id) }}
               >
                 <Tooltip label={viewTab.label} portal><span className={css.tabLabel}>{viewTab.label}</span></Tooltip>
-              </button>
+              </ActionButton>
             ))}
           </div>
           {hasEntryActions && (

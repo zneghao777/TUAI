@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The pin action: a `sidebar.workspaces.session.menu.item` row and a
  * `sidebar.workspaces.session.row.action` button over one injected behavior.
@@ -60,14 +61,14 @@ export function PinSessionRowButton(props: SessionRowActionProps<PinSessionInjec
   if (archived || !allowed) return null
   return (
     <Tooltip label={t(pinned ? 'actions.unpin' : 'actions.pin')} side="bottom" align="end" delayMs={500} portal>
-      <button
+      <ActionButton
         type="button"
         className={css.iconButton}
         aria-label={t(pinned ? 'menu.unpinSession' : 'menu.pinSession')}
         onClick={() => { (pinned ? unpinSession : pinSession)(sessionId) }}
       >
         {pinned ? <IconPinFillRegular size={14} /> : <IconPinOutlineRegular size={14} />}
-      </button>
+      </ActionButton>
     </Tooltip>
   )
 }

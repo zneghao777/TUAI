@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Draft-attachment rail: scrollbar-less horizontal overflow paged by edge arrows. */
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -136,14 +137,14 @@ export function AttachmentRail<T extends AttachmentRailItem>({ items, labels, re
   return (
     <div className={css.root}>
       {edges.left && (
-        <button
+        <ActionButton
           type="button"
           className={clsx(css.arrow, css.arrowLeft)}
           aria-label={labels.scrollLeft}
           onClick={() => { page(-1) }}
         >
           <IconChevronLeftOutlineRegular />
-        </button>
+        </ActionButton>
       )}
       <div
         ref={railRef}
@@ -157,14 +158,14 @@ export function AttachmentRail<T extends AttachmentRailItem>({ items, labels, re
         ))}
       </div>
       {edges.right && (
-        <button
+        <ActionButton
           type="button"
           className={clsx(css.arrow, css.arrowRight)}
           aria-label={labels.scrollRight}
           onClick={() => { page(1) }}
         >
           <IconChevronRightOutlineRegular />
-        </button>
+        </ActionButton>
       )}
     </div>
   )

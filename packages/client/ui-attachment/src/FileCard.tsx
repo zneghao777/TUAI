@@ -1,3 +1,4 @@
+import { ActionButton, ProgressBar, Spinner } from '@deepseek-ai/dsh-client-ui-primitives'
 import { fileExtension, FileTypeIcon, fileSizeText, IconCloseFillRegular } from '@deepseek-ai/dsh-client-ui-primitives'
 import css from './FileCard.module.css'
 
@@ -45,15 +46,15 @@ export function FileCard({
     >
       <span className={css.icon} aria-hidden>
         {state === 'uploading'
-          ? <span className={css.spinner} />
+          ? <Spinner size="sm" />
           : <FileTypeIcon path={name} />}
       </span>
       {retryable
         ? (
-          <button type="button" className={`${css.body} ${css.retry}`} aria-label={labels.retry} onClick={onRetry}>
+          <ActionButton type="button" className={`${css.body} ${css.retry}`} aria-label={labels.retry} onClick={onRetry}>
             <span className={css.name}>{name}</span>
             <span className={`${css.meta} ${css.metaFailed}`}>{meta}</span>
-          </button>
+          </ActionButton>
         )
         : (
           <span className={css.body} aria-label={labels.label}>
@@ -61,21 +62,19 @@ export function FileCard({
             <span className={css.meta}>{meta}</span>
           </span>
         )}
-      <button
+      <ActionButton
         type="button"
         className={retryable ? `${css.remove} ${css.removeFailed}` : css.remove}
         aria-label={labels.remove}
         onClick={onRemove}
       >
         <IconCloseFillRegular size={12} />
-      </button>
+      </ActionButton>
       {state === 'uploading' && (
-        <span className={css.progressTrack} aria-hidden>
-          <span
-            className={css.progressBar}
-            style={progress === undefined ? undefined : { width: `${String(Math.min(1, Math.max(0, progress)) * 100)}%` }}
-          />
-        </span>
+        <ProgressBar aria-label={labels.uploading} className={css.progressTrack ?? ''} isIndeterminate={progress === undefined}
+          value={Math.min(1, Math.max(0, progress ?? 0)) * 100}>
+          <ProgressBar.Track className="tz-upload-track"><ProgressBar.Fill className="tz-upload-fill" /></ProgressBar.Track>
+        </ProgressBar>
       )}
     </div>
   )

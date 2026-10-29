@@ -270,7 +270,7 @@ describe('TextPreview — pages', () => {
     const view = render(<TextPreview {...h.props()} />)
     await settle()
     expect(view.container.querySelector('[data-textpreview-failed]')).not.toBeNull()
-    expect(view.container.querySelector('[data-slot]')).toBeNull()
+    expect(view.container.querySelector('[data-slot^="sidebar.right.tab.document."]')).toBeNull()
     h.script(1, page(1, ['reloaded'], true))
     click(view.container, '[data-textpreview-tool="reload"]')
     await settle()

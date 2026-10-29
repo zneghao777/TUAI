@@ -15,7 +15,12 @@ export async function mountUiFoundation(ctx: Context) {
     apply(scope: Context) {
       // Locale remains Chinese; Host-backed chat preferences are mounted by chat-runtime.
       const locale = new LocaleRuntime(scope, undefined, { languages: ['zh'], preference: 'zh' })
-      scope.effect(() => locale.register(COMMON_NS, { zh, en }))
+      scope.effect(() =>
+        locale.register(COMMON_NS, {
+          zh: { ...zh, 'brand.localBuild': '天质 AI' },
+          en: { ...en, 'brand.localBuild': '天质 AI' },
+        }),
+      )
       scope.provide('locale', locale)
       scope.slots.installLocale(locale)
     },

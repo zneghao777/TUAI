@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Question-owned summary action and transcript disclosure. */
 import { DisclosureRow, IconInspectOutlineRegular, IconQuestionOutlineRegular, TextShimmer } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ToolRowProps } from './ToolRow.tsx'
@@ -36,11 +37,11 @@ export function QuestionToolRow({
             <span className={css.sep} aria-hidden />
             <span className={css.summary}><TextShimmer active={state === 'running'}>{summary}</TextShimmer></span>
           </>}
-          <button type="button" className={questionCss.panelButton}
+          <ActionButton type="button" className={questionCss.panelButton}
             onClick={(event) => { event.stopPropagation(); if (!openPanel()) toggle() }}
             onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') event.stopPropagation() }}>
             <IconQuestionOutlineRegular />{panelLabel}
-          </button>
+          </ActionButton>
         </>}
       >
         {open && <div className={css.bodyWrap}>
@@ -54,9 +55,9 @@ export function QuestionToolRow({
               <span className={css.ioLabel}>{t('row.output')}</span><span className={css.ioText}>{output}</span>
             </div>}
           </div>}
-          {inspect !== undefined && <button type="button" className={css.inspectButton} onClick={inspect}>
+          {inspect !== undefined && <ActionButton type="button" className={css.inspectButton} onClick={inspect}>
             <IconInspectOutlineRegular />{t('row.inspect')}
-          </button>}
+          </ActionButton>}
         </div>}
       </DisclosureRow>
     </div>

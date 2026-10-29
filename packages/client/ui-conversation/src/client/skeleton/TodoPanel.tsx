@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import { useState } from 'react'
 import type { Context } from '@deepseek-ai/cordis'
 import type { PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
@@ -69,7 +70,7 @@ export function TodoPanel({ todos, t }: TodoPanelProps) {
   return (
     <section className={css.root} data-testid="todo-panel" aria-label={t('todo.title')}>
       <div className={css.body}>
-        <button
+        <ActionButton
           type="button"
           className={css.header}
           aria-expanded={!collapsed}
@@ -81,7 +82,7 @@ export function TodoPanel({ todos, t }: TodoPanelProps) {
           <span className={css.chevron} aria-hidden>
             {collapsed ? <IconChevronUpOutlineRegular /> : <IconChevronDownOutlineRegular />}
           </span>
-        </button>
+        </ActionButton>
         {!collapsed && (
           <ul className={css.list}>
             {todos.map(item => (

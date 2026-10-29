@@ -6,6 +6,10 @@ import type { ComposedProps } from '@deepseek-ai/dsh-client-ui-slots'
 import type {} from '@deepseek-ai/dsh-client-ui-sidebar/client'
 import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
+import { Button as HeroButton } from '@heroui/react'
+import { CursorGlow } from './components/CursorGlow'
+import { ModelPicker } from './components/ModelPicker'
+import type { ModelSelectInjected } from '@deepseek-ai/dsh-client-ui-model-selection/client'
 import { useSource } from './bindings'
 import { SettingsDialog } from './components/SettingsDialog'
 import type { AppClient } from './model/client'
@@ -37,18 +41,28 @@ type SettingsProps = ComposedProps<
 export function mountProductUi(client: AppClient, container: HTMLElement) {
   const { ctx } = client
   mountArtifactPane(client)
-  const colors: Record<string, [string, string]> = {
-    '--dsw-alias-bg-base': ['#f5f6f8', '#191d24'],
-    '--dsw-specific-sidebar-fill': ['#f9fafb', '#20252e'],
-    '--dsw-alias-bg-layer-1': ['#ffffff', '#262d38'],
-    '--dsw-alias-bg-layer-2': ['#ffffff', '#303946'],
-    '--dsw-alias-bg-overlay': ['#ffffff', '#262d38'],
-    '--dsw-alias-label-primary': ['#282d35', '#edf0f4'],
-    '--dsw-alias-label-secondary': ['#666e7b', '#b8c2d0'],
-    '--dsw-alias-brand-primary': ['#536985', '#a6bedc'],
-    '--dsw-specific-bubble': ['#e9eff6', '#303c4d'],
-    '--dsw-alias-border-l3': ['#e2e6ec', '#3c4552'],
-  }
+  const colors: Record<string, [string, string]> = Object.fromEntries(
+    Object.entries({
+      '--dsw-alias-bg-base': 'var(--canvas)',
+      '--dsw-specific-sidebar-fill': 'var(--sidebar)',
+      '--dsw-alias-bg-layer-1': 'var(--glass)',
+      '--dsw-alias-bg-layer-2': 'var(--panel)',
+      '--dsw-alias-bg-overlay': 'var(--panel)',
+      '--dsw-alias-label-primary': 'var(--ink)',
+      '--dsw-alias-label-secondary': 'var(--muted)',
+      '--dsw-alias-label-primary-foreground': 'var(--accent-foreground)',
+      '--dsw-alias-brand-primary': 'var(--accent)',
+      '--dsw-alias-state-business-primary': 'var(--accent)',
+      '--dsw-alias-button-primary-fill': 'var(--accent)',
+      '--dsw-alias-button-primary-hover': 'var(--accent-pressed)',
+      '--dsw-alias-button-info-fill': 'var(--accent)',
+      '--dsw-alias-button-info-hover': 'var(--accent-pressed)',
+      '--dsw-specific-input-major': 'var(--glass)',
+      '--dsw-specific-selector': 'var(--mist)',
+      '--dsw-specific-bubble': 'var(--mist)',
+      '--dsw-alias-border-l3': 'var(--line)',
+    }).map(([key, value]) => [key, [value, value]]),
+  )
   const resetTheme = ctx.theme.overrideTokens(
     'tianzhiai',
     Object.fromEntries(
@@ -57,6 +71,28 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
   )
   const settingsOpen = createSnapshotStore(false)
   const disposers = [
+    ctx.slots.inject('conversation.input.model', () =>
+      ctx.slots.register(
+        {
+          name: 'conversation.input.model',
+          priority: -10,
+          inject: (sessionId): ModelSelectInjected => {
+            const directory = ctx.modelDirectories.directoryFor(sessionId)
+            const available = ctx.sessions.subagentAddress(sessionId) === undefined
+            return {
+              available,
+              directory: directory.store,
+              load: () => {
+                if (available) void directory.load().catch(() => {})
+              },
+              select: (selection) =>
+                available ? directory.select(selection) : Promise.resolve(undefined),
+            }
+          },
+        },
+        (props) => <ModelPicker {...props} />,
+      ),
+    ),
     ctx.slots.inject('shell.overlay', () =>
       ctx.slots.register(
         { name: 'shell.overlay', id: 'tianzhiai-connection' },
@@ -66,9 +102,13 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
           return state !== 'connected' || facts.error ? (
             <div className="tz-connection" role="alert">
               <span>{facts.error ?? '连接中断，正在恢复…'}</span>
-              <button className="tz-pane-action" onClick={() => client.connection.reconnect()}>
+              <HeroButton
+                variant="ghost"
+                className="tz-pane-action"
+                onClick={() => client.connection.reconnect()}
+              >
                 重新连接
-              </button>
+              </HeroButton>
             </div>
           ) : null
         },
@@ -86,14 +126,15 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     ),
     ctx.slots.inject('sidebar.settings', () =>
       ctx.slots.register({ name: 'sidebar.settings' }, ({ wide }) => (
-        <button
+        <HeroButton
+          variant="ghost"
           className="tz-settings-trigger"
           aria-label="设置"
           onClick={() => settingsOpen.set(true)}
         >
           <IconSettingsOutlineRegular size={18} />
           {wide ? <span>设置</span> : null}
-        </button>
+        </HeroButton>
       )),
     ),
     ctx.slots.inject('shell.overlay', () =>
@@ -115,7 +156,10 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     ),
   ]
   const unmount = ctx.uiRenderer.mount(container, (app) => (
-    <MarkdownDelegateProvider allowRemoteImages={false}>{app}</MarkdownDelegateProvider>
+    <MarkdownDelegateProvider allowRemoteImages={false}>
+      {app}
+      <CursorGlow />
+    </MarkdownDelegateProvider>
   ))
   return () => {
     unmount()

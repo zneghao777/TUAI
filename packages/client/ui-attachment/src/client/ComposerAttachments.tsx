@@ -1,3 +1,4 @@
+import { ActionButton, ProgressBar } from '@deepseek-ai/dsh-client-ui-primitives'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type {
   ComposerAttachment, ComposerAttachmentsProps, ComposerImageAttachment,
@@ -97,20 +98,20 @@ export function ComposerAttachments({
                   {refusal !== undefined
                     ? (
                       <Tooltip label={refusal} side="top" delayMs={300} portal openOnClick>
-                        <button
+                        <ActionButton
                           type="button"
                           className={`${css.thumbnail} ${css.thumbnailFailed} ${css.thumbnailRefused}`}
                           aria-label={refusal}
                         >
                           <img src={attachment.previewUrl} alt="" />
                           <span className={css.failureGlyph} aria-hidden><IconWarningOutlineRegular size={16} /></span>
-                        </button>
+                        </ActionButton>
                       </Tooltip>
                     )
                     : upload?.status === 'error'
                       ? (
                         <Tooltip label={t('file.uploadFailed')} side="top" delayMs={300} portal>
-                          <button
+                          <ActionButton
                             type="button"
                             className={`${css.thumbnail} ${css.thumbnailFailed}`}
                             aria-label={t('file.retry', { name })}
@@ -118,11 +119,11 @@ export function ComposerAttachments({
                           >
                             <img src={attachment.previewUrl} alt="" />
                             <span className={css.failureGlyph} aria-hidden><IconRefreshOutlineRegular size={16} /></span>
-                          </button>
+                          </ActionButton>
                         </Tooltip>
                       )
                       : (
-                        <button
+                        <ActionButton
                           type="button"
                           className={css.thumbnail}
                           title={t('image.openOriginal')}
@@ -130,26 +131,22 @@ export function ComposerAttachments({
                           onClick={() => { setPreview(attachment) }}
                         >
                           <img src={attachment.previewUrl} alt={name} />
-                        </button>
+                        </ActionButton>
                       )}
                   {upload?.status === 'uploading' && (
-                    <span className={css.progressTrack} aria-hidden>
-                      <span
-                        className={css.progressBar}
-                        style={upload.total === undefined || upload.total <= 0
-                          ? undefined
-                          : { width: `${String(Math.min(1, upload.loaded / upload.total) * 100)}%` }}
-                      />
-                    </span>
+                    <ProgressBar aria-label={name} className={css.progressTrack ?? ''} isIndeterminate={upload.total === undefined || upload.total <= 0}
+                      value={upload.total && upload.total > 0 ? Math.min(1, upload.loaded / upload.total) * 100 : 0}>
+                      <ProgressBar.Track className="tz-upload-track"><ProgressBar.Fill className="tz-upload-fill" /></ProgressBar.Track>
+                    </ProgressBar>
                   )}
-                  <button
+                  <ActionButton
                     type="button"
                     className={css.remove}
                     aria-label={t('image.remove', { name })}
                     onClick={() => { onRemoveAttachment(attachment.id) }}
                   >
                     <IconCloseFillRegular size={12} />
-                  </button>
+                  </ActionButton>
                 </div>
               )
             }}

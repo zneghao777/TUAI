@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Toolbar warning and non-modal details for the current preview’s missing fonts. */
 import { useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
@@ -39,11 +40,11 @@ export function FontNotice({ fonts, t }: FontNoticeProps): ReactNode {
   return <>
     <Tooltip label={label} side="bottom" delayMs={500} disabled={open}>
       <span ref={anchor} className={css.anchor} data-office-font-warning>
-        <button type="button" className={clsx(common.tool, css.warning)} aria-label={label}
+        <ActionButton type="button" className={clsx(common.tool, css.warning)} aria-label={label}
           aria-expanded={open} aria-controls={open ? id : undefined} aria-haspopup="dialog"
           onClick={() => { setExpanded(value => !value) }}>
           <IconWarningTriangleOutlineRegular />
-        </button>
+        </ActionButton>
       </span>
     </Tooltip>
     {open && createPortal(<div ref={panel} id={id} role="dialog" aria-labelledby={`${id}-title`}

@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import clsx from 'clsx'
@@ -174,7 +175,7 @@ export function PermissionSelect({
         side="top"
         portal
         anchor={
-          <button
+          <ActionButton
             type="button"
             className={css.trigger}
             aria-label={t('mode', { name: currentLabel })}
@@ -189,7 +190,7 @@ export function PermissionSelect({
             <span className={clsx(css.chevron, open && css.chevronOpen)} aria-hidden>
               <IconChevronDownOutlineRegular />
             </span>
-          </button>
+          </ActionButton>
         }
       />
       {confirmation !== null && (

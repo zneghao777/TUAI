@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Compact, read-only fields and lists for recorded Tool results. */
 import {
   CodeBlock, MarkdownText, IconCheckOutlineRegular, IconChevronRightOutlineRegular, IconPlayOutlineRegular,
@@ -56,10 +57,10 @@ function DetailItem({ item, t, onOpenFile }: { item: ToolDetailItem } & DetailCo
             </span>
           )}
           {item.location !== undefined && onOpenFile !== undefined ? (
-            <button className={css.path} type="button" onClick={() => {
+            <ActionButton className={css.path} type="button" onClick={() => {
               const location = item.location
               if (location !== undefined) onOpenFile(location.path, location.line === undefined ? undefined : { line: location.line })
-            }}>{item.title}</button>
+            }}>{item.title}</ActionButton>
           ) : <span className={css.text}>{item.title}</span>}
           {item.badge !== undefined && <span className={css.badge} data-tone={item.badge.tone}>{item.badge.label}</span>}
           {status !== undefined && (

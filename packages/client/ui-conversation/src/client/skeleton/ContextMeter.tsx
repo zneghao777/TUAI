@@ -1,3 +1,4 @@
+import { ActionButton, Meter } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Composer context-occupancy meter: a ring and percentage below the card fed by the
  * `contextPressure` projection, with a click-open panel of the heuristic
  * `contextBreakdown` composition (system prompt, tools, conversation).
@@ -108,7 +109,7 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
   return (
     <span ref={rootRef} className={css.root}>
       <Tooltip label={t('context.aria', { percent: reading })} side="top" delayMs={200} disabled={open}>
-        <button
+        <ActionButton
           type="button"
           className={css.trigger}
           aria-label={t('context.aria', { percent: reading })}
@@ -128,7 +129,7 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
             />
           </svg>
           <span>{reading}</span>
-        </button>
+        </ActionButton>
       </Tooltip>
       {open && createPortal(
         <div
@@ -150,7 +151,8 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
               {`~${formatTokens(context.usedTokens, t)} / ${formatTokens(context.contextWindow, t)}`}
             </span>
           </div>
-          <div className={css.bar}>
+          <Meter aria-label={t('context.used')} value={percent} minValue={0} maxValue={100}>
+          <Meter.Track className={css.bar ?? ''}>
             {segments.map(segment => (
               <div
                 key={segment.key}
@@ -158,7 +160,8 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
                 style={{ width: `${segment.width}%` }}
               />
             ))}
-          </div>
+          </Meter.Track>
+          </Meter>
           {breakdown !== undefined && (
             <dl className={css.rows}>
               {ROWS.map(row => (

@@ -1,6 +1,7 @@
 import { createRoot, type Root } from 'react-dom/client'
 import { AppClient } from './model/client'
 import { mountProductUi } from './ui'
+import './hero.css'
 import '@deepseek-ai/dsh-client-ui-theme/src/styles/base.css'
 import '@deepseek-ai/dsh-client-ui-theme/src/styles/design-platform.css'
 import '@deepseek-ai/dsh-client-ui-theme/src/styles/gradient-shadow-text.css'

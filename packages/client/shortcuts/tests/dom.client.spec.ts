@@ -184,6 +184,11 @@ it('blocks background commands during dialogs and gives terminal input ownership
   document.body.append(dialog)
   expect(press(input).defaultPrevented).toBe(true)
   expect(run).not.toHaveBeenCalled()
+  // React Aria dialogs own inert outside content instead of aria-modal.
+  dialog.dataset.shortcutModal = 'settings'
+  dialog.removeAttribute('aria-modal')
+  expect(press(input).defaultPrevented).toBe(true)
+  expect(run).not.toHaveBeenCalled()
   dialog.dataset.shortcutModal = 'shortcuts'
   expect(press(input).defaultPrevented).toBe(true)
   expect(run).toHaveBeenCalledOnce()

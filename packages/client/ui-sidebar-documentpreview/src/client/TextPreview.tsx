@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The text preview's body: a file's content, or the reason it is not showing.
  *
@@ -240,27 +241,27 @@ export function TextPreview({
           // bar would only repeat the same line.
           <p className={css.changed} data-textpreview-meta-failed={meta.failure.code}>
             <span>{failureLine(t, meta.failure)}</span>
-            <button
+            <ActionButton
               type="button"
               className={css.action}
               data-textpreview-reload-now
               onClick={reload}
             >
               {t('reloadNow')}
-            </button>
+            </ActionButton>
           </p>
         )
         : changed && (
           <p className={css.changed} data-textpreview-changed>
             <span>{t('changed')}</span>
-            <button
+            <ActionButton
               type="button"
               className={css.action}
               data-textpreview-reload-now
               onClick={reload}
             >
               {t('reloadNow')}
-            </button>
+            </ActionButton>
           </p>
         )}
       <div className={css.header}>
@@ -270,9 +271,9 @@ export function TextPreview({
             <Menu
               open={menuOpen}
               anchor={(
-                <button type="button" className={clsx(css.tool, css.viewerTool)} aria-label={t('openWith')} title={selected.title()} data-document-viewer-menu onClick={() => { setMenuOpen(value => !value) }}>
+                <ActionButton type="button" className={clsx(css.tool, css.viewerTool)} aria-label={t('openWith')} title={selected.title()} data-document-viewer-menu onClick={() => { setMenuOpen(value => !value) }}>
                   {selected.title()}
-                </button>
+                </ActionButton>
               )}
               items={candidates.map(candidate => ({ id: candidate.id, label: candidate.title() }))}
               selectedId={selected.id}
@@ -287,7 +288,7 @@ export function TextPreview({
           // The tooltip names the action while the stable aria name and
           // `aria-pressed` expose the control and its current state.
           <Tooltip label={t(state.wrap ? 'wrap.disable' : 'wrap.enable')} side="bottom" delayMs={500}>
-            <button
+            <ActionButton
               type="button"
               className={css.tool}
               aria-pressed={state.wrap}
@@ -302,23 +303,23 @@ export function TextPreview({
               }}
             >
               {state.wrap ? <IconNowrapFillRegular /> : <IconWrapFillRegular />}
-            </button>
+            </ActionButton>
           </Tooltip>
         )}
         {content !== undefined && renderSlot('sidebar.right.tab.document.action', { content }, { entryKey: selected.id, hookContext: useTabInfo })}
         <span hidden>
           <Tooltip label={t(state.autoRefresh ? 'autoRefresh.disable' : 'autoRefresh.enable')} side="bottom" delayMs={500}>
-            <button type="button" className={css.tool} aria-label={t('autoRefresh')}
+            <ActionButton type="button" className={css.tool} aria-label={t('autoRefresh')}
               aria-pressed={state.autoRefresh} data-textpreview-tool="auto-refresh"
               onClick={() => { actions.toggledAutoRefresh(tab.id) }}>
               {state.autoRefresh ? <IconPauseOutlineRegular /> : <IconPlayOutlineRegular />}
-            </button>
+            </ActionButton>
           </Tooltip>
         </span>
         {/* Preview and file-tree refresh controls own different reload lifecycles and locale namespaces. */}
         {/* jscpd:ignore-start */}
         <Tooltip label={t('reload')} shortcutKeys={tab.refreshShortcut?.keys} side="bottom" delayMs={500}>
-          <button
+          <ActionButton
             type="button"
             className={css.tool}
             aria-label={t('reload')}
@@ -327,7 +328,7 @@ export function TextPreview({
             onClick={reload}
           >
             <IconRefreshOutlineRegular />
-          </button>
+          </ActionButton>
         </Tooltip>
         {/* jscpd:ignore-end */}
         {fileOwner !== undefined && renderSlot('sidebar.right.tab.document.actions', fileOwner)}
@@ -361,14 +362,14 @@ export function TextPreview({
           ? (
             <p className={css.statusLine} data-textpreview-failed={current.failure.code}>
               <span>{failureLine(t, current.failure)}</span>
-              <button
+              <ActionButton
                 type="button"
                 className={css.action}
                 data-textpreview-retry
                 onClick={loadNext}
               >
                 {t('retry')}
-              </button>
+              </ActionButton>
             </p>
           )
           : (
@@ -383,7 +384,7 @@ export function TextPreview({
               {emptyFailureRecourse(current.failure) === 'open' && fileOwner !== undefined
                 && renderSlot('sidebar.right.tab.document.unpreviewable', fileOwner)}
               {emptyFailureRecourse(current.failure) === 'retry' && (
-                <button
+                <ActionButton
                   type="button"
                   className={css.retry}
                   data-textpreview-retry
@@ -391,12 +392,12 @@ export function TextPreview({
                 >
                   <IconRefreshOutlineRegular size={14} />
                   {t('retry')}
-                </button>
+                </ActionButton>
               )}
             </div>
           ))}
         {mode === 'text-pages' && current !== undefined && loaded.length > 0 && !current.eof && current.failure === undefined && (
-          <button
+          <ActionButton
             type="button"
             className={css.more}
             disabled={current.loading}
@@ -404,7 +405,7 @@ export function TextPreview({
             onClick={loadNext}
           >
             {current.loading ? <LoadingIndicator inline label={t('loading')} /> : t('loadMore')}
-          </button>
+          </ActionButton>
         )}
       </div>
     </div>

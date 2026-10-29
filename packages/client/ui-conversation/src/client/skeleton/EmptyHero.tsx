@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 // The composer remains in ConversationRoot so switching out of the blank-draft
 // phase does not remount its textarea.
 
@@ -36,14 +37,14 @@ export function workspaceLabel(cwd: string): string {
  * @returns the chip button element.
  */
 export function WorkspaceChip({ buttonRef, label, menuOpen = false, onClick, t }: {
-  buttonRef?: RefObject<HTMLButtonElement>
+  buttonRef?: RefObject<HTMLButtonElement | null>
   label?: string | undefined
   menuOpen?: boolean
   onClick?: () => void
   t: HeroTranslate
 }) {
   return (
-    <button
+    <ActionButton
       ref={buttonRef}
       type="button"
       className={css.workspace}
@@ -57,7 +58,7 @@ export function WorkspaceChip({ buttonRef, label, menuOpen = false, onClick, t }
         : <IconFolderOpenRegular className={css.folder} size={16} />}
       <span className={css.workspaceLabel}>{label ?? t('hero.chooseWorkspace')}</span>
       <IconChevronDownOutlineRegular className={css.chevron} size={12} />
-    </button>
+    </ActionButton>
   )
 }
 

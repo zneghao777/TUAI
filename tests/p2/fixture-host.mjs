@@ -72,6 +72,14 @@ class ScenarioModel extends MockAdapter {
   }
   async *stream(options) {
     this.calls.push(options)
+    if (
+      this.holdGoalRounds &&
+      options.messages.some((message) => message.source?.kind === 'goal')
+    ) {
+      // Keep the goal active until the real pause RPC aborts this controlled round.
+      // An instantaneous model can exhaust the round budget before a UI click.
+      await delay(60_000, undefined, { signal: options.signal })
+    }
     const messages = options.messages,
       last = messages
         .filter((m) => (m.role === 'user' && m.source?.kind === 'user') || m.role === 'tool')

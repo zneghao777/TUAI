@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /** Localized two-column selector shared by Chat preference rows. */
 import { useRef, useState } from 'react'
 import { IconChevronDownOutlineRegular, Menu } from '@deepseek-ai/dsh-client-ui-primitives'
@@ -25,7 +26,7 @@ export function PreferenceRow({ title, description, value, selectedLabel, option
     onSelect(id)
   }
   const selector = (
-    <button
+    <ActionButton
       ref={selectorRef}
       type="button"
       className={css.selector}
@@ -35,7 +36,7 @@ export function PreferenceRow({ title, description, value, selectedLabel, option
     >
       {selectedLabel}
       <IconChevronDownOutlineRegular className={css.chevron} />
-    </button>
+    </ActionButton>
   )
 
   return (

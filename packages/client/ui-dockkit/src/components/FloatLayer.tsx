@@ -1,3 +1,4 @@
+import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
 /**
  * The floating layer: one overlay panel per floating pane, bottom-to-top in the
  * model's z order. A floating pane hosts exactly one tab; its header is the
@@ -130,19 +131,19 @@ export function FloatHeader({ paneId, tab, labels, intents, renderTabTitle, canC
       </div>
       <div className={css.stripFill} />
       <Tooltip label={labels.dockFloat} side="bottom" delayMs={500}>
-        <button type="button" className={css.iconButton} aria-label={labels.dockFloat}
+        <ActionButton type="button" className={css.iconButton} aria-label={labels.dockFloat}
           data-dockkit-float-dock={paneId} onPointerDown={(event) => { event.stopPropagation() }}
           onClick={() => { intents.unfloatPane(paneId) }}>
           <IconPanelLeftOutlineRegular className={css.dockGlyph} />
-        </button>
+        </ActionButton>
       </Tooltip>
       {(canCloseTab?.(tab.id) ?? true) && (
         <Tooltip label={labels.closeTab} shortcutKeys={labels.closeTabKeys} side="bottom" delayMs={500}>
-          <button type="button" className={css.iconButton} aria-label={labels.closeTab}
+          <ActionButton type="button" className={css.iconButton} aria-label={labels.closeTab}
             data-dockkit-float-close={paneId} onPointerDown={(event) => { event.stopPropagation() }}
             onClick={() => { intents.closeTab(tab.id) }}>
             <IconCloseOutlineRegular />
-          </button>
+          </ActionButton>
         </Tooltip>
       )}
     </header>

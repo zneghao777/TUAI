@@ -1,8 +1,7 @@
 // Switch: two-state toggle. `label` is required and has no default, so a render
 // site cannot ship the control without an accessible name.
 
-import clsx from 'clsx'
-import css from './Switch.module.css'
+import { Switch as HeroSwitch } from '@heroui/react'
 
 /**
  * Render a toggle switch.
@@ -26,17 +25,8 @@ export function Switch({ checked, onChange, label, disabled = false, title, clas
   className?: string | undefined
 }) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      aria-label={label}
-      title={title}
-      disabled={disabled}
-      className={clsx(css.switch, className)}
-      onClick={() => { onChange(!checked) }}
-    >
-      <span className={css.thumb} />
-    </button>
+    <HeroSwitch isSelected={checked} onChange={(next) => { if (!disabled) onChange(next) }} isDisabled={disabled} aria-label={label} render={(props) => <div {...props} title={title} />} size="sm" className={className ?? ''}>
+      <HeroSwitch.Content><HeroSwitch.Control><HeroSwitch.Thumb /></HeroSwitch.Control></HeroSwitch.Content>
+    </HeroSwitch>
   )
 }
