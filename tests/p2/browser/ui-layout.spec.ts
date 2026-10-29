@@ -51,13 +51,15 @@ test('会话操作支持键盘，单会话无重复分组，长标题保持布�
     ).toBeVisible()
     const session = page.locator('[data-session-id][aria-current=page]')
     await expect(session).toBeVisible()
-    const history = page.getByRole('tree', { name: '会话' })
+    const history = page.getByRole('navigation', { name: '聊天记录' })
     await expect(history.locator('summary')).toHaveCount(0)
     const row = session
     expect(await row.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(
       'rgba(0, 0, 0, 0)',
     )
-    await session.focus()
+    await session.getByRole('button').first().focus()
+    await page.keyboard.press('Tab')
+    await expect(row.getByRole('button', { name: /^归档会话/ })).toBeFocused()
     await page.keyboard.press('Tab')
     const trigger = row.getByRole('button', { name: /^会话.*的操作/ })
     await expect(trigger).toBeFocused()
@@ -71,9 +73,9 @@ test('会话操作支持键盘，单会话无重复分组，长标题保持布�
     await expect(page.locator('header').getByText(title, { exact: true })).toBeVisible()
     for (const width of [1440, 820, 320]) {
       await page.setViewportSize({ width, height: 844 })
-      expect(await page.locator('header').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(
-        true,
-      )
+      await expect
+        .poll(() => page.locator('header').evaluate((el) => el.scrollWidth <= el.clientWidth))
+        .toBe(true)
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true,
       )

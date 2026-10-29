@@ -94,7 +94,7 @@ test(
       ctx.permissionPresets.set(agent.session, 'readonly')
       const denied = await call(ctx, agent, 'write', { file_path: 'sample.txt', content: 'before' })
       assert.equal(denied.isError, true, text(denied))
-      ctx.permissionPresets.set(agent.session, 'workspace-write')
+      ctx.permissionPresets.set(agent.session, 'full-access')
       const write = await call(ctx, agent, 'write', { file_path: 'sample.txt', content: 'before' })
       assert.ok(!write.isError, text(write))
       assert.equal(await readFile(join(cwd, 'sample.txt'), 'utf8'), 'before')

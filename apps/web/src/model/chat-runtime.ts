@@ -46,8 +46,8 @@ export async function mountChatRuntime(ctx: Context, actions: ChatHostActions) {
   await ctx.plugin(Settings)
   await ctx.plugin(Theme)
   await ctx.plugin(Layout)
-  await ctx.plugin(Workspace, { managedSessions: true })
-  await ctx.plugin(Sidebar)
+  await ctx.plugin(Workspace, { managedSessions: true, simpleChat: true })
+  await ctx.plugin(Sidebar, { brandStartsSession: false })
   await ctx.plugin(FileDrag)
   await ctx.plugin(Conversation, {
     managedWorkspaces: true,

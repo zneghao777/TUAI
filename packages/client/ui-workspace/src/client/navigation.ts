@@ -89,6 +89,8 @@ export interface UiWorkspace {
    * whether existing text or attachments are kept, replaced, or followed by the prompt.
    */
   startSession(workspaceId?: WorkspaceId, options?: StartSessionOptions): void
+  /** Create one managed Session and prepare its retained input before opening it. */
+  startManagedSession(beforeOpen: (sessionId: SessionId) => void): Promise<SessionId | undefined>
   /**
    * Archive a Session and clear it when it is the current selection.
    * @param sessionId - Session to archive.
@@ -382,6 +384,15 @@ class UiWorkspaceService extends Service implements UiWorkspace {
     void opening.catch(
       (reason: unknown) => { console.warn('new session failed:', reason) },
     )
+  }
+
+  async startManagedSession(beforeOpen: (sessionId: SessionId) => void): Promise<SessionId | undefined> {
+    if (!this.managedSessions) throw new Error('Managed sessions are unavailable')
+    const navigation = AbortSignal.any([this.ctx.layout.beginNavigation(), this.lifetime.signal])
+    const id = await this.sessions.create({})
+    if (navigation.aborted) return undefined
+    this.replaceMain(id, navigation, 'reveal', beforeOpen)
+    return id
   }
 
   private prepareDraft(binding: SessionBinding, options: DraftInitializationOptions): void {

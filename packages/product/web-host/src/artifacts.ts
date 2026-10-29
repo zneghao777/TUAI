@@ -118,6 +118,8 @@ export async function download(ctx: Context, request: Request): Promise<Response
     session = url.searchParams.get('sessionId'),
     id = url.searchParams.get('artifactId')
   if (!session || !id) return new Response('需要会话和产物身份', { status: 400 })
+  if (ctx.get('conversationTrash')?.has(SessionId(session)))
+    return new Response('该会话已删除', { status: 404 })
   try {
     const entry = (await entries(ctx, SessionId(session))).find((item) => item.info.id === id)
     if (!entry) return new Response('产物不存在或不属于此会话', { status: 404 })

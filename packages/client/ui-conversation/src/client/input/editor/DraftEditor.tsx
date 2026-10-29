@@ -1,5 +1,5 @@
 /** Stateless text-area presentation over the InputBar's borrowed editor. */
-import type { CSSProperties, KeyboardEventHandler, ReactNode, RefObject } from 'react'
+import type { CSSProperties, FormEventHandler, KeyboardEventHandler, ReactNode, RefObject } from 'react'
 import type { LexicalEditor } from 'lexical'
 import clsx from 'clsx'
 import { HoverCardGroup } from '@deepseek-ai/dsh-client-ui-primitives'
@@ -22,6 +22,9 @@ export interface DraftEditorProps {
   readonly onWorkspaceKeyDown: KeyboardEventHandler<HTMLDivElement>
   readonly hint: string | null
   readonly showPlaceholder: boolean
+  readonly standalone?: boolean
+  readonly onStandaloneInput?: FormEventHandler<HTMLDivElement> | undefined
+  readonly onStandaloneKeyDown?: KeyboardEventHandler<HTMLDivElement> | undefined
 }
 
 /**
@@ -32,12 +35,14 @@ export interface DraftEditorProps {
 export function DraftEditor({
   classNames: css, editor, scrollRef, editable, editorDisabled, phase, placeholderText, ariaLabel,
   workspaceTrigger, workspacePickerOpen, onWorkspaceKeyDown, hint, showPlaceholder,
+  standalone, onStandaloneInput, onStandaloneKeyDown,
 }: DraftEditorProps): ReactNode {
   return (
     <div ref={scrollRef} className={css.scroll} data-input-scroll>
       <HoverCardGroup className={css.grow}>
         <ComposerContentEditable
           editor={workspaceTrigger ? null : editor}
+          standalone={standalone}
           editable={editable}
           className={clsx(css.input, editorDisabled && css.inputDisabled)}
           data-phase={phase}
@@ -49,7 +54,8 @@ export function DraftEditor({
           aria-haspopup={workspaceTrigger ? 'menu' : undefined}
           aria-expanded={workspaceTrigger ? workspacePickerOpen : undefined}
           tabIndex={workspaceTrigger ? 0 : undefined}
-          onKeyDown={workspaceTrigger ? onWorkspaceKeyDown : undefined}
+          onKeyDown={workspaceTrigger ? onWorkspaceKeyDown : onStandaloneKeyDown}
+          onInput={onStandaloneInput}
           style={hint === null ? undefined : { '--dsh-composer-hint': JSON.stringify(hint) } as CSSProperties}
         />
         {showPlaceholder && (

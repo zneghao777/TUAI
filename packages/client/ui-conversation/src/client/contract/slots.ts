@@ -310,6 +310,8 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
     'conversation.input.plan': { kind: 'single'; scope: 'session'; owner: InputControlOwnerProps }
     /** Current-session permission control inside the composer tool row. */
     'conversation.input.permission': { kind: 'single'; scope: 'session'; owner: InputControlOwnerProps }
+    'conversation.input.staged.permission': { kind: 'single'; scope: 'root'; owner: StagedControlOwnerProps }
+    'conversation.input.staged.model': { kind: 'single'; scope: 'root'; owner: StagedControlOwnerProps }
     /**
      * Model selector inside the composer tool row. When expanded controls cannot
      * share a line, the row sets --dsh-composer-model-text-display to none and
@@ -427,6 +429,7 @@ export interface ConversationInjected {
   approvalInput?: boolean
   /** Connect and open a blank Session in the selected Workspace. */
   selectWorkspace: (workspaceId: WorkspaceId) => Promise<void>
+  startManagedChat: (draft: string, submit: boolean) => Promise<SessionId | undefined>
   /** Session-addressed composer block source, or the stable absent source. */
   hooks: { composerBlock: ObservableSnapshot<ComposerBlock | undefined> }
 }
@@ -501,6 +504,7 @@ export interface ConversationSessionHeaderInjected {
 export interface ComposerBarOwnerProps {
   /** Hero uses centered placement; composer uses the active bottom placement. */
   variant: 'hero' | 'composer'
+  startManagedChat?: (draft: string, submit: boolean) => Promise<SessionId | undefined>
   /** A feature-owned reason that makes message input inert while leaving model selection live. */
   blocked?: { readonly reason: string }
   /** Lock all message actions while preserving the resident composer surface. */
@@ -553,6 +557,11 @@ export interface InputControlOwnerProps {
   locked: boolean
 }
 
+export interface StagedControlOwnerProps {
+  locked: boolean
+  activate(): void
+}
+
 /** A toolbar activity hides ordinary accessory controls while expanded; its occupant must release expansion on unmount. */
 export interface InputActivityOwnerProps extends InputControlOwnerProps {
   /** @param active - whether the occupant needs the toolbar width before the submit action. */
@@ -565,6 +574,7 @@ export type ComposerBarProps =
   & PropsRenderSlots<
     | 'conversation.input.attachments' | 'conversation.input.overlay'
     | 'conversation.input.permission'
+    | 'conversation.input.staged.permission' | 'conversation.input.staged.model'
     | 'conversation.input.left' | 'conversation.input.plan'
     | 'conversation.input.right' | 'conversation.input.model' | 'conversation.input.activity'
     | 'conversation.composer.dock'

@@ -1,0 +1,510 @@
+diff --git a/packages/client/ui-conversation/src/client/apply.ts b/packages/client/ui-conversation/src/client/apply.ts
+index f7fd024..332ae60 100644
+--- a/packages/client/ui-conversation/src/client/apply.ts
++++ b/packages/client/ui-conversation/src/client/apply.ts
+@@ -122,6 +122,7 @@ function hostPathBridge(): HostPathBridge | undefined {
+ 
+ interface WorkspaceNavigation {
+   openSession(sessionId: SessionId): void
++  startManagedSession(beforeOpen: (sessionId: SessionId) => void): Promise<SessionId | undefined>
+   openWorkspace(
+     workspaceId: Parameters<ConversationInjected['selectWorkspace']>[0],
+     beforeOpen: (sessionId: SessionId) => void,
+@@ -371,6 +372,13 @@ export function apply(ctx: Context, config: Config = Config({})): void {
+       hooks: {
+         composerBlock: sessionId === undefined ? ABSENT_BLOCK : composerBlocks.storeFor(sessionId),
+       },
++      startManagedChat: (draft, submit) => workspaceNavigation.startManagedSession(nextId => {
++        const binding = sessions.binding(nextId)
++        if (binding === undefined) throw new Error('会话尚未就绪，请重试')
++        const input = inputHub.for(binding.ctx)
++        input.setDraft(draft)
++        if (submit) input.submit('queue', 'click')
++      }),
+       selectWorkspace: workspaceId => workspaceNavigation.openWorkspace(workspaceId, (nextId) => {
+         if (sessionId !== undefined && nextId !== sessionId) {
+           const from = inputHub.shell(sessionId)
+@@ -473,6 +481,8 @@ export function apply(ctx: Context, config: Config = Config({})): void {
+       'conversation.input.attachments': { kind: 'single', scope: 'session-maybe' },
+       'conversation.input.overlay': { kind: 'list', scope: 'session' },
+       'conversation.input.permission': { kind: 'single', scope: 'session' },
++      'conversation.input.staged.permission': { kind: 'single', scope: 'root' },
++      'conversation.input.staged.model': { kind: 'single', scope: 'root' },
+       'conversation.input.left': { kind: 'list', scope: 'session' },
+       'conversation.input.plan': { kind: 'single', scope: 'session' },
+       'conversation.input.right': { kind: 'list', scope: 'session' },
+diff --git a/packages/client/ui-conversation/src/client/contract/slots.ts b/packages/client/ui-conversation/src/client/contract/slots.ts
+index a9957a4..a9560d0 100644
+--- a/packages/client/ui-conversation/src/client/contract/slots.ts
++++ b/packages/client/ui-conversation/src/client/contract/slots.ts
+@@ -310,6 +310,8 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
+     'conversation.input.plan': { kind: 'single'; scope: 'session'; owner: InputControlOwnerProps }
+     /** Current-session permission control inside the composer tool row. */
+     'conversation.input.permission': { kind: 'single'; scope: 'session'; owner: InputControlOwnerProps }
++    'conversation.input.staged.permission': { kind: 'single'; scope: 'root'; owner: StagedControlOwnerProps }
++    'conversation.input.staged.model': { kind: 'single'; scope: 'root'; owner: StagedControlOwnerProps }
+     /**
+      * Model selector inside the composer tool row. When expanded controls cannot
+      * share a line, the row sets --dsh-composer-model-text-display to none and
+@@ -427,6 +429,7 @@ export interface ConversationInjected {
+   approvalInput?: boolean
+   /** Connect and open a blank Session in the selected Workspace. */
+   selectWorkspace: (workspaceId: WorkspaceId) => Promise<void>
++  startManagedChat: (draft: string, submit: boolean) => Promise<SessionId | undefined>
+   /** Session-addressed composer block source, or the stable absent source. */
+   hooks: { composerBlock: ObservableSnapshot<ComposerBlock | undefined> }
+ }
+@@ -501,6 +504,7 @@ export interface ConversationSessionHeaderInjected {
+ export interface ComposerBarOwnerProps {
+   /** Hero uses centered placement; composer uses the active bottom placement. */
+   variant: 'hero' | 'composer'
++  startManagedChat?: (draft: string, submit: boolean) => Promise<SessionId | undefined>
+   /** A feature-owned reason that makes message input inert while leaving model selection live. */
+   blocked?: { readonly reason: string }
+   /** Lock all message actions while preserving the resident composer surface. */
+@@ -553,6 +557,11 @@ export interface InputControlOwnerProps {
+   locked: boolean
+ }
+ 
++export interface StagedControlOwnerProps {
++  locked: boolean
++  activate(): void
++}
++
+ /** A toolbar activity hides ordinary accessory controls while expanded; its occupant must release expansion on unmount. */
+ export interface InputActivityOwnerProps extends InputControlOwnerProps {
+   /** @param active - whether the occupant needs the toolbar width before the submit action. */
+@@ -565,6 +574,7 @@ export type ComposerBarProps =
+   & PropsRenderSlots<
+     | 'conversation.input.attachments' | 'conversation.input.overlay'
+     | 'conversation.input.permission'
++    | 'conversation.input.staged.permission' | 'conversation.input.staged.model'
+     | 'conversation.input.left' | 'conversation.input.plan'
+     | 'conversation.input.right' | 'conversation.input.model' | 'conversation.input.activity'
+     | 'conversation.composer.dock'
+diff --git a/packages/client/ui-conversation/src/client/input/editor/ComposerContentEditable.tsx b/packages/client/ui-conversation/src/client/input/editor/ComposerContentEditable.tsx
+index b975ee1..e242d06 100644
+--- a/packages/client/ui-conversation/src/client/input/editor/ComposerContentEditable.tsx
++++ b/packages/client/ui-conversation/src/client/input/editor/ComposerContentEditable.tsx
+@@ -1,8 +1,7 @@
+ /**
+  * The composer's contenteditable host: binds one shell-owned Lexical editor
+- * to a resident div. Session-maybe by design — a null editor renders the
+- * same DOM inert (the no-session Workspace-trigger state), so switching
+- * between the two never swaps the element tree. Editability has ONE writer:
++ * to a resident div. A null editor is inert for workspace selection or accepts
++ * a temporary managed-chat draft; switching never swaps the element tree. Editability has ONE writer:
+  * this component reflects the `editable` prop onto the editor; nothing else
+  * calls setEditable.
+  */
+@@ -16,6 +15,7 @@ export interface ComposerContentEditableProps extends HTMLAttributes<HTMLDivElem
+   readonly editor: LexicalEditor | null
+   /** Whether the user may edit (readOnly/disabled states fold in here). */
+   readonly editable: boolean
++  readonly standalone?: boolean | undefined
+ }
+ 
+ /**
+@@ -23,7 +23,7 @@ export interface ComposerContentEditableProps extends HTMLAttributes<HTMLDivElem
+  * @param props - editor binding, editability, and div passthroughs.
+  * @returns the resident contenteditable div.
+  */
+-export function ComposerContentEditable({ editor, editable, ...rest }: ComposerContentEditableProps): ReactNode {
++export function ComposerContentEditable({ editor, editable, standalone = false, ...rest }: ComposerContentEditableProps): ReactNode {
+   const ref = useRef<HTMLDivElement | null>(null)
+   useLayoutEffect(() => {
+     const el = ref.current
+@@ -39,7 +39,7 @@ export function ComposerContentEditable({ editor, editable, ...rest }: ComposerC
+       ref={ref}
+       // Lexical's setRootElement never touches contenteditable; the binding
+       // renders it, and setEditable above keeps the editor's own gate in step.
+-      contentEditable={editor !== null && editable}
++      contentEditable={(editor !== null || standalone) && editable}
+       suppressContentEditableWarning
+       role="textbox"
+       aria-multiline="true"
+diff --git a/packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx b/packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx
+index 9c324ff..ee5eb71 100644
+--- a/packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx
++++ b/packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx
+@@ -1,5 +1,5 @@
+ /** Stateless text-area presentation over the InputBar's borrowed editor. */
+-import type { CSSProperties, KeyboardEventHandler, ReactNode, RefObject } from 'react'
++import type { CSSProperties, FormEventHandler, KeyboardEventHandler, ReactNode, RefObject } from 'react'
+ import type { LexicalEditor } from 'lexical'
+ import clsx from 'clsx'
+ import { HoverCardGroup } from '@deepseek-ai/dsh-client-ui-primitives'
+@@ -22,6 +22,9 @@ export interface DraftEditorProps {
+   readonly onWorkspaceKeyDown: KeyboardEventHandler<HTMLDivElement>
+   readonly hint: string | null
+   readonly showPlaceholder: boolean
++  readonly standalone?: boolean
++  readonly onStandaloneInput?: FormEventHandler<HTMLDivElement> | undefined
++  readonly onStandaloneKeyDown?: KeyboardEventHandler<HTMLDivElement> | undefined
+ }
+ 
+ /**
+@@ -32,12 +35,14 @@ export interface DraftEditorProps {
+ export function DraftEditor({
+   classNames: css, editor, scrollRef, editable, editorDisabled, phase, placeholderText, ariaLabel,
+   workspaceTrigger, workspacePickerOpen, onWorkspaceKeyDown, hint, showPlaceholder,
++  standalone, onStandaloneInput, onStandaloneKeyDown,
+ }: DraftEditorProps): ReactNode {
+   return (
+     <div ref={scrollRef} className={css.scroll} data-input-scroll>
+       <HoverCardGroup className={css.grow}>
+         <ComposerContentEditable
+           editor={workspaceTrigger ? null : editor}
++          standalone={standalone}
+           editable={editable}
+           className={clsx(css.input, editorDisabled && css.inputDisabled)}
+           data-phase={phase}
+@@ -49,7 +54,8 @@ export function DraftEditor({
+           aria-haspopup={workspaceTrigger ? 'menu' : undefined}
+           aria-expanded={workspaceTrigger ? workspacePickerOpen : undefined}
+           tabIndex={workspaceTrigger ? 0 : undefined}
+-          onKeyDown={workspaceTrigger ? onWorkspaceKeyDown : undefined}
++          onKeyDown={workspaceTrigger ? onWorkspaceKeyDown : onStandaloneKeyDown}
++          onInput={onStandaloneInput}
+           style={hint === null ? undefined : { '--dsh-composer-hint': JSON.stringify(hint) } as CSSProperties}
+         />
+         {showPlaceholder && (
+diff --git a/packages/client/ui-conversation/src/client/skeleton/ConversationContent.tsx b/packages/client/ui-conversation/src/client/skeleton/ConversationContent.tsx
+index d376ebf..d899f7b 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/ConversationContent.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/ConversationContent.tsx
+@@ -23,7 +23,7 @@ export function ConversationContent(props: ConversationContentProps) {
+   const {
+     managedWorkspaces, approvalInput, sessionId, phase, hero, useSession, useSessions, useSessionStatus,
+     useWorkspaces, useInput, useComposerBlock, renderSlot, renderSlotChain,
+-    selectWorkspace, t, useFactorySlot,
++    selectWorkspace, startManagedChat, t, useFactorySlot,
+   } = props
+   const session = useSession(snapshot => snapshot)
+   const Views = useFactorySlot('views', ConversationSessionView)
+@@ -134,18 +134,17 @@ export function ConversationContent(props: ConversationContentProps) {
+     </div>
+   )
+ 
+-  // The placeholder chip ("Choose workspace") and the Workspace-trigger input travel
+-  // together: no workspace picked yet (cold start, no session at all), or a
+-  // blank session whose workspace vanished (deleted from the sidebar). The
+-  // bar is ONE session-maybe slot rendered unconditionally — inert is a prop,
+-  // not a different tree, so the textarea DOM survives the transition.
+-  const inert = sessionId === undefined || (hero && chipTitle === undefined)
++  // Non-managed workspaces keep the picker trigger until a workspace exists.
++  // Managed chat instead stages a draft in the same bar without a Session.
++  const staged = managedWorkspaces && sessionId === undefined
++  const inert = !staged && (sessionId === undefined || (hero && chipTitle === undefined && !managedWorkspaces))
+   // A raised block is the same inert posture with the blocker's own reason:
+   // one disabled textarea, never a second tree. The no-workspace state wins
+   // when both hold — picking a workspace is the earlier prerequisite.
+   const blocked = !inert && composerBlock !== undefined
+   const inputBar = renderSlot('conversation.composer.bar', {
+     variant: hero ? 'hero' : 'composer',
++    ...(staged ? { startManagedChat, placeholder: t('placeholder.hero') } : {}),
+     ...(inert
+       ? {
+         disabled: true,
+@@ -164,6 +163,7 @@ export function ConversationContent(props: ConversationContentProps) {
+   const composerBar = (
+     <div className={clsx(css.composerStack, hero && css.composerHero)}>
+       {hero && !managedWorkspaces && <HeroShell t={t} renderSlot={renderSlot} />}
++      {staged && renderSlot('conversation.hero.brand.mark', { size: 34, className: '' })}
+       {hero && !managedWorkspaces && heroWorkspaceRow}
+       {zone !== undefined && renderSlot('conversation.input.dock', zone)}
+       {inputBar}
+diff --git a/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx b/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
+index 034cb43..14e6e19 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
+@@ -10,8 +10,8 @@ import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+  * The text surface is the shell-owned Lexical editor bound here through
+  * ComposerContentEditable; chips render as decorator portals, and the
+  * keymap registers submit/menu/paste gestures on the editor command layer.
+- * The no-session state renders the SAME div inert as the Workspace-picker
+- * trigger instead of a parallel tree.
++ * The no-session surface is a workspace picker for ordinary workspaces; managed
++ * chats keep a temporary text draft until a Session is created on demand.
+  */
+ 
+ import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+@@ -52,15 +52,21 @@ export const InputBar = memo(function InputBar({
+   useAccess,
+   useProjection, sessionId, variant, disabled: inert = false, blocked,
+   workspacePickerOpen = false, onRequestWorkspace,
+-  placeholder, accessory,
++  placeholder, accessory, startManagedChat,
+ }: InputBarProps) {
++  const staged = sessionId === undefined && startManagedChat !== undefined
++  const [stagedDraft, setStagedDraft] = useState('')
++  const [creating, setCreating] = useState(false)
++  const creatingRef = useRef(false)
++  const pendingControl = useRef<'commands' | 'permission' | 'model' | null>(null)
++  const [controlTarget, setControlTarget] = useState<string>()
+   const input = useInput(s => s)
+   const notice = useNotices(s => s)
+   const busyEnter = useBusyEnter(s => s)
+   const stopKeys = useStopShortcut(keys => keys)
+   // A page whose access snapshot excludes prompting, stopping, or uploading to this Session is offered
+-  // no Send, no Stop, or no file intake rather than a disabled control. `useAccess` is undefined only
+-  // without a Session, where the bar is an inert placeholder with no keyboard, stop, or file intake.
++  // no Send, no Stop, or no file intake rather than a disabled control. `useAccess` is undefined
++  // without a Session; managed chat submits only after the Host creates one.
+   const promptDenied = useAccess('session/prompt') === false
+   const cancelDenied = useAccess('session/cancel') === false
+   const uploadDenied = useAccess('fileUploads/upload') === false
+@@ -78,10 +84,9 @@ export const InputBar = memo(function InputBar({
+   const planActive = useProjection('plan', plan => plan !== undefined && (plan.pending ? !plan.active : plan.active))
+   // Absent (undefined: no frame yet) and cleared (null) both mean no goal.
+   const hasGoal = useProjection('goal', goal => goal != null)
+-  // Session-maybe: the machine faces are absent together while no session is
+-  // current; the bar renders the same DOM inert instead of a parallel tree.
+-  const live = input !== undefined && keyboard !== undefined && inputActions !== undefined
+-  const draft = input?.draft ?? ''
++  // Session-maybe: a managed chat can stage plain text before machine faces exist.
++  const live = staged || (input !== undefined && keyboard !== undefined && inputActions !== undefined)
++  const draft = staged ? stagedDraft : input?.draft ?? ''
+   const editor = keyboard?.editor ?? null
+   const attachments = useMemo(
+     () => input === undefined || resolveDraftAttachments === undefined ? [] : resolveDraftAttachments(input.attachmentIds),
+@@ -105,6 +110,25 @@ export const InputBar = memo(function InputBar({
+     setToast({ seq: toastSeq.current, text })
+   }, [])
+   const dismissToast = useCallback(() => { setToast(null) }, [])
++  const createManagedChat = useCallback((submit: boolean, control?: 'commands' | 'permission' | 'model') => {
++    if (startManagedChat === undefined || creatingRef.current || (submit && stagedDraft.trim() === '')) return
++    creatingRef.current = true
++    pendingControl.current = control ?? null
++    setControlTarget(undefined)
++    setCreating(true)
++    void startManagedChat(stagedDraft, submit).then(id => {
++      if (id !== undefined) {
++        setStagedDraft('')
++        setControlTarget(id)
++      } else pendingControl.current = null
++    }).catch((error: unknown) => {
++      pendingControl.current = null
++      showToast(error instanceof Error ? error.message : '创建会话失败，请重试')
++    }).finally(() => {
++      creatingRef.current = false
++      setCreating(false)
++    })
++  }, [startManagedChat, stagedDraft, showToast])
+   // The deployment's image-intake limits (absent while no attachment service
+   // is composed — the pre-check below then defers entirely to the host).
+   const imageLimits = useProjection('imageLimits')
+@@ -143,6 +167,24 @@ export const InputBar = memo(function InputBar({
+   }, [])
+   const cardRef = useRef<HTMLDivElement | null>(null)
+   const scrollRef = useRef<HTMLDivElement | null>(null)
++  useEffect(() => {
++    if (staged || sessionId === undefined || sessionId !== controlTarget || pendingControl.current === null) return
++    const control = pendingControl.current
++    const open = () => {
++      const button = [...(cardRef.current?.querySelectorAll<HTMLButtonElement>('button') ?? [])]
++        .find(item => !item.disabled && (control === 'commands'
++          ? item.getAttribute('aria-label') === t('input.commands')
++          : item.hasAttribute(control === 'permission' ? 'data-composer-permission-trigger' : 'data-composer-model-trigger')))
++      if (!button || pendingControl.current !== control) return
++      pendingControl.current = null
++      button.click()
++    }
++    const observer = new MutationObserver(open)
++    if (cardRef.current) observer.observe(cardRef.current, { subtree: true, childList: true, attributes: true })
++    const timer = window.setTimeout(() => { pendingControl.current = null; observer.disconnect() }, 8000)
++    open()
++    return () => { window.clearTimeout(timer); observer.disconnect() }
++  }, [staged, sessionId, controlTarget, t])
+ 
+   // A continuable child without its live parent cannot accept human input,
+   // but its independent Stop below stays available while it runs.
+@@ -152,7 +194,7 @@ export const InputBar = memo(function InputBar({
+   // inert no-workspace state, the machine faces absent (no session), or a
+   // parent-offline continuable child. An owner block also disables input;
+   // adjudicating and submitting render read-only so the draft stays visible.
+-  const disabled = removed || inert || !live || blocked !== undefined || parentOffline
++  const disabled = removed || inert || !live || blocked !== undefined || parentOffline || creating
+   const locked = disabled
+   // The model seat is the ONE control a block leaves live: every block this
+   // contract has is cleared by choosing a model, so locking it too would leave
+@@ -169,7 +211,7 @@ export const InputBar = memo(function InputBar({
+   const editable = live && !locked && !machineBusy
+   const steeringAvailable = subagent === null || subagent.address.mode === 'continuable'
+   const canSteerQueue = !locked && !machineBusy && !commandMenuOpen && empty && running && steeringAvailable
+-    && input.queue.length > 0
++    && (input?.queue.length ?? 0) > 0
+ 
+   useEffect(() => {
+     if (input === undefined || inputActions === undefined) return
+@@ -355,6 +397,10 @@ export const InputBar = memo(function InputBar({
+       stopAction?.()
+       return
+     }
++    if (staged) {
++      createManagedChat(true)
++      return
++    }
+     if (keyboard === undefined) return // absent machine: the button is disabled
+     /* v8 ignore next -- defensive: the primary button is disabled for empty, disabled, and pending-upload states. */
+     if (!empty && !disabled && !machineBusy && !uploadsPending) keyboard.submit(primarySubmitMode, 'click')
+@@ -445,6 +491,14 @@ export const InputBar = memo(function InputBar({
+         <DraftEditor
+           classNames={css}
+           editor={editor}
++          standalone={staged}
++          onStandaloneInput={staged ? event => { setStagedDraft(event.currentTarget.innerText) } : undefined}
++          onStandaloneKeyDown={staged ? event => {
++            if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
++              event.preventDefault()
++              createManagedChat(true)
++            }
++          } : undefined}
+           scrollRef={scrollRef}
+           editable={editable}
+           editorDisabled={editorDisabled}
+@@ -466,9 +520,9 @@ export const InputBar = memo(function InputBar({
+                 aria-label={t('input.commands')}
+                 aria-haspopup="listbox"
+                 aria-expanded={commandMenuOpen}
+-                disabled={locked || toggleCommandMenu === undefined}
++                disabled={locked || (!staged && toggleCommandMenu === undefined)}
+                 onMouseDown={keepFocus}
+-                onClick={onToggleCommandMenu}
++                onClick={staged ? () => { createManagedChat(false, 'commands') } : onToggleCommandMenu}
+               >
+                 <IconPlusOutlineMedium size={14} />
+               </ActionButton>
+@@ -482,7 +536,9 @@ export const InputBar = memo(function InputBar({
+               onChange={onPickFiles}
+             />
+             <div className={css.modes}>
+-              {sessionId === undefined ? null : renderSlot('conversation.input.permission', { locked })}
++              {staged
++                ? renderSlot('conversation.input.staged.permission', { locked, activate: () => { createManagedChat(false, 'permission') } })
++                : sessionId === undefined ? null : renderSlot('conversation.input.permission', { locked })}
+               {sessionId === undefined ? null : renderSlot('conversation.input.plan', { locked })}
+             </div>
+             {input === undefined || sessionId === undefined
+@@ -494,7 +550,9 @@ export const InputBar = memo(function InputBar({
+               {input === undefined || sessionId === undefined
+                 ? null
+                 : renderSlot('conversation.input.right', {})}
+-              {sessionId === undefined ? null : renderSlot('conversation.input.model', { locked: modelSeatLocked })}
++              {staged
++                ? renderSlot('conversation.input.staged.model', { locked, activate: () => { createManagedChat(false, 'model') } })
++                : sessionId === undefined ? null : renderSlot('conversation.input.model', { locked: modelSeatLocked })}
+             </div>
+             {input === undefined || sessionId === undefined ? null : <div className={activity ? css.activityExpanded : css.activity}>
+               {renderSlot('conversation.input.activity', { locked, onActiveChange: setActivity })}
+diff --git a/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx b/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
+index 75cfb07..c763c36 100644
+--- a/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
++++ b/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
+@@ -178,6 +178,7 @@ export function PermissionSelect({
+           <ActionButton
+             type="button"
+             className={css.trigger}
++            data-composer-permission-trigger
+             aria-label={t('mode', { name: currentLabel })}
+             title={current === undefined ? undefined : optionDescription(current, t)}
+             disabled={locked || busy}
+diff --git a/packages/client/ui-sidebar/src/client/SidebarRoot.module.css b/packages/client/ui-sidebar/src/client/SidebarRoot.module.css
+index 5367181..bfc6ab7 100644
+--- a/packages/client/ui-sidebar/src/client/SidebarRoot.module.css
++++ b/packages/client/ui-sidebar/src/client/SidebarRoot.module.css
+@@ -257,6 +257,10 @@
+   cursor: pointer;
+ }
+ 
++span.brand {
++  cursor: default;
++}
++
+ /* On macOS the brand is a window-drag surface, not a New Session button;
+    a pointer cursor would promise a click that drags the window instead. */
+ :global([data-platform='darwin']) .brand {
+diff --git a/packages/client/ui-sidebar/src/client/SidebarRoot.tsx b/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
+index 90f1314..4aa134c 100644
+--- a/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
++++ b/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
+@@ -132,6 +132,7 @@ export function SidebarRoot({
+   collapsed,
+   width,
+   startSession,
++  brandStartsSession,
+   toggleSidebar,
+   selectPanel,
+   setPinned,
+@@ -312,7 +313,7 @@ export function SidebarRoot({
+               </span>
+             </span>
+           )
+-          return darwinDesktop || !canStartSession
++          return darwinDesktop || !canStartSession || !brandStartsSession
+             ? <span className={clsx(css.brand, css.wide)}>{identity}</span>
+             : (
+               <ActionButton
+diff --git a/packages/client/ui-sidebar/src/client/contract/slots.ts b/packages/client/ui-sidebar/src/client/contract/slots.ts
+index 9e018b8..0759a93 100644
+--- a/packages/client/ui-sidebar/src/client/contract/slots.ts
++++ b/packages/client/ui-sidebar/src/client/contract/slots.ts
+@@ -149,6 +149,8 @@ export interface SidebarFooterActionOwnerProps {
+  * factory). The renderer binds the panel metadata source to usePanels.
+  */
+ export type SidebarRootInjected = {
++  /** Whether the expanded brand starts a session when clicked. */
++  brandStartsSession: boolean
+   /**
+    * Start a New Session: with a workspace, reuse-or-create its blank session
+    * and open it; without one, inherit the current Session Workspace, then the
+diff --git a/packages/client/ui-sidebar/src/client/index.ts b/packages/client/ui-sidebar/src/client/index.ts
+index fd93302..ff48c91 100644
+--- a/packages/client/ui-sidebar/src/client/index.ts
++++ b/packages/client/ui-sidebar/src/client/index.ts
+@@ -45,7 +45,7 @@ export const inject = ['slots', 'layout', 'uiWorkspace', 'locale', 'shortcuts']
+ /** Registers the sidebar shell and its service callbacks.
+  * @param ctx - Client root context.
+  */
+-export function apply(ctx: ClientContext): void {
++export function apply(ctx: ClientContext, config: { brandStartsSession?: boolean } = {}): void {
+   const workspaceNavigation = ctx.get('uiWorkspace') as unknown as WorkspaceNavigation
+   ctx.effect(() => ctx.locale.register(NS, { zh, en, ja, es, fr, de, ru, pt }), 'ui-sidebar: dictionaries')
+   const panels = createSnapshotStore<readonly SidebarPanelMetadata[]>([])
+@@ -71,6 +71,7 @@ export function apply(ctx: ClientContext): void {
+   }
+ 
+   const injectProps = (): SidebarRootInjected => ({
++    brandStartsSession: config.brandStartsSession ?? true,
+     // The shell's New Session button rides the Workspace UI's shared action
+     // (current Session Workspace, then recent Workspace).
+     startSession: (workspaceId) => { workspaceNavigation.startSession(workspaceId) },
+diff --git a/packages/client/ui-workspace/src/client/navigation.ts b/packages/client/ui-workspace/src/client/navigation.ts
+index 9e646b8..229f569 100644
+--- a/packages/client/ui-workspace/src/client/navigation.ts
++++ b/packages/client/ui-workspace/src/client/navigation.ts
+@@ -89,6 +89,8 @@ export interface UiWorkspace {
+    * whether existing text or attachments are kept, replaced, or followed by the prompt.
+    */
+   startSession(workspaceId?: WorkspaceId, options?: StartSessionOptions): void
++  /** Create one managed Session and prepare its retained input before opening it. */
++  startManagedSession(beforeOpen: (sessionId: SessionId) => void): Promise<SessionId | undefined>
+   /**
+    * Archive a Session and clear it when it is the current selection.
+    * @param sessionId - Session to archive.
+@@ -384,6 +386,15 @@ class UiWorkspaceService extends Service implements UiWorkspace {
+     )
+   }
+ 
++  async startManagedSession(beforeOpen: (sessionId: SessionId) => void): Promise<SessionId | undefined> {
++    if (!this.managedSessions) throw new Error('Managed sessions are unavailable')
++    const navigation = AbortSignal.any([this.ctx.layout.beginNavigation(), this.lifetime.signal])
++    const id = await this.sessions.create({})
++    if (navigation.aborted) return undefined
++    this.replaceMain(id, navigation, 'reveal', beforeOpen)
++    return id
++  }
++
+   private prepareDraft(binding: SessionBinding, options: DraftInitializationOptions): void {
+     const conversation = this.ctx.get('conversation')
+     if (conversation === undefined) this.draftPreparationFailed()

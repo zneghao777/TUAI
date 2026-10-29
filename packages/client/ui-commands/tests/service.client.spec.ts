@@ -277,6 +277,17 @@ describe('candidates', () => {
     expect(list).toEqual([{ name: 'goal', description: 'leadingInput kind', hint: 'goal text' }])
   })
 
+  it('hides configured menu entries across queries without disabling typed commands and restores them on disposal', async () => {
+    const { command, source, warm } = await bench()
+    await warm(proj('s1'))
+    const dispose = command.hideMenuEntries(['goal', 'plan'])
+    expect((await source.candidates(proj('s1'), req(''))).map(row => row.name)).toEqual([])
+    expect(await source.candidates(proj('s1'), req('goal'))).toEqual([])
+    expect(source.matchSpace!(proj('s1'), '/goal')).toHaveProperty('claim.name', 'goal')
+    dispose()
+    expect((await source.candidates(proj('s1'), req(''))).map(row => row.name)).toEqual(['goal', 'plan'])
+  })
+
   it('ranks rows through the shared name ranker: prefixes first, then alignment, then source order', async () => {
     const commands: CommandDescriptor[] = [
       { name: 'z_a_b', description: '' },

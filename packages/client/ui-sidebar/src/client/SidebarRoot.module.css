@@ -257,6 +257,10 @@
   cursor: pointer;
 }
 
+span.brand {
+  cursor: default;
+}
+
 /* On macOS the brand is a window-drag surface, not a New Session button;
    a pointer cursor would promise a click that drags the window instead. */
 :global([data-platform='darwin']) .brand {

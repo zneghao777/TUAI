@@ -210,6 +210,13 @@ export class TypertGatewayError extends RemoteError<TypertGatewayErrorCode> {
  * @typert service typertGateway
  */
 export class TypertGatewayService extends Service implements TypertGateway {
+  private readonly admissionGuards = new Set<(request: Pick<InvokeRemoteRequest, 'namespace' | 'method' | 'args'>) => void>()
+
+  /** Lifecycle admission is independent of caller authorization and activates no receiver. */
+  guard(check: (request: Pick<InvokeRemoteRequest, 'namespace' | 'method' | 'args'>) => void): () => void {
+    this.admissionGuards.add(check)
+    return () => { this.admissionGuards.delete(check) }
+  }
   static inject = ['typert', 'remoteAccess']
   static Config: z<Config> = z.object({
     websocketHeartbeatIntervalMs: z.number().step(1).min(1).max(MAX_TIMER_DELAY_MS)
@@ -789,6 +796,8 @@ export class TypertGatewayService extends Service implements TypertGateway {
     const descriptor = this.resolveDescriptor(request.namespace, request.method, endpoint)
     assertExactArguments(request.args, descriptor, endpoint)
     const validated = validateArguments(descriptor, request.args, endpoint)
+    for (const check of this.admissionGuards)
+      check({ namespace: request.namespace, method: request.method, args: validated })
     // Access precedes lookup resolution, so a refused call activates nothing.
     // oxlint-disable-next-line typescript/no-unnecessary-condition -- other packages merge non-owner kinds into PrincipalMap.
     if (request.peer.principal.kind !== 'owner') {

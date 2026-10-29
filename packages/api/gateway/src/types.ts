@@ -146,6 +146,8 @@ export type TypertGatewayErrorCode =
 
 /** Host dispatcher consumed by Connection adapters. */
 export interface TypertGateway {
+  /** Register a product lifecycle guard applied to validated calls, including owner calls. */
+  guard(check: (request: Pick<InvokeRemoteRequest, 'namespace' | 'method' | 'args'>) => void): () => void
   /** Carrier adapter shared by WebSocket and in-process transports. */
   readonly wireStream: TypertGatewayWireStream
 

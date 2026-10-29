@@ -22,7 +22,11 @@ import {
   ConversationSettingsSchema,
   ConversationSettingsFields,
 } from '@deepseek-ai/dsh-client-ui-conversation/src/submission-settings.ts'
-import { ThemeSettingsSchema } from '@deepseek-ai/dsh-client-ui-theme/src/theme-settings.ts'
+import {
+  appearanceBootInjections,
+  ProductAppearanceSchema,
+  validateAppearance,
+} from './appearance.ts'
 
 type Namespace = import('@deepseek-ai/dsh-settings/types').SettingsNamespace
 interface PreferenceDefinition {
@@ -53,17 +57,17 @@ const definitions: PreferenceDefinition[] = [
   },
   {
     ns: brandString<Namespace>('ui-theme'),
-    schema: ThemeSettingsSchema.toJSON(),
+    schema: ProductAppearanceSchema.toJSON(),
     base: {
       ...Schema.resolve(
         { preference: 'light', fontSize: 15, codeFontSize: 12 },
-        ThemeSettingsSchema,
+        ProductAppearanceSchema,
         {},
       )[0],
     },
-    fields: Object.keys(Schema.resolve({}, ThemeSettingsSchema, {})[0]),
+    fields: Object.keys(Schema.resolve({}, ProductAppearanceSchema, {})[0]),
     validate: (value) => {
-      Schema.resolve(value, ThemeSettingsSchema, {})
+      validateAppearance(value)
     },
   },
 ]
@@ -84,6 +88,37 @@ class ChatPreferences implements SettingsProvider {
   async load() {
     try {
       this.current = storedSchema.parse(JSON.parse(await readFile(this.documentPath, 'utf8')))
+      // Read compatibility only: a nonempty pre-palette document used the forest theme.
+      // Keep the file and revision untouched until the user explicitly saves again.
+      if (
+        this.definition.ns === 'ui-theme' &&
+        !Object.hasOwn(this.current.user, 'palette') &&
+        Object.keys(this.current.user).length > 0
+      ) {
+        this.current = { ...this.current, user: { ...this.current.user, palette: 'forest' } }
+      }
+      if (
+        this.definition.ns === 'permission' &&
+        this.current.user.defaultPreset === 'workspace-write'
+      ) {
+        this.current = {
+          revision: this.current.revision + 1,
+          user: { ...this.current.user, defaultPreset: 'readonly' },
+        }
+        const temporary = `${this.documentPath}.${randomUUID()}.tmp`
+        try {
+          await writeFile(temporary, JSON.stringify(this.current) + '\n', {
+            flag: 'wx',
+            mode: 0o600,
+            flush: true,
+          })
+          await rename(temporary, this.documentPath)
+        } finally {
+          await unlink(temporary).catch((error) => {
+            if (error.code !== 'ENOENT') throw error
+          })
+        }
+      }
       this.validate(this.current.user)
     } catch (error) {
       if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) throw error
@@ -147,6 +182,15 @@ class ChatPreferences implements SettingsProvider {
       if (revision !== undefined && revision !== this.current.revision)
         throw new SettingsConflictError(this.definition.ns, revision, this.current.revision)
       const user = change(this.current.user)
+      // Pin the current default on the first save so a new font-only document is
+      // distinguishable from legacy documents on the next Host start. Empty means reset.
+      if (
+        this.definition.ns === 'ui-theme' &&
+        !Object.hasOwn(user, 'palette') &&
+        Object.keys(user).length > 0
+      ) {
+        user.palette = this.definition.base.palette
+      }
       this.validate(user)
       const next = { revision: this.current.revision + 1, user }
       const temp = `${this.documentPath}.${randomUUID()}.tmp`
@@ -173,13 +217,18 @@ export async function mountChatSettings(ctx: Context) {
   const permission: PreferenceDefinition = {
     ns: brandString<Namespace>('permission'),
     schema: Schema.object({
-      defaultPreset: Schema.union(['readonly', 'workspace-write', 'full-access']).required(),
+      defaultPreset: Schema.union(['readonly', 'full-access']).required(),
     }).toJSON(),
-    base: { defaultPreset: ctx.tianzhiaiHost.settings.defaultPermissionPreset ?? 'readonly' },
+    base: {
+      defaultPreset:
+        ctx.tianzhiaiHost.settings.defaultPermissionPreset === 'full-access'
+          ? 'full-access'
+          : 'readonly',
+    },
     fields: ['defaultPreset'],
     validate: (value) => {
       z.strictObject({
-        defaultPreset: z.enum(['readonly', 'workspace-write', 'full-access']),
+        defaultPreset: z.enum(['readonly', 'full-access']),
       }).parse(value)
     },
   }
@@ -197,6 +246,15 @@ export async function mountChatSettings(ctx: Context) {
       ),
   )
   for (const section of sections) await section.load()
+  ctx.on('webserver/index-inject', (table) => {
+    const appearance = sections.find((section) => section.describe()[0]?.ns === 'ui-theme')
+    if (appearance) {
+      const settings = validateAppearance(
+        z.record(z.string(), z.unknown()).parse(appearance.describe()[0]!.value),
+      )
+      table.push(...appearanceBootInjections(settings))
+    }
+  })
   const permissionSection = sections.find((section) => section.describe()[0]?.ns === 'permission')!
   ctx.effect(() =>
     ctx.permissionPresets.useDefaultSettings(() => {

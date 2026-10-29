@@ -14,8 +14,9 @@ export function registerToasts(
   ctx: Context,
   viewStore: WorkspaceViewStoreHandle,
   actions: Pick<RowToastActions, 'undoArchive' | 'showArchived' | 'openForkSource'>,
+  simpleChat = false,
 ): void {
-  const archiveFilterAction: ArchiveToastInjected['filterAction'] = (t, dismiss) => ({
+  const archiveFilterAction: ArchiveToastInjected['filterAction'] = (t, dismiss) => simpleChat ? undefined : ({
     prefix: t('toast.archivedOr'), label: t('toast.archivedFilter'),
     onClick: () => { dismiss(); actions.showArchived() },
   })

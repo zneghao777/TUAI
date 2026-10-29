@@ -23,7 +23,7 @@ export function ConversationContent(props: ConversationContentProps) {
   const {
     managedWorkspaces, approvalInput, sessionId, phase, hero, useSession, useSessions, useSessionStatus,
     useWorkspaces, useInput, useComposerBlock, renderSlot, renderSlotChain,
-    selectWorkspace, t, useFactorySlot,
+    selectWorkspace, startManagedChat, t, useFactorySlot,
   } = props
   const session = useSession(snapshot => snapshot)
   const Views = useFactorySlot('views', ConversationSessionView)
@@ -134,18 +134,17 @@ export function ConversationContent(props: ConversationContentProps) {
     </div>
   )
 
-  // The placeholder chip ("Choose workspace") and the Workspace-trigger input travel
-  // together: no workspace picked yet (cold start, no session at all), or a
-  // blank session whose workspace vanished (deleted from the sidebar). The
-  // bar is ONE session-maybe slot rendered unconditionally — inert is a prop,
-  // not a different tree, so the textarea DOM survives the transition.
-  const inert = sessionId === undefined || (hero && chipTitle === undefined)
+  // Non-managed workspaces keep the picker trigger until a workspace exists.
+  // Managed chat instead stages a draft in the same bar without a Session.
+  const staged = managedWorkspaces && sessionId === undefined
+  const inert = !staged && (sessionId === undefined || (hero && chipTitle === undefined && !managedWorkspaces))
   // A raised block is the same inert posture with the blocker's own reason:
   // one disabled textarea, never a second tree. The no-workspace state wins
   // when both hold — picking a workspace is the earlier prerequisite.
   const blocked = !inert && composerBlock !== undefined
   const inputBar = renderSlot('conversation.composer.bar', {
     variant: hero ? 'hero' : 'composer',
+    ...(staged ? { startManagedChat, placeholder: t('placeholder.hero') } : {}),
     ...(inert
       ? {
         disabled: true,
@@ -164,6 +163,7 @@ export function ConversationContent(props: ConversationContentProps) {
   const composerBar = (
     <div className={clsx(css.composerStack, hero && css.composerHero)}>
       {hero && !managedWorkspaces && <HeroShell t={t} renderSlot={renderSlot} />}
+      {staged && renderSlot('conversation.hero.brand.mark', { size: 34, className: '' })}
       {hero && !managedWorkspaces && heroWorkspaceRow}
       {zone !== undefined && renderSlot('conversation.input.dock', zone)}
       {inputBar}

@@ -24,17 +24,15 @@ test('TZ-065/066 original slash catalog, IME, commands, permission confirmation 
     const id = await current(page).getAttribute('data-session-id')
     const agent = host.runtime.ctx.agents.get(SessionId(id!))
     await editor(page).fill('/')
-    for (const name of [
-      'file',
-      'goal',
-      'plan',
-      'feedback',
-      'compact',
-      'permission',
-      'model',
-      'export',
-    ])
+    for (const name of ['file', 'compact', 'permission', 'model'])
       await expect(page.getByText(name, { exact: true })).toBeVisible()
+    for (const name of ['goal', 'plan', 'feedback', 'export'])
+      await expect(page.getByText(name, { exact: true })).toHaveCount(0)
+    const fileOption = page.locator('[data-command-file]')
+    await expect(fileOption).toBeVisible()
+    expect(await fileOption.evaluate((element) => getComputedStyle(element).justifyContent)).toBe('flex-end')
+    await editor(page).fill('/goal')
+    await expect(page.getByText('goal', { exact: true })).toHaveCount(0)
     await page.keyboard.press('Escape')
     await editor(page).fill('中文输入')
     await editor(page).dispatchEvent('compositionstart')
@@ -103,9 +101,7 @@ test('TZ-065/066 original slash catalog, IME, commands, permission confirmation 
   }
 })
 
-test('TZ-065/068 original drafts, references, workspace menu, archive filters and settings', async ({
-  page,
-}) => {
+test('CHAT-SIMPLE drafts, references, rename, archive hiding and settings', async ({ page }) => {
   const host = await fixtureHost()
   try {
     await page.goto(host.login)
@@ -140,13 +136,9 @@ test('TZ-065/068 original drafts, references, workspace menu, archive filters an
       .click()
     await page.getByRole('menuitem', { name: '归档会话', exact: true }).click()
     await expect(page.locator(`[data-session-id="${id}"]`)).toHaveCount(0)
-    await page.getByRole('button', { name: '视图选项' }).click()
-    await page.getByRole('menuitem', { name: '仅显示已归档', exact: true }).click()
-    const archived = page.locator(`[data-session-id="${id}"]`)
-    await expect(archived).toBeVisible()
-    await archived.hover()
-    await archived.getByRole('button', { name: /^会话.*的操作/ }).click()
-    await page.getByRole('menuitem', { name: /取消归档|恢复/ }).click()
+    await expect(page.getByRole('button', { name: '视图选项' })).toHaveCount(0)
+    await page.reload()
+    await expect(page.locator(`[data-session-id="${id}"]`)).toHaveCount(0)
     await page.getByRole('button', { name: '设置', exact: true }).click()
     await page.getByRole('tab', { name: '对话显示', exact: true }).click()
     await expect(page.getByText('选择新会话的默认权限模式', { exact: false })).toBeVisible()

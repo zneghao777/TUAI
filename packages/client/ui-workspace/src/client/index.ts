@@ -114,7 +114,7 @@ export const inject = [
  * framework's global hooks.
  * @param ctx - client root context.
  */
-export interface Config { managedSessions?: boolean }
+export interface Config { managedSessions?: boolean; simpleChat?: boolean }
 export function apply(ctx: Context, config: Config = {}): void {
   const sessions = ctx.get('sessions') as ISessions
   const workspaces = ctx.get('workspaces') as IWorkspaces
@@ -218,7 +218,7 @@ export function apply(ctx: Context, config: Config = {}): void {
     unarchiveSession,
   })
   installWorkspaceShortcuts(ctx, uiWorkspace, shortcutControls, archiveInjected().archiveSession,
-    (reason) => { notify({ kind: 'shortcutForkFailed', reason }) })
+    (reason) => { notify({ kind: 'shortcutForkFailed', reason }) }, config.simpleChat)
   const archiveConfirmInjected = (): SessionArchiveConfirmInjected => ({
     hooks: { archiveRequest },
     settleSessionArchive: () => { archiveRequest.set(null) },
@@ -262,7 +262,7 @@ export function apply(ctx: Context, config: Config = {}): void {
       openSession(sessionId)
     },
   }
-  registerToasts(ctx, viewStore, toastActions)
+  registerToasts(ctx, viewStore, toastActions, config.simpleChat)
   const rowToastInjected = (): Pick<RowToastInjected, 'hooks' | 'dismissToast'> => ({
     hooks: { toast: rowToast },
     dismissToast: () => { rowToast.set(null) },

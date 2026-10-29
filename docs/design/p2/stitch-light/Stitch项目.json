@@ -1,0 +1,92 @@
+{
+  "project": {
+    "id": "2807957398532997865",
+    "name": "天质 AI · P2 浅色毛玻璃设计",
+    "url": "https://stitch.withgoogle.com/projects/2807957398532997865",
+    "visibility": "PRIVATE"
+  },
+  "status": "首页与聊天视觉已获认可；四类交互状态已补齐，供用户评审。仅设计原型，未改应用代码。",
+  "designSystem": "assets/cefaf4b150bf47279487d2dfccc0cb80",
+  "screens": [
+    {
+      "id": "50e7e38057d54fefaf867c6abfbee7e8",
+      "title": "天质 AI — 新会话首页 (珍珠白磨砂玻璃精修版)",
+      "name": "projects/2807957398532997865/screens/50e7e38057d54fefaf867c6abfbee7e8",
+      "screenshot": "projects/2807957398532997865/files/22f41c6481184bd6924c618ecff9c2cc",
+      "html": "projects/2807957398532997865/files/005217a289c842b2862386dbedfb011d",
+      "localImage": "首页.png",
+      "localHtml": "首页.html",
+      "width": "2560",
+      "height": "2048"
+    },
+    {
+      "id": "4b93a8635fa14ac399f1d54bfa013502",
+      "title": "天质 AI — 聊天工作区 (珍珠白磨砂玻璃精修版)",
+      "name": "projects/2807957398532997865/screens/4b93a8635fa14ac399f1d54bfa013502",
+      "screenshot": "projects/2807957398532997865/files/926fa65283a848068bc8ac58c3c55882",
+      "html": "projects/2807957398532997865/files/d5d46b98bf35433297b6d6565d2a4706",
+      "localImage": "聊天工作区.png",
+      "localHtml": "聊天工作区.html",
+      "width": "2560",
+      "height": "2048"
+    },
+    {
+      "id": "7ff482e56c06480a9e69504388866b5a",
+      "name": "projects/2807957398532997865/screens/7ff482e56c06480a9e69504388866b5a",
+      "title": "天质 AI — 聊天工作区 (工具调用展开状态)",
+      "screenshot": "projects/2807957398532997865/files/6feee18705c74edeb59e333a5b689a46",
+      "html": "projects/2807957398532997865/files/2fe0df8c569a4959abb9a4469b7b12d5",
+      "localImage": "工具调用展开.png",
+      "localHtml": "工具调用展开.html",
+      "width": "2560",
+      "height": "2048"
+    },
+    {
+      "id": "e0e102f44dee4c89b80737b5529133a6",
+      "name": "projects/2807957398532997865/screens/e0e102f44dee4c89b80737b5529133a6",
+      "title": "天质 AI — 聊天工作区 (等待审批状态·修复版)",
+      "screenshot": "projects/2807957398532997865/files/65c1d5e487944a4dbec2ea363a51f5c6",
+      "html": "projects/2807957398532997865/files/75f842e713824f6599a5c128bbaf4b3a",
+      "localImage": "等待审批.png",
+      "localHtml": "等待审批.html",
+      "width": "2560",
+      "height": "2048"
+    },
+    {
+      "id": "c6086da0dd454f2a97c8ec9bc3c626b3",
+      "name": "projects/2807957398532997865/screens/c6086da0dd454f2a97c8ec9bc3c626b3",
+      "title": "天质 AI — 聊天工作区 (消息排队状态)",
+      "screenshot": "projects/2807957398532997865/files/1eae5b9f6ba14942ab9635f39df94152",
+      "html": "projects/2807957398532997865/files/e0388cf178e845778f624507c9366d11",
+      "localImage": "消息排队.png",
+      "localHtml": "消息排队.html",
+      "width": "2560",
+      "height": "2048"
+    },
+    {
+      "id": "c0370c4ed5144dfc8b9f13b6bfd7a895",
+      "name": "projects/2807957398532997865/screens/c0370c4ed5144dfc8b9f13b6bfd7a895",
+      "title": "天质 AI — 聊天工作区 (异常恢复状态·修复版)",
+      "screenshot": "projects/2807957398532997865/files/33fba295598f4993962963b97948f93b",
+      "html": "projects/2807957398532997865/files/6120b2632a2c423b9fa6a375e9880956",
+      "localImage": "异常恢复.png",
+      "localHtml": "异常恢复.html",
+      "width": "2560",
+      "height": "2048"
+    }
+  ],
+  "localPreview": {
+    "url": "http://127.0.0.1:3101/",
+    "note": "本地HTML在Stitch视觉基础上补齐原型状态流转与动效清理；不调用业务Host或模型。PNG保留Stitch最终视觉稿。"
+  },
+  "validation": {
+    "browser": [
+      "工具失败→只读重试中→完成",
+      "队列编辑保存、取用后移出、清空、插话回执、追加队列、防空及停止中→已停止",
+      "审批提交锁定、批准后等待继续、拒绝、过期与刷新保持禁用",
+      "断线重连后左右连接状态一致、草稿仍在、同一回答只出现一次",
+      "模型错误独立显示、更换模型不重发旧请求"
+    ],
+    "boundary": "这些检查只覆盖本地设计原型，不是产品联调或P2验收。"
+  }
+}

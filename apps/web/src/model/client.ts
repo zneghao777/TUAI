@@ -94,6 +94,7 @@ export class AppClient {
     await mountUiFoundation(this.ctx)
     await mountChatRuntime(this.ctx, {
       showUsage: false,
+      allowFork: false,
       openSession: (id) => this.ctx.uiWorkspace.openSession(id),
       openFile: async (id, path) => {
         const cwd = this.ctx.sessions.list.getSnapshot().byId[id]?.cwd

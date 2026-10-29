@@ -144,6 +144,7 @@ export function ModelPicker({
         variant="ghost"
         size="sm"
         className="tz-model-trigger"
+        data-composer-model-trigger
         isDisabled={locked}
         aria-label={`选择模型，当前：${current?.name ?? '未选择'}${label ? `，${label}` : ''}`}
       >

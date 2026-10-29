@@ -254,7 +254,16 @@ export async function fixtureHost(options = {}) {
   const model = new ScenarioModel(options.composerControls, options.contextUsage)
   try {
     const runtime = await startWebHost(
-      { port: 0, provider: 'p2-controlled', model: 'controlled', ...options },
+      {
+        port: 0,
+        provider: 'p2-controlled',
+        model: 'controlled',
+        // A fixed build copy keeps parallel frontend rebuilds from removing live test assets.
+        ...(process.env.TIANZHI_UI_DIST_INDEX
+          ? { distIndex: process.env.TIANZHI_UI_DIST_INDEX }
+          : {}),
+        ...options,
+      },
       async (ctx) => {
         ctx.llm.registerAdapter(['p2-controlled'], model)
         const sample = await readFile('package.json', 'utf8')

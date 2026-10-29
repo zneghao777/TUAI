@@ -43,15 +43,18 @@ test('权限菜单持久化，原输入区和模型浮层在窄屏保持可用',
     await page.goto(host.login)
     const permission = page.getByRole('button', { name: /访问模式/ })
     await permission.click()
-    await page.getByRole('menuitem', { name: '工作区内修改', exact: true }).click()
+    await expect(page.getByRole('menuitem')).toHaveCount(2)
+    await page.getByRole('menuitem', { name: '完全权限', exact: true }).click()
+    await page.getByRole('checkbox').check()
+    await page.getByRole('button', { name: '启用完全权限', exact: true }).click()
     const id = await page
       .locator('[data-session-id][aria-current=page]')
       .getAttribute('data-session-id')
     expect(
       host.runtime.ctx.permissionPresets.current(host.runtime.ctx.sessions.get(SessionId(id!))),
-    ).toBe('workspace-write')
+    ).toBe('full-access')
     await page.reload()
-    await expect(permission).toContainText('工作区内修改')
+    await expect(permission).toContainText('完全权限')
     for (const width of [1440, 820, 390, 320]) {
       await page.setViewportSize({ width, height: 844 })
       await expect(editor(page)).toBeInViewport()

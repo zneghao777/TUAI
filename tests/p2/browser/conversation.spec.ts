@@ -44,6 +44,7 @@ test('流式思考、多步紧凑列表、错误、整轮计时与历史恢复',
   if ((await liveGroup.getAttribute('aria-expanded')) === 'false') await liveGroup.click()
   await expect(page.locator('[data-variant=think][data-state=running]')).toBeVisible()
   await expect(page.locator('[data-chat-running]')).toBeVisible()
+  await expect(page.locator('[data-chat-running]')).toContainText('正在思考')
   await page.screenshot({ path: 'reports/p2/063-streaming.png' })
   host.model.continueRuns()
   await expect(page.getByText(answer, { exact: true })).toBeVisible()

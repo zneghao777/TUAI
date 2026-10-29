@@ -149,6 +149,8 @@ export interface SidebarFooterActionOwnerProps {
  * factory). The renderer binds the panel metadata source to usePanels.
  */
 export type SidebarRootInjected = {
+  /** Whether the expanded brand starts a session when clicked. */
+  brandStartsSession: boolean
   /**
    * Start a New Session: with a workspace, reuse-or-create its blank session
    * and open it; without one, inherit the current Session Workspace, then the

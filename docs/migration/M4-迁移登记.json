@@ -2863,13 +2863,13 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/apply.ts",
-          "sha256": "a9c192c3747bfc2d50dcaa29ec004f7540ba80800437759c07490223ff8057ab",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "498b9ad1c24bf2593f62c107ecf89efe28b5bda775a3ec674153fd4d993788a5",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/contract/slots.ts",
-          "sha256": "60f06de81d0b36dac6ea2496ada1ba0cec877f27b5bc62236d02661a796faa78",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070 适配 React 19"
+          "sha256": "ee01a74d11d1983701605c8ffe7b7106cff101e3507d9e7017fec71069d657d6",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070 适配 React 19；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/input/hub.ts",
@@ -2888,8 +2888,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/ConversationContent.tsx",
-          "sha256": "96ec6abc7bcf822054cac135b8022caf3c59fd970d0042e42732a54069417c1d",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "03de904f882bd819fe0ed9643358ca0f2ff572c5d92c9d3be867cbb18064d35e",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/stores.ts",
@@ -2908,8 +2908,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx",
-          "sha256": "cd57ca27bf566fc821e7393aaa647720901814de5cd2ab3564d22f294128c139",
-          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+          "sha256": "9606fddb8de43b522367d475bbe2725ca02c30b6e98d799d1de8c993360dd0e4",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/input/editor/view-binding.ts",
@@ -2938,13 +2938,23 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx",
-          "sha256": "65b43c321f6fa5cea31f243c13113fb40a597de9bff9e967dc16f47d6831e6a2",
-          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+          "sha256": "d065f7b35ff5bac437ddec851cdee24bfe60ddcb09e30f525fa1c765218d2df0",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx",
           "sha256": "eebec72394780b5e87f0a14abbf56aff0fa90c4bd8156fabaa5e82f421a8734b",
           "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/locales.ts",
+          "sha256": "fac0044430d9928bd217efe23a1956b3ed11ad6baea099d29ccd7e17996cdaf0",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/input/editor/ComposerContentEditable.tsx",
+          "sha256": "8a78e6698122365f6762f49694d45eb777ccb4c8eefed11ba758b5a98892d597",
+          "reason": "TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         }
       ],
       "additionalFiles": [
@@ -3941,6 +3951,11 @@
           "path": "packages/client/ui-layout/package.json",
           "sha256": "02cf4d2ce2aaa1b5c714a71738db4aadadbe7e65022574473279fbd85dc924bd",
           "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-layout/src/client/AppFrame.tsx",
+          "sha256": "361bba4bfe89d698dd8b7b869c1906a5edb2397c423d1dfa8976928dc63625ba",
+          "reason": "TZ-076 简化聊天区、删除准入、文案及窄屏导航适配；增量见 provenance/dsh-chat-simplification-local.patch"
         }
       ],
       "additionalFiles": [
@@ -5081,8 +5096,8 @@
         },
         {
           "path": "packages/client/ui-chat/src/client/apply.ts",
-          "sha256": "4ca144f87150bf556d21f4f25a1151e0a7b4100cb8bba7143971c0fc0a1b02e4",
-          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
+          "sha256": "a1688b17820ebc0f84199beba4d019ca80e1b8f775a56ede0406191571c4559b",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现；TZ-076 简化聊天区、删除准入与文案适配"
         },
         {
           "path": "packages/client/ui-chat/src/client/index.ts",
@@ -5126,8 +5141,8 @@
         },
         {
           "path": "packages/client/ui-chat/src/client/contract/slots.ts",
-          "sha256": "5555eae2d7c3635eacfb6e0e1b00f9b4b0200a490a12130129268afe2d996a4e",
-          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch"
+          "sha256": "4abde6f24fd8d65d955930259ed954eaa8528de849e63737d1be9571c7ff6c8c",
+          "reason": "TZ-070 适配 React 19；增量补丁记录在 dsh-tz070-react19-local.patch；TZ-076 简化聊天区、删除准入与文案适配"
         },
         {
           "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx",
@@ -5168,6 +5183,26 @@
           "path": "packages/client/ui-chat/src/client/settings/PreferenceRow.tsx",
           "sha256": "e17ed62faf26c819174e3603f0d774dfc279310ea583ea15a5f85ac50f9b866e",
           "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/chat/TurnTailNodeView.tsx",
+          "sha256": "6c2aaf488a32108d8a7f92015ee9820531e1186ea4f41b93ad7931c31ccf0ddd",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/src/client/locale.ts",
+          "sha256": "92d52324beadeb5f7f025a4b3e36e90c8ffbe9e95e9aaed034b933ae50849e76",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/tests/chat-view.client.spec.tsx",
+          "sha256": "72c9106260863be1e6fbcd7e26238b5eee9f0303d4c3e9980e83d0623a8e92d6",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/client/ui-chat/tests/running-status.client.spec.tsx",
+          "sha256": "dc646bb40a44faef7d9a1098bd57e1c4f8f55dc5d03b137617197a7b8e454533",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
         }
       ],
       "additionalFiles": [
@@ -6272,8 +6307,8 @@
         },
         {
           "path": "packages/client/ui-input-trigger/src/client/MenuView.tsx",
-          "sha256": "d8e4f5bd625cd999c664c49f3494333e8ea4b8768ad3cc1f055ddf0d27645d44",
-          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+          "sha256": "c5a39140a61515dc3d7e8fce994d43390e2a8c11b29b501fef6441d36205487e",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-081 菜单与侧栏展示适配，见 provenance/dsh-tz081-local.patch"
         }
       ],
       "additionalFiles": [
@@ -7675,13 +7710,13 @@
         },
         {
           "path": "packages/client/ui-workspace/src/client/index.ts",
-          "sha256": "4a1bdccdef76ba9fbd6b604a6e2db26a3b0ed7a604a71976bfc46f0723e42ed2",
-          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
+          "sha256": "88ba0afd4fbebf59a8bd3e2b454e60ab31099b7ea317b588a0f2933a24510d89",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现；TZ-076 简化聊天区、删除准入与文案适配"
         },
         {
           "path": "packages/client/ui-workspace/src/client/navigation.ts",
-          "sha256": "8b629d60aa36e2bda42c649d3fdaf7646ccc8bb9affb510f073e6dc5130a848a",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "660dae4223c6af9fc8b830e6eae07a27776a8171d3b5810c3d8717274f9c9b5a",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         },
         {
           "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx",
@@ -7707,6 +7742,26 @@
           "path": "packages/client/ui-workspace/src/client/session-actions/PinSession.tsx",
           "sha256": "068fa979cc79d4243f243940d7c426676d3c2af6daa38bc124e76e0d230a8550",
           "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/contract/toast.ts",
+          "sha256": "cd4195e22159a13c4ea45cf4a6cea64f48b14921f66f6c9d44d48c8e65e8a243",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/shortcuts.ts",
+          "sha256": "a75f10108122b5a92bc5b375d28a0677bc6ed0619f950b1d8510528205874fb4",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/toast/Toast.tsx",
+          "sha256": "af1485b0f91f9e5df55d0bc26d8a01867d00a12fa73eab41028311fbb78a1916",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/toast/register.ts",
+          "sha256": "b7bbe7207b0e77b49d7b5cbf98841885b43aef306822c891b326571a7eae5a8b",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
         }
       ],
       "additionalFiles": [
@@ -8058,8 +8113,8 @@
         },
         {
           "path": "packages/client/ui-sidebar/src/client/index.ts",
-          "sha256": "ce73cab68c37d2083d2be314e189bc682c91082a5841e4233490bcecf07e18fd",
-          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+          "sha256": "9f575989a0f94364e384d41b653ecf87515cf9fa6a7b5a75e175c865b9903fa8",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         },
         {
           "path": "packages/client/ui-sidebar/tsconfig.json",
@@ -8073,8 +8128,18 @@
         },
         {
           "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx",
-          "sha256": "4f9afafd2314ebb9f31a3edc761bb45040f110da4fa41664ec8ac6d60723df0a",
-          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+          "sha256": "3806a2c9d6676257550597abfeedde4e623bb761a4afa030085c41515d48d262",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch；TZ-081 菜单与侧栏展示适配，见 provenance/dsh-tz081-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar/src/client/contract/slots.ts",
+          "sha256": "3dee5ad5b04340b0d0492bd377162b9ef8f3868064059e98202028f0c5628f9c",
+          "reason": "TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar/src/client/SidebarRoot.module.css",
+          "sha256": "2df472e1bc5ff3627b793911f9ba9a2ca3810d4569dfabedb7abb6379ac9ac53",
+          "reason": "TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         }
       ],
       "additionalFiles": [
@@ -10314,6 +10379,21 @@
           "path": "packages/client/ui-commands/src/client/PopupSelectView.tsx",
           "sha256": "383df6cdbb3120144cfd44168bd6af5c4c7122633f814432f0fbbcb1fcd7f27b",
           "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/contract.ts",
+          "sha256": "cfc3cf159fc6bf86ca92e3df45613f10e27e745bb499f2d9f0f361727a1349da",
+          "reason": "TZ-081 菜单与侧栏展示适配，见 provenance/dsh-tz081-local.patch"
+        },
+        {
+          "path": "packages/client/ui-commands/src/client/service.ts",
+          "sha256": "40bfb6367f30e5ea7568f3a9bf2fd9f623d92b2c9284cbeb000c2d88734f08ac",
+          "reason": "TZ-081 菜单与侧栏展示适配，见 provenance/dsh-tz081-local.patch"
+        },
+        {
+          "path": "packages/client/ui-commands/tests/service.client.spec.ts",
+          "sha256": "8e2d1c2eba65d1fc51e59a0801bfe86a0a4b907ec01e151646e3442cd6ebf0d7",
+          "reason": "TZ-081 菜单候选过滤及命令保留验证，见 provenance/dsh-tz081-local.patch"
         }
       ],
       "additionalFiles": [
@@ -10850,8 +10930,8 @@
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.tsx",
-          "sha256": "21a688ceba01ef7ad0997b8fb1cecc0523ab6fdafefda35b36ca778a841c5290",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+          "sha256": "ae4a03b83558b0b955fbfb4b01b3c643dd172c52f3465a899c15ff430885c7cc",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/index.ts",
@@ -12769,6 +12849,21 @@
       "path": "provenance/dsh-p2-heroui-local.patch",
       "sha256": "0d98a8c61ac651bd8c7ea3ea96826fcf8b0a0ea8a86a3d0d009e2761f2cfa779",
       "reason": "TZ-070～074 相对 a53c3f0 的完整前端增量，含 React 19 适配；历史来源快照和补丁保持不变"
+    },
+    {
+      "path": "provenance/dsh-chat-simplification-local.patch",
+      "sha256": "9ceb336c968defbb9999624477d9fa973c8c9c9af3c26b14117af7ecb563e20b",
+      "reason": "TZ-076 相对已提交 HeroUI 基线的增量补丁；旧来源快照与补丁保留"
+    },
+    {
+      "path": "provenance/dsh-tz080-local.patch",
+      "sha256": "85ca5213a2db194ec8ecf40a581fcf6257d8d326da872fa7d8fc7006a8d1cc48",
+      "reason": "TZ-080 涉及迁入源码相对当前 Git 基线的本地补丁；保留历史补丁"
+    },
+    {
+      "path": "provenance/dsh-tz081-local.patch",
+      "sha256": "b38d17857378a9419a25bce60da9d72ba89924ec7a3a2700ea9e17057a0fa991",
+      "reason": "TZ-081 迁入源码相对当前 Git 基线的本地补丁；SidebarRoot 同时包含未提交的 TZ-080 改动，保留历史补丁"
     }
   ],
   "excludedRuntime": [

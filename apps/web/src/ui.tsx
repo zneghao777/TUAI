@@ -1,20 +1,27 @@
 import {
   MarkdownDelegateProvider,
   IconSettingsOutlineRegular,
+  PermissionIconReadOnlyRegular,
+  PermissionIconFullAccessRegular,
+  IconChevronDownOutlineRegular,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ComposedProps } from '@deepseek-ai/dsh-client-ui-slots'
 import type {} from '@deepseek-ai/dsh-client-ui-sidebar/client'
 import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import { Button as HeroButton } from '@heroui/react'
+import { ChatSidebar } from './components/ChatSidebar'
 import { CursorGlow } from './components/CursorGlow'
 import { ModelPicker } from './components/ModelPicker'
+import { Icon } from './components/kit'
 import type { ModelSelectInjected } from '@deepseek-ai/dsh-client-ui-model-selection/client'
 import { useSource } from './bindings'
 import { SettingsDialog } from './components/SettingsDialog'
+import { AppearanceSettings } from './components/AppearanceSettings'
+import { AppearanceRuntime } from './model/appearance'
 import type { AppClient } from './model/client'
-import s from './App.module.css'
 import { mountArtifactPane } from './components/ArtifactPane'
+import brandLogo from './assets/tianzhi-logo.png'
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
   interface SlotMap {
@@ -37,7 +44,7 @@ type SettingsProps = ComposedProps<
   object
 >
 
-/** Product branding and settings surround original DSH Layout/Conversation/Workspace owners. */
+/** Product chat navigation, branding and settings share the original DSH state owners. */
 export function mountProductUi(client: AppClient, container: HTMLElement) {
   const { ctx } = client
   mountArtifactPane(client)
@@ -63,14 +70,95 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
       '--dsw-alias-border-l3': 'var(--line)',
     }).map(([key, value]) => [key, [value, value]]),
   )
-  const resetTheme = ctx.theme.overrideTokens(
-    'tianzhiai',
-    Object.fromEntries(
-      Object.entries(colors).map(([key, [light, dark]]) => [key, { light, dark }]),
-    ),
+  const semanticTokens = Object.fromEntries(
+    Object.entries(colors).map(([key, [light, dark]]) => [key, { light, dark }]),
   )
+  let resetTheme = ctx.theme.overrideTokens('tianzhiai', semanticTokens)
   const settingsOpen = createSnapshotStore(false)
+  const appearance = new AppearanceRuntime(ctx, () => {
+    resetTheme = ctx.theme.overrideTokens('tianzhiai', semanticTokens)
+  })
   const disposers = [
+    ctx.commandUi.hideMenuEntries(['goal', 'plan', 'feedback', 'export']),
+    ctx.slots.inject('settings.general.item', () =>
+      ctx.slots.register(
+        { name: 'settings.general.item', id: 'appearance', order: 10, priority: -10 },
+        () => <AppearanceSettings appearance={appearance} />,
+      ),
+    ),
+    ctx.slots.inject('sidebar.workspaces', () =>
+      ctx.slots.register({ name: 'sidebar.workspaces', priority: -10 }, ({ wide }) => (
+        <ChatSidebar client={client} wide={wide} />
+      )),
+    ),
+    ctx.slots.inject('conversation.input.dock', () =>
+      ctx.slots.register(
+        { name: 'conversation.input.dock', id: 'tianzhiai-greeting', order: -100 },
+        ({ session }) =>
+          session.blank ? (
+            <div className="tz-chat-greeting">
+              <h2>今天，想一起完成什么？</h2>
+            </div>
+          ) : null,
+      ),
+    ),
+    ctx.slots.inject('conversation.hero.brand.mark', () =>
+      ctx.slots.register({ name: 'conversation.hero.brand.mark' }, () => (
+        <div className="tz-chat-greeting">
+          <h2>今天，想一起完成什么？</h2>
+        </div>
+      )),
+    ),
+    ctx.slots.inject('conversation.input.staged.permission', () =>
+      ctx.slots.register(
+        { name: 'conversation.input.staged.permission' },
+        ({ locked, activate }) => {
+          const facts = useSource(client.facts)
+          const full = facts.permissions?.defaultPreset === 'full-access'
+          const label = full ? '完全权限' : '仅可查看'
+          return (
+            <HeroButton
+              variant="ghost"
+              className="tz-staged-permission"
+              isDisabled={locked}
+              aria-label={`访问模式，当前：${label}`}
+              onPress={activate}
+            >
+              {full ? <PermissionIconFullAccessRegular /> : <PermissionIconReadOnlyRegular />}
+              <span>{label}</span>
+              <IconChevronDownOutlineRegular />
+            </HeroButton>
+          )
+        },
+      ),
+    ),
+    ctx.slots.inject('conversation.input.staged.model', () =>
+      ctx.slots.register({ name: 'conversation.input.staged.model' }, ({ locked, activate }) => {
+        const facts = useSource(client.facts)
+        const catalog = facts.catalog
+        const selection = catalog?.default
+        const model = catalog?.groups
+          .find((group) => group.id === selection?.provider)
+          ?.models.find((item) => item.id === selection?.model)
+        const effortId = selection?.reasoningEffort ?? model?.reasoning?.defaultEffort
+        const effort = model?.reasoning?.efforts.find((item) => item.id === effortId)?.name
+        const label = model?.name ?? selection?.model ?? '选择模型'
+        return (
+          <HeroButton
+            variant="ghost"
+            size="sm"
+            className="tz-model-trigger"
+            isDisabled={locked}
+            aria-label={`选择模型，当前：${label}${effort ? `，${effort}` : ''}`}
+            onPress={activate}
+          >
+            <span>{label}</span>
+            {effort ? <span className="tz-model-effort">{effort}</span> : null}
+            <Icon name="chevron" />
+          </HeroButton>
+        )
+      }),
+    ),
     ctx.slots.inject('conversation.input.model', () =>
       ctx.slots.register(
         {
@@ -116,8 +204,8 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     ),
     ctx.slots.inject('sidebar.brand.mark', () =>
       ctx.slots.register({ name: 'sidebar.brand.mark' }, () => (
-        <span className={s.brandIcon} aria-hidden>
-          ✧
+        <span className="tz-brand-logo" aria-hidden>
+          <img src={brandLogo} alt="" />
         </span>
       )),
     ),
@@ -163,6 +251,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
   ))
   return () => {
     unmount()
+    appearance.dispose()
     resetTheme()
     for (const dispose of disposers.reverse()) dispose()
   }

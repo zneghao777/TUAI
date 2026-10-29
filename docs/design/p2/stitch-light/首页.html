@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>天质 AI - 新会话</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#dae0ed",
+            "tertiary": "#654b22",
+            "on-error": "#ffffff",
+            "primary-container": "#536985",
+            "on-secondary-fixed-variant": "#414752",
+            "on-primary-fixed-variant": "#324863",
+            "on-surface": "#282D35",
+            "tertiary-fixed": "#ffddae",
+            "surface-dim": "#d6dae5",
+            "inverse-surface": "#2c3139",
+            "surface-container-low": "#eff3fe",
+            "inverse-primary": "#b2c8e8",
+            "tertiary-container": "#7f6337",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "outline": "#717783",
+            "error": "#ba1a1a",
+            "surface-variant": "#dee2ed",
+            "on-error-container": "#93000a",
+            "secondary": "#595f6a",
+            "inverse-on-surface": "#edf1fc",
+            "surface-container-high": "#e4e8f3",
+            "surface-container-highest": "#dee2ed",
+            "on-secondary-fixed": "#161c25",
+            "on-primary": "#ffffff",
+            "surface-container": "#eaeef9",
+            "error-container": "#ffdad6",
+            "on-primary-fixed": "#021d35",
+            "on-background": "#282D35",
+            "on-secondary-container": "#5d636e",
+            "surface": "#F5F6F8",
+            "secondary-fixed": "#dde2f0",
+            "on-surface-variant": "#717783",
+            "surface-tint": "#536985",
+            "primary-fixed-dim": "#b2c8e8",
+            "primary": "#536985",
+            "tertiary-fixed-dim": "#e5c18d",
+            "on-tertiary-fixed-variant": "#5b421a",
+            "surface-bright": "#F5F6F8",
+            "on-tertiary-fixed": "#281800",
+            "on-tertiary-container": "#ffe3be",
+            "primary-fixed": "#d2e4ff",
+            "background": "#F5F6F8",
+            "secondary-fixed-dim": "#c1c7d4",
+            "on-primary-container": "#d9e8ff",
+            "outline-variant": "#E2E5EB"
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline-lg": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"],
+            "headline-md": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"],
+            "headline-sm": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"],
+            "headline-xl": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"],
+            "body-lg": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"],
+            "body-md": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"],
+            "body-sm": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"],
+            "label-md": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"],
+            "label-sm": ["\"Geist\", 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif"]
+          },
+          fontSize: {
+            "headline-xl": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+            "headline-lg": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+            "headline-md": ["20px", { lineHeight: "28px", fontWeight: "500" }],
+            "headline-sm": ["15px", { lineHeight: "22px", fontWeight: "500" }],
+            "body-lg": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+            "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }],
+            "body-sm": ["13px", { lineHeight: "20px", fontWeight: "400" }],
+            "label-md": ["13px", { lineHeight: "18px", fontWeight: "500" }],
+            "label-sm": ["11px", { lineHeight: "16px", fontWeight: "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Pearl White & Pure Frosted Glass Physical Styling */
+    .glass-sidebar {
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(24px) saturate(110%);
+      -webkit-backdrop-filter: blur(24px) saturate(110%);
+      border-right: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: inset -1px 0 0 rgba(230, 234, 240, 0.6), 0 8px 32px -4px rgba(40, 45, 53, 0.04);
+    }
+    .glass-composer-card {
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(24px) saturate(110%);
+      -webkit-backdrop-filter: blur(24px) saturate(110%);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 32px -4px rgba(40, 45, 53, 0.05), 0 1px 3px rgba(40, 45, 53, 0.04);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    textarea:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(113, 119, 131, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(113, 119, 131, 0.28);
+    }
+  </style>
+</head>
+<body class="h-full bg-[#F5F6F8] text-[#282D35] antialiased overflow-hidden select-none flex">
+<!-- Atmospheric Mist Layer -->
+<div class="fixed inset-0 pointer-events-none z-0" style="background: radial-gradient(circle at 50% 20%, #EDF0F4 0%, transparent 75%);"></div>
+<!-- Ambient Light Follower (Gentle, low-opacity cursor specular aura) -->
+<div class="pointer-events-none fixed top-0 left-0 w-[220px] h-[220px] rounded-full z-0 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300 opacity-0" id="cursor-glow" style="background: radial-gradient(circle, rgba(180, 195, 215, 0.18) 0%, rgba(180, 195, 215, 0.05) 50%, transparent 75%);">
+</div>
+<!-- ==================== LEFT SIDEBAR (Shared Component: SideNavBar) ==================== -->
+<aside class="fixed top-0 left-0 h-full w-[240px] z-30 glass-sidebar flex flex-col justify-between p-3 select-none">
+<!-- Top Branding & Action Cluster -->
+<div class="flex flex-col gap-3">
+<!-- Brand Bar & Toggle -->
+<div class="flex items-center justify-between px-2 pt-1 pb-1">
+<div class="flex items-center gap-2.5">
+<!-- Star Thin-Line Minimal Brand Icon -->
+<div class="w-6 h-6 rounded-lg bg-[#536985]/10 border border-[#536985]/20 flex items-center justify-center text-[#536985] shadow-sm"><svg class="w-3.5 h-3.5 text-[#536985]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"></path></svg></div>
+<span class="font-headline-sm text-headline-sm font-semibold text-[#282D35] tracking-tight">天质 AI</span>
+</div>
+<button aria-label="折叠侧边栏" class="p-1.5 rounded-lg text-[#717783] hover:text-[#282D35] hover:bg-white/80 transition-all duration-180 hover:-translate-y-[1px] active:scale-[0.985]" type="button">
+<span class="material-symbols-outlined text-[18px]">side_navigation</span>
+</button>
+</div>
+<!-- Action 1: New Chat Button (Active / Primary Intent) -->
+<button class="flex items-center justify-between w-full px-3 py-2 rounded-xl bg-white/90 text-[#536985] font-label-md text-label-md border-l-[3px] border-[#536985] shadow-[0_2px_8px_rgba(40,45,53,0.03)] border border-y-white border-r-white/80 hover:bg-white transition-all duration-180 hover:-translate-y-[1px] active:scale-[0.985]" id="btn-new-chat" type="button">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>新会话</span>
+</div>
+<span class="text-[10px] font-mono text-[#717783] bg-[#F5F6F8] px-1.5 py-0.5 rounded border border-[#E2E5EB]">⌘N</span>
+</button>
+<!-- Action 2: Quick Search Input -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[15px] text-[#717783] pointer-events-none">search</span>
+<input class="w-full pl-8 pr-2.5 py-1.5 rounded-xl bg-white/50 hover:bg-white/70 focus:bg-white text-body-sm font-body-sm text-[#282D35] placeholder:text-[#717783] border border-black/[0.04] focus:border-[#536985]/40 transition-all duration-180 focus:outline-none focus:ring-0" placeholder="搜索会话" type="text"/>
+</div>
+<!-- Workspace Context Indicator -->
+<div class="px-2 py-1.5 flex items-center justify-between text-body-sm font-body-sm text-[#717783] hover:text-[#282D35] hover:bg-white/60 rounded-lg cursor-pointer transition-all duration-180 hover:-translate-y-[1px] active:scale-[0.985]">
+<div class="flex items-center gap-2 overflow-hidden">
+<div class="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20"></div>
+<span class="text-xs text-[#282D35] font-medium truncate">个人工作区 · 已连接</span>
+</div>
+<span class="material-symbols-outlined text-[14px] text-[#717783]">expand_more</span>
+</div>
+<!-- Divider -->
+<div class="h-[1px] bg-black/[0.05] mx-1 my-0.5"></div>
+<!-- History List Section -->
+<div class="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-320px)] pr-0.5"><div class="px-2 pt-1 pb-1 text-[11px] font-medium text-[#717783] uppercase tracking-wider">今天</div><div class="group flex items-center justify-between px-2.5 py-1.5 rounded-xl text-body-sm font-body-sm text-[#717783] hover:text-[#282D35] hover:bg-white/70 hover:shadow-[0_2px_6px_rgba(40,45,53,0.02)] transition-all duration-180 hover:-translate-y-[1px] cursor-pointer active:scale-[0.985]"><span class="truncate">周末短途旅行</span><span class="text-[10px] text-[#717783]/60 opacity-0 group-hover:opacity-100 transition-opacity">14:20</span></div><div class="group flex items-center justify-between px-2.5 py-1.5 rounded-xl text-body-sm font-body-sm text-[#717783] hover:text-[#282D35] hover:bg-white/70 hover:shadow-[0_2px_6px_rgba(40,45,53,0.02)] transition-all duration-180 hover:-translate-y-[1px] cursor-pointer active:scale-[0.985]"><span class="truncate">项目资料整理</span><span class="text-[10px] text-[#717783]/60 opacity-0 group-hover:opacity-100 transition-opacity">10:05</span></div><div class="px-2 pt-3 pb-1 text-[11px] font-medium text-[#717783] uppercase tracking-wider">更早</div><div class="group flex items-center justify-between px-2.5 py-1.5 rounded-xl text-body-sm font-body-sm text-[#717783] hover:text-[#282D35] hover:bg-white/70 hover:shadow-[0_2px_6px_rgba(40,45,53,0.02)] transition-all duration-180 hover:-translate-y-[1px] cursor-pointer active:scale-[0.985]"><span class="truncate">一周饮食安排</span><span class="text-[10px] text-[#717783]/60 opacity-0 group-hover:opacity-100 transition-opacity">周二</span></div><div class="group flex items-center justify-between px-2.5 py-1.5 rounded-xl text-body-sm font-body-sm text-[#717783] hover:text-[#282D35] hover:bg-white/70 hover:shadow-[0_2px_6px_rgba(40,45,53,0.02)] transition-all duration-180 hover:-translate-y-[1px] cursor-pointer active:scale-[0.985]"><span class="truncate">读书笔记整理</span><span class="text-[10px] text-[#717783]/60 opacity-0 group-hover:opacity-100 transition-opacity">10-24</span></div></div>
+</div>
+<!-- Bottom Footer (Settings & Account) -->
+<div class="flex flex-col gap-1 pt-2 border-t border-black/[0.05]"><div class="flex items-center justify-between px-2.5 py-2 rounded-xl hover:bg-white/70 cursor-pointer transition-all duration-180 hover:-translate-y-[1px] active:scale-[0.985]"><div class="flex items-center gap-2.5 overflow-hidden"><div class="w-7 h-7 rounded-full bg-[#536985]/10 border border-[#536985]/20 flex items-center justify-center text-[#536985] font-medium text-xs"><span class="material-symbols-outlined text-[15px]">person</span></div><span class="text-xs font-medium text-[#282D35] truncate">个人空间</span></div><button class="p-1 text-[#717783] hover:text-[#282D35] hover:bg-white/80 rounded-lg transition-all duration-180 hover:-translate-y-[1px] active:scale-[0.985]" title="设置" type="button"><span class="material-symbols-outlined text-[16px]">settings</span></button></div></div>
+</aside>
+<!-- ==================== MAIN WORKSPACE STAGE ==================== -->
+<main class="flex-1 ml-[240px] h-full flex flex-col relative overflow-hidden bg-transparent z-10">
+<!-- Top Workspace Floating Header (Shared Component: TopNavBar) -->
+<header class="sticky top-0 w-full z-20 bg-white/40 backdrop-blur-md border-b border-black/[0.04]">
+<div class="flex justify-between items-center w-full px-6 py-3 max-w-[760px] mx-auto">
+<!-- Left Breadcrumb / Context Title -->
+<div class="flex items-center gap-2 text-[#717783] font-body-sm text-body-sm">
+<span class="font-medium text-[#282D35]">天质 AI</span>
+<span class="text-[#717783]/40">/</span>
+<span class="text-[#717783]">新会话</span>
+</div>
+<!-- Right Trailing Controls -->
+</div>
+</header>
+<!-- Canvas Central Stage (Vertical Alignment: Centered slightly above midpoint) -->
+<div class="flex-1 flex flex-col justify-center items-center px-6 pb-20 pt-4 overflow-y-auto">
+<div class="w-full max-w-[760px] flex flex-col items-center">
+<!-- Central Calm Greeting Anchor -->
+<div class="text-center mb-7 select-none">
+<h1 class="text-[26px] leading-[34px] font-semibold text-[#282D35] tracking-[-0.015em] font-headline-lg">
+            今天，想一起完成什么？
+          </h1>
+<p class="text-body-sm font-body-sm text-[#717783] mt-1.5 font-normal">
+            提供指令、黏贴文档或让系统协同规划分析
+          </p>
+</div>
+<!-- Primary Chat Input Bar (The Harness Composer) -->
+<div class="w-full glass-composer-card rounded-3xl p-4 transition-all duration-180 focus-within:border-[#536985]/50 focus-within:shadow-[0_12px_36px_-6px_rgba(40,45,53,0.08),0_1px_3px_rgba(40,45,53,0.04)]" id="composer-card">
+<!-- Multiline Text Area -->
+<div class="relative w-full">
+<textarea class="w-full resize-none bg-transparent border-0 p-1 text-[15px] leading-[24px] text-[#282D35] placeholder-[#717783] font-body-lg focus:ring-0 focus:outline-none tracking-normal" id="prompt-input" placeholder="描述你的目标，或把资料交给我…" rows="3"></textarea>
+</div>
+<!-- Bottom Action Toolbar -->
+<div class="mt-2.5 pt-2.5 border-t border-black/[0.05] flex items-center justify-between">
+<!-- Left: Attachment and Capability Caps -->
+<div class="flex items-center gap-2">
+<!-- Add Attachment Button -->
+<button class="flex items-center justify-center w-8 h-8 rounded-xl text-[#717783] hover:text-[#282D35] hover:bg-white/80 transition-all duration-180 hover:-translate-y-[1px] active:scale-[0.985]" title="添加附件资料" type="button">
+<span class="material-symbols-outlined text-[19px]">attach_file</span>
+</button>
+<div class="h-3.5 w-[1px] bg-black/[0.08] mx-0.5"></div>
+<!-- Model Selector Pill Capsule -->
+<button class="h-7 px-2.5 rounded-full bg-white/60 hover:bg-white/90 border border-black/[0.06] text-[#536985] text-label-sm font-label-sm flex items-center gap-1.5 transition-all duration-180 hover:-translate-y-[1px] active:scale-[0.985] shadow-[0_1px_2px_rgba(0,0,0,0.02)]" type="button">
+<span class="material-symbols-outlined text-[13px] text-[#536985]">neurology</span>
+<span>DeepSeek</span>
+<span class="material-symbols-outlined text-[13px] text-[#536985]/70">arrow_drop_down</span>
+</button>
+<!-- Safety & Autonomy Confirmation Badge -->
+<button class="h-7 px-2.5 rounded-full bg-white/60 hover:bg-white/90 border border-black/[0.06] text-[#717783] hover:text-[#282D35] text-label-sm font-label-sm flex items-center gap-1.5 transition-all duration-180 hover:-translate-y-[1px] active:scale-[0.985] cursor-pointer select-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]" title="权限模式选择" type="button"><span class="w-1.5 h-1.5 rounded-full bg-[#536985]"></span><span>标准 · 操作需确认</span><span class="material-symbols-outlined text-[13px] text-[#717783]/70">arrow_drop_down</span></button>
+</div>
+<!-- Right: Send Trigger Button -->
+<div class="flex items-center">
+<button class="w-8 h-8 rounded-[12px] bg-[#536985]/15 text-[#536985]/40 flex items-center justify-center transition-all duration-180 cursor-not-allowed select-none active:scale-[0.985]" disabled="" id="send-button" title="开始会话" type="button">
+<span class="material-symbols-outlined text-[17px]">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Lightweight Prompt Starters (Strictly max 3 plain-text suggestions, pure, no emojis) -->
+<div class="flex items-center justify-center gap-2 mt-4 select-none">
+<button class="prompt-chip px-3 py-1.5 rounded-full bg-white/60 hover:bg-white border border-white/80 hover:border-white text-[#717783] hover:text-[#282D35] text-label-sm font-label-sm shadow-[0_1px_4px_rgba(40,45,53,0.03)] hover:-translate-y-[1px] transition-all duration-180 active:scale-[0.985]" type="button">
+            整理资料
+          </button>
+<span class="text-[#717783]/30 text-[10px]">·</span>
+<button class="prompt-chip px-3 py-1.5 rounded-full bg-white/60 hover:bg-white border border-white/80 hover:border-white text-[#717783] hover:text-[#282D35] text-label-sm font-label-sm shadow-[0_1px_4px_rgba(40,45,53,0.03)] hover:-translate-y-[1px] transition-all duration-180 active:scale-[0.985]" type="button">
+            规划行程
+          </button>
+<span class="text-[#717783]/30 text-[10px]">·</span>
+<button class="prompt-chip px-3 py-1.5 rounded-full bg-white/60 hover:bg-white border border-white/80 hover:border-white text-[#717783] hover:text-[#282D35] text-label-sm font-label-sm shadow-[0_1px_4px_rgba(40,45,53,0.03)] hover:-translate-y-[1px] transition-all duration-180 active:scale-[0.985]" type="button">
+            梳理下一步
+          </button>
+</div>
+</div>
+</div>
+<!-- Bottom Canvas Subtle Status Note -->
+<div class="absolute bottom-3 w-full text-center pointer-events-none select-none">
+<span class="text-[11px] text-[#717783]/80 font-label-sm">
+        天质 AI 可能会产生事实误差，关键信息请予以核实
+      </span>
+</div>
+</main>
+<!-- ==================== JAVASCRIPT: MICRO-INTERACTIONS & ATMOSPHERIC EFFECTS ==================== -->
+<script>
+    (function () {
+      // 1. Mouse Follower Atmospheric Glow
+      const glowNode = document.getElementById('cursor-glow');
+      const composerCard = document.getElementById('composer-card');
+      const promptInput = document.getElementById('prompt-input');
+      const sendButton = document.getElementById('send-button');
+      const promptChips = document.querySelectorAll('.prompt-chip');
+
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let currentX = mouseX;
+      let currentY = mouseY;
+      let isVisible = false;
+      let animationFrameId = null;
+
+      const hasReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+      function updateGlowPosition() {
+        const dx = mouseX - currentX;
+        const dy = mouseY - currentY;
+
+        currentX += dx * 0.12;
+        currentY += dy * 0.12;
+
+        if (glowNode) {
+          glowNode.style.transform = `translate3d(${currentX - 110}px, ${currentY - 110}px, 0)`;
+        }
+
+        // Specular proximity reflection on composer card
+        if (composerCard) {
+          const rect = composerCard.getBoundingClientRect();
+          const distX = mouseX - (rect.left + rect.width / 2);
+          const distY = mouseY - (rect.top + rect.height / 2);
+          const distance = Math.hypot(distX, distY);
+
+          if (distance < 450) {
+            const intensity = Math.max(0, 1 - distance / 450);
+            const lightX = ((mouseX - rect.left) / rect.width) * 100;
+            const lightY = ((mouseY - rect.top) / rect.height) * 100;
+            composerCard.style.boxShadow = `inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 ${8 + intensity * 6}px ${32 + intensity * 8}px -4px rgba(40, 45, 53, ${0.05 + intensity * 0.03}), 0 1px 3px rgba(40, 45, 53, 0.04)`;
+            composerCard.style.background = `radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.74) 70%)`;
+          } else {
+            composerCard.style.background = 'rgba(255, 255, 255, 0.76)';
+            composerCard.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 32px -4px rgba(40, 45, 53, 0.05), 0 1px 3px rgba(40, 45, 53, 0.04)';
+          }
+        }
+
+        if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+          animationFrameId = requestAnimationFrame(updateGlowPosition);
+        } else {
+          animationFrameId = null;
+        }
+      }
+
+      function startAnimation() {
+        if (!animationFrameId) {
+          animationFrameId = requestAnimationFrame(updateGlowPosition);
+        }
+      }
+
+      if (!hasReducedMotion && !isTouchDevice && glowNode) {
+        window.addEventListener('pointermove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          if (!isVisible) {
+            glowNode.classList.remove('opacity-0');
+            glowNode.classList.add('opacity-100');
+            isVisible = true;
+          }
+          startAnimation();
+        });
+
+        window.addEventListener('mouseleave', () => {
+          glowNode.classList.remove('opacity-100');
+          glowNode.classList.add('opacity-0');
+          isVisible = false;
+        });
+      }
+
+      // 2. Interactive Input State & Send Activation
+      if (promptInput && sendButton) {
+        promptInput.addEventListener('input', () => {
+          const val = promptInput.value.trim();
+          if (val.length > 0) {
+            sendButton.removeAttribute('disabled');
+            sendButton.classList.remove('bg-[#536985]/15', 'text-[#536985]/40', 'cursor-not-allowed');
+            sendButton.classList.add('bg-[#536985]', 'hover:bg-[#4a5e78]', 'active:bg-[#445A75]', 'text-white', 'shadow-[0_2px_8px_rgba(83,105,133,0.25)]', 'cursor-pointer', 'hover:-translate-y-[1px]');
+          } else {
+            sendButton.setAttribute('disabled', 'true');
+            sendButton.classList.add('bg-[#536985]/15', 'text-[#536985]/40', 'cursor-not-allowed');
+            sendButton.classList.remove('bg-[#536985]', 'hover:bg-[#4a5e78]', 'active:bg-[#445A75]', 'text-white', 'shadow-[0_2px_8px_rgba(83,105,133,0.25)]', 'cursor-pointer', 'hover:-translate-y-[1px]');
+          }
+        });
+
+        // Auto-fill prompt when prompt-chips are clicked
+        promptChips.forEach(chip => {
+          chip.addEventListener('click', () => {
+            promptInput.value = chip.innerText.trim();
+            promptInput.focus();
+            promptInput.dispatchEvent(new Event('input'));
+          });
+        });
+      }
+
+      // 3. Command+N Shortcut for New Chat
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'n') {
+          e.preventDefault();
+          if (promptInput) {
+            promptInput.value = '';
+            promptInput.focus();
+            promptInput.dispatchEvent(new Event('input'));
+          }
+        }
+      });
+    })();
+  </script>
+</body></html>

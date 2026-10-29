@@ -132,6 +132,7 @@ export function SidebarRoot({
   collapsed,
   width,
   startSession,
+  brandStartsSession,
   toggleSidebar,
   selectPanel,
   setPinned,
@@ -312,7 +313,7 @@ export function SidebarRoot({
               </span>
             </span>
           )
-          return darwinDesktop || !canStartSession
+          return darwinDesktop || !canStartSession || !brandStartsSession
             ? <span className={clsx(css.brand, css.wide)}>{identity}</span>
             : (
               <ActionButton
@@ -338,11 +339,12 @@ export function SidebarRoot({
           <ActionButton
             type="button"
             className={css.newSession}
+            data-sidebar-new-session={wide ? 'wide' : 'collapsed'}
             aria-label={t('session.new.label')}
             aria-keyshortcuts={newShortcut?.aria}
             onClick={openNewSession}
           >
-            <span className={css.newSessionLabelMask}><span className={css.newSessionContent}>
+            <span className={css.newSessionLabelMask}><span className={css.newSessionContent} data-sidebar-new-session-content="">
               {wide
                 ? <IconNewChatOutlineMedium size={14} />
                 : <IconNewChatOutlineRegular size={windowsTitlebar ? 16 : 18} />}

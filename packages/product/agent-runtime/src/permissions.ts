@@ -13,11 +13,24 @@ export async function mountPermissions(ctx: Context) {
     await ctx.plugin(PermissionPresets, {
       presets: {
         readonly: { sandbox: 'read-only', approval: 'ask', name: '仅可查看' },
-        'workspace-write': { sandbox: 'workspace-write', approval: 'ask', name: '工作区内修改' },
         'full-access': { sandbox: 'danger-full-access', approval: 'never', name: '完全权限' },
       },
-      defaultPreset: ctx.tianzhiaiHost.settings.defaultPermissionPreset ?? 'readonly',
+      defaultPreset:
+        ctx.tianzhiaiHost.settings.defaultPermissionPreset === 'full-access'
+          ? 'full-access'
+          : 'readonly',
     })
+  // Legacy workspace-write sessions lose that retired mode when materialized; never expand grants.
+  await ctx.plugin({
+    name: 'tianzhiai-legacy-permission-migration',
+    inject: ['permissionPresets', 'sandboxPolicy'],
+    apply(ctx: Context) {
+      ctx.on('agent/created', ({ agent }) => {
+        if (ctx.sandboxPolicy.resolve({ session: agent.session }).mode === 'workspace-write')
+          ctx.permissionPresets.set(agent.session, 'readonly')
+      })
+    },
+  })
   await ctx.plugin({
     name: 'tianzhiai-final-tool-permissions',
     inject: ['tools', 'approval', 'sandboxPolicy'],

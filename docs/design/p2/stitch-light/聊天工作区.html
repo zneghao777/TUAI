@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>天质 AI · 聊天工作区</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "canvas": "#F5F6F8",
+            "canvas-subtle": "#EDF0F4",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#F0F2F6",
+            "surface-container": "#E9ECF1",
+            "surface-container-high": "#E2E5EB",
+            "primary": "#536985",
+            "primary-hover": "#4a5e78",
+            "primary-active": "#445A75",
+            "primary-light": "#EBF0F7",
+            "on-surface": "#282D35",
+            "on-surface-variant": "#4F5561",
+            "text-secondary": "#717783",
+            "outline-subtle": "rgba(0, 0, 0, 0.06)",
+            "outline-border": "rgba(0, 0, 0, 0.08)",
+            "glass-bg": "rgba(255, 255, 255, 0.76)",
+            "glass-border": "rgba(255, 255, 255, 0.7)",
+          },
+          fontFamily: {
+            body: ["Geist", "'PingFang SC'", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+          },
+          boxShadow: {
+            "subtle-card": "0 1px 3px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.02)",
+            "elevated": "0 4px 20px -2px rgba(40, 45, 53, 0.04), 0 1px 4px rgba(40, 45, 53, 0.02)",
+            "composer": "0 8px 30px -4px rgba(40, 45, 53, 0.05), 0 2px 8px -1px rgba(40, 45, 53, 0.02)",
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.85); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+    .cursor-pulse {
+      animation: pulse-subtle 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    .smooth-interactive {
+      transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .smooth-interactive:hover {
+      transform: translateY(-1px);
+    }
+    .smooth-interactive:active {
+      transform: scale(0.985);
+    }
+  </style>
+</head>
+<body class="h-full bg-canvas text-on-surface font-body antialiased selection:bg-primary-light selection:text-primary overflow-hidden flex relative">
+<!-- Ambient Interactive Glow Follower (珍珠白/浅灰蓝柔光，移出淡出，静止暂停，prefers-reduced-motion 禁用) -->
+<div class="pointer-events-none fixed top-0 left-0 w-[220px] h-[220px] rounded-full blur-[80px] opacity-0 bg-[#E0E6F0]/65 transition-opacity duration-700 z-0" id="ambient-glow"></div>
+<!-- Left Persistent Desktop Drawer (真实毛玻璃 rgba(255,255,255,0.76) + blur(24px)) -->
+<aside class="fixed top-0 left-0 h-full w-[240px] z-30 border-r border-outline-border shadow-[0_4px_20px_-2px_rgba(40,45,53,0.03)] flex flex-col justify-between p-3 select-none" style="background: rgba(255, 255, 255, 0.76); backdrop-filter: blur(24px) saturate(110%); -webkit-backdrop-filter: blur(24px) saturate(110%);">
+<div class="flex flex-col gap-2.5">
+<!-- Brand Header (原生星形细线矢量图标+天质 AI) -->
+<div class="flex items-center justify-between px-2 pt-1 pb-1.5">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-lg bg-surface-container-lowest border border-outline-border flex items-center justify-center text-primary shadow-sm">
+<svg class="w-4 h-4 stroke-current fill-none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M12 2l2.4 6.6L21 11l-5.6 4.4L17 22l-5-3.8L7 22l1.6-6.6L3 11l6.6-2.4z"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="text-[15px] font-semibold text-on-surface tracking-tight leading-none">天质 AI</span>
+<span class="text-[10px] font-medium text-text-secondary mt-1 tracking-normal">个人工作区 · 已连接</span>
+</div>
+</div>
+<button class="w-7 h-7 rounded-lg text-text-secondary hover:text-on-surface hover:bg-canvas-subtle transition-colors flex items-center justify-center active:scale-95 duration-150" title="折叠侧栏" type="button">
+<span class="material-symbols-outlined text-[18px]">dock_to_left</span>
+</button>
+</div>
+<!-- CTA New Chat with ⌘N -->
+<button class="smooth-interactive w-full flex items-center justify-between py-2 px-3 rounded-xl bg-surface-container-lowest/90 border border-outline-border text-on-surface hover:text-primary hover:border-primary/30 shadow-subtle-card group" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">add</span>
+<span class="text-[13px] font-medium">新会话</span>
+</div>
+<span class="text-[10px] font-mono text-text-secondary bg-canvas-subtle px-1.5 py-0.5 rounded border border-outline-subtle">⌘N</span>
+</button>
+<!-- Single Search Bar -->
+<div class="relative flex items-center mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-text-secondary absolute left-2.5 pointer-events-none">search</span>
+<input class="w-full bg-canvas-subtle/80 hover:bg-canvas-subtle focus:bg-surface-container-lowest border border-outline-border focus:border-primary/40 rounded-xl pl-8 pr-2.5 py-1.5 text-[13px] text-on-surface placeholder:text-text-secondary focus:outline-none focus:ring-0 transition-colors duration-150" placeholder="搜索会话" type="text"/>
+</div>
+<!-- Workspace Collapsible Trigger -->
+<button class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-canvas-subtle transition-colors duration-150 text-[12px] mt-1" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-text-secondary">folder_open</span>
+<span class="font-medium">个人工作区</span>
+</div>
+<span class="material-symbols-outlined text-[15px] text-text-secondary">expand_more</span>
+</button>
+<!-- Session History Grouped by 今天 and 更早 -->
+<div class="mt-1 pt-1.5 border-t border-outline-subtle flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-320px)]">
+<div class="px-2 py-0.5 text-[11px] font-medium text-text-secondary uppercase tracking-wider">今天</div>
+<!-- Active Item: 轻量白色圆润微浮嵌层，无粗蓝色竖线 -->
+<a class="smooth-interactive flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/90 text-primary font-medium border border-outline-border/60 shadow-[0_1px_3px_rgba(0,0,0,0.04)] text-[13px] relative group overflow-hidden" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary shrink-0">chat_bubble</span>
+<span class="truncate">项目资料整理</span>
+</a>
+<a class="smooth-interactive flex items-center gap-2.5 px-3 py-2 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-white/60 text-[13px] border border-transparent" href="#">
+<span class="material-symbols-outlined text-[16px] text-text-secondary shrink-0">chat_bubble</span>
+<span class="truncate">周末短途旅行</span>
+</a>
+<div class="px-2 pt-2 pb-0.5 text-[11px] font-medium text-text-secondary uppercase tracking-wider">更早</div>
+<a class="smooth-interactive flex items-center gap-2.5 px-3 py-2 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-white/60 text-[13px] border border-transparent" href="#">
+<span class="material-symbols-outlined text-[16px] text-text-secondary shrink-0">chat_bubble</span>
+<span class="truncate">一周饮食安排</span>
+</a>
+<a class="smooth-interactive flex items-center gap-2.5 px-3 py-2 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-white/60 text-[13px] border border-transparent" href="#">
+<span class="material-symbols-outlined text-[16px] text-text-secondary shrink-0">chat_bubble</span>
+<span class="truncate">读书笔记整理</span>
+</a>
+</div>
+</div>
+<!-- Drawer Footer: 个人空间 + 设置齿轮 -->
+<div class="pt-2 border-t border-outline-subtle flex flex-col gap-1">
+<div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-white/60 border border-outline-border">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-6 h-6 rounded-full bg-primary-light text-primary flex items-center justify-center text-[11px] font-semibold shrink-0">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+</div>
+<span class="text-[13px] text-on-surface font-medium truncate">个人空间</span>
+</div>
+<button class="w-6 h-6 rounded-lg text-text-secondary hover:text-on-surface hover:bg-canvas-subtle transition-colors duration-150 flex items-center justify-center shrink-0" title="偏好设置" type="button">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Canvas Stage -->
+<main class="ml-[240px] flex-1 flex flex-col h-full relative z-10 overflow-hidden bg-canvas">
+<!-- Top Floating Workspace Header -->
+<header class="sticky top-0 w-full z-20 border-b border-outline-border shadow-none" style="background: rgba(245, 246, 248, 0.82); backdrop-filter: blur(20px);">
+<div class="flex justify-between items-center w-full px-8 py-3 max-w-[800px] mx-auto">
+<div class="flex items-center gap-3 min-w-0">
+<div class="flex flex-col min-w-0">
+<h1 class="text-[16px] font-semibold text-on-surface truncate">项目资料整理</h1>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="text-[11px] text-text-secondary">个人工作区 · 已连接</span>
+</div>
+</div>
+</div>
+<!-- Trailing Workspace Actions -->
+<div class="flex items-center gap-2">
+<button class="smooth-interactive flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-outline-border text-on-surface-variant hover:text-primary hover:border-primary/30 text-[12px] font-medium shadow-sm" id="btn-toggle-sources" type="button">
+<span class="material-symbols-outlined text-[15px] text-primary">attach_file</span>
+<span>来源文件 (1)</span>
+</button>
+<button class="w-8 h-8 rounded-lg text-text-secondary hover:text-on-surface hover:bg-canvas-subtle flex items-center justify-center transition-colors duration-150 active:scale-95" title="调整参数" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+<button class="w-8 h-8 rounded-lg text-text-secondary hover:text-on-surface hover:bg-canvas-subtle flex items-center justify-center transition-colors duration-150 active:scale-95" title="更多选项" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Scrollable Message Area (Max 760px Line Reading Width) -->
+<div class="flex-1 overflow-y-auto px-6 pt-6 pb-48">
+<div class="max-w-[760px] mx-auto flex flex-col gap-6">
+<!-- Session Timestamp Watermark -->
+<div class="flex justify-center my-1">
+<span class="text-[11px] text-text-secondary bg-canvas-subtle/80 px-3 py-1 rounded-full border border-outline-subtle">今天 14:32</span>
+</div>
+<!-- User Message Bubble -->
+<div class="flex flex-col items-end gap-2 group">
+<div class="bg-white border border-outline-border shadow-[0_2px_12px_-2px_rgba(40,45,53,0.04)] rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] text-on-surface text-[14px] leading-relaxed">
+            帮我整理这份项目资料，列出重点和下一步需要确认的事。
+          </div>
+<!-- Uploaded Attachment Capsule -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 border border-outline-border text-on-surface-variant text-[12px] shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">description</span>
+<span class="font-medium text-on-surface">项目资料.pdf</span>
+<span class="text-text-secondary text-[11px]">2.4 MB</span>
+</div>
+</div>
+<!-- Assistant Reply Stream -->
+<div class="flex items-start gap-3.5 group">
+<!-- Assistant Avatar Glyph (统一星形细线矢量图标) -->
+<div class="w-7 h-7 rounded-xl bg-white border border-outline-border text-primary flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+<svg class="w-4 h-4 stroke-current fill-none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M12 2l2.4 6.6L21 11l-5.6 4.4L17 22l-5-3.8L7 22l1.6-6.6L3 11l6.6-2.4z"></path>
+</svg>
+</div>
+<!-- Message Payload Body -->
+<div class="flex-1 flex flex-col gap-3 min-w-0">
+<!-- Gentle Conversational Opening -->
+<p class="text-on-surface text-[14px] leading-relaxed">
+              好的，正在结合资料内容梳理主要脉络。
+            </p>
+<!-- Tool Invocation Interactive Accordion (低饱和微胶囊) -->
+<div class="rounded-xl border border-outline-border bg-white/70 overflow-hidden text-[13px] transition-all duration-200">
+<button class="w-full flex items-center justify-between px-3.5 py-2 hover:bg-canvas-subtle/50 text-left transition-colors" id="tool-toggle-btn" type="button">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="text-on-surface-variant text-[12px]">读取文件</span>
+<span class="text-text-secondary text-[11px]">·</span>
+<span class="text-on-surface text-[12px] font-medium">项目资料.pdf</span>
+<span class="text-text-secondary text-[11px]">·</span>
+<span class="text-emerald-700 bg-emerald-50/80 text-[11px] px-1.5 py-0.5 rounded font-medium border border-emerald-200/50">已完成</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-secondary">
+<span class="text-[11px]" id="tool-status-hint">展开摘要</span>
+<span class="material-symbols-outlined text-[15px] transition-transform duration-200" id="tool-arrow">expand_more</span>
+</div>
+</button>
+<!-- Collapsible Body Content -->
+<div class="hidden px-3.5 py-3 border-t border-outline-subtle bg-canvas-subtle/40 text-[12px] leading-relaxed text-on-surface-variant flex-col gap-2" id="tool-drawer-content">
+<div class="flex items-center justify-between text-text-secondary text-[11px]">
+<span>解析器: PDFParser Engine v4.2</span>
+<span>提取段落: 24 页 / 8,420 字</span>
+</div>
+<div class="p-2.5 rounded-lg bg-white border border-outline-border text-on-surface font-mono text-[11px]">
+                  ✓ 识别目录章节：技术选型、排期计划、业务交接表<br/>
+                  ✓ 过滤无效附录，保留重点甘特图与关键里程碑节点
+                </div>
+</div>
+</div>
+<!-- Streaming Synthesis Body (石墨灰 #282D35，舒适行距) -->
+<div class="flex flex-col gap-2.5 text-on-surface text-[14px] leading-relaxed pt-1">
+<p>我把资料归纳成了两部分：已经确定的安排，以及仍需你确认的事项。</p>
+<div class="mt-1">
+<p class="font-medium text-on-surface">目前重点：</p>
+<ul class="list-disc pl-5 space-y-1 text-on-surface-variant mt-1">
+<li>下周先完成资料补齐和方案评审</li>
+<li>核心方案已初步对齐</li>
+</ul>
+</div>
+<div class="mt-1">
+<p class="font-medium text-on-surface">接下来需要确认：</p>
+<ol class="list-decimal pl-5 space-y-1 text-on-surface-variant mt-1">
+<li>方案评审的具体时间安排；</li>
+<li>各业务模块的关键负责人及交接节点。</li>
+</ol>
+</div>
+<!-- Real-time Streaming State Bar -->
+<div class="flex items-center gap-2.5 mt-2 text-text-secondary text-[13px]">
+<span class="inline-block w-1 h-3.5 bg-primary rounded-full cursor-pulse"></span>
+<span class="text-primary font-medium text-[12px] tracking-wide">正在整理…</span>
+<button class="smooth-interactive ml-2 flex items-center gap-1 px-2 py-0.5 rounded-full border border-outline-border hover:border-red-300 hover:text-red-600 bg-white text-[11px] text-text-secondary shadow-sm" type="button">
+<span class="material-symbols-outlined text-[13px]">stop</span>
+<span>停止</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Prompt Console Container (Fixed at Bottom Stage) -->
+<div class="absolute bottom-6 left-0 right-0 max-w-[760px] mx-auto px-6 z-20 pointer-events-none">
+<!-- Lightweight Queued Intent Banner -->
+<div class="pointer-events-auto mb-2.5 flex items-center justify-between px-3.5 py-1.5 rounded-xl bg-white/80 backdrop-blur-md border border-white/80 shadow-subtle-card transition-all duration-200" id="queue-banner">
+<div class="flex items-center gap-2 min-w-0">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[12px] text-on-surface font-medium truncate">
+            排队中 · 再补一份下周行动清单
+          </span>
+</div>
+<div class="flex items-center gap-2.5 shrink-0 text-[11px] text-text-secondary">
+<button class="hover:text-primary transition-colors duration-150" type="button">编辑</button>
+<span class="text-outline-subtle">|</span>
+<button class="hover:text-red-600 transition-colors duration-150" id="btn-remove-queue" type="button">移除</button>
+</div>
+</div>
+<!-- Frosted Glass Composer Console (24px 圆角、微厚度玻璃质感) -->
+<div class="pointer-events-auto border border-white/80 shadow-composer rounded-[24px] p-3 flex flex-col gap-2.5 transition-all duration-200 focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10" style="background: rgba(255, 255, 255, 0.78); backdrop-filter: blur(24px) saturate(110%); -webkit-backdrop-filter: blur(24px) saturate(110%);">
+<!-- Input Textarea Element -->
+<textarea class="w-full bg-transparent resize-none border-0 p-1.5 text-[14px] text-on-surface placeholder:text-text-secondary/70 focus:ring-0 focus:outline-none leading-relaxed" placeholder="输入后续问题，或使用快捷指令..." rows="2"></textarea>
+<!-- Bottom Controls Bar -->
+<div class="flex items-center justify-between pt-1">
+<!-- Left Configuration Pills -->
+<div class="flex items-center gap-2">
+<button class="smooth-interactive w-7 h-7 rounded-lg text-text-secondary hover:text-on-surface hover:bg-canvas-subtle flex items-center justify-center" title="添加附件" type="button">
+<span class="material-symbols-outlined text-[18px]">attach_file</span>
+</button>
+<!-- Model Switch Capsule (DeepSeek) -->
+<button class="smooth-interactive flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-canvas-subtle/80 hover:bg-canvas-subtle border border-outline-border text-on-surface-variant hover:text-on-surface text-[11px] font-medium" type="button">
+<span class="material-symbols-outlined text-[13px] text-primary">auto_awesome</span>
+<span>DeepSeek</span>
+<span class="material-symbols-outlined text-[13px] text-text-secondary">expand_more</span>
+</button>
+<!-- Guardrails / Permission Status Capsule Button -->
+<button class="smooth-interactive hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-canvas-subtle/80 hover:bg-canvas-subtle border border-outline-border text-on-surface-variant hover:text-on-surface text-[11px]" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-text-secondary"></span>
+<span>标准 · 操作需确认</span>
+</button>
+</div>
+<!-- Right Action Triggers -->
+<div class="flex items-center gap-2">
+<!-- Secondary Interruption Action -->
+<button class="smooth-interactive px-3 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-canvas-subtle text-[12px] font-medium" type="button">
+              立即插话
+            </button>
+<!-- Primary Queued Dispatch Button (低饱和雾蓝 #536985 实体质感) -->
+<button class="smooth-interactive flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary hover:bg-primary-hover active:bg-primary-active text-white font-medium text-[12px] shadow-sm" type="button">
+<span class="material-symbols-outlined text-[15px]">send_time_extension</span>
+<span>排队发送</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Interactive Logic Scripts -->
+<script>
+    // 1. Ambient Interactive Glow Follower (移出淡出，静止暂停，prefers-reduced-motion 禁用)
+    const glow = document.getElementById('ambient-glow');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    if (!prefersReducedMotion && !isTouchDevice && glow) {
+      let targetX = window.innerWidth / 2;
+      let targetY = window.innerHeight / 2;
+      let currentX = targetX;
+      let currentY = targetY;
+      let animationFrameId = null;
+      let idleTimeout;
+
+      window.addEventListener('pointermove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+        glow.style.opacity = '0.7';
+        if (animationFrameId === null) animationFrameId = requestAnimationFrame(renderGlow);
+        clearTimeout(idleTimeout);
+        idleTimeout = setTimeout(() => {
+          glow.style.opacity = '0.35';
+        }, 800);
+      });
+
+      document.addEventListener('mouseleave', () => {
+        glow.style.opacity = '0';
+        clearTimeout(idleTimeout);
+        if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      });
+
+      function renderGlow() {
+        currentX += (targetX - currentX) * 0.08;
+        currentY += (targetY - currentY) * 0.08;
+        glow.style.transform = `translate3d(${currentX - 110}px, ${currentY - 110}px, 0)`;
+        animationFrameId = (Math.abs(targetX - currentX) > 0.1 || Math.abs(targetY - currentY) > 0.1)
+          ? requestAnimationFrame(renderGlow)
+          : null;
+      }
+    }
+
+    // 2. Tool Invocation Accordion Toggle
+    const toolBtn = document.getElementById('tool-toggle-btn');
+    const toolDrawer = document.getElementById('tool-drawer-content');
+    const toolArrow = document.getElementById('tool-arrow');
+    const toolHint = document.getElementById('tool-status-hint');
+
+    if (toolBtn && toolDrawer) {
+      toolBtn.addEventListener('click', () => {
+        const isHidden = toolDrawer.classList.contains('hidden');
+        if (isHidden) {
+          toolDrawer.classList.remove('hidden');
+          toolDrawer.classList.add('flex');
+          toolArrow.style.transform = 'rotate(180deg)';
+          toolHint.textContent = '收起';
+        } else {
+          toolDrawer.classList.add('hidden');
+          toolDrawer.classList.remove('flex');
+          toolArrow.style.transform = 'rotate(0deg)';
+          toolHint.textContent = '展开摘要';
+        }
+      });
+    }
+
+    // 3. Remove Queue Item Action
+    const btnRemoveQueue = document.getElementById('btn-remove-queue');
+    const queueBanner = document.getElementById('queue-banner');
+    if (btnRemoveQueue && queueBanner) {
+      btnRemoveQueue.addEventListener('click', () => {
+        queueBanner.style.opacity = '0';
+        queueBanner.style.transform = 'translateY(6px)';
+        setTimeout(() => queueBanner.remove(), 200);
+      });
+    }
+  </script>
+</body></html>

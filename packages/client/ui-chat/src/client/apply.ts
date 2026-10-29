@@ -86,6 +86,7 @@ export const inject = [
 export interface ChatHostActions {
   /** Hide accounting surfaces while retaining statistics and timing. */
   showUsage?: boolean
+  allowFork?: boolean
   openFile(sessionId: SessionId, path: string, options?: import('./contract/slots.ts').OpenFileOptions): Promise<void>
   openSession(sessionId: SessionId): void
 }
@@ -314,7 +315,7 @@ export function mountChat(ctx: Context, actions: ChatHostActions): void {
             },
             read: () => chatScrollPositions.get(sessionId) ?? null,
           },
-          forkAt: (seq) => {
+          forkAt: actions.allowFork === false ? undefined : (seq) => {
             const turn = [...chat.getSnapshot().timeline.turns.values()].find(turn => turn.end?.seq === seq)
             const messageId = turn?.data.get('turn-tail')?.closing?.finalNode.messageId
             ctx.sessions.fork({ sessionId, atSeq: seq, increaseTitle: true, onCreated: (childId) => {

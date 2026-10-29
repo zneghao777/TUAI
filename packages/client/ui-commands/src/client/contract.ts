@@ -133,6 +133,8 @@ export interface CommandDecoration {
 
 /** The `ctx.commandUi` service face visible to business packages. */
 export interface CommandUiContract {
+  /** Hide menu candidates by command name until the returned disposer runs. Typed commands stay available. */
+  hideMenuEntries(names: readonly string[]): () => void
   /**
    * Register one client command contribution; effect disposer. Duplicate
    * names throw at registration.

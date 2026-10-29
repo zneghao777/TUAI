@@ -1,0 +1,124 @@
+diff --git a/packages/client/ui-commands/src/client/contract.ts b/packages/client/ui-commands/src/client/contract.ts
+index 5cca3ee..f7ffae7 100644
+--- a/packages/client/ui-commands/src/client/contract.ts
++++ b/packages/client/ui-commands/src/client/contract.ts
+@@ -133,6 +133,8 @@ export interface CommandDecoration {
+ 
+ /** The `ctx.commandUi` service face visible to business packages. */
+ export interface CommandUiContract {
++  /** Hide menu candidates by command name until the returned disposer runs. Typed commands stay available. */
++  hideMenuEntries(names: readonly string[]): () => void
+   /**
+    * Register one client command contribution; effect disposer. Duplicate
+    * names throw at registration.
+diff --git a/packages/client/ui-commands/src/client/service.ts b/packages/client/ui-commands/src/client/service.ts
+index f2b5260..2583517 100644
+--- a/packages/client/ui-commands/src/client/service.ts
++++ b/packages/client/ui-commands/src/client/service.ts
+@@ -70,6 +70,7 @@ interface LiveState {
+   readonly contributions: Map<string, CommandContribution>
+   readonly decorations: Map<string, CommandDecoration>
+   readonly popups: WeakMapWithValues<SessionBinding, PopupSelectController<ClientSessionContext>>
++  readonly hiddenMenuEntries: Set<ReadonlySet<string>>
+ }
+ 
+ /** Command surface: session-keyed directory + '/' source + contribution registry + per-session popups. */
+@@ -81,10 +82,18 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
+     contributions: new Map(),
+     decorations: new Map(),
+     popups: new WeakMapWithValues(),
++    hiddenMenuEntries: new Set(),
+   }
+   /** `command`-namespace translator (composer refusal notices). */
+   private readonly t: TranslateNS<'command'>
+ 
++  /** Hide product-selected menu entries without disabling typed commands. */
++  hideMenuEntries(names: readonly string[]): () => void {
++    const hidden = new Set(names)
++    this.live.hiddenMenuEntries.add(hidden)
++    return () => { this.live.hiddenMenuEntries.delete(hidden) }
++  }
++
+   /**
+    * @param ctx - owning root context (plugin fiber; the service registers
+    * itself as `command` and follows that fiber's lifetime).
+@@ -245,7 +254,9 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
+         ...(contribution.icon === undefined ? {} : { icon: contribution.icon }),
+       })
+     }
+-    const visible = rows.filter(c => req.position === 'leading' || c.hint === undefined)
++    const visible = rows.filter(c =>
++      !Array.from(this.live.hiddenMenuEntries).some(hidden => hidden.has(c.name))
++      && (req.position === 'leading' || c.hint === undefined))
+     return req.query === '' ? sectionRows(visible, this.t) : rankByName(visible, req.query)
+   }
+ 
+diff --git a/packages/client/ui-commands/tests/service.client.spec.ts b/packages/client/ui-commands/tests/service.client.spec.ts
+index f7661c7..b790da0 100644
+--- a/packages/client/ui-commands/tests/service.client.spec.ts
++++ b/packages/client/ui-commands/tests/service.client.spec.ts
+@@ -277,6 +277,17 @@ describe('candidates', () => {
+     expect(list).toEqual([{ name: 'goal', description: 'leadingInput kind', hint: 'goal text' }])
+   })
+ 
++  it('hides configured menu entries across queries without disabling typed commands and restores them on disposal', async () => {
++    const { command, source, warm } = await bench()
++    await warm(proj('s1'))
++    const dispose = command.hideMenuEntries(['goal', 'plan'])
++    expect((await source.candidates(proj('s1'), req(''))).map(row => row.name)).toEqual([])
++    expect(await source.candidates(proj('s1'), req('goal'))).toEqual([])
++    expect(source.matchSpace!(proj('s1'), '/goal')).toHaveProperty('claim.name', 'goal')
++    dispose()
++    expect((await source.candidates(proj('s1'), req(''))).map(row => row.name)).toEqual(['goal', 'plan'])
++  })
++
+   it('ranks rows through the shared name ranker: prefixes first, then alignment, then source order', async () => {
+     const commands: CommandDescriptor[] = [
+       { name: 'z_a_b', description: '' },
+diff --git a/packages/client/ui-input-trigger/src/client/MenuView.tsx b/packages/client/ui-input-trigger/src/client/MenuView.tsx
+index 695a2d1..dba63a5 100644
+--- a/packages/client/ui-input-trigger/src/client/MenuView.tsx
++++ b/packages/client/ui-input-trigger/src/client/MenuView.tsx
+@@ -163,6 +163,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
+                         id={optionId(group.source, index)}
+                         type="button"
+                         role="option"
++                        data-command-file={group.source === 'command' && item.name === 'file' ? '' : undefined}
+                         aria-selected={active}
+                         className={clsx(css.item, active && css.active)}
+                         // mousedown, not click: the textarea keeps focus (combobox
+diff --git a/packages/client/ui-sidebar/src/client/SidebarRoot.tsx b/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
+index 90f1314..db8d0bb 100644
+--- a/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
++++ b/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
+@@ -132,6 +132,7 @@ export function SidebarRoot({
+   collapsed,
+   width,
+   startSession,
++  brandStartsSession,
+   toggleSidebar,
+   selectPanel,
+   setPinned,
+@@ -312,7 +313,7 @@ export function SidebarRoot({
+               </span>
+             </span>
+           )
+-          return darwinDesktop || !canStartSession
++          return darwinDesktop || !canStartSession || !brandStartsSession
+             ? <span className={clsx(css.brand, css.wide)}>{identity}</span>
+             : (
+               <ActionButton
+@@ -338,11 +339,12 @@ export function SidebarRoot({
+           <ActionButton
+             type="button"
+             className={css.newSession}
++            data-sidebar-new-session={wide ? 'wide' : 'collapsed'}
+             aria-label={t('session.new.label')}
+             aria-keyshortcuts={newShortcut?.aria}
+             onClick={openNewSession}
+           >
+-            <span className={css.newSessionLabelMask}><span className={css.newSessionContent}>
++            <span className={css.newSessionLabelMask}><span className={css.newSessionContent} data-sidebar-new-session-content="">
+               {wide
+                 ? <IconNewChatOutlineMedium size={14} />
+                 : <IconNewChatOutlineRegular size={windowsTitlebar ? 16 : 18} />}

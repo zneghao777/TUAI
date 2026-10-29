@@ -15,20 +15,20 @@ import workspaceFiles from '../../packages/api/workspace-files/lib/typert.remote
 const command = (ctx, agent, line) =>
   ctx.commands.execute(agent, line, [], AbortSignal.timeout(10000))
 test('TZ-066/069 production defaults, command effects, Auto review decisions and authenticated file scope', async () => {
-  const host = await fixtureHost({ defaultPreset: 'workspace-write' })
+  const host = await fixtureHost()
   const client = await clientFor(host.runtime)
   const ctx = host.runtime.ctx
   try {
-    assert.equal(ctx.tianzhiaiHost.settings.defaultPermissionPreset, 'workspace-write')
+    assert.equal(ctx.tianzhiaiHost.settings.defaultPermissionPreset, 'readonly')
     const a = await client.ctx.sessions.create({}),
       b = await client.ctx.sessions.create({})
     const agent = ctx.agents.get(a),
       other = ctx.agents.get(b)
-    assert.equal(ctx.permissionPresets.current(agent.session), 'workspace-write')
+    assert.equal(ctx.permissionPresets.current(agent.session), 'readonly')
     await ctx.settingsController.update('permission', { defaultPreset: 'readonly' })
     const c = await client.ctx.sessions.create({})
     assert.equal(ctx.permissionPresets.current(ctx.agents.get(c).session), 'readonly')
-    assert.equal(ctx.permissionPresets.current(agent.session), 'workspace-write')
+    assert.equal(ctx.permissionPresets.current(agent.session), 'readonly')
     await assert.rejects(ctx.settingsController.update('permission', { defaultPreset: 'auto' }))
     const names = ctx.commands.list(agent).map((x) => x.name)
     for (const name of ['plan', 'goal', 'feedback', 'compact', 'permission', 'export'])
@@ -48,6 +48,8 @@ test('TZ-066/069 production defaults, command effects, Auto review decisions and
       1,
     )
     assert.equal((await command(ctx, agent, '/compact wrong')).result.kind, 'error')
+    // Auto review is now an optional kernel capability, absent from the product's two-mode catalog.
+    await ctx.plugin(AutoReview)
     const stream = host.model.stream.bind(host.model)
     let decision = 'allow',
       reviews = 0,
@@ -123,7 +125,7 @@ test('TZ-066/069 production defaults, command effects, Auto review decisions and
     const unauth = await fetch(new URL(`/api/session-log?sessionId=${a}`, client.base))
     assert.notEqual(unauth.status, 200)
     const config = JSON.parse(await readFile(ctx.tianzhiaiHost.paths.hostConfig, 'utf8'))
-    assert.equal(config.defaultPermissionPreset, 'workspace-write')
+    assert.equal(config.defaultPermissionPreset, 'readonly')
   } finally {
     await client.dispose()
     await host.dispose()

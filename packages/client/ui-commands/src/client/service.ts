@@ -70,6 +70,7 @@ interface LiveState {
   readonly contributions: Map<string, CommandContribution>
   readonly decorations: Map<string, CommandDecoration>
   readonly popups: WeakMapWithValues<SessionBinding, PopupSelectController<ClientSessionContext>>
+  readonly hiddenMenuEntries: Set<ReadonlySet<string>>
 }
 
 /** Command surface: session-keyed directory + '/' source + contribution registry + per-session popups. */
@@ -81,9 +82,17 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
     contributions: new Map(),
     decorations: new Map(),
     popups: new WeakMapWithValues(),
+    hiddenMenuEntries: new Set(),
   }
   /** `command`-namespace translator (composer refusal notices). */
   private readonly t: TranslateNS<'command'>
+
+  /** Hide product-selected menu entries without disabling typed commands. */
+  hideMenuEntries(names: readonly string[]): () => void {
+    const hidden = new Set(names)
+    this.live.hiddenMenuEntries.add(hidden)
+    return () => { this.live.hiddenMenuEntries.delete(hidden) }
+  }
 
   /**
    * @param ctx - owning root context (plugin fiber; the service registers
@@ -245,7 +254,9 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
         ...(contribution.icon === undefined ? {} : { icon: contribution.icon }),
       })
     }
-    const visible = rows.filter(c => req.position === 'leading' || c.hint === undefined)
+    const visible = rows.filter(c =>
+      !Array.from(this.live.hiddenMenuEntries).some(hidden => hidden.has(c.name))
+      && (req.position === 'leading' || c.hint === undefined))
     return req.query === '' ? sectionRows(visible, this.t) : rankByName(visible, req.query)
   }
 

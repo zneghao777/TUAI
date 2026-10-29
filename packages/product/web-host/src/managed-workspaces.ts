@@ -10,15 +10,19 @@ import SessionController from '@deepseek-ai/dsh-api-session-controller'
 import WorkspaceController from '@deepseek-ai/dsh-api-workspace-controller'
 
 export class ManagedSessionController extends SessionController {
+  static override inject = [...SessionController.inject, 'conversationTrash']
   constructor(ctx: Context) {
     super(
       ctx,
       { nativeOpen: false },
       {
+        sessionAvailable: (id) => !ctx.conversationTrash.has(id),
         prepareCreate: async (request): Promise<SessionCreateRequest> => {
           if (request.cwd !== undefined || request.workspaceId !== undefined)
             throw new RemoteError('gateway/bad-request', '新会话使用自动创建的独立工作区', {})
           const id = request.sessionId ?? SessionId(randomUUID())
+          if (ctx.conversationTrash.has(id))
+            throw new RemoteError('gateway/bad-request', '该会话已删除', {})
           if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(id))
             throw new RemoteError('gateway/bad-request', '会话标识不合法', {})
           const root = join(ctx.tianzhiaiHost.paths.data, 'workspaces')
@@ -40,6 +44,12 @@ export class ManagedSessionController extends SessionController {
 
 /** Keep original archive/pin/feed contracts; custom directory management is not exposed. */
 export class ManagedWorkspaceController extends WorkspaceController {
+  static override inject = [...WorkspaceController.inject, 'conversationTrash']
+  override async unarchiveSession(request: Parameters<WorkspaceController['unarchiveSession']>[0]) {
+    if (this.ctx.conversationTrash.has(request.sessionId))
+      throw new RemoteError('gateway/bad-request', '已删除的聊天不能恢复归档', {})
+    return super.unarchiveSession(request)
+  }
   override async create(): Promise<never> {
     throw new RemoteError('gateway/bad-request', '工作区由新会话自动创建', {})
   }

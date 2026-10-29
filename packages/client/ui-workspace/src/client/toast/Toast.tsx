@@ -22,9 +22,10 @@ export function ArchiveToastEntry(props: ArchiveToastEntryProps) {
   const { dismissToast, display, filterAction, useStore, t, renderFactorySlot, seq } = props
   const archivedVisible = useStore(state => (state.archivedFilter ?? 'default') !== 'default')
   const fields = display(props, t, dismissToast)
+  const filter = archivedVisible ? undefined : filterAction(t, dismissToast)
   return renderFactorySlot('workspace.toast.content', {
     ...fields,
-    actions: [...fields.actions ?? [], ...archivedVisible ? [] : [filterAction(t, dismissToast)]],
+    actions: [...fields.actions ?? [], ...filter === undefined ? [] : [filter]],
     seq,
     onDone: dismissToast,
   })

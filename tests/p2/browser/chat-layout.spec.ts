@@ -92,7 +92,7 @@ test('真实工具的代码字体、复制换行入口与窄屏详情保持完�
     const id = await selected.getAttribute('data-session-id')
     host.runtime.ctx.permissionPresets.set(
       host.runtime.ctx.agents.get(SessionId(id!)).session,
-      'workspace-write',
+      'full-access',
     )
     await page.locator('[contenteditable="true"][role="textbox"]').fill('TZ064 核对工具布局')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()

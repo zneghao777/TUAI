@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>天质 AI — 等待审批</title>
+<!-- Tailwind CSS v3 with forms and container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            graphite: {
+              DEFAULT: '#282D35',
+              dark: '#1C2026',
+              light: '#717783',
+              subtle: '#9CA3AF'
+            },
+            mist: {
+              canvas: '#F5F6F8',
+              layer: '#EDF0F4',
+              blue: '#536985',
+              blueHover: '#445A75',
+              border: 'rgba(49, 61, 80, 0.08)'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          boxShadow: {
+            glass: '0 8px 32px 0 rgba(31, 38, 54, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.02)',
+            card: '0 4px 20px -2px rgba(49, 61, 80, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+            float: '0 12px 36px -4px rgba(35, 45, 60, 0.09)'
+          }
+        }
+      }
+    };
+  </script>
+<!-- BEGIN: CSS Stylesheets -->
+<style data-purpose="glass-and-ambient">
+    /* Subtle pearl white mist styling */
+    body {
+      background-color: #F5F6F8;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(237, 240, 244, 0.8) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(235, 239, 245, 0.9) 0px, transparent 60%);
+      color: #282D35;
+      overflow-x: hidden;
+    }
+
+    /* Ambient cursor pearl mist glow */
+    #ambient-glow {
+      position: fixed;
+      width: 260px;
+      height: 260px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(175, 192, 215, 0.22) 0%, rgba(220, 228, 238, 0.08) 60%, transparent 80%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
+      filter: blur(16px);
+      opacity: 0;
+    }
+
+    /* Standardized frosted glass recipe */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(24px) saturate(110%);
+      -webkit-backdrop-filter: blur(24px) saturate(110%);
+      border: 1px solid rgba(49, 61, 80, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 20px -2px rgba(49, 61, 80, 0.05);
+    }
+
+    .glass-card-subtle {
+      background: rgba(255, 255, 255, 0.58);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(49, 61, 80, 0.06);
+    }
+
+    /* Custom scrollbar for clean aesthetic */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(113, 119, 131, 0.2);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(113, 119, 131, 0.35);
+    }
+  </style>
+<style data-purpose="animations">
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.65; transform: scale(0.96); }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2.4s ease-in-out infinite;
+    }
+  </style>
+<!-- END: CSS Stylesheets -->
+</head>
+<body class="min-h-screen flex text-[14px] leading-relaxed antialiased selection:bg-slate-200">
+<!-- Interactive Ambient Cursor Lighting -->
+<div aria-hidden="true" id="ambient-glow"></div>
+<!-- BEGIN: Sidebar -->
+<aside class="w-[240px] shrink-0 min-h-screen flex flex-col justify-between p-3.5 border-r border-[#313d50]/[0.06] bg-[#F5F6F8]/70 backdrop-blur-md relative z-10 select-none">
+<div class="space-y-4">
+<!-- App Brand & Panel Toggle -->
+<div class="flex items-center justify-between px-2 pt-1 pb-1">
+<div class="flex items-center gap-2.5">
+<!-- Fine 4-point star brand logo -->
+<div class="w-8 h-8 rounded-xl bg-white flex items-center justify-center shadow-sm border border-[#313d50]/[0.06] text-graphite">
+<svg class="w-4 h-4 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 3v18M3 12h18M6.5 6.5l11 11M17.5 6.5l-11 11" opacity="0.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h1 class="text-[14px] font-medium text-graphite tracking-tight">天质 AI</h1>
+<p class="text-[11px] text-graphite-light">个人工作区 · 已连接</p>
+</div>
+</div>
+<button class="p-1.5 text-graphite-light hover:text-graphite rounded-lg hover:bg-black/5 transition" title="收起边栏">
+<svg class="w-4 h-4 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="18" rx="2" stroke-width="1.5" width="18" x="3" y="3"></rect>
+<path d="M9 3v18" stroke-width="1.5"></path>
+</svg>
+</button>
+</div>
+<!-- New Chat Button -->
+<button class="w-full h-9 px-3 rounded-xl bg-white hover:bg-white/90 border border-[#313d50]/[0.08] shadow-sm flex items-center justify-between text-graphite text-[13px] font-normal transition group">
+<span class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 stroke-[1.75] text-graphite-light group-hover:text-graphite transition" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+          新会话
+        </span>
+<kbd class="text-[10px] font-sans text-graphite-subtle bg-slate-100/70 border border-slate-200/60 rounded px-1.5 py-0.5 font-medium">⌘N</kbd>
+</button>
+<!-- Search Bar -->
+<div class="relative">
+<svg class="w-3.5 h-3.5 stroke-[1.5] absolute left-3 top-2.5 text-graphite-subtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+<input class="w-full h-8 pl-8 pr-3 text-[12px] bg-black/[0.02] border border-[#313d50]/[0.05] rounded-xl focus:outline-none focus:border-mist-blue/30 focus:bg-white transition text-graphite placeholder:text-graphite-subtle/80" placeholder="搜索会话" type="text"/>
+</div>
+<!-- Session Navigation Tree -->
+<div class="space-y-4 pt-1 text-[13px]">
+<div>
+<button class="w-full flex items-center justify-between px-2 py-1 text-graphite-light hover:text-graphite rounded-lg transition text-[12px]">
+<span class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+              个人工作区
+            </span>
+<svg class="w-3 h-3 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- History List: Today -->
+<div>
+<div class="text-[11px] font-medium text-graphite-subtle px-2 mb-1.5">今天</div>
+<div class="space-y-0.5">
+<!-- Active conversation item -->
+<a class="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-white/95 border border-[#313d50]/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] text-graphite font-medium text-[13px]" href="#">
+<svg class="w-3.5 h-3.5 stroke-[1.5] text-mist-blue" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">项目资料整理</span>
+</a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-black/[0.03] text-graphite-light hover:text-graphite text-[13px] transition" href="#">
+<svg class="w-3.5 h-3.5 stroke-[1.5] text-graphite-subtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">周末短途旅行</span>
+</a>
+</div>
+</div>
+<!-- History List: Earlier -->
+<div>
+<div class="text-[11px] font-medium text-graphite-subtle px-2 mb-1.5">更早</div>
+<div class="space-y-0.5">
+<a class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-black/[0.03] text-graphite-light hover:text-graphite text-[13px] transition" href="#">
+<svg class="w-3.5 h-3.5 stroke-[1.5] text-graphite-subtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">一周饮食安排</span>
+</a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-black/[0.03] text-graphite-light hover:text-graphite text-[13px] transition" href="#">
+<svg class="w-3.5 h-3.5 stroke-[1.5] text-graphite-subtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">读书笔记整理</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Bottom: Personal Workspace Switcher -->
+<div class="pt-3 border-t border-[#313d50]/[0.06] flex items-center justify-between">
+<button class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-black/[0.03] text-graphite text-[13px] transition">
+<div class="w-5 h-5 rounded-lg bg-slate-200/80 flex items-center justify-center text-graphite">
+<svg class="w-3.5 h-3.5 stroke-[1.75]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="font-medium text-[13px]">个人空间</span>
+</button>
+<button class="p-1.5 text-graphite-subtle hover:text-graphite rounded-lg hover:bg-black/5 transition" title="偏好设置">
+<svg class="w-4 h-4 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: Main Chat Workspace -->
+<main class="flex-1 flex flex-col h-screen min-w-0 relative z-10">
+<!-- Top Header Bar -->
+<header class="h-14 px-8 border-b border-[#313d50]/[0.06] flex items-center justify-between bg-white/40 backdrop-blur-md shrink-0">
+<div class="flex items-center gap-3">
+<h2 class="text-[14px] font-semibold text-graphite tracking-tight">项目资料整理</h2>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[11px] font-medium border border-emerald-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>个人工作区 · 已连接</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 text-[12px] text-graphite-light hover:text-graphite rounded-lg border border-[#313d50]/[0.08] bg-white/70 hover:bg-white flex items-center gap-1.5 transition">
+<svg class="w-3.5 h-3.5 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          来源文件 (1)
+        </button>
+<button class="p-1.5 text-graphite-light hover:text-graphite rounded-lg hover:bg-black/5 transition" title="视图选项">
+<svg class="w-4 h-4 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<line x1="4" x2="4" y1="21" y2="14"></line>
+<line x1="4" x2="4" y1="10" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="12"></line>
+<line x1="12" x2="12" y1="8" y2="3"></line>
+<line x1="20" x2="20" y1="21" y2="16"></line>
+<line x1="20" x2="20" y1="12" y2="3"></line>
+<line x1="1" x2="7" y1="14" y2="14"></line>
+<line x1="9" x2="15" y1="8" y2="8"></line>
+<line x1="17" x2="23" y1="16" y2="16"></line>
+</svg>
+</button>
+<button class="p-1.5 text-graphite-light hover:text-graphite rounded-lg hover:bg-black/5 transition" title="更多操作">
+<svg class="w-4 h-4 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="1"></circle>
+<circle cx="19" cy="12" r="1"></circle>
+<circle cx="5" cy="12" r="1"></circle>
+</svg>
+</button>
+</div>
+</header>
+<!-- Scrollable Chat Stream Container -->
+<div class="flex-1 overflow-y-auto px-6 pt-3 pb-2 scroll-smooth" id="chat-stream"><div class="max-w-[760px] mx-auto space-y-3.5"><div class="flex justify-center"><span class="text-[11px] text-graphite-subtle bg-white/50 border border-[#313d50]/[0.05] px-2.5 py-0.5 rounded-full">今天 14:32</span></div><div class="flex flex-col items-end gap-1"><div class="max-w-[85%] bg-white/90 text-graphite px-4 py-2 rounded-2xl rounded-tr-sm border border-[#313d50]/[0.07] shadow-sm text-[13.5px]">帮我整理这份项目资料，列出重点和下一步需要确认的事。</div><div class="flex items-center gap-2 bg-white/80 border border-[#313d50]/[0.08] px-3 py-1 rounded-xl shadow-xs text-[11.5px] text-graphite"><svg class="w-3.5 h-3.5 stroke-[1.5] text-mist-blue" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="font-medium">项目资料.pdf</span><span class="text-graphite-subtle text-[11px]">2.4 MB</span></div></div><div class="space-y-2.5"><div class="flex items-start gap-3"><div class="w-7 h-7 rounded-xl bg-white flex items-center justify-center shadow-xs border border-[#313d50]/[0.08] text-graphite shrink-0 mt-0.5"><svg class="w-3.5 h-3.5 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div class="space-y-2 flex-1"><div class="flex items-center justify-between p-2 rounded-xl glass-card-subtle text-[11.5px] text-graphite-light"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>读取文件 · 项目资料.pdf</span><span class="px-1.5 py-0.2 rounded text-[10px] bg-emerald-500/10 text-emerald-700 font-medium border border-emerald-500/20">已完成</span></div><span class="text-[11px] text-graphite-subtle">已提取 4 项核心要点</span></div><div class="text-[13.5px] text-graphite leading-relaxed"><p>好的，已提炼核心重点并生成待办清单，接下来需向你的工作区写入文件以完成保存。</p></div></div></div><div class="ml-10 glass-panel rounded-2xl p-4 border border-[#313d50]/[0.1] shadow-card transition-all duration-300" id="approval-card"><div class="flex items-start justify-between pb-2.5 border-b border-[#313d50]/[0.06]"><div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded-lg bg-mist-blue/10 border border-mist-blue/20 flex items-center justify-center text-mist-blue"><svg class="w-4 h-4 stroke-[1.6]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div><div class="flex items-center gap-2"><h3 class="text-[13.5px] font-semibold text-graphite tracking-tight">操作需要你的确认：保存行动清单</h3><span class="text-[10.5px] font-medium px-2 py-0.5 rounded-full bg-mist-blue/10 text-mist-blue border border-mist-blue/15">等待你确认</span></div><p class="text-[11.5px] text-graphite-light mt-0.5">天质 AI 申请在你的个人工作区执行写入动作</p></div></div><div class="flex items-center gap-1.5 text-[11px] text-graphite-subtle"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-mist-blue opacity-50"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-mist-blue"></span></span><span>待处理</span></div></div><div class="grid grid-cols-2 gap-y-2 gap-x-4 py-2.5 text-[12px] border-b border-[#313d50]/[0.06]"><div class="flex items-center"><span class="text-graphite-light w-18 shrink-0">操作类型：</span><span class="font-mono text-graphite bg-black/[0.03] px-1.5 py-0.5 rounded border border-[#313d50]/[0.06] text-[11px]">写入文件</span></div><div class="flex items-center"><span class="text-graphite-light w-18 shrink-0">影响范围：</span><span class="text-graphite font-medium">仅此文件</span></div><div class="flex items-center col-span-2"><span class="text-graphite-light w-18 shrink-0">目标位置：</span><span class="text-graphite font-mono text-[11.5px] bg-slate-100/70 border border-slate-200/60 px-2 py-0.5 rounded-md text-slate-700">写入个人工作区 / 行动清单.md</span></div><div class="flex items-start col-span-2"><span class="text-graphite-light w-18 shrink-0 pt-0.5">操作原因：</span><span class="text-graphite text-[11.5px] leading-relaxed">把整理好的行动项与时间节点保存为独立文档，便于后续跟进</span></div></div><div class="py-2"><div class="flex items-center justify-between mb-1.5"><span class="text-[11.5px] font-medium text-graphite-light flex items-center gap-1.5"><svg class="w-3.5 h-3.5 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path></svg>即将写入的内容预览</span><button class="text-[11px] text-mist-blue hover:text-mist-blueHover font-medium flex items-center gap-1 transition" id="toggle-preview-btn"><span id="preview-toggle-text">收起预览</span><svg class="w-3 h-3 stroke-[1.75] transform rotate-180 transition-transform duration-200" fill="none" id="preview-toggle-arrow" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div><div class="rounded-xl border border-[#313d50]/[0.08] bg-white/70 p-2.5 font-mono text-[11.5px] text-graphite space-y-1 shadow-inner max-h-24 overflow-y-auto" id="preview-content-box"><div class="text-graphite-subtle text-[10.5px] pb-1 border-b border-black/[0.04] flex justify-between font-sans"><span>行动清单.md (新建)</span><span>Markdown · UTF-8</span></div><div class="text-mist-blue font-semibold pt-0.5"># 项目行动清单</div><div class="text-graphite-light">- [ ] <span class="text-graphite">5月12日前</span> 完成资料补齐与方案评审</div><div class="text-graphite-light">- [ ] <span class="text-graphite">待确认</span> 方案评审具体时间安排</div><div class="text-graphite-light">- [ ] <span class="text-graphite">待确认</span> 各业务模块关键负责人及交接节点</div></div></div><div class="pt-2 border-t border-[#313d50]/[0.06] flex items-center justify-between" id="approval-actions"><div class="flex items-center gap-2"><button class="h-8 px-3.5 rounded-xl bg-mist-blue hover:bg-mist-blueHover text-white font-medium text-[12.5px] shadow-[0_2px_8px_rgba(83,105,133,0.25)] active:scale-[0.98] transition flex items-center gap-1.5 cursor-pointer" id="btn-approve"><svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg><span>仅允许本次</span></button><button class="h-8 px-3.5 rounded-xl bg-white hover:bg-black/[0.02] border border-[#313d50]/[0.12] text-graphite font-medium text-[12.5px] active:scale-[0.98] transition cursor-pointer" id="btn-reject">拒绝</button><button class="h-8 px-3 rounded-xl bg-transparent hover:bg-black/[0.03] border border-[#313d50]/[0.08] text-graphite-light hover:text-graphite font-medium text-[12px] transition cursor-pointer" id="btn-cancel-task">取消本次任务</button></div><div class="flex items-center gap-1 text-[11px] text-graphite-subtle"><span class="cursor-pointer hover:text-mist-blue transition" onclick="resetApprovalCard()">状态重置</span></div></div><div class="hidden pt-2.5 text-[12px] border-t border-[#313d50]/[0.06] mt-2" id="approval-status-message"></div></div></div></div></div>
+<!-- BEGIN: Input Container Area -->
+<div class="px-6 pb-5 pt-1 shrink-0"><div class="max-w-[760px] mx-auto"><div class="glass-panel rounded-3xl p-3 border border-[#313d50]/[0.09] shadow-glass relative"><div class="px-2 pt-0.5 pb-1.5"><textarea class="w-full bg-transparent border-0 resize-none text-[13.5px] text-graphite placeholder:text-graphite-subtle focus:ring-0 p-0 leading-relaxed font-sans" id="user-input-draft" placeholder="输入后续指令..." rows="1">请把行动项按优先级排列</textarea></div><div class="flex items-center justify-between pt-1 border-t border-black/[0.03]"><div class="flex items-center gap-2"><button class="p-1.5 text-graphite-subtle hover:text-graphite rounded-lg hover:bg-black/5 transition" title="添加附件"><svg class="w-4 h-4 stroke-[1.6]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><button class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-[#313d50]/[0.08] hover:bg-white text-[12px] text-graphite transition"><svg class="w-3.5 h-3.5 text-mist-blue stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>DeepSeek</span><svg class="w-3 h-3 stroke-[1.5] text-graphite-subtle" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/[0.02] border border-[#313d50]/[0.08] text-[12px] text-graphite-light"><span class="w-1.5 h-1.5 rounded-full bg-mist-blue"></span><span>标准 · 操作需确认</span><svg class="w-3 h-3 stroke-[1.5] text-graphite-subtle" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg></div></div><div class="flex items-center gap-2"><button class="text-[12px] text-graphite-light hover:text-graphite px-2 py-1 rounded-lg transition" title="插话">立即插话</button><div class="relative group" id="send-btn-wrapper"><button class="h-8 px-3.5 rounded-xl bg-slate-200 text-slate-400 font-medium text-[12.5px] flex items-center gap-1.5 cursor-not-allowed opacity-75 shadow-none transition" disabled="" id="btn-send-draft"><svg class="w-3.5 h-3.5 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24"></svg></button></div></div></div></div></div></div>
+<!-- END: Input Container Area -->
+</main>
+<!-- END: Main Chat Workspace -->
+<!-- BEGIN: Scripts for Interactivity & Ambient Motion -->
+<script>(()=>{const el=document.getElementById('ambient-glow');if(!el)return;const mq=matchMedia('(prefers-reduced-motion: reduce)');let x=0,y=0,tx=0,ty=0,raf=null,inside=false;Object.assign(el.style,{left:'0',top:'0',width:'220px',height:'220px',pointerEvents:'none',opacity:'0'});function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;inside=false;el.style.opacity='0';}function frame(){x+=(tx-x)*.12;y+=(ty-y)*.12;el.style.transform='translate3d('+(x-110)+'px,'+(y-110)+'px,0)';raf=inside&&(Math.abs(tx-x)>.1||Math.abs(ty-y)>.1)?requestAnimationFrame(frame):null;}window.addEventListener('pointermove',e=>{if(mq.matches||navigator.maxTouchPoints>0||e.pointerType==='touch')return;tx=e.clientX;ty=e.clientY;if(!inside){x=tx;y=ty;}inside=true;el.style.opacity='.65';if(raf===null)raf=requestAnimationFrame(frame);},{passive:true});document.addEventListener('mouseleave',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});mq.addEventListener('change',stop);})();</script>
+<script>(()=>{
+const $=id=>document.getElementById(id),card=$('approval-card'),approve=$('btn-approve'),reject=$('btn-reject'),cancel=$('btn-cancel-task'),status=$('approval-status-message'),send=$('btn-send-draft'),draft=$('user-input-draft');
+let state='pending',version=0,timer=null;
+const badges=[...card.querySelectorAll('span')].filter(e=>['等待你确认','待处理'].includes(e.textContent.trim()));
+const helper=document.createElement('p');helper.setAttribute('role','status');helper.style.cssText='font-size:11px;color:#717783;margin:6px 8px 0';$('send-btn-wrapper').closest('.glass-panel').after(helper);
+const review=document.createElement('div');review.style.cssText='display:flex;gap:12px;font-size:11px;color:#717783;margin-top:8px';review.textContent='状态演示：';card.after(review);
+function btn(text,fn){const b=document.createElement('button');b.type='button';b.textContent=text;b.style.cssText='padding:3px 7px;color:#536985';b.onclick=fn;return b;}
+review.append(btn('待审批',()=>set('pending')),btn('审批过期',()=>set('expired')));
+function sync(){send.textContent='排队发送';send.disabled=['pending','submitting','expired'].includes(state)||!draft.value.trim();send.style.opacity=send.disabled?'.45':'1';helper.textContent=state==='pending'?'等待处理当前审批；草稿可以继续编辑。':state==='expired'?'旧审批已失效，刷新只查询最新状态，不会自动批准。':state==='submitting'?'正在提交决定，请勿重复操作。':'决定已记录；新的草稿可以进入队列。';}
+function set(next){version++;clearTimeout(timer);state=next;const labels={pending:'等待你确认',submitting:'提交中',approved:'已批准 · 等待继续',rejected:'已拒绝',cancelled:'已取消',expired:'已失效'};badges.forEach(e=>e.textContent=labels[next]);for(const b of[approve,reject,cancel]){b.disabled=next!=='pending';b.style.opacity=b.disabled?'.4':'1';}approve.textContent=next==='submitting'?'提交中…':'仅允许本次';card.querySelectorAll('.animate-ping').forEach(e=>e.style.animationPlayState=next==='pending'?'running':'paused');status.replaceChildren();status.classList.toggle('hidden',next==='pending');status.setAttribute('role','status');const texts={submitting:'正在提交本次决定…',approved:'已批准本次操作，等待执行端继续；文件是否写入成功仍需确认。',rejected:'已拒绝，未执行此写入操作。',cancelled:'已取消本次任务，尚未执行此写入操作。',expired:'这条审批已失效，旧按钮不能继续使用。'};if(texts[next]){status.style.cssText='font-size:12px;color:#536985;padding-top:10px;line-height:1.7';const p=document.createElement('p');p.textContent=texts[next];status.append(p);if(next==='expired')status.append(btn('刷新状态',()=>{p.textContent='当前没有新的有效审批；旧审批仍已失效，未执行写入。';}));}sync();}
+approve.onclick=()=>{if(state!=='pending')return;set('submitting');const v=version;timer=setTimeout(()=>{if(v===version)set('approved');},500);};
+reject.onclick=()=>{if(state==='pending')set('rejected');};cancel.onclick=()=>{if(state==='pending')set('cancelled');};
+window.resetApprovalCard=()=>set('pending');
+$('toggle-preview-btn').onclick=()=>{const box=$('preview-content-box'),hidden=box.classList.toggle('hidden');$('preview-toggle-text').textContent=hidden?'展开预览':'收起预览';$('toggle-preview-arrow').classList.toggle('rotate-180',!hidden);};
+send.onclick=()=>{if(send.disabled)return;draft.value='';helper.textContent='草稿已接受并加入队列，尚未执行。';send.disabled=true;send.style.opacity='.45';};
+const steer=[...document.querySelectorAll('button')].find(e=>e.textContent.trim()==='立即插话');if(steer){steer.disabled=true;steer.title='请先处理当前审批';steer.style.opacity='.4';}
+draft.addEventListener('input',sync);set('pending');
+})();</script>
+<!-- END: Scripts -->
+</body></html>

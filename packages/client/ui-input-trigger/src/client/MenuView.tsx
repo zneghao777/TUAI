@@ -163,6 +163,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
                         id={optionId(group.source, index)}
                         type="button"
                         role="option"
+                        data-command-file={group.source === 'command' && item.name === 'file' ? '' : undefined}
                         aria-selected={active}
                         className={clsx(css.item, active && css.active)}
                         // mousedown, not click: the textarea keeps focus (combobox

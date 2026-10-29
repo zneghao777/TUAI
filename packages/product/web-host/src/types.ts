@@ -1,4 +1,14 @@
 /** Public, credential-free facts of this P2 Host. */
+import type { ThemeSettings } from '@deepseek-ai/dsh-client-ui-theme/src/theme-settings.ts'
+
+/** Product palette identity, independent of the existing light/dark preference. */
+export type ThemePalette = 'white' | 'forest' | 'dawn'
+
+/** Host-owned appearance document; older documents inherit the forest palette. */
+export interface ProductAppearanceSettings extends ThemeSettings {
+  palette: ThemePalette
+}
+
 export type {
   ModelProviderDraft,
   ManagedModel,

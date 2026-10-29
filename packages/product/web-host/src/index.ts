@@ -11,6 +11,7 @@ import SessionReferences from '@deepseek-ai/dsh-session-reference'
 import { TYPERT as contribution12 } from '@deepseek-ai/dsh-api-workspace-files/typert'
 import { TYPERT as contribution14 } from '@deepseek-ai/dsh-session-reference/typert'
 import { ManagedSessionController, ManagedWorkspaceController } from './managed-workspaces.ts'
+import { ConversationTrash } from './conversation-trash.ts'
 import { TYPERT as contribution11 } from '@deepseek-ai/dsh-api-workspace-controller/typert'
 import { mountChatSettings } from './chat-settings.ts'
 import { TYPERT as contribution10 } from '@deepseek-ai/dsh-api-settings-controller/typert'
@@ -27,7 +28,7 @@ import { TYPERT as contribution8 } from '@deepseek-ai/dsh-subagent/typert'
 import { TYPERT as contribution9 } from '@tianzhiai/web-host/typert'
 import { Context } from '@deepseek-ai/cordis'
 import { join } from 'node:path'
-import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
+import { Remote, RemoteError, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
 import Registry from '@deepseek-ai/dsh-typert-registry'
 import * as Connection from '@deepseek-ai/dsh-client-connection'
 import Gateway from '@deepseek-ai/dsh-api-gateway'
@@ -66,7 +67,14 @@ declare module '@deepseek-ai/cordis' {
 
 /** Product public status; every call passes the same Gateway admission. */
 export class PlatformService extends TypertRemoteService {
-  static inject = ['tianzhiaiHost', 'credentials', 'sessionQuery', 'attachments', 'modelManager']
+  static inject = [
+    'tianzhiaiHost',
+    'credentials',
+    'sessionQuery',
+    'attachments',
+    'modelManager',
+    'conversationTrash',
+  ]
   constructor(ctx: Context) {
     super(ctx, 'tianzhiaiPlatform', { namespace: 'platform' })
   }
@@ -101,6 +109,12 @@ export class PlatformService extends TypertRemoteService {
       workspace: process.cwd(),
       modelConfigured: (await this.ctx.modelManager.snapshot()).providers.some((p) => p.configured),
     }
+  }
+
+  /** Remove a conversation from product access while retaining its workspace files. */
+  @Remote
+  async deleteConversation(request: { id: SessionId }): Promise<void> {
+    await this.ctx.conversationTrash.delete(request.id)
   }
 }
 
@@ -160,6 +174,27 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
   await ctx.plugin(WorkspaceFiles)
   await ctx.plugin(SessionReferences)
   await ctx.plugin(Uploads)
+  await ctx.plugin(ConversationTrash)
+  ctx.inject(['typertGateway', 'conversationTrash'], (scope) => {
+    scope.effect(() =>
+      scope.typertGateway.guard(({ args }) => {
+        const inspect = (value: unknown): void => {
+          if (typeof value !== 'object' || value === null) return
+          const record = value as Record<string, unknown>
+          for (const key of ['sessionId', 'childSessionId', 'parentSessionId']) {
+            const id = record[key]
+            if (typeof id === 'string' && scope.conversationTrash.has(id as SessionId))
+              throw new RemoteError('session/not-found', '该会话已删除', {
+                sessionId: id as SessionId,
+              })
+          }
+          if (record.address !== undefined) inspect(record.address)
+        }
+        inspect(args)
+        for (const value of Object.values(args)) inspect(value)
+      }),
+    )
+  })
   await ctx.plugin(ManagedWorkspaceController)
   await ctx.plugin(ManagedSessionController)
   await ctx.plugin(PlatformService)

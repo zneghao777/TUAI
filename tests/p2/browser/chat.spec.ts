@@ -424,7 +424,7 @@ test('原侧栏窄屏展开收起与触摸设置，弹窗隔离键盘焦点', as
   const opener = page.getByRole('button', { name: '打开侧边栏', exact: true })
   await expect(opener).toBeVisible()
   await opener.click()
-  await expect(page.getByRole('tree', { name: '会话' })).toBeVisible()
+  await expect(page.getByRole('navigation', { name: '聊天记录' })).toBeVisible()
   await page.getByRole('button', { name: '收起侧边栏', exact: true }).click()
   await expect(opener).toBeVisible()
   const touch = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true })

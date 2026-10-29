@@ -99,6 +99,7 @@ body,
 .tz-settings-trigger {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 10px;
   width: 100%;
   border: 0;
@@ -519,4 +520,472 @@ body[data-ds-dark-theme] [aria-label='发送消息'] {
 .tz-model-popover[data-entering],
 .tz-model-popover[data-exiting] {
   animation: none;
+}
+
+/* On a phone, navigation takes the full frame instead of squeezing the conversation. */
+@media (max-width: 600px) {
+  [data-layout-frame],
+  [data-layout-frame][data-animating] {
+    transition: none;
+  }
+  [data-layout-frame]:not([data-sidebar-collapsed]) {
+    grid-template-columns: minmax(0, 1fr) 0 0 !important;
+  }
+  [data-layout-frame]:not([data-sidebar-collapsed]) [data-sidebar-col] > [data-slot='sidebar'] > * {
+    width: 100% !important;
+  }
+  [data-layout-frame]:not([data-sidebar-collapsed]) > :is([data-center-col], [data-rightbar-col]) {
+    visibility: hidden;
+  }
+  [data-layout-frame] > [data-side='sidebar'] {
+    display: none;
+  }
+}
+
+/* The shared HeroUI button defaults to centered content; process summaries lead the reply. */
+[data-turn-process] {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.tz-chat-greeting {
+  display: none;
+}
+[data-phase='hero'] .tz-chat-greeting,
+[data-content-phase='hero'] .tz-chat-greeting {
+  display: block;
+  padding: 0 16px 26px;
+  text-align: center;
+}
+.tz-chat-greeting h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(22px, 2.4vw, 27px);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* The supplied square image has transparent space above and below the wordmark. */
+.tz-brand-logo {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 16px;
+  overflow: hidden;
+  flex: none;
+}
+.tz-brand-logo img {
+  position: absolute;
+  top: -15px;
+  left: 0;
+  width: 42px;
+  max-width: none;
+  height: 42px;
+}
+.tz-staged-permission {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  height: 28px;
+  padding: 0 4px 0 8px;
+  border-radius: var(--dsw-radius-sm);
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+.tz-staged-permission svg {
+  width: 14px;
+  height: 14px;
+}
+@container (max-width: 460px) {
+  .tz-staged-permission span {
+    display: none;
+  }
+}
+[aria-label='打开侧边栏'] .tz-brand-logo {
+  width: 27px;
+  height: 11px;
+}
+[aria-label='打开侧边栏'] .tz-brand-logo img {
+  top: -9.6px;
+  width: 27px;
+  height: 27px;
+}
+
+.tz-chat-navigation {
+  padding: 0 4px;
+}
+body [data-sidebar-new-session='wide'] {
+  justify-content: flex-start;
+  margin: 0 2px 10px;
+  border-color: transparent;
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+[data-sidebar-new-session='wide'] [data-sidebar-new-session-content] {
+  justify-content: flex-start;
+  gap: 10px;
+}
+.tz-chat-features {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tz-chat-features .tz-chat-feature {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  color: var(--ink);
+  font-size: 14px;
+}
+.tz-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 6px 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.tz-chat-header .tz-chat-search-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  color: var(--muted);
+}
+.tz-chat-search-container {
+  width: min(520px, calc(100vw - 32px));
+  max-width: none;
+  padding: 0;
+}
+.tz-chat-search-dialog {
+  width: 100%;
+  max-height: min(600px, calc(100dvh - 32px));
+  padding: 12px;
+  gap: 0;
+  background: var(--panel);
+  color: var(--ink);
+}
+.tz-chat-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+.tz-chat-search > svg { flex: none; }
+.tz-chat-search .tz-chat-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0 !important;
+  outline: none;
+  box-shadow: none;
+  background: transparent !important;
+  color: var(--ink);
+  font-size: 14px;
+}
+.tz-chat-search .tz-chat-search-input:focus-visible { outline: none; box-shadow: none; }
+.tz-chat-search .tz-chat-search-clear {
+  flex: none;
+  min-height: 28px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--muted);
+}
+.tz-chat-search-caption {
+  padding: 14px 10px 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.tz-chat-search-results { overflow-y: auto; min-height: 0; }
+.tz-chat-search-results .tz-chat-search-result {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 10px;
+  color: var(--ink);
+  text-align: left;
+}
+.tz-chat-search-result > svg { flex: none; color: var(--muted); }
+.tz-chat-result-text { display: flex; flex: 1; min-width: 0; flex-direction: column; }
+.tz-chat-result-text > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tz-chat-result-time, .tz-chat-row-time { flex: none; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.tz-chat-history {
+  padding: 4px 8px 4px 4px;
+}
+.tz-chat-history [data-session-id] > button:first-child {
+  justify-content: flex-start;
+}
+.tz-chat-history [data-session-id][aria-current='page'] {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--ink);
+}
+.tz-chat-row-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.tz-chat-snippet {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tz-chat-history :is(.tz-chat-archive, .tz-chat-menu),
+.tz-chat-history :is(.tz-chat-archive, .tz-chat-menu):hover:not(:disabled) {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tz-chat-history [data-session-id] :is(.tz-chat-archive, .tz-chat-menu) { display: none; }
+  .tz-chat-history [data-session-id]:is(:hover, :focus-within, [data-menu-open]) :is(.tz-chat-archive, .tz-chat-menu) { display: inline-flex; }
+  .tz-chat-history [data-session-id]:is(:hover, :focus-within, [data-menu-open]) .tz-chat-row-time { display: none; }
+}
+@media (max-width: 600px) {
+  .tz-chat-history [data-session-id] :is(.tz-chat-archive, .tz-chat-menu) {
+    display: inline-flex;
+    opacity: 1;
+  }
+}
+[data-command-file] {
+  justify-content: flex-end;
+}
+.tz-chat-error {
+  color: var(--danger);
+  padding: 8px 12px;
+  font-size: 13px;
+}
+.tz-chat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+.tz-chat-confirmation {
+  width: min(440px, 100%);
+  max-height: 100%;
+}
+.tz-chat-confirm-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 14px;
+  line-height: 22px;
+}
+.tz-chat-confirm-warning svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--dsw-alias-state-error-primary);
+}
+.tz-chat-confirm-warning p {
+  margin: 0;
+}
+.tz-chat-confirm-action {
+  min-width: 96px;
+}
+
+.tz-chat-history [data-session-id][aria-current='page'],
+.tz-chat-history [data-session-id]:is(:hover, :focus-within, [data-menu-open]) {
+  background: var(--mist);
+  color: var(--ink);
+}
+
+/* Palette choices share the Host appearance document and preserve the editor. */
+.tz-appearance fieldset {
+  margin: 0 0 22px;
+}
+.tz-palette-options,
+.tz-appearance-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tz-palette-choice {
+  justify-content: flex-start;
+  gap: 12px;
+  min-width: 128px;
+  padding: 10px 14px;
+}
+.tz-palette-choice,
+.tz-appearance-modes > button {
+  --button-bg: var(--panel);
+  --button-bg-hover: var(--mist);
+  --button-bg-pressed: var(--mist);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  background: var(--panel);
+  min-height: 42px;
+}
+.tz-palette-choice[aria-pressed='true'],
+.tz-appearance-modes > button[aria-pressed='true'] {
+  --button-bg: var(--mist);
+  border-color: var(--accent);
+  color: var(--accent-pressed);
+  background: var(--mist);
+}
+.tz-palette-swatch {
+  display: inline-flex;
+  gap: 2px;
+  overflow: hidden;
+  border-radius: 5px;
+  flex: none;
+}
+.tz-palette-swatch > span {
+  width: 14px;
+  height: 22px;
+}
+/* Swatches depict their own palette, independently of the active palette. */
+.tz-palette-swatch[data-palette='white'] > span:nth-child(1) {
+  background: #f6f7f9;
+}
+.tz-palette-swatch[data-palette='white'] > span:nth-child(2) {
+  background: #dce0e6;
+}
+.tz-palette-swatch[data-palette='white'] > span:nth-child(3) {
+  background: #272b32;
+}
+.tz-palette-swatch[data-palette='forest'] > span:nth-child(1) {
+  background: #eaf0eb;
+}
+.tz-palette-swatch[data-palette='forest'] > span:nth-child(2) {
+  background: #a9c8bb;
+}
+.tz-palette-swatch[data-palette='forest'] > span:nth-child(3) {
+  background: #58786d;
+}
+.tz-palette-swatch[data-palette='dawn'] > span:nth-child(1) {
+  background: #eaf8fd;
+}
+.tz-palette-swatch[data-palette='dawn'] > span:nth-child(2) {
+  background: #f3edff;
+}
+.tz-palette-swatch[data-palette='dawn'] > span:nth-child(3) {
+  background: #155dfc;
+}
+.tz-appearance-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 10px 0 0;
+}
+.tz-appearance-error {
+  color: var(--danger);
+}
+
+/* Pure white keeps reading surfaces opaque and glass confined to the surrounding chrome. */
+body[data-tz-palette='white'] {
+  --canvas: #ffffff;
+  --sidebar: #f6f7f9;
+  --panel: #ffffff;
+  --mist: #eef0f3;
+  --ink: #24272e;
+  --muted: #626873;
+  --accent: #272b32;
+  --accent-pressed: #15181d;
+  --accent-foreground: #ffffff;
+  --glass: rgba(255, 255, 255, 0.9);
+  --line: rgba(35, 39, 46, 0.08);
+  --shadow: 0 6px 24px -10px rgba(35, 39, 46, 0.16), inset 0 1px 0 #fff;
+  --focus: #53657f;
+  --dsw-alias-label-tertiary: var(--muted);
+  --dsw-alias-label-caption: var(--muted);
+  --dsw-specific-bubble-highlight: #e4e7ec;
+  --dsw-menu-surface-fill: rgba(255, 255, 255, 0.97);
+  --dsw-menu-backdrop-filter: blur(20px);
+  --dsw-alias-bg-mask-1: #23272e24;
+  --accent-hover: var(--accent-pressed);
+  --default-hover: #e4e7ec;
+  --accent-soft-hover: #e4e7ec;
+}
+body[data-tz-palette='white'] [data-slot='sidebar'] > :first-child {
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: inset -1px 0 0 #fff;
+}
+body[data-tz-palette='white'] [data-composer-card] {
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow);
+}
+body[data-tz-palette='white'] a {
+  color: var(--focus);
+}
+body[data-tz-palette='white'] :is(button, a, summary, input, select, textarea):focus-visible {
+  outline-color: var(--focus);
+}
+body[data-tz-palette='white'] ::selection {
+  background: #e4e7ec;
+  color: var(--ink);
+}
+body[data-tz-palette='white'] .tz-cursor-glow {
+  left: -120px;
+  top: -120px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(98, 104, 115, 0.04), transparent 68%);
+}
+
+/* Light-only palette constraints are validated by the Host. */
+body[data-tz-palette='dawn'] {
+  --canvas: #f5f8fc;
+  --sidebar: #f0f6fc;
+  --panel: #ffffff;
+  --mist: #eaf3ff;
+  --ink: #1e293b;
+  --muted: #5e6f86;
+  --accent: #155dfc;
+  --accent-pressed: #124dcf;
+  --accent-foreground: #ffffff;
+  --glass: rgba(255, 255, 255, 0.94);
+  --line: #dde6f2;
+  --shadow: 0 8px 28px -8px rgba(53, 77, 117, 0.1), inset 0 1px 0 #fff;
+  --dsw-alias-label-tertiary: #5e6f86;
+  --dsw-alias-label-caption: #5e6f86;
+  --dsw-specific-bubble-highlight: #dceaff;
+  --dsw-menu-surface-fill: #ffffff;
+  --dsw-alias-bg-mask-1: #24395824;
+  --accent-hover: var(--accent-pressed);
+  --default-hover: #dceaff;
+  --accent-soft-hover: #dceaff;
+}
+/* Slot anchors use display:contents; paint their owned surface rather than the anchor. */
+body[data-tz-palette='dawn'] [data-slot='sidebar'] > :first-child {
+  background-image: linear-gradient(155deg, #eaf8fd 0%, #f5f2fc 68%, #f0f6fc 100%);
+}
+body[data-tz-palette='dawn'] :is([data-phase='hero'], [data-phase='active']) {
+  background-image:
+    radial-gradient(ellipse at 100% 0%, rgba(210, 237, 251, 0.28), transparent 32%),
+    radial-gradient(ellipse at 0% 100%, rgba(231, 218, 251, 0.2), transparent 30%);
+}
+body[data-tz-palette='dawn'] ::selection {
+  background: #dceaff;
+  color: var(--ink);
+}
+body[data-tz-palette='dawn'] .tz-cursor-glow {
+  background: radial-gradient(circle, rgba(21, 93, 252, 0.055), transparent 68%);
+}
+@media (pointer: coarse) {
+  .tz-palette-choice,
+  .tz-appearance-modes > button {
+    min-height: 44px;
+  }
 }

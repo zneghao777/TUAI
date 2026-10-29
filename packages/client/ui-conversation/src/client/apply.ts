@@ -122,6 +122,7 @@ function hostPathBridge(): HostPathBridge | undefined {
 
 interface WorkspaceNavigation {
   openSession(sessionId: SessionId): void
+  startManagedSession(beforeOpen: (sessionId: SessionId) => void): Promise<SessionId | undefined>
   openWorkspace(
     workspaceId: Parameters<ConversationInjected['selectWorkspace']>[0],
     beforeOpen: (sessionId: SessionId) => void,
@@ -371,6 +372,13 @@ export function apply(ctx: Context, config: Config = Config({})): void {
       hooks: {
         composerBlock: sessionId === undefined ? ABSENT_BLOCK : composerBlocks.storeFor(sessionId),
       },
+      startManagedChat: (draft, submit) => workspaceNavigation.startManagedSession(nextId => {
+        const binding = sessions.binding(nextId)
+        if (binding === undefined) throw new Error('会话尚未就绪，请重试')
+        const input = inputHub.for(binding.ctx)
+        input.setDraft(draft)
+        if (submit) input.submit('queue', 'click')
+      }),
       selectWorkspace: workspaceId => workspaceNavigation.openWorkspace(workspaceId, (nextId) => {
         if (sessionId !== undefined && nextId !== sessionId) {
           const from = inputHub.shell(sessionId)
@@ -473,6 +481,8 @@ export function apply(ctx: Context, config: Config = Config({})): void {
       'conversation.input.attachments': { kind: 'single', scope: 'session-maybe' },
       'conversation.input.overlay': { kind: 'list', scope: 'session' },
       'conversation.input.permission': { kind: 'single', scope: 'session' },
+      'conversation.input.staged.permission': { kind: 'single', scope: 'root' },
+      'conversation.input.staged.model': { kind: 'single', scope: 'root' },
       'conversation.input.left': { kind: 'list', scope: 'session' },
       'conversation.input.plan': { kind: 'single', scope: 'session' },
       'conversation.input.right': { kind: 'list', scope: 'session' },

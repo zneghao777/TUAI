@@ -118,6 +118,8 @@ type ResolvedConfig = Config & { readonly listWorkSliceMs: number }
 
 /** Host integrations replaceable by direct unit tests. */
 export interface SessionControllerInternals {
+  /** Product lifecycle admission; unavailable Sessions cannot be listed or addressed over Remote. */
+  readonly sessionAvailable?: (sessionId: SessionId) => boolean
   /** Host-owned placement of newly created Sessions. */
   readonly prepareCreate?: (request: SessionCreateRequest) => Promise<SessionCreateRequest>
   /** Native default-application handoff. */
@@ -155,6 +157,7 @@ export class SessionController extends TypertRemoteService {
   })
 
   private readonly prepareCreate: SessionControllerInternals['prepareCreate']
+  private readonly sessionAvailable: (sessionId: SessionId) => boolean
   private agents!: ApiSessionAgentController
   private commands!: SessionCommandController
   private controlState!: SessionControlController
@@ -176,6 +179,7 @@ export class SessionController extends TypertRemoteService {
   constructor(ctx: Context, config: Config, internals: SessionControllerInternals = {}) {
     super(ctx, 'sessionController', { namespace: 'session' })
     this.prepareCreate = internals.prepareCreate
+    this.sessionAvailable = internals.sessionAvailable ?? (() => true)
     this.listWorkSliceMs = SessionController.Config(config).listWorkSliceMs
     this.fileApplications = internals.fileApplications ?? nativeFileApplications
     this.openFileApplication = internals.openFileApplication ?? openNativeFileApplication
@@ -192,7 +196,7 @@ export class SessionController extends TypertRemoteService {
     this.agents.initialize()
     this.commands = new SessionCommandController(ctx, this.agents, process.cwd())
     ctx.effect(() => ctx.fileUploads.registerAgentResolver(async (sessionId) => {
-      const result = await this.agents.resolveAgent(sessionId)
+      const result = await this.resolveAgent(sessionId)
       if ('error' in result) throw result.error
       return result.agent
     }), 'session-controller: file-upload Agent resolver')
@@ -214,13 +218,14 @@ export class SessionController extends TypertRemoteService {
     ctx.plugin(ArchivedSessionGate)
 
     ctx.on('session/created', (session) => {
+      if (!this.sessionAvailable(session.id)) return
       ctx.emit('api-session/added', this.listState.summaryFor(session))
     })
     ctx.on('session/disposed', (session) => {
       ctx.emit('api-session/removed', session.id)
     })
     const publishAgentAvailability = ({ agent }: { agent: Agent }): undefined => {
-      if (ctx.sessions.get(agent.id) === agent.session) {
+      if (this.sessionAvailable(agent.id) && ctx.sessions.get(agent.id) === agent.session) {
         ctx.emit('api-session/added', this.listState.summaryFor(agent.session))
       }
     }
@@ -257,6 +262,8 @@ export class SessionController extends TypertRemoteService {
    * @returns the live Agent or the stable Session-domain failure.
    */
   resolveAgent(sessionId: SessionId): Promise<ApiSessionAgentResult> {
+    if (!this.sessionAvailable(sessionId))
+      throw new RemoteError('session/not-found', '该会话已删除', { sessionId })
     return this.agents.resolveAgent(sessionId)
   }
 
@@ -269,7 +276,7 @@ export class SessionController extends TypertRemoteService {
   @Remote('list')
   async list(_request: SessionListRequest, signal: AbortSignal): Promise<SessionListValue> {
     const items = await this.listState.list(signal)
-    return { items: items.filter(item => this.ctx.remoteAccess.allows({ kind: 'session', id: item.sessionId })) }
+    return { items: items.filter(item => this.sessionAvailable(item.sessionId) && this.ctx.remoteAccess.allows({ kind: 'session', id: item.sessionId })) }
   }
 
   /**
@@ -283,7 +290,7 @@ export class SessionController extends TypertRemoteService {
   @Remote('search')
   async search(request: SessionSearchRequest, signal: AbortSignal): Promise<SessionSearchValue> {
     const result = await this.listState.search(request.query, signal)
-    return { ...result, items: result.items.filter(item => this.ctx.remoteAccess.allows({ kind: 'session', id: item.sessionId })) }
+    return { ...result, items: result.items.filter(item => this.sessionAvailable(item.sessionId) && this.ctx.remoteAccess.allows({ kind: 'session', id: item.sessionId })) }
   }
 
   /**
@@ -595,12 +602,12 @@ export class SessionController extends TypertRemoteService {
       switch (frame.type) {
         case 'baseline': {
           const projections = Object.fromEntries(Object.entries(frame.value.projections)
-            .filter(([sessionId]) => this.ctx.remoteAccess.allows({ kind: 'session', id: sessionId as SessionId })))
+            .filter(([sessionId]) => this.sessionAvailable(sessionId as SessionId) && this.ctx.remoteAccess.allows({ kind: 'session', id: sessionId as SessionId })))
           yield { type: 'baseline', value: { ...frame.value, projections } }
           break
         }
         case 'projection':
-          if (this.ctx.remoteAccess.allows({ kind: 'session', id: frame.sessionId })) yield frame
+          if (this.sessionAvailable(frame.sessionId) && this.ctx.remoteAccess.allows({ kind: 'session', id: frame.sessionId })) yield frame
           break
         /* v8 ignore next -- closed control-frame union. */
         default:

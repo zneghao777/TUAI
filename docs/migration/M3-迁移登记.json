@@ -517,6 +517,16 @@
           "path": "packages/api/gateway/package.json",
           "sha256": "e9b388d8447bd63f5f2a110269a617c5b922a9741457072287ce22f3b7db83e0",
           "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/api/gateway/src/index.ts",
+          "sha256": "eeab3243fa9b8d6b59e408ebe03d3905666027ca5235c4d0b1ab6a764df86dd0",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/api/gateway/src/types.ts",
+          "sha256": "f14f70127e60b53e65a5a6fe3a29a9bbf56835dc6a428265c9c2562e1c86c701",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
         }
       ],
       "additionalFiles": [
@@ -2173,8 +2183,8 @@
         },
         {
           "path": "packages/api/session-controller/src/index.ts",
-          "sha256": "c107048514d6ee520a03e6c3de2fbad946df3a2be815ae6991eea3773abeefdb",
-          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现"
+          "sha256": "623ff04310347d988b71891dc7fa5101aeaa72288cbcff1c1daa278cd6877d01",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现；TZ-076 简化聊天区、删除准入与文案适配"
         },
         {
           "path": "packages/api/session-controller/src/client/contract/session.ts",
@@ -4058,5 +4068,12 @@
     "sha256": "8b7ef07421dffb91ca8170267528c33d3e6bbaf095443fa9dcafdd51fa76a05b",
     "reason": "仅 P2 Remote 组合裁剪；依赖/TS 配置适配另在各包 localPatches 登记"
   },
-  "acceptanceScope": "P2 选定能力本机出口；不是全部来源包的所有能力。真实外部模型、真实 Electron 壳、安装与后续阶段未验证。"
+  "acceptanceScope": "P2 选定能力本机出口；不是全部来源包的所有能力。真实外部模型、真实 Electron 壳、安装与后续阶段未验证。",
+  "snapshots": [
+    {
+      "path": "provenance/dsh-chat-simplification-local.patch",
+      "sha256": "9ceb336c968defbb9999624477d9fa973c8c9c9af3c26b14117af7ecb563e20b",
+      "reason": "TZ-076 相对已提交 HeroUI 基线的增量补丁；旧来源快照与补丁保留"
+    }
+  ]
 }

@@ -10,8 +10,8 @@ import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
  * The text surface is the shell-owned Lexical editor bound here through
  * ComposerContentEditable; chips render as decorator portals, and the
  * keymap registers submit/menu/paste gestures on the editor command layer.
- * The no-session state renders the SAME div inert as the Workspace-picker
- * trigger instead of a parallel tree.
+ * The no-session surface is a workspace picker for ordinary workspaces; managed
+ * chats keep a temporary text draft until a Session is created on demand.
  */
 
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
@@ -52,15 +52,21 @@ export const InputBar = memo(function InputBar({
   useAccess,
   useProjection, sessionId, variant, disabled: inert = false, blocked,
   workspacePickerOpen = false, onRequestWorkspace,
-  placeholder, accessory,
+  placeholder, accessory, startManagedChat,
 }: InputBarProps) {
+  const staged = sessionId === undefined && startManagedChat !== undefined
+  const [stagedDraft, setStagedDraft] = useState('')
+  const [creating, setCreating] = useState(false)
+  const creatingRef = useRef(false)
+  const pendingControl = useRef<'commands' | 'permission' | 'model' | null>(null)
+  const [controlTarget, setControlTarget] = useState<string>()
   const input = useInput(s => s)
   const notice = useNotices(s => s)
   const busyEnter = useBusyEnter(s => s)
   const stopKeys = useStopShortcut(keys => keys)
   // A page whose access snapshot excludes prompting, stopping, or uploading to this Session is offered
-  // no Send, no Stop, or no file intake rather than a disabled control. `useAccess` is undefined only
-  // without a Session, where the bar is an inert placeholder with no keyboard, stop, or file intake.
+  // no Send, no Stop, or no file intake rather than a disabled control. `useAccess` is undefined
+  // without a Session; managed chat submits only after the Host creates one.
   const promptDenied = useAccess('session/prompt') === false
   const cancelDenied = useAccess('session/cancel') === false
   const uploadDenied = useAccess('fileUploads/upload') === false
@@ -78,10 +84,9 @@ export const InputBar = memo(function InputBar({
   const planActive = useProjection('plan', plan => plan !== undefined && (plan.pending ? !plan.active : plan.active))
   // Absent (undefined: no frame yet) and cleared (null) both mean no goal.
   const hasGoal = useProjection('goal', goal => goal != null)
-  // Session-maybe: the machine faces are absent together while no session is
-  // current; the bar renders the same DOM inert instead of a parallel tree.
-  const live = input !== undefined && keyboard !== undefined && inputActions !== undefined
-  const draft = input?.draft ?? ''
+  // Session-maybe: a managed chat can stage plain text before machine faces exist.
+  const live = staged || (input !== undefined && keyboard !== undefined && inputActions !== undefined)
+  const draft = staged ? stagedDraft : input?.draft ?? ''
   const editor = keyboard?.editor ?? null
   const attachments = useMemo(
     () => input === undefined || resolveDraftAttachments === undefined ? [] : resolveDraftAttachments(input.attachmentIds),
@@ -105,6 +110,25 @@ export const InputBar = memo(function InputBar({
     setToast({ seq: toastSeq.current, text })
   }, [])
   const dismissToast = useCallback(() => { setToast(null) }, [])
+  const createManagedChat = useCallback((submit: boolean, control?: 'commands' | 'permission' | 'model') => {
+    if (startManagedChat === undefined || creatingRef.current || (submit && stagedDraft.trim() === '')) return
+    creatingRef.current = true
+    pendingControl.current = control ?? null
+    setControlTarget(undefined)
+    setCreating(true)
+    void startManagedChat(stagedDraft, submit).then(id => {
+      if (id !== undefined) {
+        setStagedDraft('')
+        setControlTarget(id)
+      } else pendingControl.current = null
+    }).catch((error: unknown) => {
+      pendingControl.current = null
+      showToast(error instanceof Error ? error.message : '创建会话失败，请重试')
+    }).finally(() => {
+      creatingRef.current = false
+      setCreating(false)
+    })
+  }, [startManagedChat, stagedDraft, showToast])
   // The deployment's image-intake limits (absent while no attachment service
   // is composed — the pre-check below then defers entirely to the host).
   const imageLimits = useProjection('imageLimits')
@@ -143,6 +167,24 @@ export const InputBar = memo(function InputBar({
   }, [])
   const cardRef = useRef<HTMLDivElement | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    if (staged || sessionId === undefined || sessionId !== controlTarget || pendingControl.current === null) return
+    const control = pendingControl.current
+    const open = () => {
+      const button = [...(cardRef.current?.querySelectorAll<HTMLButtonElement>('button') ?? [])]
+        .find(item => !item.disabled && (control === 'commands'
+          ? item.getAttribute('aria-label') === t('input.commands')
+          : item.hasAttribute(control === 'permission' ? 'data-composer-permission-trigger' : 'data-composer-model-trigger')))
+      if (!button || pendingControl.current !== control) return
+      pendingControl.current = null
+      button.click()
+    }
+    const observer = new MutationObserver(open)
+    if (cardRef.current) observer.observe(cardRef.current, { subtree: true, childList: true, attributes: true })
+    const timer = window.setTimeout(() => { pendingControl.current = null; observer.disconnect() }, 8000)
+    open()
+    return () => { window.clearTimeout(timer); observer.disconnect() }
+  }, [staged, sessionId, controlTarget, t])
 
   // A continuable child without its live parent cannot accept human input,
   // but its independent Stop below stays available while it runs.
@@ -152,7 +194,7 @@ export const InputBar = memo(function InputBar({
   // inert no-workspace state, the machine faces absent (no session), or a
   // parent-offline continuable child. An owner block also disables input;
   // adjudicating and submitting render read-only so the draft stays visible.
-  const disabled = removed || inert || !live || blocked !== undefined || parentOffline
+  const disabled = removed || inert || !live || blocked !== undefined || parentOffline || creating
   const locked = disabled
   // The model seat is the ONE control a block leaves live: every block this
   // contract has is cleared by choosing a model, so locking it too would leave
@@ -169,7 +211,7 @@ export const InputBar = memo(function InputBar({
   const editable = live && !locked && !machineBusy
   const steeringAvailable = subagent === null || subagent.address.mode === 'continuable'
   const canSteerQueue = !locked && !machineBusy && !commandMenuOpen && empty && running && steeringAvailable
-    && input.queue.length > 0
+    && (input?.queue.length ?? 0) > 0
 
   useEffect(() => {
     if (input === undefined || inputActions === undefined) return
@@ -355,6 +397,10 @@ export const InputBar = memo(function InputBar({
       stopAction?.()
       return
     }
+    if (staged) {
+      createManagedChat(true)
+      return
+    }
     if (keyboard === undefined) return // absent machine: the button is disabled
     /* v8 ignore next -- defensive: the primary button is disabled for empty, disabled, and pending-upload states. */
     if (!empty && !disabled && !machineBusy && !uploadsPending) keyboard.submit(primarySubmitMode, 'click')
@@ -445,6 +491,14 @@ export const InputBar = memo(function InputBar({
         <DraftEditor
           classNames={css}
           editor={editor}
+          standalone={staged}
+          onStandaloneInput={staged ? event => { setStagedDraft(event.currentTarget.innerText) } : undefined}
+          onStandaloneKeyDown={staged ? event => {
+            if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+              event.preventDefault()
+              createManagedChat(true)
+            }
+          } : undefined}
           scrollRef={scrollRef}
           editable={editable}
           editorDisabled={editorDisabled}
@@ -466,9 +520,9 @@ export const InputBar = memo(function InputBar({
                 aria-label={t('input.commands')}
                 aria-haspopup="listbox"
                 aria-expanded={commandMenuOpen}
-                disabled={locked || toggleCommandMenu === undefined}
+                disabled={locked || (!staged && toggleCommandMenu === undefined)}
                 onMouseDown={keepFocus}
-                onClick={onToggleCommandMenu}
+                onClick={staged ? () => { createManagedChat(false, 'commands') } : onToggleCommandMenu}
               >
                 <IconPlusOutlineMedium size={14} />
               </ActionButton>
@@ -482,7 +536,9 @@ export const InputBar = memo(function InputBar({
               onChange={onPickFiles}
             />
             <div className={css.modes}>
-              {sessionId === undefined ? null : renderSlot('conversation.input.permission', { locked })}
+              {staged
+                ? renderSlot('conversation.input.staged.permission', { locked, activate: () => { createManagedChat(false, 'permission') } })
+                : sessionId === undefined ? null : renderSlot('conversation.input.permission', { locked })}
               {sessionId === undefined ? null : renderSlot('conversation.input.plan', { locked })}
             </div>
             {input === undefined || sessionId === undefined
@@ -494,7 +550,9 @@ export const InputBar = memo(function InputBar({
               {input === undefined || sessionId === undefined
                 ? null
                 : renderSlot('conversation.input.right', {})}
-              {sessionId === undefined ? null : renderSlot('conversation.input.model', { locked: modelSeatLocked })}
+              {staged
+                ? renderSlot('conversation.input.staged.model', { locked, activate: () => { createManagedChat(false, 'model') } })
+                : sessionId === undefined ? null : renderSlot('conversation.input.model', { locked: modelSeatLocked })}
             </div>
             {input === undefined || sessionId === undefined ? null : <div className={activity ? css.activityExpanded : css.activity}>
               {renderSlot('conversation.input.activity', { locked, onActiveChange: setActivity })}

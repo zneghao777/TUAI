@@ -34,7 +34,9 @@ test('代理路径 RPC、MUX、上传下载，切换另一 Host 不串线', asyn
     second = await fixtureHost()
     await page.goto(second.login)
     await expect(page.locator('[contenteditable="true"][role="textbox"]')).toHaveText('')
-    await expect(page.getByRole('tree', { name: '会话' })).not.toContainText('代理路径消息')
+    await expect(page.getByRole('navigation', { name: '聊天记录' })).not.toContainText(
+      '代理路径消息',
+    )
     await page.goto(proxy.base)
     await expect(page.locator('[contenteditable="true"][role="textbox"]')).toHaveText(
       '第一个 Host 的草稿',

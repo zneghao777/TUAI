@@ -73,7 +73,7 @@ export async function loadHostSettings(paths: HostPaths): Promise<HostSettings> 
       version: 1,
       hostId: randomUUID(),
       profile: 'production',
-      defaultPermissionPreset: 'workspace-write',
+      defaultPermissionPreset: 'readonly',
       credentialReferences: {},
     }
     const temporary = `${paths.hostConfig}.${randomUUID()}.tmp`
