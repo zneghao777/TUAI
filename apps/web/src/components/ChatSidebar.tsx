@@ -13,6 +13,7 @@ import {
   IconSearchOutlineRegular,
   IconTrashOutlineRegular,
   IconWarningOutlineRegular,
+  IconFolderOpenOutlineRegular,
   Menu,
   Toast,
   relativeTime,
@@ -25,6 +26,7 @@ import { WorkspaceArchiveError } from '@deepseek-ai/dsh-api-workspace-controller
 import { useSource } from '../bindings'
 import { AppClient, describe, unwrap } from '../model/client'
 import { Button } from './kit'
+import { FILES_PANEL } from './FileLibrary'
 import s from '../App.module.css'
 
 type Target = { id: SessionId; title: string }
@@ -36,6 +38,7 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
   const statuses = useSource(ctx.uiSession.sessionStatus)
   const workspaces = useSource(ctx.workspaces.list)
   const connection = useSource(client.connection.state)
+  const panel = useSource(ctx.layout.panelInfo)
   const [rename, setRename] = useState<Target>()
   const [title, setTitle] = useState('')
   const [confirm, setConfirm] = useState<Target & { action: 'delete' | 'archive' }>()
@@ -169,6 +172,17 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
                 <IconAgentPresetOutlineRegular size={18} aria-hidden="true" />
                 我的BOT
               </Button>
+              <Button
+                className="tz-chat-feature"
+                aria-current={panel.activePanelId === FILES_PANEL ? 'page' : undefined}
+                onClick={() => {
+                  ctx.layout.selectPanel(FILES_PANEL)
+                  if (window.matchMedia('(max-width: 600px)').matches) ctx.layout.toggleSidebar()
+                }}
+              >
+                <IconFolderOpenOutlineRegular size={18} aria-hidden="true" />
+                文件
+              </Button>
             </div>
             <div className="tz-chat-header">
               <span>我的聊天</span>
@@ -204,7 +218,7 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
                   key={id}
                   target={target}
                   updatedAt={summary.updatedAt}
-                  selected={id === current}
+                  selected={panel.activePanelId === null && id === current}
                   statusLabel={statusLabel}
                   pinned={pinned.has(id)}
                   disabled={busy || connection !== 'connected'}

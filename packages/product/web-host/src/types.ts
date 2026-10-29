@@ -44,3 +44,14 @@ export interface ArtifactInfo {
   /** Safe response media type. */
   mediaType: string
 }
+
+/** A workspace file whose creation is supported by a persisted Session event. */
+export interface LibraryFile {
+  sessionId: import('@deepseek-ai/dsh-session').SessionId
+  path: string
+  name: string
+  kind: 'document' | 'image'
+  bytes: number
+  createdAt: number | null
+  version: string
+}

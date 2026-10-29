@@ -11,6 +11,7 @@ import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import { Button as HeroButton } from '@heroui/react'
 import { ChatSidebar } from './components/ChatSidebar'
+import { FILES_PANEL, FileLibrary } from './components/FileLibrary'
 import { CursorGlow } from './components/CursorGlow'
 import { ModelPicker } from './components/ModelPicker'
 import { Icon } from './components/kit'
@@ -79,6 +80,9 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     resetTheme = ctx.theme.overrideTokens('tianzhiai', semanticTokens)
   })
   const disposers = [
+    ctx.slots.inject('main', () =>
+      ctx.slots.register({ name: 'main', key: FILES_PANEL }, () => <FileLibrary client={client} />),
+    ),
     ctx.commandUi.hideMenuEntries(['goal', 'plan', 'feedback', 'export']),
     ctx.slots.inject('settings.general.item', () =>
       ctx.slots.register(

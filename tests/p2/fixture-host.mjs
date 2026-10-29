@@ -103,6 +103,25 @@ class ScenarioModel extends MockAdapter {
         })
       return
     }
+    if (requestText.includes('TZ083')) {
+      const step = messages
+        .slice(messages.lastIndexOf(request))
+        .filter((message) => message.role === 'tool').length
+      if (step === 0)
+        yield* toolCallResponse(crypto.randomUUID(), 'write', {
+          file_path: '测试文档.md',
+          content: '# 测试文档\n\n这是文件页验收内容。',
+        })
+      else if (step === 1)
+        yield* toolCallResponse(crypto.randomUUID(), 'bash', {
+          description: '生成测试图片',
+          command: 'cp .seed.png 测试图片.png',
+        })
+      else if (step === 2)
+        yield* toolCallResponse(crypto.randomUUID(), 'publish_file', { file_path: '测试图片.png' })
+      else yield* textResponse('TZ083 文件已生成。')
+      return
+    }
     if (requestText.includes('TZ064')) {
       const step = messages
         .slice(messages.lastIndexOf(request))
@@ -273,6 +292,23 @@ export async function fixtureHost(options = {}) {
             await writeFile(join(cwd, 'package.json'), sample, { flag: 'wx' }).catch((error) => {
               if (error.code !== 'EEXIST') throw error
             })
+          if (options.fileLibrary && cwd)
+            await writeFile(
+              join(cwd, '.seed.png'),
+              Buffer.from(
+                'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=',
+                'base64',
+              ),
+              { flag: 'wx' },
+            ).catch((error) => {
+              if (error.code !== 'EEXIST') throw error
+            })
+          if (options.fileLibrary && cwd)
+            await writeFile(join(cwd, '未登记.md'), '不是本次交付的文件', { flag: 'wx' }).catch(
+              (error) => {
+                if (error.code !== 'EEXIST') throw error
+              },
+            )
         })
         if (options.nested) {
           for (const fiber of [...(ctx.registry.get(NativeExecutor)?.fibers ?? [])])

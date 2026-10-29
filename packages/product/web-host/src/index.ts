@@ -12,6 +12,7 @@ import { TYPERT as contribution12 } from '@deepseek-ai/dsh-api-workspace-files/t
 import { TYPERT as contribution14 } from '@deepseek-ai/dsh-session-reference/typert'
 import { ManagedSessionController, ManagedWorkspaceController } from './managed-workspaces.ts'
 import { ConversationTrash } from './conversation-trash.ts'
+import { FileLibraryDeletions } from './file-library-deletions.ts'
 import { TYPERT as contribution11 } from '@deepseek-ai/dsh-api-workspace-controller/typert'
 import { mountChatSettings } from './chat-settings.ts'
 import { TYPERT as contribution10 } from '@deepseek-ai/dsh-api-settings-controller/typert'
@@ -49,9 +50,12 @@ import Uploads from '@deepseek-ai/dsh-client-file-upload'
 import type {} from '@tianzhiai/agent-runtime'
 
 import { entries, download } from './artifacts.ts'
+import { deleteVerifiedFile, verifiedFileCandidates } from './file-candidates.ts'
+import { basename, relative } from 'node:path'
 import type { SessionId } from '@deepseek-ai/dsh-session'
 import type {
   ArtifactInfo,
+  LibraryFile,
   HostStatus,
   ModelProvidersState,
   SaveModelProvider,
@@ -74,6 +78,7 @@ export class PlatformService extends TypertRemoteService {
     'attachments',
     'modelManager',
     'conversationTrash',
+    'fileLibraryDeletions',
   ]
   constructor(ctx: Context) {
     super(ctx, 'tianzhiaiPlatform', { namespace: 'platform' })
@@ -98,6 +103,65 @@ export class PlatformService extends TypertRemoteService {
   @Remote
   async artifacts(sessionId: SessionId): Promise<ArtifactInfo[]> {
     return (await entries(this.ctx, sessionId)).map((entry) => entry.info)
+  }
+  /** List only files whose creation can be traced to a successful tool result. */
+  @Remote
+  async libraryFiles(signal: AbortSignal): Promise<LibraryFile[]> {
+    const sessions = await this.ctx.sessionQuery.listSessions(signal)
+    const items: LibraryFile[] = []
+    const seen = new Set<string>()
+    for (const { header } of sessions) {
+      signal.throwIfAborted()
+      if (!header.cwd || this.ctx.conversationTrash.has(header.id)) continue
+      using observation = await this.ctx.sessionQuery.observeSession(header.id, {
+        projectionMode: 'none',
+        signal,
+      })
+      const files = await verifiedFileCandidates(observation.events, header.cwd)
+      for (const file of files) {
+        if (this.ctx.fileLibraryDeletions.has(file.path, file.sourceId)) continue
+        if (seen.has(file.path)) continue
+        seen.add(file.path)
+        items.push({
+          sessionId: header.id,
+          path: relative(header.cwd, file.path),
+          name: basename(file.path),
+          kind: file.kind,
+          bytes: file.bytes,
+          createdAt: file.createdAt,
+          version: file.version,
+        })
+      }
+    }
+    return items
+  }
+  /** Delete only an unchanged file with a successful create event in its Session. */
+  @Remote
+  async deleteLibraryFile(request: {
+    sessionId: SessionId
+    path: string
+    version: string
+  }): Promise<void> {
+    if (this.ctx.conversationTrash.has(request.sessionId)) throw new Error('会话已删除')
+    const sessions = await this.ctx.sessionQuery.listSessions()
+    const header = sessions.find((entry) => entry.header.id === request.sessionId)?.header
+    if (!header?.cwd) throw new Error('会话工作区不可用')
+    using observation = await this.ctx.sessionQuery.observeSession(header.id, {
+      projectionMode: 'none',
+    })
+    const files = await verifiedFileCandidates(observation.events, header.cwd)
+    const candidate = files.find((file) => relative(header.cwd!, file.path) === request.path)
+    if (!candidate) throw new Error('文件不存在或没有可验证的会话来源')
+    if (this.ctx.fileLibraryDeletions.has(candidate.path, candidate.sourceId))
+      throw new Error('文件已删除')
+    await deleteVerifiedFile(candidate, header.cwd, request.version)
+    try {
+      await this.ctx.fileLibraryDeletions.add(candidate.path, candidate.sourceId)
+    } catch (error) {
+      throw new Error('原文件已删除，但删除记录保存失败；请刷新核对，不要重复删除', {
+        cause: error,
+      })
+    }
   }
   /** Return public Host facts, never model credentials. */
   @Remote
@@ -175,6 +239,7 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
   await ctx.plugin(SessionReferences)
   await ctx.plugin(Uploads)
   await ctx.plugin(ConversationTrash)
+  await ctx.plugin(FileLibraryDeletions)
   ctx.inject(['typertGateway', 'conversationTrash'], (scope) => {
     scope.effect(() =>
       scope.typertGateway.guard(({ args }) => {

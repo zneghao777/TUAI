@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { createdFiles } from '../../packages/product/web-host/src/file-provenance.ts'
-import { verifiedFileCandidates } from '../../packages/product/web-host/src/file-candidates.ts'
-import { mkdtemp, mkdir, writeFile, symlink, rm } from 'node:fs/promises'
+import {
+  deleteVerifiedFile,
+  verifiedFileCandidates,
+} from '../../packages/product/web-host/src/file-candidates.ts'
+import { mkdtemp, mkdir, writeFile, symlink, rm, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -15,7 +18,13 @@ const result = (id: string, path: string, extra: object = {}) => ({
 describe('file library provenance', () => {
   it('accepts only a successful created document inside the workspace', () => {
     expect(createdFiles([call('a'), result('a', '/workspace/report.md')], '/workspace')).toEqual([
-      { path: '/workspace/report.md', kind: 'document', createdAt: 123 },
+      {
+        path: '/workspace/report.md',
+        kind: 'document',
+        createdAt: 123,
+        sourceId: 'a',
+        sourceKind: 'create',
+      },
     ])
   })
 
@@ -46,7 +55,46 @@ describe('file library provenance', () => {
         [call('a'), result('a', '/workspace/a.PNG'), call('b'), result('b', '/workspace/a.PNG')],
         '/workspace',
       ),
-    ).toEqual([{ path: '/workspace/a.PNG', kind: 'image', createdAt: 123 }])
+    ).toEqual([
+      {
+        path: '/workspace/a.PNG',
+        kind: 'image',
+        createdAt: 123,
+        sourceId: 'b',
+        sourceKind: 'create',
+      },
+    ])
+  })
+
+  it('accepts an explicitly published image and rejects a failed publication', () => {
+    const publish = (id: string) => ({
+      type: 'tool/call',
+      data: { name: 'publish_file', callId: id },
+    })
+    expect(
+      createdFiles(
+        [
+          publish('a'),
+          result('a', '/workspace/image.png', {
+            meta: { operation: 'publish', path: '/workspace/image.png' },
+          }),
+          publish('b'),
+          result('b', '/workspace/bad.png', {
+            message: { toolCallId: 'b', isError: true },
+            meta: { operation: 'publish', path: '/workspace/bad.png' },
+          }),
+        ],
+        '/workspace',
+      ),
+    ).toEqual([
+      {
+        path: '/workspace/image.png',
+        kind: 'image',
+        createdAt: 123,
+        sourceId: 'a',
+        sourceKind: 'publish',
+      },
+    ])
   })
 
   it('excludes missing files and symlinks that escape the workspace', async () => {
@@ -71,8 +119,35 @@ describe('file library provenance', () => {
         workspace,
       )
       expect(files).toEqual([
-        { path: join(workspace, 'report.md'), kind: 'document', createdAt: 123, bytes: 5 },
+        {
+          path: join(workspace, 'report.md'),
+          kind: 'document',
+          createdAt: 123,
+          sourceId: 'a',
+          sourceKind: 'create',
+          bytes: 5,
+          version: expect.any(String),
+        },
       ])
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
+  it('refuses a stale deletion and removes only the verified file', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'tianzhi-delete-'))
+    try {
+      const path = join(root, 'report.md')
+      await writeFile(path, 'one')
+      const events = [call('a'), result('a', path)]
+      const [old] = await verifiedFileCandidates(events, root)
+      expect(old).toBeDefined()
+      await writeFile(path, 'updated')
+      await expect(deleteVerifiedFile(old!, root, old!.version)).rejects.toThrow('文件已变化')
+      expect(await readFile(path, 'utf8')).toBe('updated')
+      const [current] = await verifiedFileCandidates(events, root)
+      await deleteVerifiedFile(current!, root, current!.version)
+      await expect(readFile(path)).rejects.toMatchObject({ code: 'ENOENT' })
     } finally {
       await rm(root, { recursive: true, force: true })
     }

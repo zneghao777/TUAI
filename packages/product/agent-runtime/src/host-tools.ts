@@ -1,11 +1,11 @@
 import * as SearchTools from '@deepseek-ai/dsh-tool-fs-search'
 import * as TodoTools from '@deepseek-ai/dsh-tool-todo'
 import { realpathSync, existsSync, lstatSync } from 'node:fs'
-import { isAbsolute, relative } from 'node:path'
+import { extname, isAbsolute, relative } from 'node:path'
 import { join } from 'node:path'
 import { AsyncLocalStorage } from 'node:async_hooks'
 import { sessionDir } from '@deepseek-ai/dsh-spill-local'
-import type { ToolExecution } from '@deepseek-ai/dsh-tools'
+import { defineTool, type ToolExecution } from '@deepseek-ai/dsh-tools'
 import type { Context } from '@deepseek-ai/cordis'
 import { SandboxedFileSystem } from '@deepseek-ai/dsh-fs-sandbox'
 import { FsError, type FsTarget } from '@deepseek-ai/dsh-fs'
@@ -83,9 +83,68 @@ export async function mountHostTools(ctx: Context) {
   await ctx.plugin(ShellEnvironment, { dshHome: ctx.tianzhiaiHost.paths.data })
   await ctx.plugin({
     name: 'tianzhiai-tool-owner',
-    inject: ['tools', 'fs', 'workingDirectory'],
+    inject: ['tools', 'fs', 'workingDirectory', 'systemPrompt'],
     apply(ctx: Context) {
       ctx.on('tools/execute', (exec, next) => toolOwner.run(exec, next))
+      ctx.systemPrompt.section({
+        name: 'tianzhiai:publish-file',
+        order: ctx.systemPrompt.getSectionOrder('TOOL_WRITE'),
+        text: ({ scope }) =>
+          ctx.tools.get('publish_file', scope) === undefined
+            ? ''
+            : 'When you deliver a document or image created in the current session, call publish_file with its workspace path so it appears in the file library. Do not publish unrelated existing files.',
+      })
+      ctx.tools.register(
+        defineTool({
+          name: 'publish_file',
+          description:
+            'Register a document or image produced during this session for the file library. Does not alter file contents.',
+          parameters: {
+            file_path: {
+              type: 'string',
+              required: true,
+              description: 'Path of the completed file inside the current session workspace.',
+            },
+          },
+          output: {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              properties: { path: { type: 'string', required: true } },
+            },
+            render: (_args, value) => [{ type: 'text', text: `已登记文件：${value.path}` }],
+            presentationMeta: (_args, value) => ({ operation: 'publish', path: value.path }),
+          },
+          async execute(args, exec) {
+            if (!exec.agent || !args.file_path.trim()) throw new Error('文件登记需要会话和文件路径')
+            const cwd = await ctx.workingDirectory.ensure(exec.agent, exec.signal)
+            const root = realpathSync(exec.agent.session.header.cwd ?? cwd)
+            const target = await ctx.fs.resolve(args.file_path, { cwd, signal: exec.signal })
+            const path = realpathSync(ctx.fs.processPath(target))
+            if (!within(root, path) || path === root) throw new Error('文件必须位于当前会话工作区')
+            if (
+              ![
+                '.png',
+                '.jpg',
+                '.jpeg',
+                '.webp',
+                '.gif',
+                '.md',
+                '.txt',
+                '.pdf',
+                '.docx',
+                '.xlsx',
+                '.pptx',
+                '.csv',
+              ].includes(extname(path).toLowerCase())
+            )
+              throw new Error('仅支持登记文档和图片')
+            const info = await ctx.fs.stat(target, exec.signal)
+            if (!info || info.type !== 'file') throw new Error('文件不存在或不是普通文件')
+            return { path }
+          },
+        }),
+      )
       const searched = new WeakMap<ToolExecution, string>()
       ctx.on('tools/pre-execute', async (exec, next) => {
         if (!['glob', 'grep'].includes(exec.name)) return next()
