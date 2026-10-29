@@ -116,6 +116,12 @@
   height: 100%;
   object-fit: cover;
 }
+.tz-library-image-card {
+  aspect-ratio: 1;
+}
+.tz-library-image-card .tz-library-thumb {
+  height: 100%;
+}
 .tz-library-paper {
   width: 85%;
   height: 90%;
@@ -191,6 +197,93 @@
 }
 .tz-library-backdrop {
   background: #0007;
+}
+.tz-library-image-backdrop {
+  background: rgba(18, 17, 17, 0.96);
+}
+.tz-library-image-container {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  padding: 0;
+}
+.tz-library-image-viewer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  overflow: hidden;
+  color: #fff;
+  background: #171717;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.tz-image-stage {
+  position: absolute;
+  inset: 16px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
+}
+.tz-image-stage img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.tz-image-stage p {
+  max-width: min(90%, 440px);
+  text-align: center;
+  color: #fff;
+}
+.tz-library-image-viewer .tz-image-action {
+  position: absolute;
+  z-index: 1;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+}
+.tz-library-image-viewer .tz-image-action:hover {
+  background: rgba(255, 255, 255, 0.27);
+}
+.tz-library-image-viewer .tz-image-action:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.tz-image-close {
+  top: 12px;
+  left: 12px;
+}
+.tz-image-tools {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+.tz-image-tools .tz-image-action {
+  position: static;
+}
+.tz-image-previous,
+.tz-image-next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.tz-image-previous {
+  left: 12px;
+}
+.tz-image-next {
+  right: 12px;
 }
 .tz-library-preview-container {
   width: min(1000px, 92vw);
@@ -279,6 +372,9 @@
   }
   .tz-library-preview-container {
     width: 96vw;
+  }
+  .tz-image-stage {
+    inset: 64px 12px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

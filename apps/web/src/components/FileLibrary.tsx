@@ -5,6 +5,9 @@ import {
   IconTrashOutlineRegular,
   IconCloseOutlineRegular,
   IconCheckOutlineRegular,
+  IconDownloadOutlineRegular,
+  IconChevronLeftOutlineRegular,
+  IconChevronRightOutlineRegular,
   Menu,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import { brandString } from '@deepseek-ai/dsh-brand'
@@ -145,10 +148,16 @@ function PreviewDialog({
   client,
   file,
   onClose,
+  onPrevious,
+  onNext,
+  onRemove,
 }: {
   client: AppClient
   file: LibraryFile
   onClose(): void
+  onPrevious?: () => void
+  onNext?: () => void
+  onRemove(): void
 }) {
   const [preview, setPreview] = useState<Preview>()
   const [error, setError] = useState('')
@@ -156,8 +165,31 @@ function PreviewDialog({
   const [lifetime] = useState(() => new AbortController())
   useEffect(() => () => lifetime.abort(), [lifetime])
   useEffect(() => {
+    if (file.kind !== 'image') return
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopPropagation()
+        onClose()
+        return
+      }
+      if (event.key === 'ArrowLeft' && onPrevious) {
+        event.preventDefault()
+        onPrevious()
+      }
+      if (event.key === 'ArrowRight' && onNext) {
+        event.preventDefault()
+        onNext()
+      }
+    }
+    window.addEventListener('keydown', handleKey, true)
+    return () => window.removeEventListener('keydown', handleKey, true)
+  }, [file.kind, onClose, onPrevious, onNext])
+  useEffect(() => {
     const controller = new AbortController()
     let url: string | undefined
+    setPreview(undefined)
+    setError('')
     if (file.source === 'attachment') {
       void readAttachment(file, controller.signal)
         .then((blob) => {
@@ -244,6 +276,85 @@ function PreviewDialog({
       if (!lifetime.signal.aborted) setDownloading(false)
     }
   }
+  if (file.kind === 'image') {
+    return (
+      <Modal.Backdrop
+        isOpen
+        onOpenChange={(open) => {
+          if (!open) onClose()
+        }}
+        className="tz-library-image-backdrop"
+      >
+        <Modal.Container className="tz-library-image-container">
+          <Modal.Dialog aria-label={`预览 ${file.name}`} className="tz-library-image-viewer">
+            <Button
+              variant="ghost"
+              isIconOnly
+              aria-label="关闭预览"
+              className="tz-image-action tz-image-close"
+              onPress={onClose}
+            >
+              <IconCloseOutlineRegular size={18} />
+            </Button>
+            <div className="tz-image-tools">
+              <Button
+                variant="ghost"
+                isIconOnly
+                aria-label="删除图片"
+                className="tz-image-action"
+                onPress={onRemove}
+              >
+                <IconTrashOutlineRegular size={18} />
+              </Button>
+              <Button
+                variant="ghost"
+                isIconOnly
+                aria-label="下载图片"
+                className="tz-image-action"
+                isDisabled={downloading}
+                onPress={() => void download()}
+              >
+                <IconDownloadOutlineRegular size={18} />
+              </Button>
+            </div>
+            {onPrevious && (
+              <Button
+                variant="ghost"
+                isIconOnly
+                aria-label="上一张图片"
+                className="tz-image-action tz-image-previous"
+                onPress={onPrevious}
+              >
+                <IconChevronLeftOutlineRegular size={20} />
+              </Button>
+            )}
+            {onNext && (
+              <Button
+                variant="ghost"
+                isIconOnly
+                aria-label="下一张图片"
+                className="tz-image-action tz-image-next"
+                onPress={onNext}
+              >
+                <IconChevronRightOutlineRegular size={20} />
+              </Button>
+            )}
+            <div className="tz-image-stage">
+              {error ? (
+                <p role="alert">{error}</p>
+              ) : !preview ? (
+                <Spinner aria-label="正在加载预览" />
+              ) : preview.kind === 'url' ? (
+                <img src={preview.value} alt={file.name} onError={() => setError('图片无法预览')} />
+              ) : (
+                <p role="alert">图片无法预览</p>
+              )}
+            </div>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
+    )
+  }
   return (
     <Modal.Backdrop
       isOpen
@@ -277,11 +388,7 @@ function PreviewDialog({
             ) : !preview ? (
               <Spinner aria-label="正在加载预览" />
             ) : preview.kind === 'url' ? (
-              file.kind === 'image' ? (
-                <img src={preview.value} alt={file.name} />
-              ) : (
-                <iframe src={preview.value} title={file.name} sandbox="" />
-              )
+              <iframe src={preview.value} title={file.name} sandbox="" />
             ) : preview.kind === 'text' ? (
               <article>
                 {suffix(file.name) === 'md' ? (
@@ -363,6 +470,9 @@ export function FileLibrary({ client }: { client: AppClient }) {
     [files, kind, sort, opened],
   )
   const allSelected = visible.length > 0 && visible.every((file) => selected.has(itemKey(file)))
+  const previewIndex = preview
+    ? visible.findIndex((file) => itemKey(file) === itemKey(preview))
+    : -1
   const open = (file: LibraryFile) => {
     const next = { ...opened, [itemKey(file)]: Date.now() }
     setOpened(next)
@@ -529,9 +639,14 @@ export function FileLibrary({ client }: { client: AppClient }) {
             return (
               <button
                 type="button"
-                className="tz-library-card"
+                className={`tz-library-card${file.kind === 'image' ? ' tz-library-image-card' : ''}`}
                 data-selected={chosen || undefined}
                 key={key}
+                aria-label={
+                  file.kind === 'image'
+                    ? `${file.name}，${sessions.byId[file.sessionId]?.title || '会话'}`
+                    : undefined
+                }
                 aria-pressed={selecting ? chosen : undefined}
                 onClick={() => {
                   if (!selecting) return open(file)
@@ -549,20 +664,41 @@ export function FileLibrary({ client }: { client: AppClient }) {
                     {chosen ? <IconCheckOutlineRegular size={15} /> : null}
                   </span>
                 )}
-                <span className="tz-library-card-info">
-                  <FileTypeIcon path={file.name} size={23} />
-                  <span>
-                    <strong title={file.name}>{file.name}</strong>
-                    <small>{sessions.byId[file.sessionId]?.title || '会话'}</small>
+                {file.kind === 'document' && (
+                  <span className="tz-library-card-info">
+                    <FileTypeIcon path={file.name} size={23} />
+                    <span>
+                      <strong title={file.name}>{file.name}</strong>
+                      <small>{sessions.byId[file.sessionId]?.title || '会话'}</small>
+                    </span>
                   </span>
-                </span>
+                )}
               </button>
             )
           })}
         </div>
       )}
       {preview && (
-        <PreviewDialog client={client} file={preview} onClose={() => setPreview(undefined)} />
+        <PreviewDialog
+          client={client}
+          file={preview}
+          onClose={() => setPreview(undefined)}
+          onPrevious={
+            preview.kind === 'image' && previewIndex > 0
+              ? () => open(visible[previewIndex - 1]!)
+              : undefined
+          }
+          onNext={
+            preview.kind === 'image' && previewIndex >= 0 && previewIndex < visible.length - 1
+              ? () => open(visible[previewIndex + 1]!)
+              : undefined
+          }
+          onRemove={() => {
+            setSelected(new Set([itemKey(preview)]))
+            setPreview(undefined)
+            setConfirm(true)
+          }}
+        />
       )}
       {confirm && (
         <AlertDialog.Backdrop

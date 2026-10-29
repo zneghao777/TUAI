@@ -39,7 +39,7 @@ test('TZ-083 opens, previews and permanently deletes a generated document', asyn
     await page.screenshot({ path: 'reports/p2/tz083-files-sort.png' })
     await page.keyboard.press('Escape')
     await page.getByRole('tab', { name: '图片' }).click()
-    const image = page.locator('.tz-library-card').filter({ hasText: '测试图片.png' })
+    const image = page.getByRole('button', { name: /测试图片\.png/ })
     await expect(image).toBeVisible()
     await image.click()
     const previewImage = page.getByRole('dialog', { name: '预览 测试图片.png' }).getByRole('img')
@@ -111,15 +111,25 @@ test('sent user images appear in the library and remain in chat after removal', 
   let resumed: Awaited<ReturnType<typeof clientFor>> | undefined
   try {
     await page.goto(host.login)
-    await page.locator('input[type=file]').setInputFiles({
-      name: '用户图片.png',
-      mimeType: 'image/png',
-      buffer: Buffer.from(
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWNgZGIGAAAOAAeCcsnOAAAAAElFTkSuQmCC',
-        'base64',
-      ),
-    })
-    await expect(page.locator('[data-upload-state=ready]')).toBeVisible()
+    await page.locator('input[type=file]').setInputFiles([
+      {
+        name: '用户图片.png',
+        mimeType: 'image/png',
+        buffer: Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWNgZGIGAAAOAAeCcsnOAAAAAElFTkSuQmCC',
+          'base64',
+        ),
+      },
+      {
+        name: '第二张.png',
+        mimeType: 'image/png',
+        buffer: Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAEUlEQVR4nGP4z8AARAxg8j8AG/ID/fPnS7EAAAAASUVORK5CYII=',
+          'base64',
+        ),
+      },
+    ])
+    await expect(page.locator('[data-upload-state=ready]')).toHaveCount(2)
     const draftClient = await clientFor(host.runtime)
     const drafts = await draftClient.ctx.remote.platform.libraryFiles()
     expect(drafts.ok && drafts.value.some((entry) => entry.name === '用户图片.png')).toBe(false)
@@ -131,14 +141,28 @@ test('sent user images appear in the library and remain in chat after removal', 
     const id = host.runtime.ctx.sessions.list()[0].id
     await page.getByRole('button', { name: '文件', exact: true }).click()
     await page.getByRole('tab', { name: '图片' }).click()
-    const card = page.locator('.tz-library-card').filter({ hasText: '用户图片.png' })
+    const card = page.getByRole('button', { name: /用户图片\.png/ })
     await expect(card).toBeVisible()
+    await expect(card.locator('.tz-library-card-info')).toHaveCount(0)
     await card.click()
     const image = page.getByRole('dialog', { name: '预览 用户图片.png' }).getByRole('img')
     await expect
       .poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth))
       .toBeGreaterThan(0)
-    await page.getByRole('button', { name: '关闭预览' }).click()
+    await page.screenshot({ path: 'reports/p2/tz083-image-preview-desktop.png' })
+    await page.keyboard.press('ArrowRight')
+    await expect(page.getByRole('dialog', { name: '预览 第二张.png' })).toBeVisible()
+    await page.keyboard.press('ArrowLeft')
+    await expect(page.getByRole('dialog', { name: '预览 用户图片.png' })).toBeVisible()
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: '下载图片' }).click()
+    expect((await download).suggestedFilename()).toBe('用户图片.png')
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.screenshot({ path: 'reports/p2/tz083-image-preview-mobile.png' })
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('dialog', { name: '预览 用户图片.png' })).toHaveCount(0)
+    await page.setViewportSize({ width: 1440, height: 1000 })
     const client = await clientFor(host.runtime)
     const listed = await client.ctx.remote.platform.libraryFiles()
     expect(listed.ok).toBe(true)
@@ -160,9 +184,8 @@ test('sent user images appear in the library and remain in chat after removal', 
     await page.getByRole('button', { name: '文件', exact: true }).click()
     await page.getByRole('tab', { name: '图片' }).click()
     await expect(card).toBeVisible()
-    await page.getByRole('button', { name: '选择', exact: true }).click()
     await card.click()
-    await page.getByRole('button', { name: '删除', exact: true }).click()
+    await page.getByRole('button', { name: '删除图片', exact: true }).click()
     await expect(page.getByRole('alertdialog', { name: '删除文件' })).toContainText('附件会保留')
     await page.getByRole('button', { name: '移除', exact: true }).click()
     await expect(card).toHaveCount(0)
