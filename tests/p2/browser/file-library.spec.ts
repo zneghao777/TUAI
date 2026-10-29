@@ -81,6 +81,7 @@ test('TZ-083 opens, previews and permanently deletes a generated document', asyn
     expect(restoredImage).toBeDefined()
     const imageRequest = {
       sessionId: restoredImage!.sessionId,
+      source: 'workspace' as const,
       path: restoredImage!.path,
       version: restoredImage!.version,
     }
@@ -94,6 +95,94 @@ test('TZ-083 opens, previews and permanently deletes a generated document', asyn
     const deletedImage = await resumed.ctx.remote.platform.deleteLibraryFile(imageRequest)
     expect(deletedImage.ok).toBe(true)
     await expect(readFile(imagePath)).rejects.toMatchObject({ code: 'ENOENT' })
+  } finally {
+    await page.close()
+    await resumed?.dispose()
+    await reboot?.dispose()
+    await host.dispose()
+  }
+})
+
+test('sent user images appear in the library and remain in chat after removal', async ({
+  page,
+}) => {
+  const host = await fixtureHost()
+  let reboot: Awaited<ReturnType<typeof startWebHost>> | undefined
+  let resumed: Awaited<ReturnType<typeof clientFor>> | undefined
+  try {
+    await page.goto(host.login)
+    await page.locator('input[type=file]').setInputFiles({
+      name: '用户图片.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWNgZGIGAAAOAAeCcsnOAAAAAElFTkSuQmCC',
+        'base64',
+      ),
+    })
+    await expect(page.locator('[data-upload-state=ready]')).toBeVisible()
+    const draftClient = await clientFor(host.runtime)
+    const drafts = await draftClient.ctx.remote.platform.libraryFiles()
+    expect(drafts.ok && drafts.value.some((entry) => entry.name === '用户图片.png')).toBe(false)
+    await draftClient.dispose()
+    const input = page.locator('[contenteditable="true"][role="textbox"]')
+    await input.fill('请查看图片')
+    await input.press('Enter')
+    await expect(page.getByRole('img', { name: '用户图片.png' })).toBeVisible()
+    const id = host.runtime.ctx.sessions.list()[0].id
+    await page.getByRole('button', { name: '文件', exact: true }).click()
+    await page.getByRole('tab', { name: '图片' }).click()
+    const card = page.locator('.tz-library-card').filter({ hasText: '用户图片.png' })
+    await expect(card).toBeVisible()
+    await card.click()
+    const image = page.getByRole('dialog', { name: '预览 用户图片.png' }).getByRole('img')
+    await expect
+      .poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth))
+      .toBeGreaterThan(0)
+    await page.getByRole('button', { name: '关闭预览' }).click()
+    const client = await clientFor(host.runtime)
+    const listed = await client.ctx.remote.platform.libraryFiles()
+    expect(listed.ok).toBe(true)
+    if (!listed.ok) throw new Error(listed.error.message)
+    const item = listed.value.find((entry) => entry.name === '用户图片.png')
+    expect(item).toMatchObject({ sessionId: id, source: 'attachment', kind: 'image' })
+    if (!item?.artifactId) throw new Error('missing attachment identity')
+    await client.dispose()
+    await host.runtime.dispose()
+    reboot = await startWebHost({ port: 0 })
+    resumed = await clientFor(reboot)
+    const historical = await resumed.ctx.remote.platform.libraryFiles()
+    expect(historical.ok && historical.value.some((entry) => entry.name === '用户图片.png')).toBe(
+      true,
+    )
+    await page.goto(
+      reboot.ctx.connection.authenticatedUrl(`http://127.0.0.1:${reboot.ctx.webServer.port}/`),
+    )
+    await page.getByRole('button', { name: '文件', exact: true }).click()
+    await page.getByRole('tab', { name: '图片' }).click()
+    await expect(card).toBeVisible()
+    await page.getByRole('button', { name: '选择', exact: true }).click()
+    await card.click()
+    await page.getByRole('button', { name: '删除', exact: true }).click()
+    await expect(page.getByRole('alertdialog', { name: '删除文件' })).toContainText('附件会保留')
+    await page.getByRole('button', { name: '移除', exact: true }).click()
+    await expect(card).toHaveCount(0)
+    await page.locator(`[data-session-id="${id}"]`).click()
+    await expect(page.getByRole('img', { name: '用户图片.png' })).toBeVisible()
+    await page.close()
+    await resumed.dispose()
+    await reboot.dispose()
+    reboot = await startWebHost({ port: 0 })
+    resumed = await clientFor(reboot)
+    const restored = await resumed.ctx.remote.platform.libraryFiles()
+    expect(restored.ok).toBe(true)
+    if (!restored.ok) throw new Error(restored.error.message)
+    expect(restored.value.some((entry) => entry.name === '用户图片.png')).toBe(false)
+    const artifacts = await resumed.ctx.remote.platform.artifacts(id)
+    expect(artifacts.ok && artifacts.value.some((entry) => entry.id === item.artifactId)).toBe(true)
+    using observation = await reboot.ctx.sessionQuery.observeSession(id, { projectionMode: 'none' })
+    const message = observation.events.find((event) => event.type === 'user/message')!
+    const ref = message.data.content.find((block) => block.type === 'image')!.attachment
+    expect((await reboot.ctx.attachments.readImage(ref)).data.length).toBeGreaterThan(0)
   } finally {
     await page.close()
     await resumed?.dispose()

@@ -45,10 +45,12 @@ export interface ArtifactInfo {
   mediaType: string
 }
 
-/** A workspace file whose creation is supported by a persisted Session event. */
+/** A workspace output or an image referenced by a sent user message. */
 export interface LibraryFile {
   sessionId: import('@deepseek-ai/dsh-session').SessionId
+  source: 'workspace' | 'attachment'
   path: string
+  artifactId?: string
   name: string
   kind: 'document' | 'image'
   bytes: number

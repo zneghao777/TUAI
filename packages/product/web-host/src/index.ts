@@ -51,6 +51,7 @@ import type {} from '@tianzhiai/agent-runtime'
 
 import { entries, download } from './artifacts.ts'
 import { deleteVerifiedFile, verifiedFileCandidates } from './file-candidates.ts'
+import { userImageAttachments } from './user-image-attachments.ts'
 import { basename, relative } from 'node:path'
 import type { SessionId } from '@deepseek-ai/dsh-session'
 import type {
@@ -104,7 +105,7 @@ export class PlatformService extends TypertRemoteService {
   async artifacts(sessionId: SessionId): Promise<ArtifactInfo[]> {
     return (await entries(this.ctx, sessionId)).map((entry) => entry.info)
   }
-  /** List only files whose creation can be traced to a successful tool result. */
+  /** List traceable workspace outputs and images sent in user messages. */
   @Remote
   async libraryFiles(signal: AbortSignal): Promise<LibraryFile[]> {
     const sessions = await this.ctx.sessionQuery.listSessions(signal)
@@ -112,11 +113,28 @@ export class PlatformService extends TypertRemoteService {
     const seen = new Set<string>()
     for (const { header } of sessions) {
       signal.throwIfAborted()
-      if (!header.cwd || this.ctx.conversationTrash.has(header.id)) continue
+      if (this.ctx.conversationTrash.has(header.id)) continue
       using observation = await this.ctx.sessionQuery.observeSession(header.id, {
         projectionMode: 'none',
         signal,
       })
+      for (const image of userImageAttachments(observation.events)) {
+        const path = `attachment:${image.id}`
+        const deletionKey = JSON.stringify(['attachment', header.id, image.id])
+        if (this.ctx.fileLibraryDeletions.has(deletionKey, image.id)) continue
+        items.push({
+          sessionId: header.id,
+          source: 'attachment',
+          path,
+          artifactId: image.id,
+          name: image.name,
+          kind: 'image',
+          bytes: image.bytes,
+          createdAt: image.createdAt,
+          version: image.id,
+        })
+      }
+      if (!header.cwd) continue
       const files = await verifiedFileCandidates(observation.events, header.cwd)
       for (const file of files) {
         if (this.ctx.fileLibraryDeletions.has(file.path, file.sourceId)) continue
@@ -124,6 +142,7 @@ export class PlatformService extends TypertRemoteService {
         seen.add(file.path)
         items.push({
           sessionId: header.id,
+          source: 'workspace',
           path: relative(header.cwd, file.path),
           name: basename(file.path),
           kind: file.kind,
@@ -135,20 +154,32 @@ export class PlatformService extends TypertRemoteService {
     }
     return items
   }
-  /** Delete only an unchanged file with a successful create event in its Session. */
+  /** Remove an attachment from the library or delete a verified workspace output. */
   @Remote
   async deleteLibraryFile(request: {
     sessionId: SessionId
+    source: 'workspace' | 'attachment'
     path: string
     version: string
   }): Promise<void> {
     if (this.ctx.conversationTrash.has(request.sessionId)) throw new Error('会话已删除')
     const sessions = await this.ctx.sessionQuery.listSessions()
     const header = sessions.find((entry) => entry.header.id === request.sessionId)?.header
-    if (!header?.cwd) throw new Error('会话工作区不可用')
+    if (!header) throw new Error('会话不可用')
     using observation = await this.ctx.sessionQuery.observeSession(header.id, {
       projectionMode: 'none',
     })
+    if (request.source === 'attachment') {
+      const image = userImageAttachments(observation.events).find(
+        (item) => `attachment:${item.id}` === request.path && item.id === request.version,
+      )
+      if (!image) throw new Error('图片不存在或不属于此会话')
+      const deletionKey = JSON.stringify(['attachment', header.id, image.id])
+      if (this.ctx.fileLibraryDeletions.has(deletionKey, image.id)) throw new Error('图片已移除')
+      await this.ctx.fileLibraryDeletions.add(deletionKey, image.id)
+      return
+    }
+    if (request.source !== 'workspace' || !header.cwd) throw new Error('会话工作区不可用')
     const files = await verifiedFileCandidates(observation.events, header.cwd)
     const candidate = files.find((file) => relative(header.cwd!, file.path) === request.path)
     if (!candidate) throw new Error('文件不存在或没有可验证的会话来源')

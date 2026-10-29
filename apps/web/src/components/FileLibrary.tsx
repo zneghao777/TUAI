@@ -22,7 +22,15 @@ type Preview =
   | { kind: 'text'; value: string; eof: boolean }
   | { kind: 'url'; value: string }
   | { kind: 'unsupported' }
-const itemKey = (file: LibraryFile) => JSON.stringify([file.sessionId, file.path])
+const itemKey = (file: LibraryFile) => JSON.stringify([file.sessionId, file.source, file.path])
+const artifactUrl = (file: LibraryFile) =>
+  `api/artifact?${new URLSearchParams({ sessionId: file.sessionId, artifactId: file.artifactId ?? '' })}`
+async function readAttachment(file: LibraryFile, signal: AbortSignal): Promise<Blob> {
+  if (!file.artifactId) throw new Error('图片附件不可用')
+  const response = await fetch(artifactUrl(file), { signal })
+  if (!response.ok) throw new Error('图片附件不存在或无法读取')
+  return response.blob()
+}
 const suffix = (name: string) => name.split('.').at(-1)?.toLowerCase() ?? ''
 const isText = (name: string) => ['md', 'txt', 'csv'].includes(suffix(name))
 const imageType = (name: string) =>
@@ -85,7 +93,15 @@ function Thumb({ client, file }: { client: AppClient; file: LibraryFile }) {
     const controller = new AbortController()
     let url: string | undefined
     setValue(undefined)
-    if (file.kind === 'image' && file.bytes <= 8 * 1024 * 1024) {
+    if (file.source === 'attachment' && file.bytes <= 8 * 1024 * 1024) {
+      void readAttachment(file, controller.signal)
+        .then((blob) => {
+          if (controller.signal.aborted) return
+          url = URL.createObjectURL(blob)
+          setValue({ kind: 'url', value: url })
+        })
+        .catch(() => {})
+    } else if (file.kind === 'image' && file.bytes <= 8 * 1024 * 1024) {
       void client.ctx.remote.workspaceFiles
         .readBytes(file.sessionId, file.path, {}, controller.signal)
         .then(unwrap)
@@ -111,7 +127,7 @@ function Thumb({ client, file }: { client: AppClient; file: LibraryFile }) {
       controller.abort()
       if (url) URL.revokeObjectURL(url)
     }
-  }, [client, file.sessionId, file.path, file.name, file.kind, file.bytes, file.version, visible])
+  }, [client, file, visible])
   return (
     <div className="tz-library-thumb" ref={element} aria-hidden="true">
       {value?.kind === 'url' ? (
@@ -142,7 +158,17 @@ function PreviewDialog({
   useEffect(() => {
     const controller = new AbortController()
     let url: string | undefined
-    if (isText(file.name)) {
+    if (file.source === 'attachment') {
+      void readAttachment(file, controller.signal)
+        .then((blob) => {
+          if (controller.signal.aborted) return
+          url = URL.createObjectURL(blob)
+          setPreview({ kind: 'url', value: url })
+        })
+        .catch((e: unknown) => {
+          if (!controller.signal.aborted) setError(describe(e))
+        })
+    } else if (isText(file.name)) {
       void client.ctx.remote.workspaceFiles
         .read(file.sessionId, file.path, {}, controller.signal)
         .then(unwrap)
@@ -177,6 +203,11 @@ function PreviewDialog({
     }
   }, [client, file])
   const openInConversation = async () => {
+    if (file.source === 'attachment') {
+      client.ctx.uiWorkspace.openSession(file.sessionId)
+      onClose()
+      return
+    }
     const { fileAddressFor } = await import('@deepseek-ai/dsh-util-workspace-path')
     const cwd = client.ctx.sessions.list.getSnapshot().byId[file.sessionId]?.cwd
     client.ctx.uiWorkspace.openSession(file.sessionId)
@@ -187,16 +218,21 @@ function PreviewDialog({
     setDownloading(true)
     setError('')
     try {
-      const result = unwrap(
-        await client.ctx.remote.workspaceFiles.readBytes(
-          file.sessionId,
-          file.path,
-          {},
-          lifetime.signal,
-        ),
-      )
-      if (!result.eof || result.offset !== 0) throw new Error('未取得完整文件')
-      const url = URL.createObjectURL(new Blob([Uint8Array.from(result.data).buffer]))
+      let blob: Blob
+      if (file.source === 'attachment') blob = await readAttachment(file, lifetime.signal)
+      else {
+        const result = unwrap(
+          await client.ctx.remote.workspaceFiles.readBytes(
+            file.sessionId,
+            file.path,
+            {},
+            lifetime.signal,
+          ),
+        )
+        if (!result.eof || result.offset !== 0) throw new Error('未取得完整文件')
+        blob = new Blob([Uint8Array.from(result.data).buffer])
+      }
+      const url = URL.createObjectURL(blob)
       const anchor = document.createElement('a')
       anchor.href = url
       anchor.download = file.name
@@ -350,6 +386,7 @@ export function FileLibrary({ client }: { client: AppClient }) {
         unwrap(
           await client.ctx.remote.platform.deleteLibraryFile({
             sessionId: f.sessionId,
+            source: f.source,
             path: f.path,
             version: f.version,
           }),
@@ -538,12 +575,21 @@ export function FileLibrary({ client }: { client: AppClient }) {
           <AlertDialog.Container>
             <AlertDialog.Dialog aria-label="删除文件" className="tz-confirm-dialog">
               <AlertDialog.Heading>删除 {selected.size} 个文件？</AlertDialog.Heading>
-              <p>将永久删除工作区中的原文件，此操作无法恢复。会话消息中的附件不会删除。</p>
+              <p>
+                {files.some((file) => selected.has(itemKey(file)) && file.source === 'workspace')
+                  ? '将永久删除工作区中的原文件，此操作无法恢复。'
+                  : '将从文件页移除所选图片。'}
+                会话消息中的附件会保留。
+              </p>
               <Button variant="ghost" isDisabled={busy} onPress={() => setConfirm(false)}>
                 取消
               </Button>
               <Button variant="danger" isDisabled={busy} onPress={() => void remove()}>
-                {busy ? '正在删除…' : '永久删除'}
+                {busy
+                  ? '正在删除…'
+                  : files.some((file) => selected.has(itemKey(file)) && file.source === 'workspace')
+                    ? '永久删除'
+                    : '移除'}
               </Button>
             </AlertDialog.Dialog>
           </AlertDialog.Container>
