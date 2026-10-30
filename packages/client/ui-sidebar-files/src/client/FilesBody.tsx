@@ -19,6 +19,7 @@ import type {
 import {
   FileTypeIcon, IconFolderCloseRegular, IconFolderOpenRegular, IconRefreshOutlineRegular, Tooltip, classifyFileType,
   IconPauseOutlineRegular, IconPlayOutlineRegular, PathLabel,
+  IconChevronRightOutlineRegular, IconChevronDownOutlineRegular,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import { fileAddressFor } from '@deepseek-ai/dsh-util-workspace-path'
 import type { WorkspaceDirectoryEntry } from '@deepseek-ai/dsh-api-workspace-files/types'
@@ -86,6 +87,7 @@ function Entry({ parent, entry, tree }: { parent: string; entry: WorkspaceDirect
     return (
       <li className={css.item} data-files-entry="directory" data-files-path={path}>
         <ActionButton type="button" className={css.row} aria-expanded={expanded} onClick={() => { tree.onToggle(parent, path) }}>
+          {expanded ? <IconChevronDownOutlineRegular className={css.chevron} aria-hidden="true" /> : <IconChevronRightOutlineRegular className={css.chevron} aria-hidden="true" />}
           {expanded ? <IconFolderOpenRegular className={css.icon} /> : <IconFolderCloseRegular className={css.icon} />}
           <span className={css.name}>{entry.name}</span>
         </ActionButton>
@@ -97,6 +99,7 @@ function Entry({ parent, entry, tree }: { parent: string; entry: WorkspaceDirect
     return (
       <li className={css.item} data-files-entry="file" data-files-path={path}>
         <ActionButton type="button" className={css.row} onClick={() => { tree.onOpen(path) }}>
+          <span className={css.chevron} aria-hidden="true" />
           <FileTypeIcon kind={classifyFileType(entry.name)} size={16} className={css.fileIcon} />
           <span className={css.name}>{entry.name}</span>
         </ActionButton>
@@ -106,6 +109,7 @@ function Entry({ parent, entry, tree }: { parent: string; entry: WorkspaceDirect
   return (
     <li className={css.item} data-files-entry="other" data-files-path={path}>
       <span className={clsx(css.row, css.other)} aria-disabled="true" title={tree.t('entry.other')}>
+        <span className={css.chevron} aria-hidden="true" />
         <span className={css.name}>{entry.name}</span>
       </span>
     </li>
@@ -194,7 +198,7 @@ export function FilesBody({
   return (
     <div className={css.root} data-files-state="tree" data-files-root={state.root}>
       <div className={css.header}>
-        {/[/\\]data[/\\]workspaces[/\\][A-Za-z0-9._-]+$/.test(state.root) ? null : <PathLabel path={state.root} className={css.path} data-files-path />}
+        {/[/\\]data[/\\]workspaces[/\\][A-Za-z0-9._-]+$/.test(state.root) ? <span className={css.path}>{t('guide.title')}</span> : <PathLabel path={state.root} className={css.path} data-files-path />}
         <span hidden>
           <ActionButton type="button" className={css.tool} aria-label={t('autoRefresh')}
             aria-pressed={state.autoRefresh} data-files-auto-refresh

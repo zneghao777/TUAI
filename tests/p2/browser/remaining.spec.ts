@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { fixtureHost } from '../fixture-host.mjs'
 import { SessionId } from '../../../packages/core/session/lib/index.js'
-import { copyFile, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pdfFixture } from '../../../packages/client/ui-sidebar-documentpreview/tests/pdf-fixture'
 
@@ -30,7 +30,9 @@ test('TZ-065/066 original slash catalog, IME, commands, permission confirmation 
       await expect(page.getByText(name, { exact: true })).toHaveCount(0)
     const fileOption = page.locator('[data-command-file]')
     await expect(fileOption).toBeVisible()
-    expect(await fileOption.evaluate((element) => getComputedStyle(element).justifyContent)).toBe('flex-end')
+    expect(await fileOption.evaluate((element) => getComputedStyle(element).justifyContent)).toBe(
+      'flex-end',
+    )
     await editor(page).fill('/goal')
     await expect(page.getByText('goal', { exact: true })).toHaveCount(0)
     await page.keyboard.press('Escape')
@@ -165,6 +167,8 @@ test('TZ-069 original files, safe HTML and text preview through authenticated Wo
       '<h1>预览内容</h1><script>parent.__untrustedExecuted=true</script><img src="https://example.invalid/tracker">',
     )
     await writeFile(join(session.header.cwd, 'notes.txt'), '文件预览与会话目录隔离验收')
+    await mkdir(join(session.header.cwd, 'nested'))
+    await writeFile(join(session.header.cwd, 'nested', 'child.txt'), '子目录文件')
     await writeFile(join(session.header.cwd, 'preview.pdf'), pdfFixture())
     await copyFile(
       'apps/web/tests/fixtures/office/preview.xls',
@@ -172,10 +176,38 @@ test('TZ-069 original files, safe HTML and text preview through authenticated Wo
     )
     await page.getByRole('button', { name: '打开右侧边栏' }).click()
     await page.getByRole('button', { name: /工作区文件/ }).click()
+    const filesTabTitle = page.getByRole('tab', { name: '工作区文件 关闭', exact: true }).locator('[data-dockkit-tab-title]')
+    await expect(filesTabTitle).not.toHaveAttribute('data-dockkit-tab-clipped', '')
+    await expect(page.getByRole('button', { name: '会话产物' })).toHaveCount(0)
+    const folder = page.getByRole('button', { name: 'nested', exact: true })
+    await expect(folder).toHaveAttribute('aria-expanded', 'false')
+    await folder.click()
+    await expect(folder).toHaveAttribute('aria-expanded', 'true')
+    const child = page.getByRole('button', { name: 'child.txt', exact: true })
+    await expect(child).toBeVisible()
+    expect(await folder.evaluate((node) => getComputedStyle(node).justifyContent)).toBe(
+      'flex-start',
+    )
+    const folderBox = await folder.boundingBox()
+    const childBox = await child.boundingBox()
+    expect(childBox!.x).toBeGreaterThan(folderBox!.x)
+    await page.screenshot({ path: 'reports/p2/tz084-tree-desktop.png' })
+    await page.setViewportSize({ width: 390, height: 850 })
+    await expect(child).toBeVisible()
+    await page.screenshot({ path: 'reports/p2/tz084-tree-narrow.png' })
+    await page.setViewportSize({ width: 1440, height: 1000 })
+    await page.getByRole('button', { name: '设置', exact: true }).click()
+    await page.getByRole('tab', { name: '通用', exact: true }).click()
+    await page.getByRole('button', { name: '青绿', exact: true }).click()
+    await page.getByRole('button', { name: '深色', exact: true }).click()
+    await page.getByRole('dialog', { name: '设置' }).getByRole('button', { name: '关闭', exact: true }).click()
+    await expect(page.locator('body')).toHaveAttribute('data-ds-dark-theme', '')
+    await expect(child).toBeVisible()
+    await page.screenshot({ path: 'reports/p2/tz084-tree-dark.png' })
     await expect(page.getByText('notes.txt', { exact: true })).toBeVisible()
     await page.getByText('notes.txt', { exact: true }).click()
     await expect(page.getByText('文件预览与会话目录隔离验收', { exact: true })).toBeVisible()
-    await page.getByRole('tab', { name: '文件 关闭', exact: true }).click()
+    await page.getByRole('tab', { name: '工作区文件 关闭', exact: true }).click()
     await page.getByText('preview.html', { exact: true }).click()
     await expect(
       page.frameLocator('[data-html-preview]').getByRole('heading', { name: '预览内容' }),
@@ -183,13 +215,13 @@ test('TZ-069 original files, safe HTML and text preview through authenticated Wo
     expect(await page.evaluate(() => Reflect.get(window, '__untrustedExecuted'))).toBeUndefined()
     expect(await page.locator('[data-html-preview]').getAttribute('sandbox')).toBe('')
     await page.screenshot({ path: 'reports/p2/069-file-preview.png' })
-    await page.getByRole('tab', { name: '文件 关闭', exact: true }).click()
+    await page.getByRole('tab', { name: '工作区文件 关闭', exact: true }).click()
     await page.getByText('preview.pdf', { exact: true }).click()
     await expect(page.locator('[data-pdf-text]').first()).toContainText('Selectable PDF text')
     await expect(page.locator('[data-pdf-page="1"] canvas')).toBeVisible()
     await expect(page.locator('[data-pdf-preview] [role=alert]')).toHaveCount(0)
     await page.screenshot({ path: 'reports/p2/069-pdf-preview.png' })
-    await page.getByRole('tab', { name: '文件 关闭', exact: true }).click()
+    await page.getByRole('tab', { name: '工作区文件 关闭', exact: true }).click()
     await page.getByText('preview.xls', { exact: true }).click()
     await expect(page.locator('[data-excel-preview] canvas').first()).toBeVisible()
     await page.screenshot({ path: 'reports/p2/069-excel-preview.png' })

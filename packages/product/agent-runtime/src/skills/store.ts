@@ -42,10 +42,24 @@ export class SkillStore {
       CREATE TABLE IF NOT EXISTS skill_versions(skill_id TEXT NOT NULL REFERENCES skills(id), version INTEGER NOT NULL, package TEXT NOT NULL, created_at INTEGER NOT NULL, PRIMARY KEY(skill_id,version));
       CREATE TABLE IF NOT EXISTS skill_checks(skill_id TEXT NOT NULL, version INTEGER NOT NULL, checked INTEGER NOT NULL, issues TEXT NOT NULL, PRIMARY KEY(skill_id,version), FOREIGN KEY(skill_id,version) REFERENCES skill_versions(skill_id,version));
       CREATE TABLE IF NOT EXISTS skill_turns(session_id TEXT NOT NULL, turn INTEGER NOT NULL, selection TEXT NOT NULL, PRIMARY KEY(session_id,turn));
-      CREATE TABLE IF NOT EXISTS skill_uses(skill_id TEXT NOT NULL, session_id TEXT NOT NULL, turn INTEGER NOT NULL, version INTEGER NOT NULL, digest TEXT NOT NULL, loaded_at INTEGER NOT NULL, PRIMARY KEY(skill_id,session_id,turn,version), FOREIGN KEY(skill_id,version) REFERENCES skill_versions(skill_id,version)); PRAGMA user_version=1;`)
+      CREATE TABLE IF NOT EXISTS skill_uses(skill_id TEXT NOT NULL, session_id TEXT NOT NULL, turn INTEGER NOT NULL, version INTEGER NOT NULL, digest TEXT NOT NULL, loaded_at INTEGER NOT NULL, PRIMARY KEY(skill_id,session_id,turn,version), FOREIGN KEY(skill_id,version) REFERENCES skill_versions(skill_id,version));
+      CREATE TABLE IF NOT EXISTS skill_runtime_copies(workspace TEXT NOT NULL, directory TEXT PRIMARY KEY);
+      CREATE INDEX IF NOT EXISTS skill_runtime_copies_workspace ON skill_runtime_copies(workspace); PRAGMA user_version=1;`)
   }
   close(): void {
     this.db.close()
+  }
+  recordRuntimeCopy(workspace: string, directory: string): void {
+    this.db
+      .prepare('INSERT INTO skill_runtime_copies(workspace,directory) VALUES(?,?)')
+      .run(workspace, directory)
+  }
+  runtimeCopies(workspace: string): string[] {
+    return (
+      this.db
+        .prepare('SELECT directory FROM skill_runtime_copies WHERE workspace=?')
+        .all(workspace) as { directory: string }[]
+    ).map((row) => row.directory)
   }
   private transaction<T>(work: () => T): T {
     this.db.exec('BEGIN IMMEDIATE')

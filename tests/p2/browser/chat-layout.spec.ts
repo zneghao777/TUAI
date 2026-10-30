@@ -2,6 +2,82 @@ import { test, expect } from '@playwright/test'
 import { fixtureHost } from '../fixture-host.mjs'
 import { SessionId } from '../../../packages/core/session/lib/types/types.js'
 
+test('回复中的宽表滚动限定在正文内，链接图标和文字同行', async ({ page }) => {
+  test.setTimeout(20000)
+  const host = await fixtureHost()
+  try {
+    await page.goto(host.login)
+    await page
+      .locator('[contenteditable="true"][role="textbox"]')
+      .fill(
+        '表格与链接布局\n\n| 日期 | 价格 | 航班 | 出发 | 到达 | 时刻 | 余票 | 备注 | 结果 |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| 周五 | €67 | FR7538 | 米兰 | 巴塞罗那 | 22:45 | 有 | 可预订 | 最后一列需要横向滚动才能查看 |\n\n[11 月 6 日结果页](https://example.com/flights)',
+      )
+    await page.getByRole('button', { name: '发送消息', exact: true }).click()
+    const reply = page
+      .locator('[data-chat-flow-kind=assistant-step][data-chat-group-part=response]')
+      .last()
+    const table = reply.locator('.md-table-wide')
+    const link = reply.getByRole('link', { name: '11 月 6 日结果页' })
+    await expect(table).toBeVisible()
+    await expect(link).toBeVisible()
+    await expect(link).toHaveAttribute('href', 'https://example.com/flights')
+    await expect(link).toHaveAttribute('target', '_blank')
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 })
+      const geometry = await table.evaluate((el) => {
+        const body = el.closest('[class*="body_"]')!.getBoundingClientRect()
+        const box = el.getBoundingClientRect()
+        return {
+          bodyLeft: body.left,
+          bodyRight: body.right,
+          left: box.left,
+          right: box.right,
+          scrollWidth: el.scrollWidth,
+          clientWidth: el.clientWidth,
+        }
+      })
+      expect(geometry.left).toBeGreaterThanOrEqual(geometry.bodyLeft - 1)
+      expect(geometry.right).toBeLessThanOrEqual(geometry.bodyRight + 1)
+      expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth)
+      await table.evaluate((el) => {
+        el.scrollLeft = 0
+      })
+      await table.focus()
+      await page.keyboard.press('ArrowRight')
+      await expect.poll(() => table.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0)
+      await table.evaluate((el) => {
+        el.scrollLeft = el.scrollWidth
+      })
+      expect(await table.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0)
+      const linkLayout = await link.evaluate((el) => {
+        const icon = el.querySelector('svg')!
+        const text = [...el.childNodes].find(
+          (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
+        )!
+        const range = document.createRange()
+        range.selectNodeContents(text)
+        return {
+          icon: icon.getBoundingClientRect().toJSON(),
+          text: range.getBoundingClientRect().toJSON(),
+          display: getComputedStyle(icon).display,
+        }
+      })
+      expect(linkLayout.display).toBe('inline-block')
+      expect(linkLayout.icon.right).toBeLessThanOrEqual(linkLayout.text.left + 1)
+      expect(
+        Math.abs(
+          (linkLayout.icon.top + linkLayout.icon.bottom) / 2 -
+            (linkLayout.text.top + linkLayout.text.bottom) / 2,
+        ),
+      ).toBeLessThan(8)
+      await page.screenshot({ path: `reports/p2/markdown-${width}.png` })
+    }
+  } finally {
+    await page.close()
+    await host.dispose()
+  }
+})
+
 test('代码高亮生效，窄屏宽表格可滚动到最后一列', async ({ page }) => {
   const host = await fixtureHost()
   try {

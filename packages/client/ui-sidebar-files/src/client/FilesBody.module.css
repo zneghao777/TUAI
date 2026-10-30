@@ -29,7 +29,11 @@
 
 /* The margin plus the header's gap keeps the path 16px clear of reload. */
 .path {
-  margin-right: 12px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .body {
@@ -71,6 +75,7 @@
   display: flex;
   gap: 6px;
   align-items: center;
+  justify-content: flex-start;
   width: 100%;
   min-width: 0;
   /* Rows abut, so the hover fill is the whole row; the tree's air is this
@@ -94,6 +99,13 @@
 /* The folder glyph rides the tertiary ink, as the workspace tree's does (ui-workspace Rows `.slot`). */
 .icon {
   flex: 0 0 auto;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.chevron {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
   color: var(--dsw-alias-label-tertiary);
 }
 

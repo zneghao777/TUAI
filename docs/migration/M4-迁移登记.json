@@ -12493,8 +12493,18 @@
         },
         {
           "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx",
-          "sha256": "d4184b9ee362b798a9ef1ccbc7b35040cf468e78941e675b3f01d488d0adad21",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+          "sha256": "69ce47cd3377dfd380fc850f2f762020004a30537d423584cb7fc1d7a2abfced",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容；TZ-084 文件树对齐、展开状态与标签适配；增量见 provenance/dsh-tz084-files-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/FilesBody.module.css",
+          "sha256": "80b9255aa59b5c35f8816006683579da9bd143577342b9009f5c2633e0aba873",
+          "reason": "TZ-084 文件树对齐、展开状态与标签适配；增量见 provenance/dsh-tz084-files-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-files/src/client/locales.ts",
+          "sha256": "6474b22abe334f08734fc5dce1718876971ef38d4b1b28d832734df1345d2b25",
+          "reason": "TZ-084 文件树对齐、展开状态与标签适配；增量见 provenance/dsh-tz084-files-local.patch"
         }
       ],
       "additionalFiles": [

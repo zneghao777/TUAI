@@ -1,6 +1,7 @@
 import { Context, Service } from '@deepseek-ai/cordis'
-import { join } from 'node:path'
-import { mkdir, mkdtemp, writeFile, realpath } from 'node:fs/promises'
+import { isAbsolute, join, relative } from 'node:path'
+import { mkdir, mkdtemp, writeFile, realpath, lstat, rm } from 'node:fs/promises'
+import { realpathSync } from 'node:fs'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import SkillRegistry, {
   type SkillViewOptions,
@@ -28,7 +29,22 @@ export class SkillLibrary extends Service {
     this.store = new SkillStore(join(ctx.tianzhiaiHost.paths.business, 'skills.sqlite3'))
     ctx.effect(() => () => this.store.close())
   }
-  /** Materialize data into this session's workspace; never install or execute anything. */
+  /** A session and its workspace-sharing forks may read registered copies. */
+  ownsCopy(agent: Agent, path: string): boolean {
+    if (!agent.session.header.cwd) return false
+    const workspace = realpathSync(agent.session.header.cwd)
+    for (const root of this.store.runtimeCopies(workspace)) {
+      const part = relative(root, path)
+      if (
+        part === '' ||
+        (part !== '..' && !part.startsWith('../') && !part.startsWith('..\\') && !isAbsolute(part))
+      )
+        return true
+    }
+    return false
+  }
+
+  /** Materialize data in private runtime storage; never install or execute anything. */
   materialize(id: string, version: number, agent: Agent): Promise<string> {
     const key = JSON.stringify([id, version])
     let copies = this.copies.get(agent)
@@ -39,19 +55,30 @@ export class SkillLibrary extends Service {
     const existing = copies.get(key)
     if (existing) return existing
     const pending = (async () => {
-      const cwd = agent.session.header.cwd
-      if (!cwd) throw new Error('技能资源需要当前会话工作区')
-      const root = await realpath(cwd)
-      const directory = await mkdtemp(join(root, `.skill-${this.store.item(id).name}-v${version}-`))
-      const p = this.store.package(id, version)
-      for (const file of p.files) {
-        const parts = file.path.split('/')
-        if (parts.length > 1)
-          await mkdir(join(directory, ...parts.slice(0, -1)), { recursive: true, mode: 0o700 })
-        await writeFile(join(directory, file.path), Buffer.from(file.data, 'base64'), {
-          flag: 'wx',
-          mode: 0o400,
-        })
+      if (!agent.session.header.cwd) throw new Error('技能资源需要当前会话工作区')
+      const workspace = await realpath(agent.session.header.cwd)
+      const cache = await realpath(this.ctx.tianzhiaiHost.paths.cache)
+      const root = join(cache, 'skill-runtime')
+      await mkdir(root, { recursive: true, mode: 0o700 })
+      const info = await lstat(root)
+      if (!info.isDirectory() || info.isSymbolicLink() || (await realpath(root)) !== root)
+        throw new Error('技能运行目录不合法')
+      const directory = await mkdtemp(join(root, 'skill-'))
+      try {
+        const p = this.store.package(id, version)
+        for (const file of p.files) {
+          const parts = file.path.split('/')
+          if (parts.length > 1)
+            await mkdir(join(directory, ...parts.slice(0, -1)), { recursive: true, mode: 0o700 })
+          await writeFile(join(directory, file.path), Buffer.from(file.data, 'base64'), {
+            flag: 'wx',
+            mode: 0o400,
+          })
+        }
+        this.store.recordRuntimeCopy(workspace, directory)
+      } catch (error) {
+        await rm(directory, { recursive: true, force: true })
+        throw error
       }
       return directory
     })()

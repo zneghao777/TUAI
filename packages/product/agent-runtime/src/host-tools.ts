@@ -54,6 +54,13 @@ class WorkspaceFileSystem extends SandboxedFileSystem {
       (!within(root, physical) && mode !== 'danger-full-access') ||
       (!ownWorkspace && privateRoots.some((privateRoot) => within(privateRoot, physical)))
     ) {
+      if (
+        agent &&
+        exec &&
+        ['read', 'read_image', 'glob', 'grep'].includes(exec.name) &&
+        this.ctx.get('skillLibrary')?.ownsCopy(agent, physical)
+      )
+        return target
       const owner = agent?.id
       const ownDirectory = owner
         ? sessionDir(join(this.ctx.tianzhiaiHost.paths.artifacts, 'spill'), owner)

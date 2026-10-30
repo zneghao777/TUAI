@@ -1,11 +1,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdtemp, readdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { SkillStore } from '../../packages/product/agent-runtime/lib/skills.js'
 import { fixtureHost } from '../p2/fixture-host.mjs'
 import { clientFor } from '../p2/client.mjs'
+import { startWebHost } from '../../apps/cli/lib/web.js'
 import { createUserMessage } from '../../packages/llm/llm/lib/index.js'
 import {
   textResponse,
@@ -32,6 +33,125 @@ const send = async (agent, text) => {
   agent.followup(createUserMessage({ source: { kind: 'user' }, content: [{ type: 'text', text }] }))
   await agent.whenIdle()
 }
+async function call(ctx, agent, name, args) {
+  const signal = AbortSignal.timeout(15000)
+  const toolSet = await ctx.tools.resolve({
+    agent,
+    signal,
+    modelSelection: { provider: 'p2-controlled', model: 'controlled' },
+  })
+  try {
+    return (
+      await ctx.tools.execute({
+        agent,
+        signal,
+        toolSet,
+        calls: [{ type: 'tool-call', id: crypto.randomUUID(), name, arguments: args }],
+      })
+    ).results[0].result
+  } finally {
+    toolSet.dispose()
+  }
+}
+
+test('skill runtime resources stay outside workspace and remain scoped to the loading session', async () => {
+  const host = await fixtureHost()
+  const client = await clientFor(host.runtime)
+  let reboot
+  try {
+    const ctx = host.runtime.ctx
+    const api = client.ctx.remote.skillLibrary
+    let skill = ok(
+      await api.import(
+        skillPackage('读取资源', [
+          {
+            path: 'scripts/probe.sh',
+            data: Buffer.from('printf skill-script-ok').toString('base64'),
+          },
+        ]),
+      ),
+    )
+    skill = ok(await api.check({ id: skill.id, revision: skill.revision, version: 1 }))
+    ok(await api.activate({ id: skill.id, revision: skill.revision, version: 1 }))
+    const a = await client.ctx.sessions.create({})
+    const b = await client.ctx.sessions.create({})
+    const agent = ctx.agents.get(a),
+      other = ctx.agents.get(b)
+    const loaded = await ctx.skills.get('test-skill', { scope: agent })
+    assert.equal(loaded.resourceBase.kind, 'directory')
+    const base = loaded.resourceBase.path
+    assert.ok(!base.startsWith(agent.session.header.cwd + '/'), '技能副本不应出现在工作区')
+    assert.deepEqual(
+      (await readdir(agent.session.header.cwd)).filter((name) => name.startsWith('.skill-')),
+      [],
+    )
+    const resource = join(base, 'scripts/probe.sh')
+    const own = await call(ctx, agent, 'read', { file_path: resource })
+    assert.equal(Boolean(own.isError), false, JSON.stringify(own))
+    assert.match(JSON.stringify(own), /skill-script-ok/)
+    const cross = await call(ctx, other, 'read', { file_path: resource })
+    assert.equal(cross.isError, true)
+    const privateFile = join(ctx.tianzhiaiHost.paths.cache, 'not-a-skill.txt')
+    await writeFile(privateFile, 'private-data')
+    assert.equal((await call(ctx, agent, 'read', { file_path: privateFile })).isError, true)
+    assert.equal(
+      (await call(ctx, agent, 'write', { file_path: resource, content: 'blocked' })).isError,
+      true,
+    )
+    const approve = ctx.on('approval/request', () => 'allowed-once')
+    const command = `bash '${resource.replaceAll("'", "'\\''")}'`
+    let step = 0
+    host.model.stream = async function* () {
+      if (step++ === 0)
+        yield* toolCallResponse(crypto.randomUUID(), 'bash', {
+          description: '只读执行技能测试脚本',
+          command,
+        })
+      else yield* textResponse('已完成')
+    }
+    await send(agent, '执行技能测试脚本')
+    const readonlyShell = agent.session
+      .snapshotEvents()
+      .filter((event) => event.type === 'tool/result')
+      .at(-1).data.message
+    approve()
+    assert.equal(Boolean(readonlyShell.isError), false, JSON.stringify(readonlyShell))
+    assert.match(JSON.stringify(readonlyShell), /skill-script-ok/)
+    ctx.permissionPresets.set(agent.session, 'full-access')
+    assert.equal(
+      (await call(ctx, agent, 'write', { file_path: resource, content: 'blocked' })).isError,
+      true,
+    )
+    assert.equal((await call(ctx, agent, 'read', { file_path: privateFile })).isError, true)
+    assert.equal((await call(ctx, other, 'read', { file_path: resource })).isError, true)
+    const shell = await call(ctx, agent, 'bash', { description: '执行技能测试脚本', command })
+    assert.equal(Boolean(shell.isError), false, JSON.stringify(shell))
+    assert.match(JSON.stringify(shell), /skill-script-ok/)
+    host.model.stream = async function* () {
+      yield* textResponse('已完成')
+    }
+    await send(agent, '完成一个回合')
+    const fork = ok(await client.ctx.remote.session.fork({ sessionId: a }))
+    const forkAgent = ctx.agents.get(fork.sessionId)
+    assert.equal(forkAgent.session.header.cwd, agent.session.header.cwd)
+    assert.equal(
+      Boolean((await call(ctx, forkAgent, 'read', { file_path: resource })).isError),
+      false,
+    )
+    await client.dispose()
+    await host.runtime.dispose()
+    reboot = await startWebHost({ port: 0, provider: 'p2-controlled', model: 'controlled' })
+    const resumed = (await reboot.ctx.agents.resume({ resumeSessionId: a })).agent
+    assert.equal(
+      Boolean((await call(reboot.ctx, resumed, 'read', { file_path: resource })).isError),
+      false,
+    )
+  } finally {
+    await reboot?.dispose()
+    await client.dispose()
+    await host.dispose()
+  }
+})
 
 test('immutable versions, CAS, validation, disable and restart retain turn snapshots and evidence', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'tz-skill-store-'))
