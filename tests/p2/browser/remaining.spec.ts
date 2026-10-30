@@ -31,7 +31,7 @@ test('TZ-065/066 original slash catalog, IME, commands, permission confirmation 
     const fileOption = page.locator('[data-command-file]')
     await expect(fileOption).toBeVisible()
     expect(await fileOption.evaluate((element) => getComputedStyle(element).justifyContent)).toBe(
-      'flex-end',
+      'flex-start',
     )
     await editor(page).fill('/goal')
     await expect(page.getByText('goal', { exact: true })).toHaveCount(0)
