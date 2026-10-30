@@ -119,6 +119,9 @@
     },
     {
       "path": "../agent-runtime"
+    },
+    {
+      "path": "../../core/tools"
     }
   ]
 }

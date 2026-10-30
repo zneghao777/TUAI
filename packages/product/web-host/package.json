@@ -78,5 +78,8 @@
     "@deepseek-ai/dsh-command-feedback": "workspace:*",
     "@deepseek-ai/dsh-message-feedback": "workspace:*",
     "@deepseek-ai/dsh-goal": "workspace:*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-tools": "workspace:*"
   }
 }

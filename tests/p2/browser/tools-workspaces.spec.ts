@@ -197,7 +197,7 @@ test('CHAT-SIMPLE flat chats, retained actions, managed directories and settings
     for (const name of ['视图选项', '添加工作区'])
       await expect(page.getByRole('button', { name, exact: true })).toHaveCount(0)
     await expect(page.getByText('我的聊天', { exact: true })).toBeVisible()
-    for (const feature of ['技能', '我的BOT']) {
+    for (const feature of ['我的BOT']) {
       await page.getByRole('button', { name: feature, exact: true }).click()
       await expect(
         page.getByRole('alert').filter({ hasText: '该功能暂未开发，敬请期待' }),

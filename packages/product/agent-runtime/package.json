@@ -17,6 +17,10 @@
     "./types": {
       "types": "./lib/types/model-types.d.ts",
       "default": "./lib/model-types.js"
+    },
+    "./skills": {
+      "types": "./lib/types/skills.d.ts",
+      "default": "./lib/skills.js"
     }
   },
   "dependencies": {
@@ -84,6 +88,12 @@
     "@deepseek-ai/dsh-command-feedback": "workspace:*",
     "@deepseek-ai/dsh-session-log-export": "workspace:*",
     "@deepseek-ai/dsh-experimental-auto-review": "workspace:*",
-    "@deepseek-ai/dsh-session-reference": "workspace:*"
+    "@deepseek-ai/dsh-session-reference": "workspace:*",
+    "@deepseek-ai/dsh-skill": "workspace:*",
+    "@deepseek-ai/dsh-tool-skill": "workspace:*",
+    "js-yaml": "4.3.2"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "4.0.9"
   }
 }

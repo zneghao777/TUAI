@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "batchId": "M5",
+  "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
+  "status": "skill-scope-verified",
+  "scope": "TZ-031 独立技能运行时及 TZ-032 技能页；不扩展其他 P3 领域",
+  "packages": [
+    {
+      "path": "packages/skill/tool-skill",
+      "name": "@deepseek-ai/dsh-tool-skill",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-031",
+      "upstreamFiles": [
+        {
+          "path": "packages/skill/tool-skill/src/index.ts",
+          "sha256": "29f6cf10c7247379298d9a96a53aef9cb2b21dcf7266f57ab147860b27d7cc44"
+        },
+        {
+          "path": "packages/skill/tool-skill/package.json",
+          "sha256": "87a4c5de18338fcbd94d3826821447d94d24c2deaeb098488c821f31c06675b5"
+        },
+        {
+          "path": "packages/skill/tool-skill/tsconfig.json",
+          "sha256": "b9c7b5486b479bf621a30f620ad8fecc97ae72d53174a56ba5465bf118902edc"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/skill/tool-skill/package.json",
+          "sha256": "d47f33166a6e5ed61de399e96cb4db072c77ca6a2380ada75e4ebfd9ef669be1",
+          "reason": "补齐本项目 Session 运行依赖和 workspace 开发依赖"
+        },
+        {
+          "path": "packages/skill/tool-skill/tsconfig.json",
+          "sha256": "4f7903c2a2aa6cabb53be5775328ea7e48aeaa25b79c3fac60e61628b2abb1f7",
+          "reason": "补齐本项目 Session 运行依赖和 workspace 开发依赖"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/skill/tool-skill/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+        }
+      ]
+    }
+  ]
+}

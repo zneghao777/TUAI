@@ -31,7 +31,9 @@
     "dev:web": "pnpm --filter @tianzhiai/web dev",
     "test:p2": "vitest run --config vitest.p2.config.ts && node --expose-internals --test --test-timeout=30000 tests/p2/*.test.mjs",
     "test:ui": "node --expose-internals node_modules/@playwright/test/cli.js test --config playwright.config.ts",
-    "demo:p2": "node --expose-internals tests/p2/demo.mjs"
+    "demo:p2": "node --expose-internals tests/p2/demo.mjs",
+    "test:skills": "node --expose-internals --test --test-timeout=30000 tests/p3/*.test.mjs",
+    "test:skills:ui": "node --expose-internals node_modules/@playwright/test/cli.js test --config tests/p3/playwright.config.ts"
   },
   "devDependencies": {
     "@types/js-yaml": "4.0.9",

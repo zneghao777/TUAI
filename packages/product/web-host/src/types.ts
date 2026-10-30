@@ -57,3 +57,13 @@ export interface LibraryFile {
   createdAt: number | null
   version: string
 }
+export type {
+  SkillImport,
+  SkillEdit,
+  SkillMutation,
+  SkillItem,
+  SkillVersion,
+  SkillDetail,
+  SkillFileRead,
+  SkillFileValue,
+} from '@tianzhiai/agent-runtime/skills'

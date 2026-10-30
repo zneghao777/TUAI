@@ -12,6 +12,8 @@ import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import { Button as HeroButton } from '@heroui/react'
 import { ChatSidebar } from './components/ChatSidebar'
 import { FILES_PANEL, FileLibrary } from './components/FileLibrary'
+import { SkillsPage } from './components/SkillsPage'
+import { SKILLS_PANEL, mountSkillInput } from './model/skills'
 import { CursorGlow } from './components/CursorGlow'
 import { ModelPicker } from './components/ModelPicker'
 import { Icon } from './components/kit'
@@ -80,6 +82,10 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     resetTheme = ctx.theme.overrideTokens('tianzhiai', semanticTokens)
   })
   const disposers = [
+    mountSkillInput(client),
+    ctx.slots.inject('main', () =>
+      ctx.slots.register({ name: 'main', key: SKILLS_PANEL }, () => <SkillsPage client={client} />),
+    ),
     ctx.slots.inject('main', () =>
       ctx.slots.register({ name: 'main', key: FILES_PANEL }, () => <FileLibrary client={client} />),
     ),

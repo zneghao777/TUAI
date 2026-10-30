@@ -843,7 +843,9 @@
       "@deepseek-ai/dsh-message-quotes/src/*": ["./packages/session/message-quotes/src/*"],
       "@deepseek-ai/dsh-message-quotes/client": [
         "./packages/session/message-quotes/src/client/index.ts"
-      ]
+      ],
+      "@deepseek-ai/dsh-tool-skill": ["./packages/skill/tool-skill/src/index.ts"],
+      "@tianzhiai/agent-runtime/skills": ["./packages/product/agent-runtime/src/skills.ts"]
     }
   }
 }

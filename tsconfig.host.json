@@ -610,6 +610,9 @@
     },
     {
       "path": "packages/session/message-quotes"
+    },
+    {
+      "path": "packages/skill/tool-skill"
     }
   ]
 }

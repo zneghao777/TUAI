@@ -22,6 +22,7 @@ import { MockAdapter, textResponse, toolCallResponse } from './fixture-model.ts'
 import { mountHostTools } from './host-tools.ts'
 import { mountContext } from './context.ts'
 import { mountPermissions } from './permissions.ts'
+import { mountSkills } from './skills.ts'
 
 export const name = 'tianzhiai-agent-runtime'
 export const inject = ['tianzhiaiHost']
@@ -49,6 +50,7 @@ export async function apply(ctx: Context) {
   await ctx.plugin(Retry)
   await ctx.plugin(TokenMeter)
   await mountHostTools(ctx)
+  await mountSkills(ctx)
   // Mount persistence before the loop, so live writers drain before storage closes.
   await ctx.plugin(Jsonl, { root: ctx.tianzhiaiHost.paths.sessions, compression: 'none' })
   await ctx.plugin(AgentLoop, { agents: [] })

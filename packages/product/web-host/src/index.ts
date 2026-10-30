@@ -12,6 +12,7 @@ import { TYPERT as contribution12 } from '@deepseek-ai/dsh-api-workspace-files/t
 import { TYPERT as contribution14 } from '@deepseek-ai/dsh-session-reference/typert'
 import { ManagedSessionController, ManagedWorkspaceController } from './managed-workspaces.ts'
 import { ConversationTrash } from './conversation-trash.ts'
+import { SkillLibraryRemote } from './skills.ts'
 import { FileLibraryDeletions } from './file-library-deletions.ts'
 import { TYPERT as contribution11 } from '@deepseek-ai/dsh-api-workspace-controller/typert'
 import { mountChatSettings } from './chat-settings.ts'
@@ -293,6 +294,7 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
   })
   await ctx.plugin(ManagedWorkspaceController)
   await ctx.plugin(ManagedSessionController)
+  await ctx.plugin(SkillLibraryRemote)
   await ctx.plugin(PlatformService)
   await mountChatSettings(ctx)
   ctx.effect(() =>

@@ -27,6 +27,7 @@ import { useSource } from '../bindings'
 import { AppClient, describe, unwrap } from '../model/client'
 import { Button } from './kit'
 import { FILES_PANEL } from './FileLibrary'
+import { SKILLS_PANEL } from '../model/skills'
 import s from '../App.module.css'
 
 type Target = { id: SessionId; title: string }
@@ -164,7 +165,14 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
         <>
           <div className="tz-chat-navigation">
             <div className="tz-chat-features">
-              <Button className="tz-chat-feature" onClick={() => setNotice((value) => value + 1)}>
+              <Button
+                className="tz-chat-feature"
+                aria-current={panel.activePanelId === SKILLS_PANEL ? 'page' : undefined}
+                onClick={() => {
+                  ctx.layout.selectPanel(SKILLS_PANEL)
+                  if (window.matchMedia('(max-width: 600px)').matches) ctx.layout.toggleSidebar()
+                }}
+              >
                 <IconSkillOutlineRegular size={18} aria-hidden="true" />
                 技能
               </Button>

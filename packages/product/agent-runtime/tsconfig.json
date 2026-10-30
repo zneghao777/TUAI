@@ -194,6 +194,12 @@
     },
     {
       "path": "../host-config"
+    },
+    {
+      "path": "../../skill/skill"
+    },
+    {
+      "path": "../../skill/tool-skill"
     }
   ]
 }
