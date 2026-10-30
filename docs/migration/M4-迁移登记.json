@@ -1745,8 +1745,8 @@
         },
         {
           "path": "packages/client/ui-primitives/src/Modal.tsx",
-          "sha256": "98f93a4035adade1ef6f49d8c68a241110e6f7e37cac6c46d7b923bbc7b22caf",
-          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+          "sha256": "c55ce349644c9a74ed9a76b325f2f2f856fa84c20e2929e3a5f6dca50cfcc951",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
         },
         {
           "path": "packages/client/ui-primitives/src/SegmentedControl.tsx",
@@ -1797,6 +1797,11 @@
           "path": "packages/client/ui-primitives/tests/terminal-block.client.spec.tsx",
           "sha256": "b519b99f65c35a7c78949987ee81f3f6deec395d4fc13e5783a9a12ac3a56303",
           "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-primitives/src/RiskConfirmation.tsx",
+          "sha256": "4ffa4952b300296368b73fd23ff26e6f6ec81b970efa210e5f2551f02cc197d1",
+          "reason": "2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
         }
       ],
       "additionalFiles": [
@@ -2928,8 +2933,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx",
-          "sha256": "871afe998396d051173eb422bd6904fcc20012d55d3dcf03fc423ef5b706d31f",
-          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+          "sha256": "226efccb5f5b95bb193a0eb91d1d2def2456ecf215bbc722d7a6338eea53dc6f",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx",
@@ -2938,8 +2943,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx",
-          "sha256": "d065f7b35ff5bac437ddec851cdee24bfe60ddcb09e30f525fa1c765218d2df0",
-          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
+          "sha256": "a8d8014771c7d827ab9500bd4da218cb7cbc62db8199a66679cde2630b129c2e",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch；2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx",
@@ -2955,6 +2960,16 @@
           "path": "packages/client/ui-conversation/src/client/input/editor/ComposerContentEditable.tsx",
           "sha256": "8a78e6698122365f6762f49694d45eb777ccb4c8eefed11ba758b5a98892d597",
           "reason": "TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/ContextMeter.module.css",
+          "sha256": "fd69f7fd98d5f2e6de3c358e980fb30cb627485b877bdbcfd60eedc9f9338aa7",
+          "reason": "2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
+        },
+        {
+          "path": "packages/client/ui-conversation/tests/input-bar.client.spec.tsx",
+          "sha256": "5219143e44d27bfc71c349540efcef77c9e2fb5b182879e9445a19e010e08de6",
+          "reason": "2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
         }
       ],
       "additionalFiles": [
@@ -10925,13 +10940,13 @@
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/PermissionRow.tsx",
-          "sha256": "299071bb2deaae3359da71c7b5964ac08c8fd7de793c49cccaf704f1559e162f",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+          "sha256": "2f01b544a246572def4eb82bff2c67ad63dcb65cde5134b15e591cacc4401ffa",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容；2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.tsx",
-          "sha256": "ae4a03b83558b0b955fbfb4b01b3c643dd172c52f3465a899c15ff430885c7cc",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
+          "sha256": "5b4a070759b583c4108df47cb3fd4e89a66b2efea2abb86f6e805d630c736e93",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch；2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/index.ts",
@@ -10942,6 +10957,11 @@
           "path": "packages/client/ui-permission-presets/src/client/presentation.ts",
           "sha256": "7ee15f9a808ba519ffbc8b3ec5424cbd2a5b41f8946be3d762bdf5d3259a6e33",
           "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.module.css",
+          "sha256": "7aec59ad485c13d11397d4963a7bed56402cb1423b914ace91ed3db6cbcce042",
+          "reason": "2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
         }
       ],
       "additionalFiles": [

@@ -141,7 +141,7 @@ test('鼠标柔光不拦截输入，失焦、减少动态效果与触屏停用�
     await page.emulateMedia({ reducedMotion: 'no-preference' })
     for (const dark of [false, true]) {
       await page.getByRole('button', { name: '设置', exact: true }).click()
-      await page.getByRole('tab', { name: '对话显示', exact: true }).click()
+      await page.getByRole('tab', { name: '通用', exact: true }).click()
       await page.getByRole('button', { name: '青绿', exact: true }).click()
       await page.getByRole('button', { name: dark ? '深色' : '浅色', exact: true }).click()
       await page.getByRole('button', { name: '关闭', exact: true }).click()

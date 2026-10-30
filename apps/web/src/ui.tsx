@@ -123,7 +123,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
           return (
             <HeroButton
               variant="ghost"
-              className="tz-staged-permission"
+              className={`tz-staged-permission${full ? ' tz-permission-full' : ''}`}
               isDisabled={locked}
               aria-label={`访问模式，当前：${label}`}
               onPress={activate}

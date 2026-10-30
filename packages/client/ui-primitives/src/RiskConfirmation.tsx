@@ -17,6 +17,7 @@ export interface RiskConfirmationProps {
   confirmLabel: string
   acknowledged: boolean
   disabled?: boolean
+  portalContainer?: HTMLElement | null
   onAcknowledgedChange: (acknowledged: boolean) => void
   onCancel: () => void
   onConfirm: () => void
@@ -36,6 +37,7 @@ export function RiskConfirmation({
   confirmLabel,
   acknowledged,
   disabled = false,
+  portalContainer,
   onAcknowledgedChange,
   onCancel,
   onConfirm,
@@ -48,6 +50,7 @@ export function RiskConfirmation({
       closeLabel={closeLabel}
       className={css.confirmation ?? ''}
       contentClassName={css.confirmationContent ?? ''}
+      portalContainer={portalContainer ?? null}
       footer={(
         <>
           <Button variant="outline" className={css.modalAction} onClick={onCancel}>

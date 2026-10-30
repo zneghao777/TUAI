@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Button, Header, Label, ListBox, Popover, Slider, Spinner } from '@heroui/react'
+import { useDismissOnOutsidePointer } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ModelSelectInjected } from '@deepseek-ai/dsh-client-ui-model-selection/client'
 import type { ModelSelection } from '@deepseek-ai/dsh-api-session-controller/types'
 import { Icon } from './kit'
@@ -21,6 +22,8 @@ export function ModelPicker({
   const [error, setError] = useState('')
   const sliderInput = useRef<HTMLInputElement>(null)
   const trigger = useRef<HTMLButtonElement>(null)
+  const panel = useRef<HTMLDivElement>(null)
+  useDismissOnOutsidePointer(trigger, open, setOpen, panel)
   const openRef = useRef(open)
   openRef.current = open
   const pending = useRef(false)
@@ -152,8 +155,9 @@ export function ModelPicker({
         {reasoning && label ? <span className="tz-model-effort">{label}</span> : null}
         {busy ? <Spinner size="sm" aria-label="正在切换模型" /> : <Icon name="chevron" />}
       </Button>
-      <Popover.Content placement="top end" offset={10} className="tz-model-popover">
+      <Popover.Content placement="top end" offset={10} className="tz-model-popover" isNonModal>
         <Popover.Dialog
+          ref={panel}
           data-shortcut-modal="model"
           aria-label="模型与推理强度"
           className="tz-model-dialog"
@@ -161,20 +165,6 @@ export function ModelPicker({
         >
           {listVisible ? (
             <>
-              <div className="tz-model-heading">
-                {current ? (
-                  <Button
-                    isIconOnly
-                    variant="ghost"
-                    size="sm"
-                    aria-label="返回推理强度"
-                    onPress={() => setChoosing(false)}
-                  >
-                    <Icon name="back" />
-                  </Button>
-                ) : null}
-                <Popover.Heading>选择模型</Popover.Heading>
-              </div>
               <ListBox
                 aria-label="模型"
                 className="tz-model-list"

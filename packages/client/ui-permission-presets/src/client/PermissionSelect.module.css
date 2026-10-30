@@ -33,6 +33,13 @@
   cursor: default;
 }
 
+.trigger.fullAccess:not(:disabled) {
+  color: var(--tz-permission-full, #b63e20);
+}
+.fullOption {
+  color: var(--tz-permission-full, #b63e20);
+}
+
 .triggerIcon {
   display: inline-flex;
   flex: 0 0 auto;

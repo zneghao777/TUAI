@@ -282,7 +282,7 @@ test('CHAT-SIMPLE flat chats, retained actions, managed directories and settings
     await host.runtime.ctx.workspaceRegistry.unarchiveSession(SessionId(id!))
     await page.locator(`[data-session-id="${id}"]`).click()
     await page.getByRole('button', { name: '设置', exact: true }).click()
-    await page.getByRole('tab', { name: '对话显示', exact: true }).click()
+    await page.getByRole('tab', { name: '通用', exact: true }).click()
     await expect(page.getByRole('dialog')).toHaveCSS('background-color', 'rgb(255, 255, 255)')
     await expect(page.getByRole('dialog')).toHaveCSS('opacity', '1')
     await expect(page.getByText('用量统计', { exact: false })).toHaveCount(0)

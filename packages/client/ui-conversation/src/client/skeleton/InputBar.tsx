@@ -550,6 +550,7 @@ export const InputBar = memo(function InputBar({
               {input === undefined || sessionId === undefined
                 ? null
                 : renderSlot('conversation.input.right', {})}
+              {activity ? null : <ContextMeter useProjection={useProjection} t={t} />}
               {staged
                 ? renderSlot('conversation.input.staged.model', { locked, activate: () => { createManagedChat(false, 'model') } })
                 : sessionId === undefined ? null : renderSlot('conversation.input.model', { locked: modelSeatLocked })}
@@ -602,7 +603,6 @@ export const InputBar = memo(function InputBar({
         {variant === 'composer' && input !== undefined && sessionId !== undefined
           ? renderSlot('conversation.composer.dock', {})
           : null}
-        {activity ? null : <ContextMeter useProjection={useProjection} t={t} />}
       </div>
     </div>
   )

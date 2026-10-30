@@ -6,7 +6,7 @@ import { fixtureHost } from '../fixture-host.mjs'
 const editor = (page) => page.locator('[contenteditable="true"][role="textbox"]')
 async function openAppearance(page) {
   await page.getByRole('button', { name: '设置', exact: true }).click()
-  await page.getByRole('tab', { name: '对话显示', exact: true }).click()
+  await page.getByRole('tab', { name: '通用', exact: true }).click()
   await expect(page.getByRole('button', { name: '青绿', exact: true })).toBeEnabled()
   await expect(page.locator('.tz-settings-backdrop')).toHaveCSS('opacity', '1')
 }

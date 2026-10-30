@@ -140,7 +140,7 @@ test('CHAT-SIMPLE drafts, references, rename, archive hiding and settings', asyn
     await page.reload()
     await expect(page.locator(`[data-session-id="${id}"]`)).toHaveCount(0)
     await page.getByRole('button', { name: '设置', exact: true }).click()
-    await page.getByRole('tab', { name: '对话显示', exact: true }).click()
+    await page.getByRole('tab', { name: '通用', exact: true }).click()
     await expect(page.getByText('选择新会话的默认权限模式', { exact: false })).toBeVisible()
     await page.screenshot({ path: 'reports/p2/068-workspace-settings.png' })
   } finally {

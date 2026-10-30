@@ -109,17 +109,18 @@ export function PermissionSelect({
     const icon = permissionGlyph(option.value)
     const label = permissionLabel(option.value, option.name, t)
     const badge = optionBadge(option.value, t)
+    const full = option.value === FULL_ACCESS || option.value === 'danger-full-access'
     return {
       id: option.value,
       label: badge === undefined
-        ? label
+        ? (full ? <span className={css.fullOption}>{label}</span> : label)
         : (
           <span className={css.optionLabel} aria-label={`${label} ${badge}`}>
             <span className={css.optionLabelText}>{label}</span>
             <span className={css.badge}>{badge}</span>
           </span>
         ),
-      ...icon === undefined ? {} : { icon },
+      ...icon === undefined ? {} : { icon: full ? <span className={css.fullOption}>{icon}</span> : icon },
     }
   })
 
@@ -177,7 +178,7 @@ export function PermissionSelect({
         anchor={
           <ActionButton
             type="button"
-            className={css.trigger}
+            className={clsx(css.trigger, (currentValue === FULL_ACCESS || currentValue === 'danger-full-access') && css.fullAccess)}
             data-composer-permission-trigger
             aria-label={t('mode', { name: currentLabel })}
             title={current === undefined ? undefined : optionDescription(current, t)}

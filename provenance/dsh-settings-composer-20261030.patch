@@ -1,0 +1,212 @@
+diff --git a/packages/client/ui-conversation/src/client/skeleton/ContextMeter.module.css b/packages/client/ui-conversation/src/client/skeleton/ContextMeter.module.css
+index 9590df4..e66ded8 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/ContextMeter.module.css
++++ b/packages/client/ui-conversation/src/client/skeleton/ContextMeter.module.css
+@@ -1,4 +1,4 @@
+-/* Context-occupancy control below the composer plus its click-open breakdown
++/* Context-occupancy control beside the model plus its click-open breakdown
+    panel (menu surface: elevation-prominent). */
+ 
+ .root {
+diff --git a/packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx b/packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx
+index 69c3d18..83582db 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx
+@@ -1,5 +1,5 @@
+ import { ActionButton, Meter } from '@deepseek-ai/dsh-client-ui-primitives'
+-/** Composer context-occupancy meter: a ring and percentage below the card fed by the
++/** Composer context-occupancy meter: a ring and percentage beside the model fed by the
+  * `contextPressure` projection, with a click-open panel of the heuristic
+  * `contextBreakdown` composition (system prompt, tools, conversation).
+  * Renders nothing until a provider reports both pressure and a route
+diff --git a/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx b/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
+index 14e6e19..642a578 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
+@@ -550,6 +550,7 @@ export const InputBar = memo(function InputBar({
+               {input === undefined || sessionId === undefined
+                 ? null
+                 : renderSlot('conversation.input.right', {})}
++              {activity ? null : <ContextMeter useProjection={useProjection} t={t} />}
+               {staged
+                 ? renderSlot('conversation.input.staged.model', { locked, activate: () => { createManagedChat(false, 'model') } })
+                 : sessionId === undefined ? null : renderSlot('conversation.input.model', { locked: modelSeatLocked })}
+@@ -602,7 +603,6 @@ export const InputBar = memo(function InputBar({
+         {variant === 'composer' && input !== undefined && sessionId !== undefined
+           ? renderSlot('conversation.composer.dock', {})
+           : null}
+-        {activity ? null : <ContextMeter useProjection={useProjection} t={t} />}
+       </div>
+     </div>
+   )
+diff --git a/packages/client/ui-conversation/tests/input-bar.client.spec.tsx b/packages/client/ui-conversation/tests/input-bar.client.spec.tsx
+index a6968a7..0b77f37 100644
+--- a/packages/client/ui-conversation/tests/input-bar.client.spec.tsx
++++ b/packages/client/ui-conversation/tests/input-bar.client.spec.tsx
+@@ -2091,8 +2091,9 @@ it('lets a toolbar activity replace accessories without replacing the draft edit
+   expect(view.getByRole('button', { name: 'model choice' })).toBeTruthy()
+ })
+ 
+-it('places context usage below the composer and hides it until the activity closes', () => {
++it('places context usage before the model and hides it until the activity closes', () => {
+   const { view } = bench({ draft: 'draft', contextPressure: { pressureTokens: 32_000, contextWindow: 128_000 },
++    modelEntry: <button>model choice</button>,
+     activityEntry: owner => <>
+       <button onClick={() => { owner.onActiveChange(true) }}>microphone</button>
+       <button onClick={() => { owner.onActiveChange(false) }}>close activity</button>
+@@ -2100,7 +2101,8 @@ it('places context usage below the composer and hides it until the activity clos
+   })
+   const meter = view.getByRole('button', { name: '上下文已用 25%' })
+   const microphone = view.getByRole('button', { name: 'microphone' })
+-  expect(microphone.compareDocumentPosition(meter) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
++  expect(meter.compareDocumentPosition(view.getByRole('button', { name: 'model choice' })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
++  expect(meter.compareDocumentPosition(microphone) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+   fireEvent.click(meter)
+   expect(view.getByRole('dialog', { name: '上下文已用' })).toBeTruthy()
+   fireEvent.click(microphone)
+diff --git a/packages/client/ui-permission-presets/src/client/PermissionRow.tsx b/packages/client/ui-permission-presets/src/client/PermissionRow.tsx
+index 2ca501e..c63e365 100644
+--- a/packages/client/ui-permission-presets/src/client/PermissionRow.tsx
++++ b/packages/client/ui-permission-presets/src/client/PermissionRow.tsx
+@@ -5,7 +5,7 @@ import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+  * control.
+  */
+ 
+-import { useEffect, useState } from 'react'
++import { useEffect, useRef, useState } from 'react'
+ import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
+ import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
+ import {
+@@ -44,6 +44,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
+   const [open, setOpen] = useState(false)
+   const [confirmingFullAccess, setConfirmingFullAccess] = useState(false)
+   const [acknowledged, setAcknowledged] = useState(false)
++  const rowRef = useRef<HTMLDivElement>(null)
+ 
+   useEffect(() => {
+     void load()
+@@ -66,7 +67,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
+ 
+   return (
+     <>
+-      <div className={css.row}>
++      <div ref={rowRef} className={css.row}>
+         <div className={css.rowText}>
+           <div className={css.title}>{t('title')}</div>
+           <div className={css.desc} role={state.error === null ? undefined : 'alert'}>{description}</div>
+@@ -113,6 +114,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
+         confirmLabel={t('confirm.enable')}
+         acknowledged={acknowledged}
+         disabled={!state.writable || state.status === 'saving'}
++        portalContainer={rowRef.current?.closest<HTMLElement>('[role="dialog"]') ?? null}
+         onAcknowledgedChange={setAcknowledged}
+         onCancel={() => {
+           setAcknowledged(false)
+diff --git a/packages/client/ui-permission-presets/src/client/PermissionSelect.module.css b/packages/client/ui-permission-presets/src/client/PermissionSelect.module.css
+index 306051a..2d45ae7 100644
+--- a/packages/client/ui-permission-presets/src/client/PermissionSelect.module.css
++++ b/packages/client/ui-permission-presets/src/client/PermissionSelect.module.css
+@@ -33,6 +33,13 @@
+   cursor: default;
+ }
+ 
++.trigger.fullAccess:not(:disabled) {
++  color: var(--tz-permission-full, #b63e20);
++}
++.fullOption {
++  color: var(--tz-permission-full, #b63e20);
++}
++
+ .triggerIcon {
+   display: inline-flex;
+   flex: 0 0 auto;
+diff --git a/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx b/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
+index c763c36..799bc20 100644
+--- a/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
++++ b/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
+@@ -109,17 +109,18 @@ export function PermissionSelect({
+     const icon = permissionGlyph(option.value)
+     const label = permissionLabel(option.value, option.name, t)
+     const badge = optionBadge(option.value, t)
++    const full = option.value === FULL_ACCESS || option.value === 'danger-full-access'
+     return {
+       id: option.value,
+       label: badge === undefined
+-        ? label
++        ? (full ? <span className={css.fullOption}>{label}</span> : label)
+         : (
+           <span className={css.optionLabel} aria-label={`${label} ${badge}`}>
+             <span className={css.optionLabelText}>{label}</span>
+             <span className={css.badge}>{badge}</span>
+           </span>
+         ),
+-      ...icon === undefined ? {} : { icon },
++      ...icon === undefined ? {} : { icon: full ? <span className={css.fullOption}>{icon}</span> : icon },
+     }
+   })
+ 
+@@ -177,7 +178,7 @@ export function PermissionSelect({
+         anchor={
+           <ActionButton
+             type="button"
+-            className={css.trigger}
++            className={clsx(css.trigger, (currentValue === FULL_ACCESS || currentValue === 'danger-full-access') && css.fullAccess)}
+             data-composer-permission-trigger
+             aria-label={t('mode', { name: currentLabel })}
+             title={current === undefined ? undefined : optionDescription(current, t)}
+diff --git a/packages/client/ui-primitives/src/Modal.tsx b/packages/client/ui-primitives/src/Modal.tsx
+index 539631e..98e59eb 100644
+--- a/packages/client/ui-primitives/src/Modal.tsx
++++ b/packages/client/ui-primitives/src/Modal.tsx
+@@ -20,6 +20,7 @@ interface ModalBaseProps {
+   shortcutModal?: string
+   onKeyDownCapture?: KeyboardEventHandler<HTMLDivElement>
+   backdropBlur?: boolean
++  portalContainer?: HTMLElement | null
+ }
+ 
+ type ModalProps = ModalBaseProps & (
+@@ -49,7 +50,7 @@ type ModalProps = ModalBaseProps & (
+  */
+ export function Modal({
+   open, onClose, title, closeLabel, description, children, footer, className, contentClassName,
+-  onKeyDownCapture, headless = false, backdropBlur = true, shortcutModal,
++  onKeyDownCapture, headless = false, backdropBlur = true, shortcutModal, portalContainer,
+ }: ModalProps) {
+   const dialog = useRef<HTMLDivElement>(null)
+   useModalLayer(dialog, open, onClose)
+@@ -89,5 +90,5 @@ export function Modal({
+           )}
+       </Surface>
+     </div>
+-  ), document.body)
++  ), portalContainer ?? document.body)
+ }
+diff --git a/packages/client/ui-primitives/src/RiskConfirmation.tsx b/packages/client/ui-primitives/src/RiskConfirmation.tsx
+index 7109d09..0dab095 100644
+--- a/packages/client/ui-primitives/src/RiskConfirmation.tsx
++++ b/packages/client/ui-primitives/src/RiskConfirmation.tsx
+@@ -17,6 +17,7 @@ export interface RiskConfirmationProps {
+   confirmLabel: string
+   acknowledged: boolean
+   disabled?: boolean
++  portalContainer?: HTMLElement | null
+   onAcknowledgedChange: (acknowledged: boolean) => void
+   onCancel: () => void
+   onConfirm: () => void
+@@ -36,6 +37,7 @@ export function RiskConfirmation({
+   confirmLabel,
+   acknowledged,
+   disabled = false,
++  portalContainer,
+   onAcknowledgedChange,
+   onCancel,
+   onConfirm,
+@@ -48,6 +50,7 @@ export function RiskConfirmation({
+       closeLabel={closeLabel}
+       className={css.confirmation ?? ''}
+       contentClassName={css.confirmationContent ?? ''}
++      portalContainer={portalContainer ?? null}
+       footer={(
+         <>
+           <Button variant="outline" className={css.modalAction} onClick={onCancel}>

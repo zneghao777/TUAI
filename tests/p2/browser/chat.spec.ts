@@ -287,7 +287,7 @@ test('安全 Markdown、窄屏、IME、键盘与焦点', async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.getByRole('button', { name: '打开侧边栏' }).click()
   await page.getByRole('button', { name: '设置', exact: true }).click()
-  await expect(page.getByRole('tab', { name: '对话显示', exact: true })).toBeVisible()
+  await expect(page.getByRole('tab', { name: '通用', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: '连接与工作区', exact: true })).toHaveCount(0)
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toHaveCount(0)

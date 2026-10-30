@@ -2091,8 +2091,9 @@ it('lets a toolbar activity replace accessories without replacing the draft edit
   expect(view.getByRole('button', { name: 'model choice' })).toBeTruthy()
 })
 
-it('places context usage below the composer and hides it until the activity closes', () => {
+it('places context usage before the model and hides it until the activity closes', () => {
   const { view } = bench({ draft: 'draft', contextPressure: { pressureTokens: 32_000, contextWindow: 128_000 },
+    modelEntry: <button>model choice</button>,
     activityEntry: owner => <>
       <button onClick={() => { owner.onActiveChange(true) }}>microphone</button>
       <button onClick={() => { owner.onActiveChange(false) }}>close activity</button>
@@ -2100,7 +2101,8 @@ it('places context usage below the composer and hides it until the activity clos
   })
   const meter = view.getByRole('button', { name: '上下文已用 25%' })
   const microphone = view.getByRole('button', { name: 'microphone' })
-  expect(microphone.compareDocumentPosition(meter) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(meter.compareDocumentPosition(view.getByRole('button', { name: 'model choice' })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(meter.compareDocumentPosition(microphone) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   fireEvent.click(meter)
   expect(view.getByRole('dialog', { name: '上下文已用' })).toBeTruthy()
   fireEvent.click(microphone)

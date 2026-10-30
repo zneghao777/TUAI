@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Modal, Tabs } from '@heroui/react'
+import { closeTopModal } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { AppClient } from '../model/client'
 import { Button, Icon } from './kit'
 import { ModelSettings } from './ModelSettings'
@@ -25,8 +26,23 @@ export function SettingsDialog({
     const observer = new MutationObserver(update)
     observer.observe(document.body, { childList: true, subtree: true })
     const keydown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape')
-        nestedEscape.current = Boolean(document.querySelector('[data-menu-material]'))
+      if (event.key === 'Escape') {
+        nestedEscape.current = Boolean(
+          document.querySelector(
+            '[data-menu-material], .tz-settings-dialog [role="dialog"][aria-modal="true"]',
+          ),
+        )
+        if (
+          !event.isComposing &&
+          !event.repeat &&
+          !document.querySelector('[data-menu-material]') &&
+          document.querySelector('.tz-settings-dialog [role="dialog"][aria-modal="true"]')
+        ) {
+          event.preventDefault()
+          event.stopPropagation()
+          closeTopModal(document)
+        }
+      }
     }
     const keyup = () => {
       nestedEscape.current = false
@@ -71,14 +87,14 @@ export function SettingsDialog({
           >
             <nav className={s.settingsNav} aria-label="设置分类">
               <Tabs.List aria-label="设置分类" className="tz-settings-tablist">
+                <Tabs.Tab id="display" isDisabled={busy}>
+                  <Icon name="settings" />
+                  通用
+                  <Tabs.Indicator />
+                </Tabs.Tab>
                 <Tabs.Tab id="models" isDisabled={busy}>
                   <Icon name="model" />
                   模型
-                  <Tabs.Indicator />
-                </Tabs.Tab>
-                <Tabs.Tab id="display" isDisabled={busy}>
-                  <Icon name="settings" />
-                  对话显示
                   <Tabs.Indicator />
                 </Tabs.Tab>
               </Tabs.List>
@@ -98,7 +114,7 @@ export function SettingsDialog({
               className={s.settingsContent}
             >
               <div className={s.settingsHeading}>
-                <h3>对话显示</h3>
+                <h3>通用</h3>
               </div>
               {children}
             </Tabs.Panel>

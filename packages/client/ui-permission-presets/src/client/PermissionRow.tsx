@@ -5,7 +5,7 @@ import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
  * control.
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import {
@@ -44,6 +44,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
   const [open, setOpen] = useState(false)
   const [confirmingFullAccess, setConfirmingFullAccess] = useState(false)
   const [acknowledged, setAcknowledged] = useState(false)
+  const rowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     void load()
@@ -66,7 +67,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
 
   return (
     <>
-      <div className={css.row}>
+      <div ref={rowRef} className={css.row}>
         <div className={css.rowText}>
           <div className={css.title}>{t('title')}</div>
           <div className={css.desc} role={state.error === null ? undefined : 'alert'}>{description}</div>
@@ -113,6 +114,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
         confirmLabel={t('confirm.enable')}
         acknowledged={acknowledged}
         disabled={!state.writable || state.status === 'saving'}
+        portalContainer={rowRef.current?.closest<HTMLElement>('[role="dialog"]') ?? null}
         onAcknowledgedChange={setAcknowledged}
         onCancel={() => {
           setAcknowledged(false)

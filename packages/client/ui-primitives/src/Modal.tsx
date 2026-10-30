@@ -20,6 +20,7 @@ interface ModalBaseProps {
   shortcutModal?: string
   onKeyDownCapture?: KeyboardEventHandler<HTMLDivElement>
   backdropBlur?: boolean
+  portalContainer?: HTMLElement | null
 }
 
 type ModalProps = ModalBaseProps & (
@@ -49,7 +50,7 @@ type ModalProps = ModalBaseProps & (
  */
 export function Modal({
   open, onClose, title, closeLabel, description, children, footer, className, contentClassName,
-  onKeyDownCapture, headless = false, backdropBlur = true, shortcutModal,
+  onKeyDownCapture, headless = false, backdropBlur = true, shortcutModal, portalContainer,
 }: ModalProps) {
   const dialog = useRef<HTMLDivElement>(null)
   useModalLayer(dialog, open, onClose)
@@ -89,5 +90,5 @@ export function Modal({
           )}
       </Surface>
     </div>
-  ), document.body)
+  ), portalContainer ?? document.body)
 }
