@@ -53,6 +53,8 @@ export type { DocumentLoadMode, DocumentPreviewDefinition } from './document/reg
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
+    /** Optional product translation for Host-provided error messages. */
+    formatRemoteError?: (message: string) => string
     /** File-extension renderer registrations, independent from their keyed document bodies. */
     documentPreviews: DocumentPreviewRegistry
   }
@@ -111,6 +113,7 @@ export function apply(ctx: ClientContext): void {
       },
       inject: (sessionId, actions): TextPreviewInjected => ({
         ...face(sessionId, actions), hooks: { documentPreviews: source },
+        formatRemoteError: message => ctx.get('formatRemoteError')?.(message) ?? message,
       }),
     },
     TextPreview,

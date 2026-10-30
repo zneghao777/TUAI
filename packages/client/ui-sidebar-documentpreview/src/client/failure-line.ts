@@ -21,7 +21,7 @@ function humanBytes(bytes: number): string {
  * @param failure - the settled Remote failure.
  * @returns the line to show in place of the file.
  */
-export function failureLine(t: TranslateNS<'sidebarDocumentPreview'>, failure: RemoteFailure): string {
+export function failureLine(t: TranslateNS<'sidebarDocumentPreview'>, failure: RemoteFailure, formatRemoteError?: (message: string) => string): string {
   switch (failure.code) {
     case 'workspace-file/not-found': return t('error.notFound')
     case 'workspace-file/too-large':
@@ -30,7 +30,7 @@ export function failureLine(t: TranslateNS<'sidebarDocumentPreview'>, failure: R
     case 'workspace-file/not-regular-file': return t('error.notRegularFile')
     // Carrier and unclassified host failures reach the reader as themselves:
     // this panel knows nothing useful to add to a transport-level message.
-    default: return t('error.unavailable', { message: failure.message })
+    default: return t('error.unavailable', { message: formatRemoteError?.(failure.message) ?? failure.message })
   }
 }
 

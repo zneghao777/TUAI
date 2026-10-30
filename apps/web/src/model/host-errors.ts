@@ -372,6 +372,14 @@ export function localizeHostError(message: string, language: ProductLanguage): s
   const index = language === 'en' ? 0 : 1
   const direct = messages[message]?.[index]
   if (direct) return direct
+  const hostPath =
+    /^(Home|TIANZHIAI_HOME|APPDATA|XDG_CONFIG_HOME|XDG_DATA_HOME|XDG_STATE_HOME|XDG_CACHE_HOME) 必须是 Host 的绝对路径$/.exec(
+      message,
+    )
+  if (hostPath)
+    return language === 'en'
+      ? `${hostPath[1]} must be an absolute path on the Host`
+      : `${hostPath[1]} deve essere un percorso assoluto sull’Host`
   // unwrap() preserves the remote error code alongside its message.
   const prefixed = /^([^：:\n]+)(?:：|: )(.+)$/.exec(message)
   if (prefixed) {

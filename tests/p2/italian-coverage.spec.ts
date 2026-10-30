@@ -21,9 +21,31 @@ import { en as base18 } from '../../packages/client/ui-sidebar-documentpreview/s
 import { en as base19 } from '../../packages/session/message-quotes/src/client/locales.ts'
 import { en as base20 } from '../../packages/session-query/session-log-export/src/client/locales.ts'
 import { en as base21 } from '../../packages/client/ui-layout/src/client/shortcut-locales.ts'
+import { en as common } from '../../packages/client/locale/src/locales/index.ts'
+import { en as approval } from '../../packages/client/ui-approval/src/client/locales.ts'
+import { en as question } from '../../packages/client/ui-user-questions/src/client/locales.ts'
+import { en as sidebar } from '../../packages/client/ui-sidebar/src/client/locales.ts'
+import { en as sidebarRight } from '../../packages/client/ui-sidebar-right/src/client/locales.ts'
+import {
+  en as permission,
+  accessEn,
+} from '../../packages/client/ui-permission-presets/src/client/locales.ts'
+import { en as theme } from '../../packages/client/ui-theme/src/client/locales.ts'
 import { italianConversation } from '../../apps/web/src/model/italian-conversation'
 import { italianChat } from '../../apps/web/src/model/italian-chat'
 import { italianChatSettings } from '../../apps/web/src/model/italian-settings'
+import { italianTheme } from '../../apps/web/src/model/italian-settings'
+import { italianCommon } from '../../apps/web/src/model/italian-common'
+import {
+  italianApproval,
+  italianQuestion,
+  italianSidebar,
+  italianSidebarRight,
+} from '../../apps/web/src/model/italian-shell'
+import {
+  permissionSettingsIt,
+  permissionAccessIt,
+} from '../../apps/web/src/model/italian-permissions'
 import { italianWorkspace } from '../../apps/web/src/model/italian-workspace'
 import {
   italianCommand,
@@ -50,6 +72,14 @@ import {
 } from '../../apps/web/src/model/italian-preview'
 
 const dictionaries: Array<[string, Record<string, string>, Record<string, string>]> = [
+  ['common', common, italianCommon],
+  ['approval', approval, italianApproval],
+  ['question', question, italianQuestion],
+  ['sidebar', sidebar, italianSidebar],
+  ['sidebarRight', sidebarRight, italianSidebarRight],
+  ['settings.permission', permission, permissionSettingsIt],
+  ['permission.access', accessEn, permissionAccessIt],
+  ['settings.theme', theme, italianTheme],
   ['conversation', base0, italianConversation],
   ['chat', base1, { ...italianChat, ...italianChatSettings }],
   ['command', base2, italianCommand],

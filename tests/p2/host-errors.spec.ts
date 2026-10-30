@@ -21,6 +21,15 @@ describe('Host error presentation', () => {
     )
   })
   it('preserves recovery paths and never changes unknown details', () => {
+    expect(localizeHostError('TIANZHIAI_HOME 必须是 Host 的绝对路径', 'it')).toBe(
+      'TIANZHIAI_HOME deve essere un percorso assoluto sull’Host',
+    )
+    expect(localizeHostError('晨曦主题目前仅支持浅色', 'it')).toBe(
+      'Il tema Alba supporta attualmente solo la modalità chiara',
+    )
+    expect(localizeHostError('gateway/internal: 纯白主题目前仅支持浅色', 'en')).toBe(
+      'gateway/internal: The Pure White theme currently supports light mode only',
+    )
     expect(localizeHostError('文件删除未完成；文件保留在 /tmp/a，b，请手动恢复', 'it')).toContain(
       '/tmp/a，b',
     )

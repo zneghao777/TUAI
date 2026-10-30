@@ -25,8 +25,7 @@ export const italianDocumentPreview = {
 export const italianCodePreview = { title: 'Codice', copy: 'Copia', copied: 'Copiato' }
 export const italianExcel = {
   title: 'Foglio di calcolo',
-  // The embedded workbook viewer only provides Chinese and English resources.
-  language: 'en',
+  language: 'it',
   loading: 'Preparazione del documento…',
   invalid:
     'Impossibile aprire questo foglio di calcolo. Controlla formato, contenuto o protezione con password.',

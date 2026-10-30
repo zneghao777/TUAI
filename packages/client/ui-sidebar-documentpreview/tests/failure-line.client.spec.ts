@@ -32,6 +32,11 @@ describe('failureLine', () => {
   it('passes any other failure through in its own words', () => {
     expect(failureLine(t, failure('gateway/internal', {}, 'socket closed'))).toBe('error.unavailable(message=socket closed)')
   })
+
+  it('formats host messages when the product provides a translator', () => {
+    expect(failureLine(t, failure('gateway/internal', {}, 'translated by host'), message => `localized: ${message}`))
+      .toBe('error.unavailable(message=localized: translated by host)')
+  })
 })
 
 describe('emptyFailureRecourse', () => {

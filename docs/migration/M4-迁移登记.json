@@ -2863,18 +2863,18 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/index.ts",
-          "sha256": "b932d2360bbabc41dbb2e2610f12ec8b42b694df42273f277f3b15055d3c97cf",
-          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+          "sha256": "9dbe691770fb2b75c0fa66b3ff80c90530aaecba9873f89d09c26c6c2c2b54ee",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-conversation-locale.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/apply.ts",
-          "sha256": "498b9ad1c24bf2593f62c107ecf89efe28b5bda775a3ec674153fd4d993788a5",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
+          "sha256": "034bc711cbaa63533ebd68ec1db0d14395c7a5ea5c58c4c194ee63afacf7fdad",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-conversation-locale.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/contract/slots.ts",
-          "sha256": "ee01a74d11d1983701605c8ffe7b7106cff101e3507d9e7017fec71069d657d6",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070 适配 React 19；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch"
+          "sha256": "1c7a3bcc43b61846b0875cb6597c9566e70bc5c6eaf384c16b8c1e35a7375159",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070 适配 React 19；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-conversation-locale.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/input/hub.ts",
@@ -2888,8 +2888,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/service.ts",
-          "sha256": "9b550a0faf031c97f2eef69ea4c482aff8a693223c63aaab712ad874a1517e71",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "c38958ffa2325376a665c1f6a995673b6266190e59a65a6f52c9476bb20f7fda",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-conversation-locale.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/ConversationContent.tsx",
@@ -2943,8 +2943,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx",
-          "sha256": "a8d8014771c7d827ab9500bd4da218cb7cbc62db8199a66679cde2630b129c2e",
-          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch；2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch"
+          "sha256": "c3166040eae9263480edc924b8653863055121a49b9ae9703c63f781ef9d6161",
+          "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch；TZ-080 空会话输入和品牌交互适配，见 provenance/dsh-tz080-local.patch；2026-10-30 设置与输入区交互修复，见 provenance/dsh-settings-composer-20261030.patch；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-conversation-locale.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx",
@@ -2953,8 +2953,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/locales.ts",
-          "sha256": "fac0044430d9928bd217efe23a1956b3ed11ad6baea099d29ccd7e17996cdaf0",
-          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+          "sha256": "ada6b5ccd93a783d36cc29f08862a2a2b1604772fb2a674a73ba8c6e790c43df",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-conversation-locale.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/input/editor/ComposerContentEditable.tsx",
@@ -2985,8 +2985,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/submission-journal.ts",
-          "sha256": "e162c27d867cb0678768c880639641fd832cc0fac85c2c6d16921133564e9733",
-          "reason": "P2 持久输入恢复适配，按 Host/Session 隔离"
+          "sha256": "7d06590ea4c5c294e120255bd3bfb537f5503ab09feb0d55a9da424520b2103a",
+          "reason": "P2 持久输入恢复适配，按 Host/Session 隔离；TZ-087 错误提示本地化，见 provenance/dsh-tz087-conversation-locale.patch"
         }
       ]
     },
@@ -7140,8 +7140,8 @@
         },
         {
           "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
-          "sha256": "a523af498c6232c0f45229ec332eb48e34d88130415c0346a39b4102848a5759",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+          "sha256": "f43ba734d758afdd10226cf2ef2389aa23a4014ee6dca93d7d646b09f7defd0c",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-070～074 HeroUI 适配与原生事件契约兼容；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-document-errors.patch"
         },
         {
           "path": "packages/client/ui-sidebar-documentpreview/tests/document-preview-license-bundle.client.spec.ts",
@@ -7177,6 +7177,26 @@
           "path": "packages/client/ui-sidebar-documentpreview/tests/text-preview.client.spec.tsx",
           "sha256": "3f45bf3aaaa819bd1eb33a00b0bf510d3ec0ba587d4ab4f50c92e32576b8bc49",
           "reason": "TZ-070～074 HeroUI 控件及交互适配；见 dsh-p2-heroui-local.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/failure-line.ts",
+          "sha256": "a409c0738ae21cb7b0354a4632a548ef288fb9ac09f592ae75e72645e406ba6e",
+          "reason": "TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-document-errors.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/index.ts",
+          "sha256": "28ecea28cee6dd437151f2df7dbe3de8fd557e8a2555dd7046df584e83cc0214",
+          "reason": "TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-document-errors.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/office/index.ts",
+          "sha256": "0ac071881defc6362c061e277dcb98fd96b6b959a8f817e0b449c550bc22ace0",
+          "reason": "TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-document-errors.patch"
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/tests/failure-line.client.spec.ts",
+          "sha256": "d10387b8eeecb412fe915ec75215aa045637b3c0d415f1d0714edd78f94994ef",
+          "reason": "TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-document-errors.patch"
         }
       ],
       "additionalFiles": [
@@ -7775,8 +7795,8 @@
         },
         {
           "path": "packages/client/ui-workspace/src/client/toast/register.ts",
-          "sha256": "b7bbe7207b0e77b49d7b5cbf98841885b43aef306822c891b326571a7eae5a8b",
-          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+          "sha256": "b40d68182e6d52a7cf48a5fe95821174f086b2f7e89799005fdff616467ac5c8",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-workspace-locale.patch"
         }
       ],
       "additionalFiles": [
@@ -13078,7 +13098,8 @@
       "sha256": "2932e52e79afcd4ced08cfa123b5eded786c85043da32f622f3e80af6fc96c37",
       "source": "patches/@fortune-sheet__react@1.0.4.patch",
       "sourceSha256": "2932e52e79afcd4ced08cfa123b5eded786c85043da32f622f3e80af6fc96c37",
-      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容；TZ-087 为只读表格预览补充意大利语",
+      "localSha256": "4e26e53f36f4119ab5b83ac79779f3a047a456402a6952edfc53cc6c717f93f4"
     },
     {
       "path": "patches/lexical@0.49.0.patch",
@@ -13106,7 +13127,26 @@
       "sha256": "8791a230763dbf853fd65d627c68c31de37209992851377855e16cf08ea70532",
       "source": "patches/@fortune-sheet__core@1.0.4.patch",
       "sourceSha256": "8791a230763dbf853fd65d627c68c31de37209992851377855e16cf08ea70532",
-      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容"
+      "reason": "原测试 fixture / DOM 环境 / 依赖补丁；保持原许可和内容；TZ-087 为只读表格预览补充意大利语",
+      "localSha256": "cc583e2d1b63b6b30a80a11eaa71cdd1ccc811ef9dca8e9bf0888d8c1bd46147"
+    },
+    {
+      "path": "provenance/dsh-tz087-conversation-locale.patch",
+      "sha256": "aa75ffb0c72adefec06ccb6d1843b00519e43486574022806d7002f9300b3340",
+      "source": "local",
+      "reason": "TZ-087 本地翻译适配补丁"
+    },
+    {
+      "path": "provenance/dsh-tz087-document-errors.patch",
+      "sha256": "362d3dbfb461785fce6f2ee6b26bec65dcbb77aa944cf04cd5e4992356bc0d4d",
+      "source": "local",
+      "reason": "TZ-087 本地翻译适配补丁"
+    },
+    {
+      "path": "provenance/dsh-tz087-workspace-locale.patch",
+      "sha256": "cead7ddab547dc605eed08baa281a63022b4e17858b3390b4c3e7290ca06f652",
+      "source": "local",
+      "reason": "TZ-087 本地翻译适配补丁"
     }
   ],
   "completionRollbackRevision": "578c5f9f77f174e6c1392684ea93dd882b2aacd4",

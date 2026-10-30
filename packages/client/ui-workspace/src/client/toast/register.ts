@@ -5,6 +5,13 @@ import type { RowToastActions, WorkspaceViewStoreHandle } from '../contract/slot
 import type { ArchiveToastInjected, ToastDisplayInjected } from '../contract/toast.ts'
 import { ArchiveToastEntry, ToastEntry, WorkspaceToast } from './Toast.tsx'
 
+declare module '@deepseek-ai/cordis' {
+  interface Context {
+    /** Optional product translation for Host-provided error messages. */
+    formatRemoteError?: (message: string) => string
+  }
+}
+
 /** Register notice presentations with their business-owned display fields and actions.
  * @param ctx - Workspace plugin context.
  * @param viewStore - Viewing store, read only by archive notices.
@@ -69,7 +76,7 @@ export function registerToasts(
     yield ctx.slots.register({
       name: 'workspace.toast', key: 'createFailed', locale: 'workspace',
       inject: (): ToastDisplayInjected<'createFailed'> => ({
-        display: (notice, t) => ({ text: t('toast.createFailed', { message: notice.message }), tone: 'warning', holdMs: 6000 }),
+        display: (notice, t) => ({ text: t('toast.createFailed', { message: ctx.get('formatRemoteError')?.(notice.message) ?? notice.message }), tone: 'warning', holdMs: 6000 }),
       }),
     }, ToastEntry<PropsRuntime<'workspace.toast', 'createFailed'>>)
     yield ctx.slots.register({

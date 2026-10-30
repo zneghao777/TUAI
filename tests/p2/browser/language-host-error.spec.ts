@@ -67,3 +67,58 @@ test('Italian translates a Host session error while preserving the draft', async
     await host.dispose()
   }
 })
+
+test('Italian translates Host errors from the new-chat button', async ({ page }) => {
+  const host = await fixtureHost()
+  try {
+    await page.goto(host.login)
+    await page.getByRole('button', { name: '设置', exact: true }).click()
+    await page.getByRole('tab', { name: '通用', exact: true }).click()
+    await page.getByRole('button', { name: '语言: 中文' }).click()
+    await page.getByRole('menuitem', { name: 'Italiano' }).click()
+    await page.getByRole('button', { name: 'Chiudi', exact: true }).click()
+    host.runtime.ctx.sessionController.prepareCreate = async () => {
+      throw new Error('Host 会话服务尚未就绪，请检查认证与连接')
+    }
+    await page.getByRole('button', { name: 'Nuova chat', exact: true }).click()
+    await expect(
+      page.getByText(
+        /Creazione della sessione non riuscita:.*Il servizio chat dell’Host non è pronto/,
+      ),
+    ).toBeVisible()
+  } finally {
+    await page.close().catch(() => {})
+    await host.dispose()
+  }
+})
+
+test('Italian translates Host errors in document preview', async ({ page }) => {
+  const host = await fixtureHost()
+  try {
+    await page.goto(host.login)
+    const id = await page
+      .locator('[data-session-id][aria-current=page]')
+      .getAttribute('data-session-id')
+    const session = host.runtime.ctx.sessions.list().find((item) => item.id === id)
+    await writeFile(join(session.header.cwd, 'failure.txt'), 'fixture')
+    await page.getByRole('button', { name: '打开右侧边栏' }).click()
+    await page.getByRole('button', { name: /工作区文件/ }).click()
+    await expect(page.getByText('failure.txt', { exact: true })).toBeVisible()
+    await page.getByRole('button', { name: '设置', exact: true }).click()
+    await page.getByRole('tab', { name: '通用', exact: true }).click()
+    await page.getByRole('button', { name: '语言: 中文' }).click()
+    await page.getByRole('menuitem', { name: 'Italiano' }).click()
+    await page
+      .getByRole('dialog', { name: 'Impostazioni' })
+      .getByRole('button', { name: 'Chiudi', exact: true })
+      .click()
+    host.runtime.ctx.workspaceFiles.read = async () => {
+      throw new Error('文件已变化，请刷新后重试')
+    }
+    await page.getByText('failure.txt', { exact: true }).click()
+    await expect(page.getByText(/Il file è cambiato\. Aggiorna e riprova\./)).toBeVisible()
+  } finally {
+    await page.close().catch(() => {})
+    await host.dispose()
+  }
+})

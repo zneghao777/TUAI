@@ -119,4 +119,27 @@ describe('language preference', () => {
     await pending
     expect(locale.getSnapshot().active).toBe('zh')
   })
+
+  it('serializes a pending language change and accepts subsequent Host updates', async () => {
+    const { runtime, form, locale, update } = setup()
+    let finish!: (accepted: boolean) => void
+    form.set.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve
+        }),
+    )
+    const first = runtime.setLanguage('it')
+    await runtime.setLanguage('en')
+    expect(form.set).toHaveBeenCalledTimes(1)
+    expect(runtime.state.getSnapshot().saving).toBe(true)
+    update({ preference: 'it' })
+    finish(true)
+    await first
+    expect(locale.getSnapshot().active).toBe('it')
+    expect(runtime.state.getSnapshot().saving).toBe(false)
+    update({ preference: 'en' })
+    expect(locale.getSnapshot().active).toBe('en')
+    runtime.dispose()
+  })
 })

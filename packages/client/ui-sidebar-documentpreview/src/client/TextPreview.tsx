@@ -38,6 +38,7 @@ export type { LoadedPage } from './text/lines.ts'
 
 /** Private registration inputs; the framework binds the registry source to useDocumentPreviews. */
 export interface TextPreviewInjected extends TextInjected {
+  readonly formatRemoteError?: (message: string) => string
   readonly hooks: { readonly documentPreviews: ObservableSnapshot<readonly DocumentPreviewDefinition[]> }
 }
 
@@ -57,7 +58,7 @@ export type TextPreviewProps =
 export function TextPreview({
   useTabInfo, useResource, useStore, actions, loadPage, reloadPages,
   loadAll, reloadAll, prepareRenderer, useDocumentPreviews, renderSlot, t,
-  addResource, setResources,
+  addResource, setResources, formatRemoteError,
 }: TextPreviewProps): ReactNode {
   const { tab } = useTabInfo()
   const { navigation, signal } = tab
@@ -240,7 +241,7 @@ export function TextPreview({
           // With nothing read the body's own failure already says it, so the
           // bar would only repeat the same line.
           <p className={css.changed} data-textpreview-meta-failed={meta.failure.code}>
-            <span>{failureLine(t, meta.failure)}</span>
+            <span>{failureLine(t, meta.failure, formatRemoteError)}</span>
             <ActionButton
               type="button"
               className={css.action}
@@ -361,7 +362,7 @@ export function TextPreview({
         {current?.failure !== undefined && (hasContent
           ? (
             <p className={css.statusLine} data-textpreview-failed={current.failure.code}>
-              <span>{failureLine(t, current.failure)}</span>
+              <span>{failureLine(t, current.failure, formatRemoteError)}</span>
               <ActionButton
                 type="button"
                 className={css.action}
@@ -380,7 +381,7 @@ export function TextPreview({
             // Metadata observation remains owned by the resource provider.
             <div className={css.empty} data-textpreview-failed={current.failure.code}>
               <FileTypeIcon kind={classifyFileType(name)} size={36} className={css.emptyIcon} />
-              <p className={css.emptyLine}>{failureLine(t, current.failure)}</p>
+              <p className={css.emptyLine}>{failureLine(t, current.failure, formatRemoteError)}</p>
               {emptyFailureRecourse(current.failure) === 'open' && fileOwner !== undefined
                 && renderSlot('sidebar.right.tab.document.unpreviewable', fileOwner)}
               {emptyFailureRecourse(current.failure) === 'retry' && (

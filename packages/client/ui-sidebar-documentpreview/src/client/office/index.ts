@@ -51,7 +51,9 @@ export function apply(ctx: Context, config: Config['office']): void {
   const documentT = ctx.locale.bind('sidebarDocumentPreview')
   const face = officeFace(
     (file, signal) => read(file, signal),
-    failure => 'code' in failure ? failureLine(documentT, failure) : documentT('error.unavailable', { message: failure.message }),
+    failure => 'code' in failure
+      ? failureLine(documentT, failure, message => ctx.get('formatRemoteError')?.(message) ?? message)
+      : documentT('error.unavailable', { message: ctx.get('formatRemoteError')?.(failure.message) ?? failure.message }),
   )
   ctx.effect(() => ctx.slots.inject('sidebar.right.tab.document', () => ctx.slots.register({
     name: 'sidebar.right.tab.document', key: id, locale: 'sidebarOffice', store,
