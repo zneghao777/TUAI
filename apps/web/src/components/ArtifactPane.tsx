@@ -11,6 +11,7 @@ import type { ArtifactInfo } from '@tianzhiai/web-host/types'
 import type { AppClient } from '../model/client'
 import { describe, unwrap } from '../model/client'
 import { useProductLanguage } from '../model/product-language'
+import { localizeHostError } from '../model/host-errors'
 import type { ProductLanguage } from '../model/language'
 
 const artifactCopy: Record<string, readonly [string, string]> = {
@@ -155,7 +156,7 @@ function ArtifactPreview({
       className="tz-artifact-preview"
     >
       {error ? (
-        <p role="alert">{error}</p>
+        <p role="alert">{localizeHostError(error, language)}</p>
       ) : !content ? (
         <p role="status">{tr('正在加载…')}</p>
       ) : content.kind === 'image' ? (
@@ -220,7 +221,7 @@ export function mountArtifactPane(client: AppClient) {
               >
                 {tr('下载文件')}
               </ActionButton>
-              {error && <span role="alert">{error}</span>}
+              {error && <span role="alert">{localizeHostError(error, language)}</span>}
             </>
           )
         },
@@ -343,7 +344,7 @@ export function mountArtifactPane(client: AppClient) {
               </div>
               {downloadError && (
                 <p className="tz-artifacts-error" role="alert">
-                  {downloadError}
+                  {localizeHostError(downloadError, language)}
                 </p>
               )}
               {loading ? (
@@ -361,7 +362,7 @@ export function mountArtifactPane(client: AppClient) {
                         it: 'Caricamento non riuscito: ',
                       }[language]
                     }
-                    {error}
+                    {localizeHostError(error, language)}
                   </span>
                   <ActionButton
                     className="tz-pane-action"

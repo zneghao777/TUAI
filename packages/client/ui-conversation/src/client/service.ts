@@ -20,6 +20,7 @@ import type {
   ISessions, PendingSubmissionAttachment, PendingSubmissionRetirement, SessionFace,
 } from '@deepseek-ai/dsh-api-session-controller/client'
 import type {} from '@deepseek-ai/dsh-client-file-upload/client'
+import type {} from '@deepseek-ai/dsh-client-locale/client'
 import type { SessionId } from '@deepseek-ai/dsh-session/types'
 import type { FileAttachmentRef, ImageMediaType } from '@deepseek-ai/dsh-attachment'
 import { createSnapshotStore, scopedPersistenceKey } from '@deepseek-ai/dsh-client-store'
@@ -287,7 +288,7 @@ export class ConversationController extends Service implements IConversation {
     const retirement = attachments.length === 0
       ? undefined
       : new Promise<PendingSubmissionRetirement>((resolve) => { finishRetirement = resolve })
-    const journalId = this.persistDraftUploads ? reserveInput(session.sessionId, text, mode, attachmentIds) : undefined
+    const journalId = this.persistDraftUploads ? reserveInput(session.sessionId, text, mode, attachmentIds, this.ctx.locale.bind('conversation')('error.pendingLimit')) : undefined
     const submission = session.beginSubmission({
       ...(journalId === undefined ? {} : { requestId: journalId }),
       mode,
@@ -316,7 +317,8 @@ export class ConversationController extends Service implements IConversation {
     if (!result.ok) {
       const uncertain = ['gateway/internal', 'gateway/cancelled'].includes(result.error.code)
       if (journalId !== undefined && !uncertain) finishInput(session.sessionId, journalId)
-      return { kind: 'error', text: uncertain ? '发送状态尚未确认，请检查连接后再次发送；原请求身份已保留。' : `${result.error.message}。Host 已拒绝，请编辑后重新提交。` }
+      const message = this.ctx.get('formatRemoteError')?.(result.error.message) ?? result.error.message
+      return { kind: 'error', text: uncertain ? this.ctx.locale.bind('conversation')('error.sendUncertain') : this.ctx.locale.bind('conversation')('error.sendRejected', { message }) }
     }
     if (journalId !== undefined) finishInput(session.sessionId, journalId)
     if (retirement !== undefined && (await retirement).reason !== 'observed') {
@@ -395,7 +397,7 @@ export class ConversationController extends Service implements IConversation {
         this.recoveredDrafts.add(id)
         const state: DraftFileUpload = 'receiptId' in row && typeof row.receiptId === 'string'
           ? { status: 'ready', receiptId: brandString<FileUploadReceiptId>(row.receiptId) }
-          : { status: 'error', message: '上传未完成，请移除此项并重新选择文件' }
+          : { status: 'error', message: this.ctx.locale.bind('conversation')('error.uploadInterrupted') }
         this.fileUploads.update(draft => { draft[id] = state })
         return [id]
       })

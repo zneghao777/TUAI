@@ -10,6 +10,8 @@ import type {} from '@deepseek-ai/dsh-client-ui-sidebar/client'
 import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import { Button as HeroButton } from '@heroui/react'
+import { I18nProvider } from 'react-aria-components'
+import type { ReactNode } from 'react'
 import { ChatSidebar } from './components/ChatSidebar'
 import { FILES_PANEL, FileLibrary } from './components/FileLibrary'
 import { SkillsPage } from './components/SkillsPage'
@@ -25,9 +27,22 @@ import { AppearanceRuntime } from './model/appearance'
 import { LanguageRuntime } from './model/language'
 import { LanguageSettings } from './components/LanguageSettings'
 import { useProductLanguage } from './model/product-language'
+import { localizeHostError } from './model/host-errors'
 import type { AppClient } from './model/client'
 import { mountArtifactPane } from './components/ArtifactPane'
 import brandLogo from './assets/tianzhi-logo.png'
+
+function ProductProviders({ client, children }: { client: AppClient; children: ReactNode }) {
+  const language = useProductLanguage(client)
+  return (
+    <I18nProvider locale={language === 'zh' ? 'zh-CN' : language}>
+      <MarkdownDelegateProvider allowRemoteImages={false}>
+        {children}
+        <CursorGlow />
+      </MarkdownDelegateProvider>
+    </I18nProvider>
+  )
+}
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
   interface SlotMap {
@@ -208,7 +223,10 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
             aria-label={`${copy.current}${label}${effort ? `, ${effort}` : ''}`}
             onPress={activate}
           >
-            <span>{label}</span>
+            <span className="tz-model-icon" aria-hidden="true">
+              <Icon name="model" />
+            </span>
+            <span className="tz-model-name">{label}</span>
             {effort ? <span className="tz-model-effort">{effort}</span> : null}
             <Icon name="chevron" />
           </HeroButton>
@@ -243,10 +261,13 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
         function ConnectionNotice() {
           const state = useSource(client.connection.state)
           const facts = useSource(client.facts)
-          const copy = shellCopy[useProductLanguage(client)]
+          const language = useProductLanguage(client)
+          const copy = shellCopy[language]
           return state !== 'connected' || facts.error ? (
             <div className="tz-connection" role="alert">
-              <span>{facts.error ?? copy.connection}</span>
+              <span>
+                {facts.error ? localizeHostError(facts.error, language) : copy.connection}
+              </span>
               <HeroButton
                 variant="ghost"
                 className="tz-pane-action"
@@ -304,10 +325,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     ),
   ]
   const unmount = ctx.uiRenderer.mount(container, (app) => (
-    <MarkdownDelegateProvider allowRemoteImages={false}>
-      {app}
-      <CursorGlow />
-    </MarkdownDelegateProvider>
+    <ProductProviders client={client}>{app}</ProductProviders>
   ))
   return () => {
     unmount()

@@ -46,7 +46,7 @@ export type InputBarProps = ComposerBarProps
 
 export const InputBar = memo(function InputBar({
   useSession, useInput, inputActions, keyboard, addFiles, removeAttachment, resolveDraftAttachments,
-  retryFileUpload,
+  retryFileUpload, formatRemoteError,
   toggleCommandMenu, stop, t,
   renderSlot, useBusyEnter, useFileUploads, useNotices, useLexicon, useMenuLauncher, useStopShortcut,
   useAccess,
@@ -123,12 +123,12 @@ export const InputBar = memo(function InputBar({
       } else pendingControl.current = null
     }).catch((error: unknown) => {
       pendingControl.current = null
-      showToast(error instanceof Error ? error.message : '创建会话失败，请重试')
+      showToast(error instanceof Error ? formatRemoteError(error.message) : t('error.createFailed'))
     }).finally(() => {
       creatingRef.current = false
       setCreating(false)
     })
-  }, [startManagedChat, stagedDraft, showToast])
+  }, [startManagedChat, stagedDraft, showToast, t, formatRemoteError])
   // The deployment's image-intake limits (absent while no attachment service
   // is composed — the pre-check below then defers entirely to the host).
   const imageLimits = useProjection('imageLimits')
@@ -154,11 +154,11 @@ export const InputBar = memo(function InputBar({
     }
     showToast(error.code === 'session/attachment-invalid' || error.code === 'subagent/attachment-invalid'
       ? attachmentErrorText(t, error.details.reason, imageLimits)
-      : `${error.message} (${error.code})`)
-  }, [promptError, showToast, t, imageLimits])
+      : `${formatRemoteError(error.message)} (${error.code})`)
+  }, [promptError, showToast, t, imageLimits, formatRemoteError])
   useEffect(() => {
-    if (notice?.level === 'error') showToast(notice.text)
-  }, [notice, showToast])
+    if (notice?.level === 'error') showToast(formatRemoteError(notice.text))
+  }, [notice, showToast, formatRemoteError])
   const rowRef = useRef<HTMLDivElement | null>(null)
   useLayoutEffect(() => {
     const row = rowRef.current

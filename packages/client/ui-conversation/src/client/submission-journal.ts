@@ -21,12 +21,12 @@ export function pendingInputs(id: SessionId): PendingInput[] {
     })
   } catch { return [] }
 }
-export function reserveInput(id: SessionId, text: string, mode: string, attachments: readonly DraftAttachmentId[]): SessionRequestId {
+export function reserveInput(id: SessionId, text: string, mode: string, attachments: readonly DraftAttachmentId[], limitMessage = '待确认输入过多，请先检查连接与会话历史'): SessionRequestId {
   const rows = pendingInputs(id)
   const signature = JSON.stringify([text, mode, attachments])
   const found = rows.find(row => row.signature === signature)
   if (found) return found.requestId
-  if (rows.length >= 128) throw new Error('待确认输入过多，请先检查连接与会话历史')
+  if (rows.length >= 128) throw new Error(limitMessage)
   const requestId = brandString<SessionRequestId>(randomUUID())
   // A failed durable write prevents the send, rather than losing retry identity.
   localStorage.setItem(key(id), JSON.stringify([...rows, { requestId, text, signature, attachments }]))

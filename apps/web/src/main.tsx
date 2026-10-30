@@ -1,6 +1,8 @@
 import { createRoot, type Root } from 'react-dom/client'
 import { AppClient } from './model/client'
 import { mountProductUi } from './ui'
+import { readBootLanguage } from './model/language'
+import { localizeHostError } from './model/host-errors'
 import './hero.css'
 import '@deepseek-ai/dsh-client-ui-theme/src/styles/base.css'
 import '@deepseek-ai/dsh-client-ui-theme/src/styles/design-platform.css'
@@ -13,11 +15,33 @@ import './chat-theme.css'
 const container = document.getElementById('root')!
 let root: Root | undefined
 const client = new AppClient()
+const bootLanguage = readBootLanguage()
+const bootCopy = {
+  zh: {
+    loading: '正在连接天质 AI…',
+    failed: '连接未完成',
+    unavailable: 'Host 未就绪',
+    retry: '重新连接',
+  },
+  en: {
+    loading: 'Connecting to Tianzhi AI…',
+    failed: 'Connection failed',
+    unavailable: 'Host is not ready',
+    retry: 'Reconnect',
+  },
+  it: {
+    loading: 'Connessione a Tianzhi AI…',
+    failed: 'Connessione non riuscita',
+    unavailable: 'Host non ancora disponibile',
+    retry: 'Riconnetti',
+  },
+}[bootLanguage]
+document.documentElement.lang = bootLanguage === 'zh' ? 'zh-CN' : bootLanguage
 let unmount: (() => void) | undefined
 let closed = false
 const loading = document.createElement('p')
 loading.style.padding = '32px'
-loading.textContent = '正在连接天质 AI…'
+loading.textContent = bootCopy.loading
 container.replaceChildren(loading)
 void client
   .start()
@@ -31,9 +55,13 @@ void client
     root ??= createRoot(container)
     root.render(
       <main style={{ padding: 32 }}>
-        <h1>连接未完成</h1>
-        <p>{error instanceof Error ? error.message : 'Host 未就绪'}</p>
-        <button onClick={() => location.reload()}>重新连接</button>
+        <h1>{bootCopy.failed}</h1>
+        <p>
+          {error instanceof Error
+            ? localizeHostError(error.message, bootLanguage)
+            : bootCopy.unavailable}
+        </p>
+        <button onClick={() => location.reload()}>{bootCopy.retry}</button>
       </main>,
     )
   })

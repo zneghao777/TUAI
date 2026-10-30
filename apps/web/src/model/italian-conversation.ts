@@ -1,7 +1,16 @@
+import { italianConversationExtra } from './italian-conversation-extra'
 import type { ConversationKey } from '@deepseek-ai/dsh-client-ui-conversation/src/client/locales.ts'
 
 /** Product-owned Italian text for the conversation controls. */
 export const italianConversation = {
+  ...italianConversationExtra,
+  'error.createFailed': 'Impossibile creare la sessione. Riprova.',
+  'error.sessionNotReady': 'La sessione non è pronta. Riprova.',
+  'error.sendUncertain': 'L’invio non è ancora confermato. Controlla la connessione prima di riprovare; l’identità della richiesta originale è stata conservata.',
+  'error.sendRejected': '{message}. L’Host ha rifiutato la richiesta; modificala prima di inviarla di nuovo.',
+  'error.uploadInterrupted': 'Caricamento incompleto. Rimuovi questo elemento e seleziona di nuovo il file.',
+  'error.pendingLimit': 'Troppe richieste sono in attesa di conferma. Controlla la connessione e la cronologia della sessione.',
+
   'quote.remove': 'Rimuovi citazione',
   'shortcut.newline': 'Vai a capo',
   'shortcut.complementary': 'Usa l’altra modalità di invio',
@@ -76,4 +85,4 @@ export const italianConversation = {
     'Comportamento di Invio e del pulsante di invio mentre l’agente lavora; Cmd/Ctrl+Invio usa l’altra modalità',
   'settings.enter.queue': 'Accoda',
   'settings.enter.steer': 'Intervieni',
-} satisfies Partial<Record<ConversationKey, string>>
+} satisfies Record<ConversationKey, string>

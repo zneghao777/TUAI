@@ -9,9 +9,25 @@ import { isLanguage, type LanguageRuntime } from '../model/language'
 import type { AppClient } from '../model/client'
 
 const labels = {
-  zh: { language: '语言', failed: '语言设置未保存，请重试' },
-  en: { language: 'Language', failed: 'Language could not be saved. Try again.' },
-  it: { language: 'Lingua', failed: 'Impossibile salvare la lingua. Riprova.' },
+  zh: {
+    language: '语言',
+    failed: '语言设置未保存，请重试',
+    unavailable: '当前 Host 不支持语言设置，请更新并重启 Host',
+    readOnly: '当前语言设置不可修改',
+  },
+  en: {
+    language: 'Language',
+    failed: 'Language could not be saved. Try again.',
+    unavailable: 'This Host does not support language settings. Update and restart the Host.',
+    readOnly: 'Language settings are read-only.',
+  },
+  it: {
+    language: 'Lingua',
+    failed: 'Impossibile salvare la lingua. Riprova.',
+    unavailable:
+      'Questo Host non supporta le impostazioni della lingua. Aggiorna e riavvia l’Host.',
+    readOnly: 'Le impostazioni della lingua sono di sola lettura.',
+  },
 }
 const options = [
   { id: 'zh', label: '中文' },
@@ -36,9 +52,9 @@ export function LanguageSettings({
     <div className="tz-language-settings" aria-busy={state.saving}>
       <div className="tz-language-text">
         <div className="tz-language-title">{copy.language}</div>
-        {state.error ? (
+        {state.error || state.unavailable || state.readOnly ? (
           <div role="alert" className="tz-language-error">
-            {copy.failed}
+            {state.error ? copy.failed : state.unavailable ? copy.unavailable : copy.readOnly}
           </div>
         ) : null}
       </div>

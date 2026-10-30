@@ -30,12 +30,16 @@ test('语言设置切换并在 Host 重启后恢复', async ({ page }) => {
     await page.getByRole('menuitem', { name: 'English' }).click()
     await expect(page.getByRole('dialog', { name: 'Settings' })).toBeVisible()
     await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+    await expect(page.locator('button[aria-label="Dismiss"]').first()).toHaveCount(1)
     await page.getByRole('button', { name: 'Language: English' }).click()
     await page.getByRole('menuitem', { name: 'Italiano' }).click()
     await expect(page.getByRole('dialog', { name: 'Impostazioni' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Generale' })).toBeVisible()
     await expect(page.getByText('Autorizzazioni', { exact: true })).toBeVisible()
     await expect(page.locator('html')).toHaveAttribute('lang', 'it')
+    const dismiss = page.locator('button[tabindex="-1"][style*="width: 1px"]').first()
+    await expect(dismiss).toHaveAttribute('aria-label', /.+/)
+    await expect(dismiss).not.toHaveAttribute('aria-label', '取消')
     await page.getByRole('button', { name: 'Sola lettura', exact: true }).click()
     await expect(
       page.getByRole('menuitem', { name: 'Accesso completo', exact: true }),

@@ -520,6 +520,7 @@ export interface ComposerBarOwnerProps {
 
 /** Package-private operations injected into the resident composer bar. */
 export interface ComposerBarInjected {
+  formatRemoteError: (message: string) => string
   keyboard: ComposerKeyboard | undefined
   /**
    * Register one picked batch; resolves to the rejection copy or null. Where

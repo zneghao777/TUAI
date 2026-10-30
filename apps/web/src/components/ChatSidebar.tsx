@@ -30,6 +30,7 @@ import { FILES_PANEL } from './FileLibrary'
 import { SKILLS_PANEL } from '../model/skills'
 import s from '../App.module.css'
 import { useProductLanguage } from '../model/product-language'
+import { localizeHostError } from '../model/host-errors'
 import type { ProductLanguage } from '../model/language'
 
 const chatCopy = {
@@ -534,7 +535,7 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
                         language
                       ]
                     }
-                    {searchError}
+                    {localizeHostError(searchError, language)}
                   </p>
                 ) : null}
                 {searchHasMore ? (
@@ -547,7 +548,7 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
       ) : null}
       {error && !rename && !confirm ? (
         <p className="tz-chat-error" role="alert">
-          {error}
+          {localizeHostError(error, language)}
         </p>
       ) : null}
       {rename ? (
@@ -589,7 +590,7 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
                   onChange={(event) => setTitle(event.target.value)}
                   disabled={busy}
                 />
-                {error ? <p role="alert">{error}</p> : null}
+                {error ? <p role="alert">{localizeHostError(error, language)}</p> : null}
                 <div className="tz-chat-dialog-actions">
                   <ExistingButton
                     variant="outline"
@@ -667,7 +668,7 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
                   }[language]}
             </p>
           </div>
-          {error ? <p role="alert">{error}</p> : null}
+          {error ? <p role="alert">{localizeHostError(error, language)}</p> : null}
         </ExistingModal>
       ) : null}
     </>

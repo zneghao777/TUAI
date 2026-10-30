@@ -10,6 +10,7 @@ import { Button, Icon } from './kit'
 import { Select } from './Select'
 import s from '../App.module.css'
 import { useProductLanguage } from '../model/product-language'
+import { localizeHostError } from '../model/host-errors'
 
 const modelCopy = {
   模型: {
@@ -294,7 +295,7 @@ export function ModelSettings({
         const result = unwrap(await client.ctx.remote.platform.testModelProvider(request))
         setTestOk(result.ok)
         setTestMessage(
-          `${result.message} · ${(result.latencyMs / 1000).toFixed(1)} ${language === 'zh' ? '秒' : 's'}`,
+          `${localizeHostError(result.message, language)} · ${(result.latencyMs / 1000).toFixed(1)} ${language === 'zh' ? '秒' : 's'}`,
         )
       } else {
         const next = unwrap(
@@ -674,7 +675,7 @@ export function ModelSettings({
       ) : null}
       {error ? (
         <p role="alert" className={s.error}>
-          {error}
+          {localizeHostError(error, language)}
           <Button
             disabled={busy}
             onClick={() => {

@@ -12,6 +12,7 @@ import { unwrap, describe, type AppClient } from '../model/client'
 import { useSkill } from '../model/skills'
 import './SkillsPage.css'
 import { useProductLanguage } from '../model/product-language'
+import { localizeHostError } from '../model/host-errors'
 
 const skillCopy: Record<string, readonly [string, string]> = {
   技能管理: ['Skills', 'Gestione competenze'],
@@ -264,7 +265,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
       </header>
       {error ? (
         <div role="alert" className="tz-skills-error">
-          {error}
+          {localizeHostError(error, language)}
           <Button size="sm" onClick={() => void run(() => reload())}>
             {tr('刷新')}
           </Button>
@@ -608,7 +609,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
             ? `${source} · ${{ zh: `${bundle.length} 个文件`, en: `${bundle.length} files`, it: `${bundle.length} file` }[language]}`
             : tr('包含配套资源时请选择完整目录，最多 2 MB。')}
         </p>
-        {error ? <p role="alert">{error}</p> : null}
+        {error ? <p role="alert">{localizeHostError(error, language)}</p> : null}
       </Modal>
       <Modal
         open={editor !== undefined}
@@ -662,7 +663,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
           value={editor ?? ''}
           onChange={(e) => setEditor(e.target.value)}
         />
-        {error ? <p role="alert">{error}</p> : null}
+        {error ? <p role="alert">{localizeHostError(error, language)}</p> : null}
       </Modal>
     </section>
   )

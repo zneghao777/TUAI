@@ -6,6 +6,7 @@ import type { ModelSelection } from '@deepseek-ai/dsh-api-session-controller/typ
 import { Icon } from './kit'
 import type { AppClient } from '../model/client'
 import { useProductLanguage } from '../model/product-language'
+import { localizeHostError } from '../model/host-errors'
 
 const pickerCopy = {
   提供商默认: {
@@ -245,7 +246,10 @@ export function ModelPicker({
         isDisabled={locked}
         aria-label={`${{ zh: '选择模型，当前：', en: 'Select model, current: ', it: 'Seleziona modello, attuale: ' }[language]}${current?.name ?? t('未选择')}${label ? `, ${label}` : ''}`}
       >
-        <span>
+        <span className="tz-model-icon" aria-hidden="true">
+          <Icon name="model" />
+        </span>
+        <span className="tz-model-name">
           {current?.name ?? (state.status === 'loading' ? t('读取模型…') : t('选择模型'))}
         </span>
         {reasoning && label ? <span className="tz-model-effort">{label}</span> : null}
@@ -424,9 +428,14 @@ export function ModelPicker({
           {error || state.error || state.failures.length ? (
             <div role="alert" className="tz-model-error">
               <span>
-                {error ||
-                  state.error ||
-                  state.failures.map((f) => `${f.name}：${f.message}`).join('；')}
+                {localizeHostError(
+                  error ||
+                    state.error ||
+                    state.failures
+                      .map((f) => `${f.name}：${localizeHostError(f.message, language)}`)
+                      .join('；'),
+                  language,
+                )}
               </span>
               <Button
                 variant="ghost"

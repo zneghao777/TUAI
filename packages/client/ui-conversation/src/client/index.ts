@@ -110,6 +110,8 @@ export type { ComposerBlock, ComposerBlocks } from './contract/composer-blocks.t
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
+    /** Optional product translation of known Host error messages. */
+    formatRemoteError?: (message: string) => string
     /** Scope-addressed Conversation actions and per-Session input registry. */
     conversation: import('./service.ts').IConversation
     /** Target-neutral Conversation registries and per-Session assembly. */

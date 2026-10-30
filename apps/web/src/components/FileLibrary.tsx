@@ -19,6 +19,7 @@ import { useSource } from '../bindings'
 import { describe, unwrap, type AppClient } from '../model/client'
 import './FileLibrary.css'
 import { useProductLanguage } from '../model/product-language'
+import { localizeHostError } from '../model/host-errors'
 
 const libraryCopy: Record<string, readonly [string, string]> = {
   图片附件不可用: ['Image attachment unavailable', 'Allegato immagine non disponibile'],
@@ -410,7 +411,7 @@ function PreviewDialog({
             )}
             <div className="tz-image-stage">
               {error ? (
-                <p role="alert">{error}</p>
+                <p role="alert">{localizeHostError(error, language)}</p>
               ) : !preview ? (
                 <Spinner aria-label={tr('正在加载预览')} />
               ) : preview.kind === 'url' ? (
@@ -460,7 +461,7 @@ function PreviewDialog({
           </header>
           <div className="tz-library-preview-body">
             {error ? (
-              <p role="alert">{error}</p>
+              <p role="alert">{localizeHostError(error, language)}</p>
             ) : !preview ? (
               <Spinner aria-label={tr('正在加载预览')} />
             ) : preview.kind === 'url' ? (
@@ -583,7 +584,9 @@ export function FileLibrary({ client }: { client: AppClient }) {
       ),
     )
     const failures = results.flatMap((result, i) =>
-      result.status === 'rejected' ? [`${targets[i]!.name}：${describe(result.reason)}`] : [],
+      result.status === 'rejected'
+        ? [`${targets[i]!.name}：${localizeHostError(describe(result.reason), language)}`]
+        : [],
     )
     const failed = new Set(
       results.flatMap((result, i) => (result.status === 'rejected' ? [itemKey(targets[i]!)] : [])),
@@ -712,7 +715,7 @@ export function FileLibrary({ client }: { client: AppClient }) {
       </div>
       {error && (
         <div className="tz-library-error" role="alert">
-          {error}
+          {localizeHostError(error, language)}
           <Button variant="ghost" size="sm" onPress={() => setRevision((v) => v + 1)}>
             {tr('重试')}
           </Button>

@@ -9,6 +9,31 @@ import { italianCommon } from './italian-common'
 import { italianConversation } from './italian-conversation'
 import { italianChatSettings, italianTheme } from './italian-settings'
 import { italianChat } from './italian-chat'
+import { localizeHostError } from './host-errors'
+import { italianWorkspace } from './italian-workspace'
+import {
+  italianDocumentPreview,
+  italianCodePreview,
+  italianExcel,
+  italianHtml,
+  italianImage,
+  italianMarkdown,
+  italianOffice,
+  italianPdf,
+  italianQuotes,
+  italianExport,
+  italianLayoutShortcuts,
+} from './italian-preview'
+import {
+  italianCommand,
+  italianFileDrag,
+  italianGoal,
+  italianSlashMenu,
+  italianFeedback,
+  italianModel,
+  italianReference,
+  italianSidebarFiles,
+} from './italian-ui-extra'
 import {
   italianApproval,
   italianQuestion,
@@ -36,6 +61,26 @@ export async function mountUiFoundation(ctx: Context) {
       scope.effect(() => locale.register('question', 'it', italianQuestion))
       scope.effect(() => locale.register('sidebar', 'it', italianSidebar))
       scope.effect(() => locale.register('sidebarRight', 'it', italianSidebarRight))
+      scope.effect(() => locale.register('command', 'it', italianCommand))
+      scope.effect(() => locale.register('fileDrag', 'it', italianFileDrag))
+      scope.effect(() => locale.register('goal', 'it', italianGoal))
+      scope.effect(() => locale.register('slash.menu', 'it', italianSlashMenu))
+      scope.effect(() => locale.register('feedback', 'it', italianFeedback))
+      scope.effect(() => locale.register('model', 'it', italianModel))
+      scope.effect(() => locale.register('reference', 'it', italianReference))
+      scope.effect(() => locale.register('sidebarFiles', 'it', italianSidebarFiles))
+      scope.effect(() => locale.register('workspace', 'it', italianWorkspace))
+      scope.effect(() => locale.register('sidebarDocumentPreview', 'it', italianDocumentPreview))
+      scope.effect(() => locale.register('sidebarCodePreview', 'it', italianCodePreview))
+      scope.effect(() => locale.register('sidebarExcel', 'it', italianExcel))
+      scope.effect(() => locale.register('documentHtml', 'it', italianHtml))
+      scope.effect(() => locale.register('sidebarImage', 'it', italianImage))
+      scope.effect(() => locale.register('documentMarkdown', 'it', italianMarkdown))
+      scope.effect(() => locale.register('sidebarOffice', 'it', italianOffice))
+      scope.effect(() => locale.register('sidebarPdf', 'it', italianPdf))
+      scope.effect(() => locale.register('messageQuotes', 'it', italianQuotes))
+      scope.effect(() => locale.register('session-log-download', 'it', italianExport))
+      scope.effect(() => locale.register('shortcuts.layout', 'it', italianLayoutShortcuts))
       const syncLanguage = () => {
         if (typeof document === 'undefined') return
         document.documentElement.lang =
@@ -51,6 +96,10 @@ export async function mountUiFoundation(ctx: Context) {
         }),
       )
       scope.provide('locale', locale)
+      scope.provide('formatRemoteError', (message) => {
+        const active = locale.getSnapshot().active
+        return localizeHostError(message, active === 'en' || active === 'it' ? active : 'zh')
+      })
       scope.slots.installLocale(locale)
     },
   })

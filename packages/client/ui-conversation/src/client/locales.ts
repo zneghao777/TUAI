@@ -9,6 +9,13 @@ const PLAN_NEXT_ACTION_EN = 'describe your task to generate plan'
 
 /** Simplified Chinese dictionary (the key-set source of truth). */
 export const zh = {
+  "error.createFailed": "创建会话失败，请重试",
+  "error.sessionNotReady": "会话尚未就绪，请重试",
+  "error.sendUncertain": "发送状态尚未确认，请检查连接后再次发送；原请求身份已保留。",
+  "error.sendRejected": "{message}。Host 已拒绝，请编辑后重新提交。",
+  "error.uploadInterrupted": "上传未完成，请移除此项并重新选择文件",
+  "error.pendingLimit": "待确认输入过多，请先检查连接与会话历史",
+
   'quote.remove': '移除引用',
   'shortcut.newline': '换行',
   'shortcut.complementary': '使用互补的 Queue／Steer 方式',
@@ -392,6 +399,13 @@ export type ConversationKey = keyof typeof zh
 
 /** English dictionary, checked complete against the zh key set. */
 export const en = {
+  "error.createFailed": "Could not create the session. Try again.",
+  "error.sessionNotReady": "Session is not ready. Try again.",
+  "error.sendUncertain": "Sending is not yet confirmed. Check the connection before retrying; the original request identity has been retained.",
+  "error.sendRejected": "{message}. The Host rejected the request; edit it before submitting again.",
+  "error.uploadInterrupted": "Upload did not finish. Remove this item and choose the file again.",
+  "error.pendingLimit": "Too many inputs await confirmation. Check the connection and session history first.",
+
   'quote.remove': 'Remove quote',
   'shortcut.newline': 'New line',
   'shortcut.complementary': 'Use the complementary Queue / Steer action',
@@ -774,6 +788,13 @@ export const en = {
 
 /** Japanese copy, checked against the English keys. */
 export const ja = {
+  "error.createFailed": "セッションを作成できませんでした。再試行してください。",
+  "error.sessionNotReady": "セッションの準備ができていません。再試行してください。",
+  "error.sendUncertain": "送信状態を確認できません。接続を確認して再試行してください。元のリクエスト識別子は保持されています。",
+  "error.sendRejected": "{message}。Host が拒否しました。編集して再送信してください。",
+  "error.uploadInterrupted": "アップロードが未完了です。この項目を削除し、ファイルを選び直してください。",
+  "error.pendingLimit": "確認待ちの入力が多すぎます。接続と履歴を確認してください。",
+
   'quote.remove': '引用を削除',
   'shortcut.newline': '改行',
   'shortcut.complementary': '補助のキュー / 実行中の指示変更を使用',
@@ -1154,6 +1175,13 @@ export const ja = {
 
 /** Spanish dictionary, checked against the English keys. */
 export const es = {
+  "error.createFailed": "No se pudo crear la sesión. Inténtalo de nuevo.",
+  "error.sessionNotReady": "La sesión no está lista. Inténtalo de nuevo.",
+  "error.sendUncertain": "El envío aún no está confirmado. Comprueba la conexión antes de reintentar; se conserva la identidad de la solicitud original.",
+  "error.sendRejected": "{message}. El Host rechazó la solicitud; edítala antes de volver a enviarla.",
+  "error.uploadInterrupted": "La carga no se completó. Elimina este elemento y vuelve a seleccionar el archivo.",
+  "error.pendingLimit": "Hay demasiadas entradas pendientes de confirmación. Comprueba la conexión y el historial.",
+
   'quote.remove': 'Eliminar cotización',
   'shortcut.newline': 'Nueva linea',
   'shortcut.complementary': 'Usar la acción alternativa de poner en cola o redirigir',
@@ -1536,6 +1564,13 @@ export const es = {
 
 /** French dictionary, checked against the English keys. */
 export const fr = {
+  "error.createFailed": "Impossible de créer la session. Réessayez.",
+  "error.sessionNotReady": "La session n’est pas prête. Réessayez.",
+  "error.sendUncertain": "L’envoi n’est pas encore confirmé. Vérifiez la connexion avant de réessayer ; l’identité de la demande initiale est conservée.",
+  "error.sendRejected": "{message}. Le Host a refusé la demande ; modifiez-la avant de la renvoyer.",
+  "error.uploadInterrupted": "Le transfert est incomplet. Retirez cet élément et sélectionnez à nouveau le fichier.",
+  "error.pendingLimit": "Trop de messages attendent une confirmation. Vérifiez la connexion et l’historique.",
+
   'quote.remove': 'Supprimer le devis',
   'shortcut.newline': 'Nouvelle ligne',
   'shortcut.complementary': 'Utiliser l’action alternative de mise en attente ou de guidage',
@@ -1918,6 +1953,13 @@ export const fr = {
 
 /** German dictionary, checked against the English keys. */
 export const de = {
+  "error.createFailed": "Sitzung konnte nicht erstellt werden. Bitte erneut versuchen.",
+  "error.sessionNotReady": "Sitzung ist noch nicht bereit. Bitte erneut versuchen.",
+  "error.sendUncertain": "Der Versand ist noch nicht bestätigt. Verbindung vor einem erneuten Versuch prüfen; die ursprüngliche Anfragekennung bleibt erhalten.",
+  "error.sendRejected": "{message}. Der Host hat die Anfrage abgelehnt. Vor dem erneuten Senden bearbeiten.",
+  "error.uploadInterrupted": "Upload nicht abgeschlossen. Element entfernen und Datei erneut auswählen.",
+  "error.pendingLimit": "Zu viele Eingaben warten auf Bestätigung. Verbindung und Sitzungsverlauf prüfen.",
+
   'quote.remove': 'Zitat entfernen',
   'shortcut.newline': 'Neue Zeile',
   'shortcut.complementary': 'Die alternative Aktion zum Vormerken oder Lenken verwenden',
@@ -2300,6 +2342,13 @@ export const de = {
 
 /** Russian dictionary, checked against the English keys. */
 export const ru = {
+  "error.createFailed": "Не удалось создать сеанс. Повторите попытку.",
+  "error.sessionNotReady": "Сеанс ещё не готов. Повторите попытку.",
+  "error.sendUncertain": "Отправка ещё не подтверждена. Проверьте соединение перед повторной отправкой; идентификатор исходного запроса сохранён.",
+  "error.sendRejected": "{message}. Host отклонил запрос; измените его перед повторной отправкой.",
+  "error.uploadInterrupted": "Загрузка не завершена. Удалите элемент и выберите файл снова.",
+  "error.pendingLimit": "Слишком много сообщений ожидают подтверждения. Проверьте соединение и историю сеанса.",
+
   'quote.remove': 'Удалить цитату',
   'shortcut.newline': 'Новая линия',
   'shortcut.complementary': 'Использовать альтернативное действие: поставить в очередь или направить',
@@ -2682,6 +2731,13 @@ export const ru = {
 
 /** Portuguese dictionary, checked against the English keys. */
 export const pt = {
+  "error.createFailed": "Não foi possível criar a sessão. Tente novamente.",
+  "error.sessionNotReady": "A sessão ainda não está pronta. Tente novamente.",
+  "error.sendUncertain": "O envio ainda não foi confirmado. Verifique a conexão antes de tentar novamente; a identidade da solicitação original foi preservada.",
+  "error.sendRejected": "{message}. O Host recusou a solicitação; edite-a antes de reenviar.",
+  "error.uploadInterrupted": "O upload não foi concluído. Remova este item e selecione o arquivo novamente.",
+  "error.pendingLimit": "Há entradas demais aguardando confirmação. Verifique a conexão e o histórico da sessão.",
+
   'quote.remove': 'Remover cotação',
   'shortcut.newline': 'Nova linha',
   'shortcut.complementary': 'Usar a ação alternativa de enfileirar ou orientar',

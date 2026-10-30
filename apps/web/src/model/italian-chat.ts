@@ -1,6 +1,8 @@
+import { italianChatExtra } from './italian-chat-extra'
 import type { ChatKey } from '@deepseek-ai/dsh-client-ui-chat/src/client/locale.ts'
 
 export const italianChat = {
+  ...italianChatExtra,
   'message.stepProcess.thinking': 'Analisi della richiesta',
   'message.stepProcess.read': 'Lettura dei file',
   'message.stepProcess.readImage': 'Lettura delle immagini',

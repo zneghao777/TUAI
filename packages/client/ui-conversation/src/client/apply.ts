@@ -374,7 +374,7 @@ export function apply(ctx: Context, config: Config = Config({})): void {
       },
       startManagedChat: (draft, submit) => workspaceNavigation.startManagedSession(nextId => {
         const binding = sessions.binding(nextId)
-        if (binding === undefined) throw new Error('会话尚未就绪，请重试')
+        if (binding === undefined) throw new Error(t('error.sessionNotReady'))
         const input = inputHub.for(binding.ctx)
         input.setDraft(draft)
         if (submit) input.submit('queue', 'click')
@@ -474,6 +474,7 @@ export function apply(ctx: Context, config: Config = Config({})): void {
     }),
   }, ConversationSessionHeader)
 
+  const formatRemoteError = (message: string) => ctx.get('formatRemoteError')?.(message) ?? message
   const registerComposerBar = () => slots.register({
     name: 'conversation.composer.bar',
     locale: NS,
@@ -493,6 +494,7 @@ export function apply(ctx: Context, config: Config = Config({})): void {
     inject: (sessionId: SessionId | undefined): ComposerBarInjected => {
       if (sessionId === undefined) {
         return {
+          formatRemoteError,
           keyboard: undefined,
           addFiles: undefined,
           removeAttachment: undefined,
@@ -515,6 +517,7 @@ export function apply(ctx: Context, config: Config = Config({})): void {
       const inputTriggers = inputHub.inputTriggers(sessionId)
       const bridge = hostPathBridge()
       return {
+        formatRemoteError,
         keyboard: shell,
         addFiles: (files, directories = new Set()) => {
           if (sessions.binding(sessionId) === undefined) return t('file.sessionUnavailable')
