@@ -10,6 +10,52 @@ import {
 import type { ArtifactInfo } from '@tianzhiai/web-host/types'
 import type { AppClient } from '../model/client'
 import { describe, unwrap } from '../model/client'
+import { useProductLanguage } from '../model/product-language'
+import type { ProductLanguage } from '../model/language'
+
+const artifactCopy: Record<string, readonly [string, string]> = {
+  文件不存在或无法读取: [
+    'File does not exist or cannot be read',
+    'Il file non esiste o non può essere letto',
+  ],
+  '文件超过预览大小限制，请下载查看': [
+    'File exceeds the preview limit; download it to view',
+    'Il file supera il limite di anteprima; scaricalo per visualizzarlo',
+  ],
+  关闭预览: ['Close preview', 'Chiudi anteprima'],
+  '正在加载…': ['Loading…', 'Caricamento…'],
+  '图片无法预览，请下载查看': [
+    'Cannot preview image; download it to view',
+    'Impossibile visualizzare l’immagine; scaricala per visualizzarla',
+  ],
+  '未取得完整文件，下载已取消': [
+    'The file was incomplete; download cancelled',
+    'Il file è incompleto; download annullato',
+  ],
+  下载文件: ['Download file', 'Scarica file'],
+  会话产物: ['Chat artifacts', 'File della chat'],
+  附件与完整工具输出: [
+    'Attachments and complete tool outputs',
+    'Allegati e output completi degli strumenti',
+  ],
+  文件已清理或不属于当前会话: [
+    'File was removed or does not belong to this chat',
+    'Il file è stato rimosso o non appartiene a questa chat',
+  ],
+  附件与工具输出: ['Attachments and tool outputs', 'Allegati e output degli strumenti'],
+  刷新会话产物: ['Refresh chat artifacts', 'Aggiorna file della chat'],
+  重试: ['Retry', 'Riprova'],
+  暂无附件或工具输出: [
+    'No attachments or tool outputs',
+    'Nessun allegato o output degli strumenti',
+  ],
+  会话附件: ['Chat attachments', 'Allegati della chat'],
+  工具输出: ['Tool outputs', 'Output degli strumenti'],
+  预览: ['Preview', 'Anteprima'],
+  下载: ['Download', 'Scarica'],
+}
+const artifactText = (language: ProductLanguage, text: string) =>
+  language === 'zh' ? text : (artifactCopy[text]?.[language === 'en' ? 0 : 1] ?? text)
 
 const textExtensions = new Set([
   'txt',
@@ -38,14 +84,18 @@ const artifactUrl = (sessionId: string, item: ArtifactInfo) =>
   `api/artifact?${new URLSearchParams({ sessionId, artifactId: item.id })}`
 
 function ArtifactPreview({
+  client,
   sessionId,
   item,
   onClose,
 }: {
+  client: AppClient
   sessionId: string
   item: ArtifactInfo
   onClose(): void
 }) {
+  const language = useProductLanguage(client)
+  const tr = (text: string) => artifactText(language, text)
   const [content, setContent] = useState<{ kind: 'image' | 'text'; value: string }>()
   const [error, setError] = useState('')
   useEffect(() => {
@@ -59,7 +109,7 @@ function ArtifactPreview({
           credentials: 'same-origin',
           signal: controller.signal,
         })
-        if (!response.ok || !response.body) throw new Error('文件不存在或无法读取')
+        if (!response.ok || !response.body) throw new Error(tr('文件不存在或无法读取'))
         const limit = kind === 'image' ? 8 * 1024 * 1024 : 2 * 1024 * 1024
         const reader = response.body.getReader()
         const chunks: Uint8Array[] = []
@@ -69,7 +119,7 @@ function ArtifactPreview({
             const { done, value } = await reader.read()
             if (done) break
             total += value.byteLength
-            if (total > limit) throw new Error('文件超过预览大小限制，请下载查看')
+            if (total > limit) throw new Error(tr('文件超过预览大小限制，请下载查看'))
             chunks.push(value)
           }
         } finally {
@@ -101,18 +151,18 @@ function ArtifactPreview({
       open
       onClose={onClose}
       title={item.name}
-      closeLabel="关闭预览"
+      closeLabel={tr('关闭预览')}
       className="tz-artifact-preview"
     >
       {error ? (
         <p role="alert">{error}</p>
       ) : !content ? (
-        <p role="status">正在加载…</p>
+        <p role="status">{tr('正在加载…')}</p>
       ) : content.kind === 'image' ? (
         <img
           src={content.value}
           alt={item.name}
-          onError={() => setError('图片无法预览，请下载查看')}
+          onError={() => setError(tr('图片无法预览，请下载查看'))}
         />
       ) : (
         <pre>{content.value}</pre>
@@ -130,6 +180,8 @@ export function mountArtifactPane(client: AppClient) {
       ctx.slots.register(
         { name: 'sidebar.right.tab.document.actions', id: `${key}-download` },
         function FileDownload({ sessionId, absolutePath }) {
+          const language = useProductLanguage(client)
+          const tr = (text: string) => artifactText(language, text)
           const [busy, setBusy] = useState(false)
           const [error, setError] = useState('')
           const [lifetime] = useState(() => new AbortController())
@@ -146,7 +198,7 @@ export function mountArtifactPane(client: AppClient) {
                   lifetime.signal,
                 ),
               )
-              if (!file.eof || file.offset !== 0) throw new Error('未取得完整文件，下载已取消')
+              if (!file.eof || file.offset !== 0) throw new Error(tr('未取得完整文件，下载已取消'))
               const url = URL.createObjectURL(new Blob([Uint8Array.from(file.data).buffer]))
               const anchor = document.createElement('a')
               anchor.href = url
@@ -166,7 +218,7 @@ export function mountArtifactPane(client: AppClient) {
                 disabled={busy}
                 onClick={() => void download()}
               >
-                下载文件
+                {tr('下载文件')}
               </ActionButton>
               {error && <span role="alert">{error}</span>}
             </>
@@ -179,13 +231,37 @@ export function mountArtifactPane(client: AppClient) {
     ctx.sidebarRightTabs.register({
       id: key,
       kind: 'artifacts',
-      title: () => '会话产物',
+      title: () =>
+        artifactText(
+          ctx.locale.getSnapshot().active === 'it'
+            ? 'it'
+            : ctx.locale.getSnapshot().active === 'en'
+              ? 'en'
+              : 'zh',
+          '会话产物',
+        ),
       guide: [
         {
           id: key,
           order: 11,
-          title: () => '会话产物',
-          description: () => '附件与完整工具输出',
+          title: () =>
+            artifactText(
+              ctx.locale.getSnapshot().active === 'it'
+                ? 'it'
+                : ctx.locale.getSnapshot().active === 'en'
+                  ? 'en'
+                  : 'zh',
+              '会话产物',
+            ),
+          description: () =>
+            artifactText(
+              ctx.locale.getSnapshot().active === 'it'
+                ? 'it'
+                : ctx.locale.getSnapshot().active === 'en'
+                  ? 'en'
+                  : 'zh',
+              '附件与完整工具输出',
+            ),
           icon: () => <FileTypeIcon kind="other" size={24} />,
         },
       ],
@@ -196,6 +272,8 @@ export function mountArtifactPane(client: AppClient) {
       ctx.slots.register(
         { name: 'sidebar.right.pane.tab', key },
         function Artifacts({ sessionId, useTabInfo }: PropsRuntime<'sidebar.right.pane.tab'>) {
+          const language = useProductLanguage(client)
+          const tr = (text: string) => artifactText(language, text)
           const { tab } = useTabInfo()
           const [items, setItems] = useState<ArtifactInfo[]>([])
           const [error, setError] = useState('')
@@ -237,8 +315,8 @@ export function mountArtifactPane(client: AppClient) {
               if (!response.ok)
                 throw new Error(
                   response.status === 404
-                    ? '文件已清理或不属于当前会话'
-                    : `无法下载（${response.status}）`,
+                    ? tr('文件已清理或不属于当前会话')
+                    : `${{ zh: '无法下载', en: 'Download failed', it: 'Download non riuscito' }[language]} (${response.status})`,
                 )
               const url = URL.createObjectURL(await response.blob())
               const anchor = document.createElement('a')
@@ -251,13 +329,13 @@ export function mountArtifactPane(client: AppClient) {
             }
           }
           return (
-            <section className="tz-artifacts" aria-label="会话产物">
+            <section className="tz-artifacts" aria-label={tr('会话产物')}>
               <div className="tz-artifacts-header">
-                <span>附件与工具输出</span>
+                <span>{tr('附件与工具输出')}</span>
                 <ActionButton
                   className="tz-artifacts-refresh"
-                  aria-label="刷新会话产物"
-                  title="刷新会话产物"
+                  aria-label={tr('刷新会话产物')}
+                  title={tr('刷新会话产物')}
                   onClick={() => setRevision((value) => value + 1)}
                 >
                   <IconRefreshOutlineRegular />
@@ -271,20 +349,29 @@ export function mountArtifactPane(client: AppClient) {
               {loading ? (
                 <p className="tz-artifacts-state" role="status">
                   <Spinner size="sm" />
-                  正在加载…
+                  {tr('正在加载…')}
                 </p>
               ) : error ? (
                 <div className="tz-artifacts-state" role="alert">
-                  <span>读取失败：{error}</span>
+                  <span>
+                    {
+                      {
+                        zh: '读取失败：',
+                        en: 'Could not load: ',
+                        it: 'Caricamento non riuscito: ',
+                      }[language]
+                    }
+                    {error}
+                  </span>
                   <ActionButton
                     className="tz-pane-action"
                     onClick={() => setRevision((value) => value + 1)}
                   >
-                    重试
+                    {tr('重试')}
                   </ActionButton>
                 </div>
               ) : items.length === 0 ? (
-                <p className="tz-artifacts-state">暂无附件或工具输出</p>
+                <p className="tz-artifacts-state">{tr('暂无附件或工具输出')}</p>
               ) : (
                 <div className="tz-artifacts-list">
                   {(['会话附件', '工具输出'] as const).map((group) => {
@@ -293,8 +380,8 @@ export function mountArtifactPane(client: AppClient) {
                     )
                     if (!entries.length) return null
                     return (
-                      <section className="tz-artifact-group" key={group} aria-label={group}>
-                        <h3>{group}</h3>
+                      <section className="tz-artifact-group" key={group} aria-label={tr(group)}>
+                        <h3>{tr(group)}</h3>
                         {entries.map((item) => (
                           <div className="tz-artifact" key={item.id}>
                             <FileTypeIcon path={item.name} size={20} aria-hidden="true" />
@@ -306,17 +393,17 @@ export function mountArtifactPane(client: AppClient) {
                               {previewKind(item) && (
                                 <ActionButton
                                   className="tz-pane-action"
-                                  aria-label={`预览 ${item.name}`}
+                                  aria-label={`${tr('预览')} ${item.name}`}
                                   onClick={() => setPreview(item)}
                                 >
-                                  预览
+                                  {tr('预览')}
                                 </ActionButton>
                               )}
                               <ActionButton
                                 className="tz-pane-action"
                                 onClick={() => void download(item)}
                               >
-                                下载
+                                {tr('下载')}
                               </ActionButton>
                             </div>
                           </div>
@@ -328,6 +415,7 @@ export function mountArtifactPane(client: AppClient) {
               )}
               {preview && tab.visible && (
                 <ArtifactPreview
+                  client={client}
                   key={`${sessionId}:${preview.id}`}
                   sessionId={sessionId}
                   item={preview}

@@ -11,6 +11,77 @@ import remarkGfm from 'remark-gfm'
 import { unwrap, describe, type AppClient } from '../model/client'
 import { useSkill } from '../model/skills'
 import './SkillsPage.css'
+import { useProductLanguage } from '../model/product-language'
+
+const skillCopy: Record<string, readonly [string, string]> = {
+  技能管理: ['Skills', 'Gestione competenze'],
+  技能: ['Skills', 'Competenze'],
+  导入技能: ['Import skill', 'Importa competenza'],
+  刷新: ['Refresh', 'Aggiorna'],
+  技能列表: ['Skills', 'Competenze'],
+  搜索技能: ['Search skills', 'Cerca competenze'],
+  技能状态: ['Skill status', 'Stato della competenza'],
+  '正在读取技能…': ['Loading skills…', 'Caricamento competenze…'],
+  没有匹配的技能: ['No matching skills', 'Nessuna competenza corrispondente'],
+  还没有技能: ['No skills yet', 'Nessuna competenza'],
+  返回列表: ['Back to list', 'Torna all’elenco'],
+  选择技能查看内容: [
+    'Select a skill to view its content',
+    'Seleziona una competenza per visualizzarla',
+  ],
+  '正在读取详情…': ['Loading details…', 'Caricamento dettagli…'],
+  在新聊天中使用: ['Use in a new chat', 'Usa in una nuova chat'],
+  '个人 · 所有聊天': ['Personal · All chats', 'Personale · Tutte le chat'],
+  尚未启用: ['Not enabled', 'Non attiva'],
+  查看版本: ['View version', 'Mostra versione'],
+  检查: ['Check', 'Verifica'],
+  停用: ['Disable', 'Disattiva'],
+  回滚到此版本: ['Roll back to this version', 'Ripristina questa versione'],
+  启用此版本: ['Enable this version', 'Attiva questa versione'],
+  尚未检查: ['Not checked', 'Non verificata'],
+  '结构检查通过；业务效果尚未验证': [
+    'Structure check passed; behavior not verified',
+    'Verifica della struttura superata; comportamento non verificato',
+  ],
+  技能详情: ['Skill details', 'Dettagli della competenza'],
+  编辑新版本: ['Edit new version', 'Modifica nuova versione'],
+  '正在读取内容…': ['Loading content…', 'Caricamento contenuto…'],
+  图片资源: ['Image', 'Immagine'],
+  无法预览此文件: ['Cannot preview this file', 'Impossibile visualizzare l’anteprima del file'],
+  下载文件: ['Download file', 'Scarica file'],
+  '二进制文件，可下载查看': [
+    'Binary file; download to view',
+    'File binario; scaricalo per visualizzarlo',
+  ],
+  '正在读取…': ['Loading…', 'Caricamento…'],
+  查看: ['View', 'Visualizza'],
+  未声明额外工具依赖: [
+    'No additional tool dependencies declared',
+    'Nessuna dipendenza aggiuntiva dagli strumenti dichiarata',
+  ],
+  尚未在聊天中加载: ['Not loaded in a chat yet', 'Non ancora caricata in una chat'],
+  关闭导入: ['Close import', 'Chiudi importazione'],
+  取消: ['Cancel', 'Annulla'],
+  '正在导入…': ['Importing…', 'Importazione…'],
+  导入为草稿: ['Import as draft', 'Importa come bozza'],
+  '选择 SKILL.md': ['Choose SKILL.md', 'Seleziona SKILL.md'],
+  选择技能目录: ['Choose skill directory', 'Seleziona cartella della competenza'],
+  '包含配套资源时请选择完整目录，最多 2 MB。': [
+    'Select the complete directory when including resources; maximum 2 MB.',
+    'Se includi risorse, seleziona la cartella completa; massimo 2 MB.',
+  ],
+  关闭编辑: ['Close editor', 'Chiudi editor'],
+  保存新版本: ['Save new version', 'Salva nuova versione'],
+  'SKILL.md 内容': ['SKILL.md content', 'Contenuto di SKILL.md'],
+  全部: ['All', 'Tutte'],
+  已启用: ['Enabled', 'Attiva'],
+  已停用: ['Disabled', 'Disattivata'],
+  草稿: ['Draft', 'Bozza'],
+  内容: ['Content', 'Contenuto'],
+  文件: ['Files', 'File'],
+  版本: ['Versions', 'Versioni'],
+  使用记录: ['Usage', 'Utilizzo'],
+}
 
 const encode = (text: string) => {
   let value = ''
@@ -22,6 +93,9 @@ const status = (skill: SkillItem) =>
 type Tab = '内容' | '文件' | '版本' | '使用记录'
 
 export function SkillsPage({ client }: { client: AppClient }) {
+  const language = useProductLanguage(client)
+  const tr = (text: string) =>
+    language === 'zh' ? text : (skillCopy[text]?.[language === 'en' ? 0 : 1] ?? text)
   const api = useMemo(() => client.ctx.remote.skillLibrary, [client])
   const [items, setItems] = useState<SkillItem[]>([]),
     [loaded, setLoaded] = useState(false)
@@ -126,7 +200,13 @@ export function SkillsPage({ client }: { client: AppClient }) {
     await run(async () => {
       const values = Array.from(files)
       if (values.length > 128 || values.reduce((sum, f) => sum + f.size, 0) > 2 * 1024 * 1024)
-        throw new Error('技能包最多 128 个文件、2 MB')
+        throw new Error(
+          {
+            zh: '技能包最多 128 个文件、2 MB',
+            en: 'A skill can contain at most 128 files and 2 MB',
+            it: 'Una competenza può contenere al massimo 128 file e 2 MB',
+          }[language],
+        )
       const entries = await Promise.all(
         values.map(async (f) => {
           const relative = f.webkitRelativePath
@@ -137,7 +217,14 @@ export function SkillsPage({ client }: { client: AppClient }) {
           return { path, data: btoa(binary) }
         }),
       )
-      if (!entries.some((f) => f.path === 'SKILL.md')) throw new Error('所选目录根部需要 SKILL.md')
+      if (!entries.some((f) => f.path === 'SKILL.md'))
+        throw new Error(
+          {
+            zh: '所选目录根部需要 SKILL.md',
+            en: 'The selected directory must contain SKILL.md at its root',
+            it: 'La cartella selezionata deve contenere SKILL.md nella radice',
+          }[language],
+        )
       setBundle(entries)
       setSource(values[0]!.webkitRelativePath.split('/')[0] || values[0]!.name)
     })
@@ -161,9 +248,9 @@ export function SkillsPage({ client }: { client: AppClient }) {
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
   return (
-    <section className="tz-skills" aria-label="技能管理" data-detail={!!selected}>
+    <section className="tz-skills" aria-label={tr('技能管理')} data-detail={!!selected}>
       <header className="tz-skills-header">
-        <h1>技能</h1>
+        <h1>{tr('技能')}</h1>
         <Button
           variant="primary"
           onClick={() => {
@@ -172,27 +259,27 @@ export function SkillsPage({ client }: { client: AppClient }) {
             setImportOpen(true)
           }}
         >
-          导入技能
+          {tr('导入技能')}
         </Button>
       </header>
       {error ? (
         <div role="alert" className="tz-skills-error">
           {error}
           <Button size="sm" onClick={() => void run(() => reload())}>
-            刷新
+            {tr('刷新')}
           </Button>
         </div>
       ) : null}
       <div className="tz-skills-workspace">
-        <aside className="tz-skills-list" aria-label="技能列表">
+        <aside className="tz-skills-list" aria-label={tr('技能列表')}>
           <input
-            aria-label="搜索技能"
-            placeholder="搜索技能"
+            aria-label={tr('搜索技能')}
+            placeholder={tr('搜索技能')}
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <div className="tz-skills-filters" aria-label="技能状态">
+          <div className="tz-skills-filters" aria-label={tr('技能状态')}>
             {['全部', '已启用', '已停用', '草稿'].map((value) => (
               <Button
                 key={value}
@@ -200,14 +287,16 @@ export function SkillsPage({ client }: { client: AppClient }) {
                 aria-pressed={filter === value}
                 onClick={() => setFilter(value)}
               >
-                {value}
+                {tr(value)}
               </Button>
             ))}
           </div>
           {!loaded ? (
-            <p role="status">正在读取技能…</p>
+            <p role="status">{tr('正在读取技能…')}</p>
           ) : shown.length === 0 ? (
-            <p className="tz-skills-empty">{items.length ? '没有匹配的技能' : '还没有技能'}</p>
+            <p className="tz-skills-empty">
+              {items.length ? tr('没有匹配的技能') : tr('还没有技能')}
+            </p>
           ) : (
             shown.map((item) => (
               <ActionButton
@@ -222,7 +311,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
               >
                 <span>
                   <strong>{item.name}</strong>
-                  <small>{status(item)}</small>
+                  <small>{tr(status(item))}</small>
                 </span>
                 <p>{item.versions[0]?.description}</p>
               </ActionButton>
@@ -236,13 +325,13 @@ export function SkillsPage({ client }: { client: AppClient }) {
               icon={<IconChevronLeftOutlineRegular size={16} />}
               onClick={() => setSelected('')}
             >
-              返回列表
+              {tr('返回列表')}
             </Button>
           ) : null}
           {!selected ? (
-            <div className="tz-skills-empty">选择技能查看内容</div>
+            <div className="tz-skills-empty">{tr('选择技能查看内容')}</div>
           ) : !current ? (
-            <p role="status">正在读取详情…</p>
+            <p role="status">{tr('正在读取详情…')}</p>
           ) : (
             <>
               <div className="tz-skills-title">
@@ -254,21 +343,23 @@ export function SkillsPage({ client }: { client: AppClient }) {
                   disabled={busy || !current.enabled || !meta?.userInvocable}
                   onClick={() => void run(() => useSkill(client, current.name))}
                 >
-                  在新聊天中使用
+                  {tr('在新聊天中使用')}
                 </Button>
               </div>
               <div className="tz-skills-meta">
-                <span>{status(current)}</span>
-                <span>个人 · 所有聊天</span>
+                <span>{tr(status(current))}</span>
+                <span>{tr('个人 · 所有聊天')}</span>
                 <span>
-                  {current.activeVersion ? `生效版本 v${current.activeVersion}` : '尚未启用'}
+                  {current.activeVersion
+                    ? `${{ zh: '生效版本', en: 'Active version', it: 'Versione attiva' }[language]} v${current.activeVersion}`
+                    : tr('尚未启用')}
                 </span>
               </div>
               <div className="tz-skills-toolbar">
                 <label>
-                  查看版本{' '}
+                  {tr('查看版本')}{' '}
                   <select
-                    aria-label="查看版本"
+                    aria-label={tr('查看版本')}
                     disabled={busy}
                     value={version}
                     onChange={(e) => {
@@ -279,7 +370,9 @@ export function SkillsPage({ client }: { client: AppClient }) {
                     {current.versions.map((v) => (
                       <option value={v.version} key={v.version}>
                         v{v.version}
-                        {v.version === current.activeVersion ? ' · 生效' : ''}
+                        {v.version === current.activeVersion
+                          ? ` · ${{ zh: '生效', en: 'Active', it: 'Attiva' }[language]}`
+                          : ''}
                       </option>
                     ))}
                   </select>
@@ -290,7 +383,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                     disabled={busy || !mutation}
                     onClick={() => void run(async () => update(unwrap(await api.check(mutation!))))}
                   >
-                    检查
+                    {tr('检查')}
                   </Button>
                   {current.enabled && current.activeVersion === version ? (
                     <Button
@@ -302,7 +395,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                         )
                       }
                     >
-                      停用
+                      {tr('停用')}
                     </Button>
                   ) : (
                     <Button
@@ -313,8 +406,8 @@ export function SkillsPage({ client }: { client: AppClient }) {
                       }
                     >
                       {current.activeVersion && version < current.activeVersion
-                        ? '回滚到此版本'
-                        : '启用此版本'}
+                        ? tr('回滚到此版本')
+                        : tr('启用此版本')}
                     </Button>
                   )}
                 </div>
@@ -322,13 +415,13 @@ export function SkillsPage({ client }: { client: AppClient }) {
               {meta ? (
                 <p className="tz-skills-check">
                   {!meta.checked
-                    ? '尚未检查'
+                    ? tr('尚未检查')
                     : meta.issues.length
                       ? meta.issues.join('；')
-                      : '结构检查通过；业务效果尚未验证'}
+                      : tr('结构检查通过；业务效果尚未验证')}
                 </p>
               ) : null}
-              <nav className="tz-skills-tabs" aria-label="技能详情">
+              <nav className="tz-skills-tabs" aria-label={tr('技能详情')}>
                 {(['内容', '文件', '版本', '使用记录'] as Tab[]).map((t) => (
                   <Button
                     key={t}
@@ -338,7 +431,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                       if (t === '内容') setPath('SKILL.md')
                     }}
                   >
-                    {t}
+                    {tr(t)}
                   </Button>
                 ))}
               </nav>
@@ -350,19 +443,19 @@ export function SkillsPage({ client }: { client: AppClient }) {
                       disabled={busy || !file?.text || path !== 'SKILL.md'}
                       onClick={() => setEditor(file!.text!)}
                     >
-                      编辑新版本
+                      {tr('编辑新版本')}
                     </Button>
                   </div>
                   {!file ? (
-                    <p role="status">正在读取内容…</p>
+                    <p role="status">{tr('正在读取内容…')}</p>
                   ) : (
                     <article className="tz-skills-markdown">
                       <Markdown
                         remarkPlugins={[remarkGfm]}
-                        components={{ img: ({ alt }) => <span>{alt || '图片资源'}</span> }}
+                        components={{ img: ({ alt }) => <span>{alt || tr('图片资源')}</span> }}
                       >
                         {file.text?.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '') ??
-                          '无法预览此文件'}
+                          tr('无法预览此文件')}
                       </Markdown>
                     </article>
                   )}
@@ -384,12 +477,12 @@ export function SkillsPage({ client }: { client: AppClient }) {
                   </div>
                   <div>
                     <Button size="sm" disabled={!file} onClick={download}>
-                      下载文件
+                      {tr('下载文件')}
                     </Button>
                     {file ? (
-                      <pre>{file.text ?? '二进制文件，可下载查看'}</pre>
+                      <pre>{file.text ?? tr('二进制文件，可下载查看')}</pre>
                     ) : (
-                      <p role="status">正在读取…</p>
+                      <p role="status">{tr('正在读取…')}</p>
                     )}
                   </div>
                 </div>
@@ -400,7 +493,11 @@ export function SkillsPage({ client }: { client: AppClient }) {
                     <article key={v.version}>
                       <div>
                         <strong>v{v.version}</strong>
-                        <span>{new Date(v.createdAt).toLocaleString()}</span>
+                        <span>
+                          {new Date(v.createdAt).toLocaleString(
+                            language === 'zh' ? 'zh-CN' : language,
+                          )}
+                        </span>
                         <Button
                           size="sm"
                           onClick={() => {
@@ -409,15 +506,18 @@ export function SkillsPage({ client }: { client: AppClient }) {
                             setTab('内容')
                           }}
                         >
-                          查看
+                          {tr('查看')}
                         </Button>
                       </div>
-                      <p>来源：{v.source}</p>
+                      <p>
+                        {{ zh: '来源：', en: 'Source: ', it: 'Origine: ' }[language]}
+                        {v.source}
+                      </p>
                       <code title={v.digest}>SHA256 {v.digest}</code>
                       <p>
                         {v.requiredTools.length
-                          ? `依赖工具：${v.requiredTools.join('、')}`
-                          : '未声明额外工具依赖'}
+                          ? `${{ zh: '依赖工具：', en: 'Required tools: ', it: 'Strumenti richiesti: ' }[language]}${v.requiredTools.join(language === 'zh' ? '、' : ', ')}`
+                          : tr('未声明额外工具依赖')}
                       </p>
                     </article>
                   ))}
@@ -429,12 +529,16 @@ export function SkillsPage({ client }: { client: AppClient }) {
                     detail.uses.map((u) => (
                       <article key={`${u.sessionId}/${u.turn}/${u.version}`}>
                         <strong>v{u.version}</strong>
-                        <span>{new Date(u.loadedAt).toLocaleString()}</span>
+                        <span>
+                          {new Date(u.loadedAt).toLocaleString(
+                            language === 'zh' ? 'zh-CN' : language,
+                          )}
+                        </span>
                         <code>{u.sessionId}</code>
                       </article>
                     ))
                   ) : (
-                    <p>尚未在聊天中加载</p>
+                    <p>{tr('尚未在聊天中加载')}</p>
                   )}
                 </div>
               ) : null}
@@ -444,15 +548,15 @@ export function SkillsPage({ client }: { client: AppClient }) {
       </div>
       <Modal
         open={importOpen}
-        title="导入技能"
-        closeLabel="关闭导入"
+        title={tr('导入技能')}
+        closeLabel={tr('关闭导入')}
         onClose={() => {
           if (!busy) setImportOpen(false)
         }}
         footer={
           <>
             <Button disabled={busy} onClick={() => setImportOpen(false)}>
-              取消
+              {tr('取消')}
             </Button>
             <Button
               variant="primary"
@@ -466,17 +570,17 @@ export function SkillsPage({ client }: { client: AppClient }) {
                 })
               }
             >
-              {busy ? '正在导入…' : '导入为草稿'}
+              {busy ? tr('正在导入…') : tr('导入为草稿')}
             </Button>
           </>
         }
       >
         <div className="tz-skills-import">
           <Button disabled={busy} onClick={() => fileInput.current?.click()}>
-            选择 SKILL.md
+            {tr('选择 SKILL.md')}
           </Button>
           <Button disabled={busy} onClick={() => directoryInput.current?.click()}>
-            选择技能目录
+            {tr('选择技能目录')}
           </Button>
           <input
             ref={fileInput}
@@ -501,15 +605,15 @@ export function SkillsPage({ client }: { client: AppClient }) {
         </div>
         <p>
           {bundle.length
-            ? `${source} · ${bundle.length} 个文件`
-            : '包含配套资源时请选择完整目录，最多 2 MB。'}
+            ? `${source} · ${{ zh: `${bundle.length} 个文件`, en: `${bundle.length} files`, it: `${bundle.length} file` }[language]}`
+            : tr('包含配套资源时请选择完整目录，最多 2 MB。')}
         </p>
         {error ? <p role="alert">{error}</p> : null}
       </Modal>
       <Modal
         open={editor !== undefined}
-        title="编辑新版本"
-        closeLabel="关闭编辑"
+        title={tr('编辑新版本')}
+        closeLabel={tr('关闭编辑')}
         className="tz-skills-editor-modal"
         onClose={() => {
           if (!busy) setEditor(undefined)
@@ -517,7 +621,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
         footer={
           <>
             <Button disabled={busy} onClick={() => setEditor(undefined)}>
-              取消
+              {tr('取消')}
             </Button>
             <Button
               variant="primary"
@@ -547,13 +651,13 @@ export function SkillsPage({ client }: { client: AppClient }) {
                 })
               }
             >
-              保存新版本
+              {tr('保存新版本')}
             </Button>
           </>
         }
       >
         <textarea
-          aria-label="SKILL.md 内容"
+          aria-label={tr('SKILL.md 内容')}
           data-modal-autofocus
           value={editor ?? ''}
           onChange={(e) => setEditor(e.target.value)}

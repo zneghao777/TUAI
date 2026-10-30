@@ -4,9 +4,95 @@ import { useDismissOnOutsidePointer } from '@deepseek-ai/dsh-client-ui-primitive
 import type { ModelSelectInjected } from '@deepseek-ai/dsh-client-ui-model-selection/client'
 import type { ModelSelection } from '@deepseek-ai/dsh-api-session-controller/types'
 import { Icon } from './kit'
+import type { AppClient } from '../model/client'
+import { useProductLanguage } from '../model/product-language'
+
+const pickerCopy = {
+  提供商默认: {
+    zh: '提供商默认',
+    en: 'Provider default',
+    it: 'Predefinito del fornitore',
+  },
+  当前会话无法切换模型: {
+    zh: '当前会话无法切换模型',
+    en: 'Cannot change the model for this chat',
+    it: 'Impossibile cambiare modello per questa chat',
+  },
+  '切换未完成，请重试': {
+    zh: '切换未完成，请重试',
+    en: 'Could not change the model. Try again.',
+    it: 'Cambio del modello non riuscito. Riprova.',
+  },
+  未选择: {
+    zh: '未选择',
+    en: 'None selected',
+    it: 'Nessuno selezionato',
+  },
+  '读取模型…': {
+    zh: '读取模型…',
+    en: 'Loading models…',
+    it: 'Caricamento modelli…',
+  },
+  选择模型: {
+    zh: '选择模型',
+    en: 'Select model',
+    it: 'Seleziona modello',
+  },
+  正在切换模型: {
+    zh: '正在切换模型',
+    en: 'Changing model',
+    it: 'Cambio modello in corso',
+  },
+  模型与推理强度: {
+    zh: '模型与推理强度',
+    en: 'Model and reasoning effort',
+    it: 'Modello e livello di ragionamento',
+  },
+  模型: {
+    zh: '模型',
+    en: 'Model',
+    it: 'Modello',
+  },
+  '正在读取模型…': {
+    zh: '正在读取模型…',
+    en: 'Loading models…',
+    it: 'Caricamento modelli…',
+  },
+  暂无可用模型: {
+    zh: '暂无可用模型',
+    en: 'No models available',
+    it: 'Nessun modello disponibile',
+  },
+  切换模型: {
+    zh: '切换模型',
+    en: 'Change model',
+    it: 'Cambia modello',
+  },
+  恢复默认推理强度: {
+    zh: '恢复默认推理强度',
+    en: 'Restore default reasoning effort',
+    it: 'Ripristina livello di ragionamento predefinito',
+  },
+  推理强度: {
+    zh: '推理强度',
+    en: 'Reasoning effort',
+    it: 'Livello di ragionamento',
+  },
+  正在刷新模型: {
+    zh: '正在刷新模型',
+    en: 'Refreshing models',
+    it: 'Aggiornamento modelli',
+  },
+  重新加载: {
+    zh: '重新加载',
+    en: 'Reload',
+    it: 'Ricarica',
+  },
+} as const
 
 /** Product presentation over the same Session directory used by /model. */
 export function ModelPicker({
+  client,
   available,
   directory,
   load,
@@ -14,7 +100,10 @@ export function ModelPicker({
   locked,
 }: ModelSelectInjected & {
   locked: boolean
+  client: AppClient
 }) {
+  const language = useProductLanguage(client)
+  const t = (key: keyof typeof pickerCopy) => pickerCopy[key][language]
   const state = useSyncExternalStore(directory.subscribe, directory.getSnapshot)
   const [open, setOpen] = useState(false)
   const [choosing, setChoosing] = useState(false)
@@ -36,7 +125,9 @@ export function ModelPicker({
   const effort = state.current?.reasoningEffort ?? reasoning?.defaultEffort
   const levels = reasoning
     ? [
-        ...(reasoning.defaultEffort === undefined ? [{ id: undefined, name: '提供商默认' }] : []),
+        ...(reasoning.defaultEffort === undefined
+          ? [{ id: undefined, name: t('提供商默认') }]
+          : []),
         ...reasoning.efforts,
       ]
     : []
@@ -50,7 +141,7 @@ export function ModelPicker({
 
   useLayoutEffect(() => {
     // The public thumb input ref lets categorical levels announce their Host label.
-    sliderInput.current?.setAttribute('aria-valuetext', label ?? '提供商默认')
+    sliderInput.current?.setAttribute('aria-valuetext', label ?? t('提供商默认'))
   })
   useEffect(() => {
     mounted.current = true
@@ -93,9 +184,12 @@ export function ModelPicker({
       if (!mounted.current) return
       if (result?.ok) setChoosing(false)
       else
-        setError(result ? `${result.error.code}: ${result.error.message}` : '当前会话无法切换模型')
+        setError(
+          result ? `${result.error.code}: ${result.error.message}` : t('当前会话无法切换模型'),
+        )
     } catch (cause) {
-      if (mounted.current) setError(cause instanceof Error ? cause.message : '切换未完成，请重试')
+      if (mounted.current)
+        setError(cause instanceof Error ? cause.message : t('切换未完成，请重试'))
     } finally {
       pending.current = false
       if (mounted.current) {
@@ -149,24 +243,26 @@ export function ModelPicker({
         className="tz-model-trigger"
         data-composer-model-trigger
         isDisabled={locked}
-        aria-label={`选择模型，当前：${current?.name ?? '未选择'}${label ? `，${label}` : ''}`}
+        aria-label={`${{ zh: '选择模型，当前：', en: 'Select model, current: ', it: 'Seleziona modello, attuale: ' }[language]}${current?.name ?? t('未选择')}${label ? `, ${label}` : ''}`}
       >
-        <span>{current?.name ?? (state.status === 'loading' ? '读取模型…' : '选择模型')}</span>
+        <span>
+          {current?.name ?? (state.status === 'loading' ? t('读取模型…') : t('选择模型'))}
+        </span>
         {reasoning && label ? <span className="tz-model-effort">{label}</span> : null}
-        {busy ? <Spinner size="sm" aria-label="正在切换模型" /> : <Icon name="chevron" />}
+        {busy ? <Spinner size="sm" aria-label={t('正在切换模型')} /> : <Icon name="chevron" />}
       </Button>
       <Popover.Content placement="top end" offset={10} className="tz-model-popover" isNonModal>
         <Popover.Dialog
           ref={panel}
           data-shortcut-modal="model"
-          aria-label="模型与推理强度"
+          aria-label={t('模型与推理强度')}
           className="tz-model-dialog"
           aria-busy={busy}
         >
           {listVisible ? (
             <>
               <ListBox
-                aria-label="模型"
+                aria-label={t('模型')}
                 className="tz-model-list"
                 selectionMode="single"
                 autoFocus
@@ -193,7 +289,7 @@ export function ModelPicker({
                   busy ? groups.flatMap((g) => g.models.map((m) => keyOf(g.id, m.id))) : []
                 }
                 renderEmptyState={() =>
-                  state.status === 'loading' ? '正在读取模型…' : '暂无可用模型'
+                  state.status === 'loading' ? t('正在读取模型…') : t('暂无可用模型')
                 }
               >
                 {groups.map((group) => (
@@ -217,12 +313,14 @@ export function ModelPicker({
             <>
               <div className="tz-model-heading">
                 <div className="tz-model-identity">
-                  {reasoning ? <strong aria-live="polite">{label ?? '提供商默认'}</strong> : null}
+                  {reasoning ? (
+                    <strong aria-live="polite">{label ?? t('提供商默认')}</strong>
+                  ) : null}
                   <Button
                     ref={switchButton}
                     variant="ghost"
                     className="tz-model-name"
-                    aria-label="切换模型"
+                    aria-label={t('切换模型')}
                     isDisabled={busy}
                     onPress={() => setChoosing(true)}
                   >
@@ -235,7 +333,7 @@ export function ModelPicker({
                     isIconOnly
                     variant="ghost"
                     size="sm"
-                    aria-label="恢复默认推理强度"
+                    aria-label={t('恢复默认推理强度')}
                     isDisabled={busy || state.current?.reasoningEffort === undefined}
                     onPress={() => {
                       if (state.current)
@@ -288,7 +386,7 @@ export function ModelPicker({
                   }}
                 >
                   <Slider
-                    aria-label="推理强度"
+                    aria-label={t('推理强度')}
                     className="tz-effort-slider"
                     minValue={0}
                     maxValue={levels.length - 1}
@@ -320,7 +418,7 @@ export function ModelPicker({
           {state.status === 'loading' ? (
             <div role="status" className="tz-model-status">
               <Spinner size="sm" />
-              正在刷新模型
+              {t('正在刷新模型')}
             </div>
           ) : null}
           {error || state.error || state.failures.length ? (
@@ -338,7 +436,7 @@ export function ModelPicker({
                   load()
                 }}
               >
-                重新加载
+                {t('重新加载')}
               </Button>
             </div>
           ) : null}

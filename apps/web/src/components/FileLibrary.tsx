@@ -18,6 +18,69 @@ import remarkGfm from 'remark-gfm'
 import { useSource } from '../bindings'
 import { describe, unwrap, type AppClient } from '../model/client'
 import './FileLibrary.css'
+import { useProductLanguage } from '../model/product-language'
+
+const libraryCopy: Record<string, readonly [string, string]> = {
+  图片附件不可用: ['Image attachment unavailable', 'Allegato immagine non disponibile'],
+  图片附件不存在或无法读取: [
+    'Image attachment does not exist or cannot be read',
+    'L’allegato immagine non esiste o non può essere letto',
+  ],
+  关闭预览: ['Close preview', 'Chiudi anteprima'],
+  删除图片: ['Delete image', 'Elimina immagine'],
+  下载图片: ['Download image', 'Scarica immagine'],
+  上一张图片: ['Previous image', 'Immagine precedente'],
+  下一张图片: ['Next image', 'Immagine successiva'],
+  正在加载预览: ['Loading preview', 'Caricamento anteprima'],
+  图片无法预览: ['Cannot preview image', 'Impossibile visualizzare l’immagine'],
+  下载: ['Download', 'Scarica'],
+  打开来源会话: ['Open source chat', 'Apri chat di origine'],
+  '仅显示文件的前一部分，可在来源会话中继续查看。': [
+    'Only the beginning of the file is shown. Open the source chat to see more.',
+    'È mostrata solo la prima parte del file. Apri la chat di origine per vedere il resto.',
+  ],
+  '此格式请在来源会话中预览。': [
+    'Preview this format in the source chat.',
+    'Visualizza questo formato nella chat di origine.',
+  ],
+  打开预览: ['Open preview', 'Apri anteprima'],
+  文件: ['Files', 'File'],
+  创建时间: ['Created', 'Data di creazione'],
+  标题: ['Name', 'Nome'],
+  最近打开: ['Recently opened', 'Aperti di recente'],
+  排序: ['Sort', 'Ordina'],
+  选择: ['Select', 'Seleziona'],
+  删除: ['Delete', 'Elimina'],
+  取消全选: ['Deselect all', 'Deseleziona tutto'],
+  全选: ['Select all', 'Seleziona tutto'],
+  退出选择: ['Exit selection', 'Esci dalla selezione'],
+  文件分类: ['File categories', 'Categorie di file'],
+  文档: ['Documents', 'Documenti'],
+  图片: ['Images', 'Immagini'],
+  重试: ['Retry', 'Riprova'],
+  正在加载文件: ['Loading files', 'Caricamento file'],
+  暂无已登记文档: ['No registered documents', 'Nessun documento registrato'],
+  暂无已登记图片: ['No registered images', 'Nessuna immagine registrata'],
+  会话: ['Chat', 'Chat'],
+  删除文件: ['Delete files', 'Elimina file'],
+  '将永久删除工作区中的原文件，此操作无法恢复。': [
+    'The original files in the workspace will be permanently deleted. This cannot be undone.',
+    'I file originali nell’area di lavoro saranno eliminati definitivamente. L’operazione non può essere annullata.',
+  ],
+  '将从文件页移除所选图片。': [
+    'The selected images will be removed from Files.',
+    'Le immagini selezionate saranno rimosse dai File.',
+  ],
+  '会话消息中的附件会保留。': [
+    'Attachments in chat messages will remain.',
+    'Gli allegati nei messaggi della chat saranno conservati.',
+  ],
+  取消: ['Cancel', 'Annulla'],
+  '正在删除…': ['Deleting…', 'Eliminazione…'],
+  永久删除: ['Delete permanently', 'Elimina definitivamente'],
+  移除: ['Remove', 'Rimuovi'],
+  未取得完整文件: ['Could not retrieve the complete file', 'Impossibile ottenere il file completo'],
+}
 
 export const FILES_PANEL = brandString<MainPanelId>('tianzhiai-files')
 type Sort = 'created' | 'name' | 'opened'
@@ -159,6 +222,9 @@ function PreviewDialog({
   onNext?: () => void
   onRemove(): void
 }) {
+  const language = useProductLanguage(client)
+  const tr = (text: string) =>
+    language === 'zh' ? text : (libraryCopy[text]?.[language === 'en' ? 0 : 1] ?? text)
   const [preview, setPreview] = useState<Preview>()
   const [error, setError] = useState('')
   const [downloading, setDownloading] = useState(false)
@@ -198,7 +264,7 @@ function PreviewDialog({
           setPreview({ kind: 'url', value: url })
         })
         .catch((e: unknown) => {
-          if (!controller.signal.aborted) setError(describe(e))
+          if (!controller.signal.aborted) setError(tr(describe(e)))
         })
     } else if (isText(file.name)) {
       void client.ctx.remote.workspaceFiles
@@ -209,7 +275,7 @@ function PreviewDialog({
             setPreview({ kind: 'text', value: result.text, eof: result.eof })
         })
         .catch((e: unknown) => {
-          if (!controller.signal.aborted) setError(describe(e))
+          if (!controller.signal.aborted) setError(tr(describe(e)))
         })
     } else if (file.kind === 'image' || suffix(file.name) === 'pdf') {
       void client.ctx.remote.workspaceFiles
@@ -217,7 +283,7 @@ function PreviewDialog({
         .then(unwrap)
         .then((result) => {
           if (controller.signal.aborted) return
-          if (!result.eof) throw new Error('未取得完整文件')
+          if (!result.eof) throw new Error(tr('未取得完整文件'))
           url = URL.createObjectURL(
             new Blob([Uint8Array.from(result.data).buffer], {
               type: file.kind === 'image' ? imageType(file.name) : 'application/pdf',
@@ -226,7 +292,7 @@ function PreviewDialog({
           setPreview({ kind: 'url', value: url })
         })
         .catch((e: unknown) => {
-          if (!controller.signal.aborted) setError(describe(e))
+          if (!controller.signal.aborted) setError(tr(describe(e)))
         })
     } else setPreview({ kind: 'unsupported' })
     return () => {
@@ -261,7 +327,7 @@ function PreviewDialog({
             lifetime.signal,
           ),
         )
-        if (!result.eof || result.offset !== 0) throw new Error('未取得完整文件')
+        if (!result.eof || result.offset !== 0) throw new Error(tr('未取得完整文件'))
         blob = new Blob([Uint8Array.from(result.data).buffer])
       }
       const url = URL.createObjectURL(blob)
@@ -271,7 +337,7 @@ function PreviewDialog({
       anchor.click()
       window.setTimeout(() => URL.revokeObjectURL(url), 1000)
     } catch (e) {
-      if (!lifetime.signal.aborted) setError(describe(e))
+      if (!lifetime.signal.aborted) setError(tr(describe(e)))
     } finally {
       if (!lifetime.signal.aborted) setDownloading(false)
     }
@@ -286,11 +352,14 @@ function PreviewDialog({
         className="tz-library-image-backdrop"
       >
         <Modal.Container className="tz-library-image-container">
-          <Modal.Dialog aria-label={`预览 ${file.name}`} className="tz-library-image-viewer">
+          <Modal.Dialog
+            aria-label={`${{ zh: '预览', en: 'Preview', it: 'Anteprima' }[language]} ${file.name}`}
+            className="tz-library-image-viewer"
+          >
             <Button
               variant="ghost"
               isIconOnly
-              aria-label="关闭预览"
+              aria-label={tr('关闭预览')}
               className="tz-image-action tz-image-close"
               onPress={onClose}
             >
@@ -300,7 +369,7 @@ function PreviewDialog({
               <Button
                 variant="ghost"
                 isIconOnly
-                aria-label="删除图片"
+                aria-label={tr('删除图片')}
                 className="tz-image-action"
                 onPress={onRemove}
               >
@@ -309,7 +378,7 @@ function PreviewDialog({
               <Button
                 variant="ghost"
                 isIconOnly
-                aria-label="下载图片"
+                aria-label={tr('下载图片')}
                 className="tz-image-action"
                 isDisabled={downloading}
                 onPress={() => void download()}
@@ -321,7 +390,7 @@ function PreviewDialog({
               <Button
                 variant="ghost"
                 isIconOnly
-                aria-label="上一张图片"
+                aria-label={tr('上一张图片')}
                 className="tz-image-action tz-image-previous"
                 onPress={onPrevious}
               >
@@ -332,7 +401,7 @@ function PreviewDialog({
               <Button
                 variant="ghost"
                 isIconOnly
-                aria-label="下一张图片"
+                aria-label={tr('下一张图片')}
                 className="tz-image-action tz-image-next"
                 onPress={onNext}
               >
@@ -343,11 +412,15 @@ function PreviewDialog({
               {error ? (
                 <p role="alert">{error}</p>
               ) : !preview ? (
-                <Spinner aria-label="正在加载预览" />
+                <Spinner aria-label={tr('正在加载预览')} />
               ) : preview.kind === 'url' ? (
-                <img src={preview.value} alt={file.name} onError={() => setError('图片无法预览')} />
+                <img
+                  src={preview.value}
+                  alt={file.name}
+                  onError={() => setError(tr('图片无法预览'))}
+                />
               ) : (
-                <p role="alert">图片无法预览</p>
+                <p role="alert">{tr('图片无法预览')}</p>
               )}
             </div>
           </Modal.Dialog>
@@ -364,7 +437,10 @@ function PreviewDialog({
       className="tz-library-backdrop"
     >
       <Modal.Container size="lg" placement="center" className="tz-library-preview-container">
-        <Modal.Dialog aria-label={`预览 ${file.name}`} className="tz-library-preview">
+        <Modal.Dialog
+          aria-label={`${{ zh: '预览', en: 'Preview', it: 'Anteprima' }[language]} ${file.name}`}
+          className="tz-library-preview"
+        >
           <header>
             <Modal.Heading>{file.name}</Modal.Heading>
             <Button
@@ -373,12 +449,12 @@ function PreviewDialog({
               isDisabled={downloading}
               onPress={() => void download()}
             >
-              下载
+              {tr('下载')}
             </Button>
             <Button variant="ghost" size="sm" onPress={() => void openInConversation()}>
-              打开来源会话
+              {tr('打开来源会话')}
             </Button>
-            <Button variant="ghost" isIconOnly aria-label="关闭预览" onPress={onClose}>
+            <Button variant="ghost" isIconOnly aria-label={tr('关闭预览')} onPress={onClose}>
               <IconCloseOutlineRegular size={18} />
             </Button>
           </header>
@@ -386,7 +462,7 @@ function PreviewDialog({
             {error ? (
               <p role="alert">{error}</p>
             ) : !preview ? (
-              <Spinner aria-label="正在加载预览" />
+              <Spinner aria-label={tr('正在加载预览')} />
             ) : preview.kind === 'url' ? (
               <iframe src={preview.value} title={file.name} sandbox="" />
             ) : preview.kind === 'text' ? (
@@ -398,12 +474,12 @@ function PreviewDialog({
                 ) : (
                   <pre className="tz-library-text">{preview.value}</pre>
                 )}
-                {!preview.eof && <p>仅显示文件的前一部分，可在来源会话中继续查看。</p>}
+                {!preview.eof && <p>{tr('仅显示文件的前一部分，可在来源会话中继续查看。')}</p>}
               </article>
             ) : (
               <div>
-                <p>此格式请在来源会话中预览。</p>
-                <Button onPress={() => void openInConversation()}>打开预览</Button>
+                <p>{tr('此格式请在来源会话中预览。')}</p>
+                <Button onPress={() => void openInConversation()}>{tr('打开预览')}</Button>
               </div>
             )}
           </div>
@@ -414,6 +490,9 @@ function PreviewDialog({
 }
 
 export function FileLibrary({ client }: { client: AppClient }) {
+  const language = useProductLanguage(client)
+  const tr = (text: string) =>
+    language === 'zh' ? text : (libraryCopy[text]?.[language === 'en' ? 0 : 1] ?? text)
   const sessions = useSource(client.ctx.sessions.list)
   const host = useSource(client.facts).host
   const storageKey = `tianzhiai:file-opened:${host?.id ?? 'local'}`
@@ -445,7 +524,7 @@ export function FileLibrary({ client }: { client: AppClient }) {
       .catch((e: unknown) => {
         if (!controller.signal.aborted) {
           setLoadFailed(true)
-          setError(describe(e))
+          setError(tr(describe(e)))
         }
       })
       .finally(() => {
@@ -461,13 +540,13 @@ export function FileLibrary({ client }: { client: AppClient }) {
         .filter((f) => f.kind === kind)
         .sort((a, b) =>
           sort === 'name'
-            ? a.name.localeCompare(b.name, 'zh-CN')
+            ? a.name.localeCompare(b.name, language === 'zh' ? 'zh-CN' : language)
             : sort === 'opened'
               ? (opened[itemKey(b)] ?? 0) - (opened[itemKey(a)] ?? 0) ||
                 (b.createdAt ?? 0) - (a.createdAt ?? 0)
               : (b.createdAt ?? 0) - (a.createdAt ?? 0),
         ),
-    [files, kind, sort, opened],
+    [files, kind, sort, opened, language],
   )
   const allSelected = visible.length > 0 && visible.every((file) => selected.has(itemKey(file)))
   const previewIndex = preview
@@ -515,13 +594,24 @@ export function FileLibrary({ client }: { client: AppClient }) {
     setSelected(failed)
     setConfirm(false)
     setBusy(false)
-    if (failures.length) setError(`部分文件未删除：${failures.join('；')}`)
+    if (failures.length)
+      setError(
+        `${{ zh: '部分文件未删除：', en: 'Some files were not deleted: ', it: 'Alcuni file non sono stati eliminati: ' }[language]}${failures.join('; ')}`,
+      )
     else resetSelection()
   }
   return (
-    <section className="tz-library" aria-label="文件">
+    <section className="tz-library" aria-label={tr('文件')}>
       <header className="tz-library-header">
-        <h1>{selecting ? `已选 ${selected.size} 项` : '文件'}</h1>
+        <h1>
+          {selecting
+            ? {
+                zh: `已选 ${selected.size} 项`,
+                en: `${selected.size} selected`,
+                it: `${selected.size} selezionati`,
+              }[language]
+            : tr('文件')}
+        </h1>
         <div className="tz-library-actions">
           {!selecting ? (
             <>
@@ -529,9 +619,9 @@ export function FileLibrary({ client }: { client: AppClient }) {
                 open={sortOpen}
                 selectedId={sort}
                 items={[
-                  { id: 'created', label: '创建时间' },
-                  { id: 'name', label: '标题' },
-                  { id: 'opened', label: '最近打开' },
+                  { id: 'created', label: tr('创建时间') },
+                  { id: 'name', label: tr('标题') },
+                  { id: 'opened', label: tr('最近打开') },
                 ]}
                 onSelect={(id) => {
                   if (id === 'created' || id === 'name' || id === 'opened') setSort(id)
@@ -545,7 +635,7 @@ export function FileLibrary({ client }: { client: AppClient }) {
                   <Button
                     variant="ghost"
                     isIconOnly
-                    aria-label="排序"
+                    aria-label={tr('排序')}
                     aria-expanded={sortOpen}
                     className="tz-library-icon"
                     onPress={() => setSortOpen((open) => !open)}
@@ -559,7 +649,7 @@ export function FileLibrary({ client }: { client: AppClient }) {
                 className="tz-library-glass"
                 onPress={() => setSelecting(true)}
               >
-                选择
+                {tr('选择')}
               </Button>
             </>
           ) : (
@@ -570,23 +660,28 @@ export function FileLibrary({ client }: { client: AppClient }) {
                 onPress={() => setConfirm(true)}
               >
                 <IconTrashOutlineRegular size={16} />
-                删除
+                {tr('删除')}
               </Button>
               <Button
                 variant="ghost"
                 className="tz-library-glass"
                 onPress={() => setSelected(allSelected ? new Set() : new Set(visible.map(itemKey)))}
               >
-                {allSelected ? '取消全选' : '全选'}
+                {allSelected ? tr('取消全选') : tr('全选')}
               </Button>
-              <Button variant="ghost" isIconOnly aria-label="退出选择" onPress={resetSelection}>
+              <Button
+                variant="ghost"
+                isIconOnly
+                aria-label={tr('退出选择')}
+                onPress={resetSelection}
+              >
                 <IconCloseOutlineRegular size={18} />
               </Button>
             </>
           )}
         </div>
       </header>
-      <div role="tablist" aria-label="文件分类" className="tz-library-tabs">
+      <div role="tablist" aria-label={tr('文件分类')} className="tz-library-tabs">
         {(['document', 'image'] as const).map((value) => (
           <button
             key={value}
@@ -611,7 +706,7 @@ export function FileLibrary({ client }: { client: AppClient }) {
               resetSelection()
             }}
           >
-            {value === 'document' ? '文档' : '图片'}
+            {value === 'document' ? tr('文档') : tr('图片')}
           </button>
         ))}
       </div>
@@ -619,17 +714,17 @@ export function FileLibrary({ client }: { client: AppClient }) {
         <div className="tz-library-error" role="alert">
           {error}
           <Button variant="ghost" size="sm" onPress={() => setRevision((v) => v + 1)}>
-            重试
+            {tr('重试')}
           </Button>
         </div>
       )}
       {loading ? (
         <div className="tz-library-empty">
-          <Spinner aria-label="正在加载文件" />
+          <Spinner aria-label={tr('正在加载文件')} />
         </div>
       ) : loadFailed ? null : !visible.length ? (
         <div className="tz-library-empty">
-          {kind === 'document' ? '暂无已登记文档' : '暂无已登记图片'}
+          {kind === 'document' ? tr('暂无已登记文档') : tr('暂无已登记图片')}
         </div>
       ) : (
         <div className="tz-library-grid">
@@ -644,7 +739,7 @@ export function FileLibrary({ client }: { client: AppClient }) {
                 key={key}
                 aria-label={
                   file.kind === 'image'
-                    ? `${file.name}，${sessions.byId[file.sessionId]?.title || '会话'}`
+                    ? `${file.name}，${sessions.byId[file.sessionId]?.title || tr('会话')}`
                     : undefined
                 }
                 aria-pressed={selecting ? chosen : undefined}
@@ -669,7 +764,7 @@ export function FileLibrary({ client }: { client: AppClient }) {
                     <FileTypeIcon path={file.name} size={23} />
                     <span>
                       <strong title={file.name}>{file.name}</strong>
-                      <small>{sessions.byId[file.sessionId]?.title || '会话'}</small>
+                      <small>{sessions.byId[file.sessionId]?.title || tr('会话')}</small>
                     </span>
                   </span>
                 )}
@@ -709,23 +804,32 @@ export function FileLibrary({ client }: { client: AppClient }) {
           }}
         >
           <AlertDialog.Container>
-            <AlertDialog.Dialog aria-label="删除文件" className="tz-confirm-dialog">
-              <AlertDialog.Heading>删除 {selected.size} 个文件？</AlertDialog.Heading>
+            <AlertDialog.Dialog aria-label={tr('删除文件')} className="tz-confirm-dialog">
+              <AlertDialog.Heading>
+                {
+                  {
+                    zh: `删除 ${selected.size} 个文件？`,
+                    en: `Delete ${selected.size} files?`,
+                    it: `Eliminare ${selected.size} file?`,
+                  }[language]
+                }
+              </AlertDialog.Heading>
               <p>
                 {files.some((file) => selected.has(itemKey(file)) && file.source === 'workspace')
-                  ? '将永久删除工作区中的原文件，此操作无法恢复。'
-                  : '将从文件页移除所选图片。'}
-                会话消息中的附件会保留。
+                  ? tr('将永久删除工作区中的原文件，此操作无法恢复。')
+                  : tr('将从文件页移除所选图片。')}
+                {language === 'zh' ? '' : ' '}
+                {tr('会话消息中的附件会保留。')}
               </p>
               <Button variant="ghost" isDisabled={busy} onPress={() => setConfirm(false)}>
-                取消
+                {tr('取消')}
               </Button>
               <Button variant="danger" isDisabled={busy} onPress={() => void remove()}>
                 {busy
-                  ? '正在删除…'
+                  ? tr('正在删除…')
                   : files.some((file) => selected.has(itemKey(file)) && file.source === 'workspace')
-                    ? '永久删除'
-                    : '移除'}
+                    ? tr('永久删除')
+                    : tr('移除')}
               </Button>
             </AlertDialog.Dialog>
           </AlertDialog.Container>

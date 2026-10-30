@@ -10955,8 +10955,8 @@
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/presentation.ts",
-          "sha256": "7ee15f9a808ba519ffbc8b3ec5424cbd2a5b41f8946be3d762bdf5d3259a6e33",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "1ecab08030984fdcffb20d05901d3962b62c0aa3798524043f1c7a13910659fb",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；TZ-087 本地化已知产品权限名称，保留自定义名称，见 provenance/dsh-tz087-permission-locale.patch"
         },
         {
           "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.module.css",

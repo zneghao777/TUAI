@@ -40,6 +40,9 @@
       "path": "../../client/file-upload/tsconfig.host.json"
     },
     {
+      "path": "../../client/locale/tsconfig.host.json"
+    },
+    {
       "path": "../../client/ui-chat/tsconfig.host.json"
     },
     {

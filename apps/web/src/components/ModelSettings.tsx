@@ -9,6 +9,195 @@ import { AppClient, describe, unwrap } from '../model/client'
 import { Button, Icon } from './kit'
 import { Select } from './Select'
 import s from '../App.module.css'
+import { useProductLanguage } from '../model/product-language'
+
+const modelCopy = {
+  模型: {
+    zh: '模型',
+    en: 'Models',
+    it: 'Modelli',
+  },
+  返回列表: {
+    zh: '返回列表',
+    en: 'Back to list',
+    it: 'Torna all’elenco',
+  },
+  模型配置暂不可用: {
+    zh: '模型配置暂不可用',
+    en: 'Model settings unavailable',
+    it: 'Impostazioni dei modelli non disponibili',
+  },
+  '正在读取模型配置…': {
+    zh: '正在读取模型配置…',
+    en: 'Loading model settings…',
+    it: 'Caricamento impostazioni dei modelli…',
+  },
+  已配置: {
+    zh: '已配置',
+    en: 'Configured',
+    it: 'Configurato',
+  },
+  未配置: {
+    zh: '未配置',
+    en: 'Not configured',
+    it: 'Non configurato',
+  },
+  编辑: {
+    zh: '编辑',
+    en: 'Edit',
+    it: 'Modifica',
+  },
+  移除模型提供商: {
+    zh: '移除模型提供商',
+    en: 'Remove model provider',
+    it: 'Rimuovi fornitore di modelli',
+  },
+  取消: {
+    zh: '取消',
+    en: 'Cancel',
+    it: 'Annulla',
+  },
+  确认移除: {
+    zh: '确认移除',
+    en: 'Remove',
+    it: 'Rimuovi',
+  },
+  添加模型提供商: {
+    zh: '添加模型提供商',
+    en: 'Add model provider',
+    it: 'Aggiungi fornitore di modelli',
+  },
+  提供商: {
+    zh: '提供商',
+    en: 'Provider',
+    it: 'Fornitore',
+  },
+  提供商类型: {
+    zh: '提供商类型',
+    en: 'Provider type',
+    it: 'Tipo di fornitore',
+  },
+  '自定义 API': {
+    zh: '自定义 API',
+    en: 'Custom API',
+    it: 'API personalizzata',
+  },
+  提供商标识: {
+    zh: '提供商标识',
+    en: 'Provider ID',
+    it: 'ID del fornitore',
+  },
+  显示名称: {
+    zh: '显示名称',
+    en: 'Display name',
+    it: 'Nome visualizzato',
+  },
+  我的模型服务: {
+    zh: '我的模型服务',
+    en: 'My model provider',
+    it: 'Il mio fornitore di modelli',
+  },
+  'API 地址': {
+    zh: 'API 地址',
+    en: 'API address',
+    it: 'Indirizzo API',
+  },
+  'DeepSeek Messages 兼容协议': {
+    zh: 'DeepSeek Messages 兼容协议',
+    en: 'DeepSeek Messages compatible protocol',
+    it: 'Protocollo compatibile con DeepSeek Messages',
+  },
+  '已保存；留空保留原密钥': {
+    zh: '已保存；留空保留原密钥',
+    en: 'Saved; leave blank to keep the key',
+    it: 'Salvata; lascia vuoto per mantenere la chiave',
+  },
+  '输入 API Key': {
+    zh: '输入 API Key',
+    en: 'Enter API key',
+    it: 'Inserisci la chiave API',
+  },
+  '隐藏 API Key': {
+    zh: '隐藏 API Key',
+    en: 'Hide API key',
+    it: 'Nascondi chiave API',
+  },
+  '显示 API Key': {
+    zh: '显示 API Key',
+    en: 'Show API key',
+    it: 'Mostra chiave API',
+  },
+  隐藏: {
+    zh: '隐藏',
+    en: 'Hide',
+    it: 'Nascondi',
+  },
+  显示: {
+    zh: '显示',
+    en: 'Show',
+    it: 'Mostra',
+  },
+  模型列表: {
+    zh: '模型列表',
+    en: 'Models',
+    it: 'Modelli',
+  },
+  添加模型: {
+    zh: '添加模型',
+    en: 'Add model',
+    it: 'Aggiungi modello',
+  },
+  '模型 ID': {
+    zh: '模型 ID',
+    en: 'Model ID',
+    it: 'ID modello',
+  },
+  模型名称: {
+    zh: '模型名称',
+    en: 'Model name',
+    it: 'Nome modello',
+  },
+  上下文与输出上限: {
+    zh: '上下文与输出上限',
+    en: 'Context and output limits',
+    it: 'Limiti di contesto e output',
+  },
+  上下文窗口: {
+    zh: '上下文窗口',
+    en: 'Context window',
+    it: 'Finestra di contesto',
+  },
+  '最大输出 Token': {
+    zh: '最大输出 Token',
+    en: 'Maximum output tokens',
+    it: 'Token di output massimi',
+  },
+  使用适配器默认值: {
+    zh: '使用适配器默认值',
+    en: 'Use adapter default',
+    it: 'Usa il valore predefinito dell’adattatore',
+  },
+  '处理中…': {
+    zh: '处理中…',
+    en: 'Working…',
+    it: 'Operazione in corso…',
+  },
+  测试连接: {
+    zh: '测试连接',
+    en: 'Test connection',
+    it: 'Verifica connessione',
+  },
+  保存: {
+    zh: '保存',
+    en: 'Save',
+    it: 'Salva',
+  },
+  重新加载: {
+    zh: '重新加载',
+    en: 'Reload',
+    it: 'Ricarica',
+  },
+} as const
 
 const emptyProvider = (): ModelProviderDraft => ({
   id: '',
@@ -26,6 +215,11 @@ export function ModelSettings({
   busy: boolean
   onBusyChange(busy: boolean): void
 }) {
+  const language = useProductLanguage(client)
+  const t = (key: keyof typeof modelCopy) => modelCopy[key][language]
+  const remove = (name: string) =>
+    ({ zh: `移除 ${name}`, en: `Remove ${name}`, it: `Rimuovi ${name}` })[language]
+  const modelField = (name: string, index: number) => `${name} ${index + 1}`
   const [data, setData] = useState<ModelProvidersState>(),
     [error, setError] = useState('')
   const [draft, setDraft] = useState<ModelProviderDraft>(),
@@ -99,7 +293,9 @@ export function ModelSettings({
       if (action === 'test') {
         const result = unwrap(await client.ctx.remote.platform.testModelProvider(request))
         setTestOk(result.ok)
-        setTestMessage(`${result.message} · ${(result.latencyMs / 1000).toFixed(1)} 秒`)
+        setTestMessage(
+          `${result.message} · ${(result.latencyMs / 1000).toFixed(1)} ${language === 'zh' ? '秒' : 's'}`,
+        )
       } else {
         const next = unwrap(
           await client.ctx.remote.platform.saveModelProvider({
@@ -120,17 +316,17 @@ export function ModelSettings({
   return (
     <>
       <div className={s.settingsHeading}>
-        <h3>模型</h3>
+        <h3>{t('模型')}</h3>
         {draft ? (
           <Button onClick={clear} disabled={busy}>
-            返回列表
+            {t('返回列表')}
           </Button>
         ) : null}
       </div>
       {!data ? (
         <p role="status">
           {!error ? <Spinner size="sm" /> : null}
-          {error ? '模型配置暂不可用' : '正在读取模型配置…'}
+          {error ? t('模型配置暂不可用') : t('正在读取模型配置…')}
         </p>
       ) : null}
       {!draft && data ? (
@@ -142,14 +338,14 @@ export function ModelSettings({
                   <strong>{provider.name}</strong>
                   <span className={s.providerState}>
                     <i className={provider.configured ? s.doneDot : s.inactiveDot} />
-                    {provider.configured ? '已配置' : '未配置'}
+                    {provider.configured ? t('已配置') : t('未配置')}
                   </span>
                 </div>
                 <div className={s.providerActions}>
-                  <Button onClick={() => edit(provider)}>编辑</Button>
+                  <Button onClick={() => edit(provider)}>{t('编辑')}</Button>
                   {provider.configured || !provider.builtin ? (
                     <Button
-                      aria-label={`移除 ${provider.name}`}
+                      aria-label={remove(provider.name)}
                       onClick={() => {
                         setDeleting(provider)
                         setError('')
@@ -174,16 +370,21 @@ export function ModelSettings({
               <AlertDialog.Container>
                 <AlertDialog.Dialog
                   data-shortcut-modal="model-delete"
-                  aria-label="移除模型提供商"
+                  aria-label={t('移除模型提供商')}
                   className="tz-confirm-dialog"
                 >
-                  <AlertDialog.Heading>移除 {deleting.name}</AlertDialog.Heading>
+                  <AlertDialog.Heading>{remove(deleting.name)}</AlertDialog.Heading>
                   <p>
-                    移除 {deleting.name}{' '}
-                    的配置和已保存密钥？已有会话会保留，下次发送前需选择可用模型。
+                    {
+                      {
+                        zh: `移除 ${deleting.name} 的配置和已保存密钥？已有会话会保留，下次发送前需选择可用模型。`,
+                        en: `Remove ${deleting.name} settings and its saved key? Existing chats will be kept. Select an available model before sending again.`,
+                        it: `Rimuovere le impostazioni e la chiave salvata di ${deleting.name}? Le chat esistenti saranno conservate. Seleziona un modello disponibile prima di inviare di nuovo.`,
+                      }[language]
+                    }
                   </p>
                   <Button disabled={busy} onClick={() => setDeleting(undefined)}>
-                    取消
+                    {t('取消')}
                   </Button>
                   <Button
                     busy={busy}
@@ -203,7 +404,7 @@ export function ModelSettings({
                         .finally(() => setBusy(false))
                     }}
                   >
-                    确认移除
+                    {t('确认移除')}
                   </Button>
                 </AlertDialog.Dialog>
               </AlertDialog.Container>
@@ -226,7 +427,7 @@ export function ModelSettings({
             }}
           >
             <Icon name="plus" />
-            添加模型提供商
+            {t('添加模型提供商')}
           </Button>
         </>
       ) : null}
@@ -240,16 +441,16 @@ export function ModelSettings({
         >
           {adding ? (
             <div className={s.field}>
-              <span>提供商</span>
+              <span>{t('提供商')}</span>
               <Select
-                label="提供商类型"
+                label={t('提供商类型')}
                 value={builtin ? 'official' : 'custom'}
                 disabled={busy}
                 options={[
                   ...(official && !official.configured
                     ? [{ value: 'official', label: 'DeepSeek' }]
                     : []),
-                  { value: 'custom', label: '自定义 API' },
+                  { value: 'custom', label: t('自定义 API') },
                 ]}
                 onChange={(value) => {
                   setKey('')
@@ -276,7 +477,7 @@ export function ModelSettings({
           {!builtin ? (
             <div className={s.fieldGrid}>
               <label className={s.field}>
-                提供商标识
+                {t('提供商标识')}
                 <Input
                   ref={firstInput}
                   value={draft.id}
@@ -289,20 +490,20 @@ export function ModelSettings({
                 />
               </label>
               <label className={s.field}>
-                显示名称
+                {t('显示名称')}
                 <Input
                   value={draft.name}
                   disabled={busy}
                   required
                   maxLength={100}
-                  placeholder="我的模型服务"
+                  placeholder={t('我的模型服务')}
                   onChange={(e) => update({ ...draft, name: e.target.value })}
                 />
               </label>
             </div>
           ) : null}
           <label className={s.field}>
-            API 地址
+            {t('API 地址')}
             <Input
               value={draft.baseURL}
               disabled={busy || builtin}
@@ -312,7 +513,7 @@ export function ModelSettings({
               onChange={(e) => update({ ...draft, baseURL: e.target.value })}
             />
           </label>
-          {!builtin ? <small>DeepSeek Messages 兼容协议</small> : null}
+          {!builtin ? <small>{t('DeepSeek Messages 兼容协议')}</small> : null}
           <label className={s.field}>
             API Key
             <div className={s.keyField}>
@@ -325,24 +526,24 @@ export function ModelSettings({
                 autoComplete="off"
                 spellCheck={false}
                 maxLength={4096}
-                placeholder={editing?.configured ? '已保存；留空保留原密钥' : '输入 API Key'}
+                placeholder={editing?.configured ? t('已保存；留空保留原密钥') : t('输入 API Key')}
                 onChange={(e) => {
                   setKey(e.target.value)
                   setTestMessage('')
                 }}
               />
               <Button
-                aria-label={visible ? '隐藏 API Key' : '显示 API Key'}
+                aria-label={visible ? t('隐藏 API Key') : t('显示 API Key')}
                 onClick={() => setVisible((v) => !v)}
                 type="button"
                 disabled={busy}
               >
-                {visible ? '隐藏' : '显示'}
+                {visible ? t('隐藏') : t('显示')}
               </Button>
             </div>
           </label>
           <div className={s.modelsHead}>
-            <h4>模型列表</h4>
+            <h4>{t('模型列表')}</h4>
             {!builtin ? (
               <Button
                 disabled={busy || draft.models.length >= 100}
@@ -352,7 +553,7 @@ export function ModelSettings({
                 type="button"
               >
                 <Icon name="plus" />
-                添加模型
+                {t('添加模型')}
               </Button>
             ) : null}
           </div>
@@ -367,9 +568,9 @@ export function ModelSettings({
                 <>
                   <div className={s.modelFields}>
                     <label className={s.field}>
-                      模型 ID
+                      {t('模型 ID')}
                       <Input
-                        aria-label={`模型 ID ${i + 1}`}
+                        aria-label={modelField(t('模型 ID'), i)}
                         required
                         value={model.id}
                         disabled={busy}
@@ -385,9 +586,9 @@ export function ModelSettings({
                       />
                     </label>
                     <label className={s.field}>
-                      模型名称
+                      {t('模型名称')}
                       <Input
-                        aria-label={`模型名称 ${i + 1}`}
+                        aria-label={modelField(t('模型名称'), i)}
                         required
                         value={model.name}
                         disabled={busy}
@@ -404,7 +605,7 @@ export function ModelSettings({
                     </label>
                     <Button
                       type="button"
-                      aria-label={`移除模型 ${i + 1}`}
+                      aria-label={remove(modelField(t('模型'), i))}
                       disabled={busy || draft.models.length === 1}
                       onClick={() =>
                         update({ ...draft, models: draft.models.filter((_, at) => at !== i) })
@@ -414,11 +615,11 @@ export function ModelSettings({
                     </Button>
                   </div>
                   <details className={s.modelAdvanced}>
-                    <summary>上下文与输出上限</summary>
+                    <summary>{t('上下文与输出上限')}</summary>
                     <div className={s.fieldGrid}>
                       {(['contextWindow', 'maxTokens'] as const).map((field) => (
                         <label className={s.field} key={field}>
-                          {field === 'contextWindow' ? '上下文窗口' : '最大输出 Token'}
+                          {field === 'contextWindow' ? t('上下文窗口') : t('最大输出 Token')}
                           <Input
                             type="number"
                             min={1}
@@ -426,7 +627,7 @@ export function ModelSettings({
                             step={1}
                             disabled={busy}
                             value={model[field] ?? ''}
-                            placeholder="使用适配器默认值"
+                            placeholder={t('使用适配器默认值')}
                             onChange={(e) =>
                               update({
                                 ...draft,
@@ -458,14 +659,14 @@ export function ModelSettings({
           ) : null}
           <div className={s.editorFooter}>
             <Button type="button" disabled={!ready || busy} onClick={() => void run('test')}>
-              {busy ? '处理中…' : '测试连接'}
+              {busy ? t('处理中…') : t('测试连接')}
             </Button>
             <div>
               <Button type="button" onClick={clear} disabled={busy}>
-                取消
+                {t('取消')}
               </Button>
               <Button type="submit" disabled={!ready} busy={busy} className={s.primary}>
-                保存
+                {t('保存')}
               </Button>
             </div>
           </div>
@@ -485,7 +686,7 @@ export function ModelSettings({
                 .catch((e) => setError(describe(e)))
             }}
           >
-            重新加载
+            {t('重新加载')}
           </Button>
         </p>
       ) : null}

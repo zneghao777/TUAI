@@ -5502,6 +5502,9 @@ importers:
       '@deepseek-ai/dsh-client-file-upload':
         specifier: workspace:*
         version: link:../../client/file-upload
+      '@deepseek-ai/dsh-client-locale':
+        specifier: workspace:*
+        version: link:../../client/locale
       '@deepseek-ai/dsh-client-ui-chat':
         specifier: workspace:*
         version: link:../../client/ui-chat

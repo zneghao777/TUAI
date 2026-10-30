@@ -23,6 +23,11 @@ import {
   ConversationSettingsFields,
 } from '@deepseek-ai/dsh-client-ui-conversation/src/submission-settings.ts'
 import {
+  LOCALE_SETTINGS_NAMESPACE,
+  LocaleSettingsFields,
+  LocaleSettingsSchema,
+} from '@deepseek-ai/dsh-client-locale/src/locale-settings.ts'
+import {
   appearanceBootInjections,
   ProductAppearanceSchema,
   validateAppearance,
@@ -44,6 +49,15 @@ const definitions: PreferenceDefinition[] = [
     fields: Object.keys(ChatSettingsFields),
     validate: (value) => {
       ChatSettingsSchema(value)
+    },
+  },
+  {
+    ns: brandString<Namespace>(LOCALE_SETTINGS_NAMESPACE),
+    schema: LocaleSettingsSchema.toJSON(),
+    base: {},
+    fields: Object.keys(LocaleSettingsFields),
+    validate: (value) => {
+      LocaleSettingsSchema(value)
     },
   },
   {

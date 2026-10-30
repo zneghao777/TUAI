@@ -917,6 +917,53 @@ body [data-sidebar-new-session='wide'] {
 }
 
 /* Palette choices share the Host appearance document and preserve the editor. */
+.tz-language-settings {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+}
+.tz-language-text {
+  flex: 1;
+  min-width: 0;
+  padding-right: 48px;
+}
+.tz-language-title {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--dsw-alias-label-primary);
+}
+.tz-language-error {
+  color: var(--danger);
+  font-size: 12px;
+  line-height: 18px;
+}
+.tz-language-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--dsw-radius-md);
+  background: var(--dsw-alias-bg-module-platform);
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .tz-language-selector:hover:not(:disabled) {
+    background: var(--dsw-alias-interactive-bg-hover);
+  }
+}
+@media (max-width: 767px) {
+  .tz-language-text {
+    padding-right: 16px;
+  }
+}
 .tz-appearance fieldset {
   margin: 0 0 22px;
 }

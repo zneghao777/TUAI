@@ -1,0 +1,27 @@
+diff --git a/packages/client/ui-permission-presets/src/client/presentation.ts b/packages/client/ui-permission-presets/src/client/presentation.ts
+index 9a560b6..351ceb8 100644
+--- a/packages/client/ui-permission-presets/src/client/presentation.ts
++++ b/packages/client/ui-permission-presets/src/client/presentation.ts
+@@ -1,4 +1,4 @@
+-import { en } from './locales.ts'
++import { en, zh } from './locales.ts'
+ 
+ /** Machine value of the preset that requires an explicit GUI risk gate. */
+ export const FULL_ACCESS_PRESET = 'full-access'
+@@ -14,6 +14,7 @@ export type PermissionPresetLabelKey =
+ 
+ const PRESET_LABEL_KEYS = new Map<string, PermissionPresetLabelKey>([
+   ['read-only', 'preset.readOnly'],
++  ['readonly', 'preset.readOnly'],
+   ['workspace-write', 'preset.workspaceWrite'],
+   [FULL_ACCESS_PRESET, 'preset.fullAccess'],
+   ['danger-full-access', 'preset.fullAccess'],
+@@ -48,7 +49,7 @@ export function displayPermissionPreset(
+   t?: (key: PermissionPresetLabelKey) => string,
+ ): string {
+   const key = PRESET_LABEL_KEYS.get(value)
+-  if (key !== undefined && (name === value || name === DEFAULT_PRESET_LABELS[key])) {
++  if (key !== undefined && (name === value || name === DEFAULT_PRESET_LABELS[key] || (t !== undefined && name === zh[key]))) {
+     return t?.(key) ?? DEFAULT_PRESET_LABELS[key]
+   }
+   return displayPresetName(name)

@@ -4,6 +4,7 @@ import { closeTopModal } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { AppClient } from '../model/client'
 import { Button, Icon } from './kit'
 import { ModelSettings } from './ModelSettings'
+import { useProductLanguage } from '../model/product-language'
 import s from '../App.module.css'
 
 /** One focus owner; mounted tab panels preserve drafts and independent scroll. */
@@ -16,6 +17,30 @@ export function SettingsDialog({
   onClose(): void
   children: ReactNode
 }) {
+  const language = useProductLanguage(client)
+  const copy = {
+    zh: {
+      settings: '设置',
+      close: '关闭',
+      categories: '设置分类',
+      general: '通用',
+      models: '模型',
+    },
+    en: {
+      settings: 'Settings',
+      close: 'Close',
+      categories: 'Settings categories',
+      general: 'General',
+      models: 'Models',
+    },
+    it: {
+      settings: 'Impostazioni',
+      close: 'Chiudi',
+      categories: 'Categorie delle impostazioni',
+      general: 'Generale',
+      models: 'Modelli',
+    },
+  }[language]
   const [category, setCategory] = useState('models')
   const [busy, setBusy] = useState(false)
   const [nestedMenu, setNestedMenu] = useState(false)
@@ -70,12 +95,12 @@ export function SettingsDialog({
       <Modal.Container size="lg" placement="center" className="tz-settings-container">
         <Modal.Dialog
           data-shortcut-modal="settings"
-          aria-label="设置"
+          aria-label={copy.settings}
           className={`${s.settingsModal} tz-settings-dialog`}
         >
           <div className={s.settingsHeader}>
-            <Modal.Heading>设置</Modal.Heading>
-            <Button aria-label="关闭" disabled={busy} onClick={onClose}>
+            <Modal.Heading>{copy.settings}</Modal.Heading>
+            <Button aria-label={copy.close} disabled={busy} onClick={onClose}>
               <Icon name="close" />
             </Button>
           </div>
@@ -85,16 +110,16 @@ export function SettingsDialog({
             orientation="vertical"
             className={`${s.settingsLayout} tz-settings-tabs`}
           >
-            <nav className={s.settingsNav} aria-label="设置分类">
-              <Tabs.List aria-label="设置分类" className="tz-settings-tablist">
+            <nav className={s.settingsNav} aria-label={copy.categories}>
+              <Tabs.List aria-label={copy.categories} className="tz-settings-tablist">
                 <Tabs.Tab id="display" isDisabled={busy}>
                   <Icon name="settings" />
-                  通用
+                  {copy.general}
                   <Tabs.Indicator />
                 </Tabs.Tab>
                 <Tabs.Tab id="models" isDisabled={busy}>
                   <Icon name="model" />
-                  模型
+                  {copy.models}
                   <Tabs.Indicator />
                 </Tabs.Tab>
               </Tabs.List>
@@ -114,7 +139,7 @@ export function SettingsDialog({
               className={s.settingsContent}
             >
               <div className={s.settingsHeading}>
-                <h3>通用</h3>
+                <h3>{copy.general}</h3>
               </div>
               {children}
             </Tabs.Panel>

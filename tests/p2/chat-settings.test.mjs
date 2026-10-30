@@ -19,6 +19,22 @@ test('DSH settings codec persists chat preferences, fences stale writers and pre
     other = await clientFor(host.runtime)
     await client.ctx.remote.$mount(settings)
     await other.ctx.remote.$mount(settings)
+    const locale = (await client.ctx.remote.settings.describe()).value.namespaces.find(
+      (value) => value.ns === 'locale',
+    )
+    assert.equal(locale.value.preference, undefined)
+    const languageSaved = await client.ctx.remote.settings.mutate(
+      'locale',
+      [{ op: 'set', path: ['preference'], value: 'it' }],
+      locale.revision,
+    )
+    assert.equal(languageSaved.ok, true)
+    const invalidLanguage = await client.ctx.remote.settings.update(
+      'locale',
+      { preference: 'invalid locale!' },
+      undefined,
+    )
+    assert.equal(invalidLanguage.ok, false)
     const initial = section(await client.ctx.remote.settings.describe())
     assert.equal(initial.value.transcriptView, 'standard')
     const changed = await client.ctx.remote.settings.mutate(
@@ -67,6 +83,10 @@ test('DSH settings codec persists chat preferences, fences stale writers and pre
     reboot = await startWebHost({ port: 0 })
     client = await clientFor(reboot)
     await client.ctx.remote.$mount(settings)
+    const restoredLocale = (await client.ctx.remote.settings.describe()).value.namespaces.find(
+      (value) => value.ns === 'locale',
+    )
+    assert.equal(restoredLocale.value.preference, 'it')
     const restored = section(await client.ctx.remote.settings.describe())
     assert.equal(restored.value.transcriptView, 'verbose')
     assert.equal(restored.value.collapseTiming, 'next-input')

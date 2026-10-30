@@ -22,6 +22,9 @@ import { useSource } from './bindings'
 import { SettingsDialog } from './components/SettingsDialog'
 import { AppearanceSettings } from './components/AppearanceSettings'
 import { AppearanceRuntime } from './model/appearance'
+import { LanguageRuntime } from './model/language'
+import { LanguageSettings } from './components/LanguageSettings'
+import { useProductLanguage } from './model/product-language'
 import type { AppClient } from './model/client'
 import { mountArtifactPane } from './components/ArtifactPane'
 import brandLogo from './assets/tianzhi-logo.png'
@@ -47,9 +50,52 @@ type SettingsProps = ComposedProps<
   object
 >
 
+const shellCopy = {
+  zh: {
+    greeting: '今天，想一起完成什么？',
+    full: '完全权限',
+    read: '仅可查看',
+    access: '访问模式，当前：',
+    model: '选择模型',
+    current: '选择模型，当前：',
+    connection: '连接中断，正在恢复…',
+    reconnect: '重新连接',
+    settings: '设置',
+  },
+  en: {
+    greeting: 'What would you like to work on today?',
+    full: 'Full access',
+    read: 'Read only',
+    access: 'Access mode, current: ',
+    model: 'Select model',
+    current: 'Select model, current: ',
+    connection: 'Connection interrupted. Reconnecting…',
+    reconnect: 'Reconnect',
+    settings: 'Settings',
+  },
+  it: {
+    greeting: 'A cosa vuoi lavorare oggi?',
+    full: 'Accesso completo',
+    read: 'Sola lettura',
+    access: 'Modalità di accesso, attuale: ',
+    model: 'Seleziona modello',
+    current: 'Seleziona modello, attuale: ',
+    connection: 'Connessione interrotta. Riconnessione…',
+    reconnect: 'Riconnetti',
+    settings: 'Impostazioni',
+  },
+}
+
 /** Product chat navigation, branding and settings share the original DSH state owners. */
 export function mountProductUi(client: AppClient, container: HTMLElement) {
   const { ctx } = client
+  function Greeting() {
+    return (
+      <div className="tz-chat-greeting">
+        <h2>{shellCopy[useProductLanguage(client)].greeting}</h2>
+      </div>
+    )
+  }
   mountArtifactPane(client)
   const colors: Record<string, [string, string]> = Object.fromEntries(
     Object.entries({
@@ -81,6 +127,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
   const appearance = new AppearanceRuntime(ctx, () => {
     resetTheme = ctx.theme.overrideTokens('tianzhiai', semanticTokens)
   })
+  const language = new LanguageRuntime(ctx)
   const disposers = [
     mountSkillInput(client),
     ctx.slots.inject('main', () =>
@@ -92,8 +139,14 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     ctx.commandUi.hideMenuEntries(['goal', 'plan', 'feedback', 'export']),
     ctx.slots.inject('settings.general.item', () =>
       ctx.slots.register(
+        { name: 'settings.general.item', id: 'language', order: 0, priority: -10 },
+        () => <LanguageSettings client={client} language={language} />,
+      ),
+    ),
+    ctx.slots.inject('settings.general.item', () =>
+      ctx.slots.register(
         { name: 'settings.general.item', id: 'appearance', order: 10, priority: -10 },
-        () => <AppearanceSettings appearance={appearance} />,
+        () => <AppearanceSettings client={client} appearance={appearance} />,
       ),
     ),
     ctx.slots.inject('sidebar.workspaces', () =>
@@ -104,34 +157,26 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     ctx.slots.inject('conversation.input.dock', () =>
       ctx.slots.register(
         { name: 'conversation.input.dock', id: 'tianzhiai-greeting', order: -100 },
-        ({ session }) =>
-          session.blank ? (
-            <div className="tz-chat-greeting">
-              <h2>今天，想一起完成什么？</h2>
-            </div>
-          ) : null,
+        ({ session }) => (session.blank ? <Greeting /> : null),
       ),
     ),
     ctx.slots.inject('conversation.hero.brand.mark', () =>
-      ctx.slots.register({ name: 'conversation.hero.brand.mark' }, () => (
-        <div className="tz-chat-greeting">
-          <h2>今天，想一起完成什么？</h2>
-        </div>
-      )),
+      ctx.slots.register({ name: 'conversation.hero.brand.mark' }, () => <Greeting />),
     ),
     ctx.slots.inject('conversation.input.staged.permission', () =>
       ctx.slots.register(
         { name: 'conversation.input.staged.permission' },
         ({ locked, activate }) => {
           const facts = useSource(client.facts)
+          const copy = shellCopy[useProductLanguage(client)]
           const full = facts.permissions?.defaultPreset === 'full-access'
-          const label = full ? '完全权限' : '仅可查看'
+          const label = full ? copy.full : copy.read
           return (
             <HeroButton
               variant="ghost"
               className={`tz-staged-permission${full ? ' tz-permission-full' : ''}`}
               isDisabled={locked}
-              aria-label={`访问模式，当前：${label}`}
+              aria-label={`${copy.access}${label}`}
               onPress={activate}
             >
               {full ? <PermissionIconFullAccessRegular /> : <PermissionIconReadOnlyRegular />}
@@ -145,6 +190,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     ctx.slots.inject('conversation.input.staged.model', () =>
       ctx.slots.register({ name: 'conversation.input.staged.model' }, ({ locked, activate }) => {
         const facts = useSource(client.facts)
+        const copy = shellCopy[useProductLanguage(client)]
         const catalog = facts.catalog
         const selection = catalog?.default
         const model = catalog?.groups
@@ -152,14 +198,14 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
           ?.models.find((item) => item.id === selection?.model)
         const effortId = selection?.reasoningEffort ?? model?.reasoning?.defaultEffort
         const effort = model?.reasoning?.efforts.find((item) => item.id === effortId)?.name
-        const label = model?.name ?? selection?.model ?? '选择模型'
+        const label = model?.name ?? selection?.model ?? copy.model
         return (
           <HeroButton
             variant="ghost"
             size="sm"
             className="tz-model-trigger"
             isDisabled={locked}
-            aria-label={`选择模型，当前：${label}${effort ? `，${effort}` : ''}`}
+            aria-label={`${copy.current}${label}${effort ? `, ${effort}` : ''}`}
             onPress={activate}
           >
             <span>{label}</span>
@@ -188,7 +234,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
             }
           },
         },
-        (props) => <ModelPicker {...props} />,
+        (props) => <ModelPicker {...props} client={client} />,
       ),
     ),
     ctx.slots.inject('shell.overlay', () =>
@@ -197,15 +243,16 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
         function ConnectionNotice() {
           const state = useSource(client.connection.state)
           const facts = useSource(client.facts)
+          const copy = shellCopy[useProductLanguage(client)]
           return state !== 'connected' || facts.error ? (
             <div className="tz-connection" role="alert">
-              <span>{facts.error ?? '连接中断，正在恢复…'}</span>
+              <span>{facts.error ?? copy.connection}</span>
               <HeroButton
                 variant="ghost"
                 className="tz-pane-action"
                 onClick={() => client.connection.reconnect()}
               >
-                重新连接
+                {copy.reconnect}
               </HeroButton>
             </div>
           ) : null
@@ -223,17 +270,20 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
       ctx.slots.register({ name: 'sidebar.brand.name' }, () => <strong>天质 AI</strong>),
     ),
     ctx.slots.inject('sidebar.settings', () =>
-      ctx.slots.register({ name: 'sidebar.settings' }, ({ wide }) => (
-        <HeroButton
-          variant="ghost"
-          className="tz-settings-trigger"
-          aria-label="设置"
-          onClick={() => settingsOpen.set(true)}
-        >
-          <IconSettingsOutlineRegular size={18} />
-          {wide ? <span>设置</span> : null}
-        </HeroButton>
-      )),
+      ctx.slots.register({ name: 'sidebar.settings' }, ({ wide }) => {
+        const copy = shellCopy[useProductLanguage(client)]
+        return (
+          <HeroButton
+            variant="ghost"
+            className="tz-settings-trigger"
+            aria-label={copy.settings}
+            onClick={() => settingsOpen.set(true)}
+          >
+            <IconSettingsOutlineRegular size={18} />
+            {wide ? <span>{copy.settings}</span> : null}
+          </HeroButton>
+        )
+      }),
     ),
     ctx.slots.inject('shell.overlay', () =>
       ctx.slots.register(
@@ -262,6 +312,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
   return () => {
     unmount()
     appearance.dispose()
+    language.dispose()
     resetTheme()
     for (const dispose of disposers.reverse()) dispose()
   }
