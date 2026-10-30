@@ -11,6 +11,8 @@ import type {
   SkillMutation,
   SkillUse,
   SkillVersion,
+  SkillPreview,
+  SkillFileChange,
 } from './types.ts'
 
 interface ItemRow {
@@ -136,6 +138,45 @@ export class SkillStore {
       )
       .all(id) as unknown as SkillUse[]
     return { skill: this.item(id), uses }
+  }
+  private changes(before: ParsedSkill | undefined, after: ParsedSkill): SkillFileChange[] {
+    const oldFiles = new Map(before?.files.map((file) => [file.path, file.data]) ?? [])
+    const newFiles = new Map(after.files.map((file) => [file.path, file.data]))
+    return [...new Set([...oldFiles.keys(), ...newFiles.keys()])].sort().map((path) => ({
+      path,
+      kind: !oldFiles.has(path)
+        ? 'added'
+        : !newFiles.has(path)
+          ? 'removed'
+          : oldFiles.get(path) !== newFiles.get(path)
+            ? 'modified'
+            : 'unchanged',
+    }))
+  }
+  preview(value: SkillImport): SkillPreview {
+    const p = parsePackage(value)
+    const existing = this.db.prepare('SELECT id FROM skills WHERE name=?').get(p.name) as
+      | { id: string }
+      | undefined
+    const item = existing ? this.item(existing.id) : undefined
+    const baseVersion = item?.activeVersion ?? item?.versions[0]?.version
+    return {
+      name: p.name,
+      description: p.description,
+      files: p.files.map((file) => ({
+        path: file.path,
+        bytes: Buffer.byteLength(file.data, 'base64'),
+      })),
+      ...(item ? { existingId: item.id, revision: item.revision } : {}),
+      ...(baseVersion !== undefined ? { baseVersion } : {}),
+      changes: this.changes(
+        item && baseVersion !== undefined ? this.package(item.id, baseVersion) : undefined,
+        p,
+      ),
+    }
+  }
+  compare(id: string, from: number, to: number): SkillFileChange[] {
+    return this.changes(this.package(id, from), this.package(id, to))
   }
   import(value: SkillImport): SkillItem {
     const p = parsePackage(value)

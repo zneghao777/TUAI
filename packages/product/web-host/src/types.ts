@@ -58,6 +58,9 @@ export interface LibraryFile {
   version: string
 }
 export type {
+  SkillPreview,
+  SkillCompare,
+  SkillFileChange,
   SkillImport,
   SkillEdit,
   SkillMutation,

@@ -10,6 +10,9 @@ import type {
   SkillDetail,
   SkillFileRead,
   SkillFileValue,
+  SkillPreview,
+  SkillCompare,
+  SkillFileChange,
 } from '@tianzhiai/agent-runtime/skills'
 
 /** Personal library management; admitted by the same authenticated Host Gateway. */
@@ -25,6 +28,14 @@ export class SkillLibraryRemote extends TypertRemoteService {
   @Remote get(id: string, signal: AbortSignal): SkillDetail {
     signal.throwIfAborted()
     return this.ctx.skillLibrary.store.detail(id)
+  }
+  @Remote preview(request: SkillImport, signal: AbortSignal): SkillPreview {
+    signal.throwIfAborted()
+    return this.ctx.skillLibrary.store.preview(request)
+  }
+  @Remote compare(request: SkillCompare, signal: AbortSignal): SkillFileChange[] {
+    signal.throwIfAborted()
+    return this.ctx.skillLibrary.store.compare(request.id, request.from, request.to)
   }
   @Remote import(request: SkillImport): SkillItem {
     return this.ctx.skillLibrary.store.import(request)

@@ -267,6 +267,10 @@ const messages: Record<string, readonly [string, string]> = {
     'Pacchetto della competenza non valido: massimo 128 file e 200 caratteri per l’origine.',
   ],
   技能文件路径不合法: ['Invalid skill file path', 'Percorso del file della competenza non valido'],
+  技能文件路径与目录冲突: [
+    'A skill file path conflicts with a directory',
+    'Il percorso di un file della competenza è in conflitto con una cartella',
+  ],
   技能包包含重名文件: [
     'Skill package contains duplicate file names',
     'Il pacchetto della competenza contiene nomi di file duplicati',

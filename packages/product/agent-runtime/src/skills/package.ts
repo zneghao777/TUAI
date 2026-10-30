@@ -52,6 +52,12 @@ export function parsePackage(value: SkillImport): ParsedSkill {
     bytes += content.byteLength
     if (bytes > 2 * 1024 * 1024) throw new Error('技能包不能超过 2 MB')
   }
+  for (const path of names) {
+    const parts = path.split('/')
+    for (let i = 1; i < parts.length; i++) {
+      if (names.has(parts.slice(0, i).join('/'))) throw new Error('技能文件路径与目录冲突')
+    }
+  }
   const document = files.find((f) => f.path === 'SKILL.md')
   if (!document) throw new Error('技能包根目录需要 SKILL.md')
   const markdown = decodeText(document.data)

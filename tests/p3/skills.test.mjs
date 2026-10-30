@@ -61,6 +61,9 @@ test('skill runtime resources stay outside workspace and remain scoped to the lo
   try {
     const ctx = host.runtime.ctx
     const api = client.ctx.remote.skillLibrary
+    const initialPreview = ok(await api.preview(skillPackage('读取资源')))
+    assert.equal(initialPreview.name, 'test-skill')
+    assert.equal(initialPreview.existingId, undefined)
     let skill = ok(
       await api.import(
         skillPackage('读取资源', [
@@ -198,6 +201,16 @@ test('reject traversal, duplicate paths, invalid YAML, missing instructions and 
     for (const path of ['../secret', '/secret', 'a\\secret', 'a/../secret', 'C:secret', 'a//b'])
       assert.throws(() => store.import(skillPackage('body', [{ path, data: '' }])), /路径/)
     assert.throws(
+      () =>
+        store.import(
+          skillPackage('body', [
+            { path: 'scripts', data: '' },
+            { path: 'scripts/run.py', data: '' },
+          ]),
+        ),
+      /目录冲突/,
+    )
+    assert.throws(
       () => store.import(skillPackage('body', [{ path: 'skill.md', data: '' }])),
       /重名/,
     )
@@ -331,5 +344,51 @@ test('real Host RPC, explicit invocation, model loading, resource access, frozen
   } finally {
     await client.dispose()
     await host.dispose()
+  }
+})
+
+test('package preview is read-only, compares bytes and rejects stale new-version writes', () => {
+  const store = new SkillStore(':memory:')
+  try {
+    const extra = (path, text) => ({ path, data: Buffer.from(text).toString('base64') })
+    const original = skillPackage('first', [
+      extra('same.txt', 'same'),
+      extra('changed.txt', 'old'),
+      extra('removed.txt', 'old'),
+    ])
+    assert.equal(store.preview(original).existingId, undefined)
+    assert.equal(store.list().length, 0)
+    let item = store.import(original)
+    item = store.check({ id: item.id, revision: item.revision, version: 1 }, [])
+    item = store.activate({ id: item.id, revision: item.revision, version: 1 }, [])
+    const incoming = skillPackage('second', [
+      extra('same.txt', 'same'),
+      extra('changed.txt', 'new'),
+      extra('added.txt', 'new'),
+    ])
+    const preview = store.preview(incoming)
+    assert.equal(preview.existingId, item.id)
+    assert.equal(preview.revision, item.revision)
+    assert.equal(preview.baseVersion, 1)
+    assert.deepEqual(Object.fromEntries(preview.changes.map(({ path, kind }) => [path, kind])), {
+      'SKILL.md': 'modified',
+      'added.txt': 'added',
+      'changed.txt': 'modified',
+      'removed.txt': 'removed',
+      'same.txt': 'unchanged',
+    })
+    assert.equal(store.item(item.id).versions.length, 1)
+    item = store.edit({ ...incoming, id: item.id, revision: preview.revision })
+    assert.deepEqual(store.compare(item.id, 1, 2), preview.changes)
+    assert.throws(
+      () => store.edit({ ...skillPackage('third'), id: item.id, revision: preview.revision }),
+      /刷新/,
+    )
+    assert.throws(
+      () => store.preview({ source: 'bad', files: [{ path: '../x', data: '' }] }),
+      /路径/,
+    )
+  } finally {
+    store.close()
   }
 })

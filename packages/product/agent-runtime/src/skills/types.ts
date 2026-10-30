@@ -58,3 +58,23 @@ export interface SkillFileValue {
   data: string
   text: string | null
 }
+
+/** A read-only package inspection; a match may be imported as a new version. */
+export interface SkillFileChange {
+  path: string
+  kind: 'added' | 'modified' | 'removed' | 'unchanged'
+}
+export interface SkillPreview {
+  name: string
+  description: string
+  files: { path: string; bytes: number }[]
+  existingId?: string
+  revision?: number
+  baseVersion?: number
+  changes: SkillFileChange[]
+}
+export interface SkillCompare {
+  id: string
+  from: number
+  to: number
+}
