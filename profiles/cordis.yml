@@ -1,0 +1,2 @@
+- id: tianzhiai-agent-runtime
+  name: ../packages/product/agent-runtime/lib/index.js

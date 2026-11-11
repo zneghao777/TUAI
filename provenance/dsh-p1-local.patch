@@ -1,0 +1,192 @@
+diff --git a/packages/llm/llm-deepseek/src/adapter.ts b/packages/llm/llm-deepseek/src/adapter.ts
+index 53b288f..c50b5a4 100644
+--- a/packages/llm/llm-deepseek/src/adapter.ts
++++ b/packages/llm/llm-deepseek/src/adapter.ts
+@@ -143,7 +143,7 @@ export class DeepSeekAdapter<C extends Connection = Connection> extends LlmAdapt
+             ...auth.headers,
+             'anthropic-version': '2023-06-01',
+             ...betas.length === 0 ? {} : { 'anthropic-beta': betas.join(',') },
+-            'x-deepseek-harness-user-id': this.dependencies.resolveUserId(),
++            ...this.dependencies.resolveUserId === undefined ? {} : { 'x-deepseek-harness-user-id': this.dependencies.resolveUserId() },
+             ...options.sessionId === undefined ? {} : { 'x-deepseek-harness-session-id': String(options.sessionId) },
+             ...options.purpose === 'compaction' ? { 'x-deepseek-harness-compact': '1' } : {},
+           },
+diff --git a/packages/llm/llm-deepseek/src/host.ts b/packages/llm/llm-deepseek/src/host.ts
+index 69fc4fe..c8d27d8 100644
+--- a/packages/llm/llm-deepseek/src/host.ts
++++ b/packages/llm/llm-deepseek/src/host.ts
+@@ -4,7 +4,6 @@ import type {} from '@deepseek-ai/dsh-settings'
+ import type {} from '@deepseek-ai/cordis-plugin-loader'
+ import type {} from '@deepseek-ai/dsh-fs'
+ import { resolveImageAttachmentAccess } from '@deepseek-ai/dsh-llm'
+-import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
+ import { deepEqualJson } from '@deepseek-ai/dsh-util-values'
+ import { DeepSeekAdapter } from './adapter.ts'
+ import type { DeepSeekAdapterOptions, DeepSeekConnectionOptions } from './types.ts'
+@@ -19,14 +18,12 @@ export function registerDeepSeekProvider<C extends DeepSeekConnectionOptions>(
+   ctx: Context, provider: string, dependencies: Pick<DeepSeekAdapterOptions<C>,
+   'options' | 'resolveAuth' | 'providerName' | 'discoverModels' | 'connect' | 'admit'>): void {
+   ctx.inject(['settings'], (child) => { child.effect(() => child.settings.configure({ auto: false }, ctx.fiber)) })
+-  let userId: AnonymousUserId | undefined
+   // These conditions repeat on every request of a route; log each first occurrence only.
+   const degradedReplays = new Set<string>()
+   const omittedRoutes = new Set<string>()
+   const unacceptedRoutes = new Set<string>()
+   const adapter = new DeepSeekAdapter({
+     ...dependencies,
+-    resolveUserId: () => userId ??= getOrCreateAnonymousUserId(),
+     onReplayDegrade: ({ provider, model, reason }) => {
+       const key = `${provider}/${model}\u0000${reason}`
+       if (degradedReplays.has(key)) return
+diff --git a/packages/llm/llm-deepseek/src/types.ts b/packages/llm/llm-deepseek/src/types.ts
+index c682bba..cbcde94 100644
+--- a/packages/llm/llm-deepseek/src/types.ts
++++ b/packages/llm/llm-deepseek/src/types.ts
+@@ -114,7 +114,7 @@ export interface DeepSeekAdapterOptions<Connection extends DeepSeekConnectionOpt
+   /** Resolve authentication from this request's connection snapshot; never re-read the endpoint. */
+   resolveAuth: (connection: Connection) => Promise<DeepSeekRequestAuth>
+   /** Resolve the harness-home anonymous id shared with telemetry and feedback. */
+-  resolveUserId: () => AnonymousUserId
++  resolveUserId?: () => AnonymousUserId
+   /** Resolve the current durable attachment service; absence rejects image input. */
+   resolveAttachments?: () => AttachmentStore | undefined
+   /** Bridge one attachment reference into the current model-tool execution world. */
+diff --git a/packages/context/agent-instructions/src/config.ts b/packages/context/agent-instructions/src/config.ts
+index 5ae3c34..92df996 100644
+--- a/packages/context/agent-instructions/src/config.ts
++++ b/packages/context/agent-instructions/src/config.ts
+@@ -4,7 +4,7 @@
+  * @module @deepseek-ai/dsh-agent-instructions/config
+  */
+ 
+-import { relative } from 'node:path'
++import { isAbsolute, relative, resolve } from 'node:path'
+ import z from '@deepseek-ai/schemastery'
+ import { resolveAgentsHome, resolveDshHome } from '@deepseek-ai/dsh-home-paths'
+ 
+@@ -16,6 +16,8 @@ const RESERVED_PATH_SEGMENTS = new Set(['', '.', '..'])
+ 
+ /** User-facing workspace instruction loader configuration. */
+ export interface Config {
++  /** Product-authorized absolute ancestor; project discovery never probes above it. */
++  projectRootBoundary?: string
+   /** Directory entries that identify the project root while walking upward from the current working directory. */
+   projectRootMarkers?: string[]
+   /**
+@@ -39,6 +41,7 @@ export interface Config {
+ }
+ 
+ export const Config: z<Config> = z.object({
++  projectRootBoundary: z.string(),
+   projectRootMarkers: z.array(z.string()).default([...DEFAULT_PROJECT_ROOT_MARKERS]),
+   maxBytes: z.number().required(),
+   maxSourceBytes: z.number().step(1).min(1).default(DEFAULT_MAX_SOURCE_BYTES),
+@@ -48,6 +51,7 @@ export const Config: z<Config> = z.object({
+ 
+ /** Normalized instruction discovery configuration. */
+ export interface ResolvedDiscoveryConfig {
++  projectRootBoundary?: string
+   dshHome: string
+   agentsHome: string
+   projectRootMarkers: string[]
+@@ -74,6 +78,7 @@ export function workspaceBaselineIdentity(
+   projectRoot: string,
+ ): string {
+   return JSON.stringify({
++    ...config.projectRootBoundary === undefined ? {} : { projectRootBoundary: relative(cwd, config.projectRootBoundary) },
+     projectRoot: relative(cwd, projectRoot),
+     projectRootMarkers: config.projectRootMarkers,
+     maxBytes: config.maxBytes,
+@@ -92,6 +97,7 @@ export function workspaceBaselineIdentity(
+ export function resolveConfig(config: Config): ResolvedConfig {
+   return {
+     ...resolveDiscoveryConfig({
++      ...config.projectRootBoundary === undefined ? {} : { projectRootBoundary: config.projectRootBoundary },
+       ...config.projectRootMarkers === undefined ? {} : { projectRootMarkers: config.projectRootMarkers },
+       ...config.instructionFileCandidates === undefined ? {} : { instructionFileCandidates: config.instructionFileCandidates },
+       ...config.localInstructionFileCandidates === undefined
+@@ -115,10 +121,14 @@ export function resolveConfig(config: Config): ResolvedConfig {
+  * @returns normalized home, root markers, and instruction candidates.
+  */
+ export function resolveDiscoveryConfig(
+-  config: Pick<Config, 'projectRootMarkers' | 'instructionFileCandidates' | 'localInstructionFileCandidates'>
++  config: Pick<Config, 'projectRootBoundary' | 'projectRootMarkers' | 'instructionFileCandidates' | 'localInstructionFileCandidates'>
+     & { dshHome?: string; agentsHome?: string },
+ ): ResolvedDiscoveryConfig {
++  if (config.projectRootBoundary !== undefined && !isAbsolute(config.projectRootBoundary)) {
++    throw new Error('agent-instructions: projectRootBoundary must be absolute')
++  }
+   return {
++    ...config.projectRootBoundary === undefined ? {} : { projectRootBoundary: resolve(config.projectRootBoundary) },
+     dshHome: resolveDshHome(config.dshHome),
+     agentsHome: resolveAgentsHome(config.agentsHome),
+     projectRootMarkers: config.projectRootMarkers ?? [...DEFAULT_PROJECT_ROOT_MARKERS],
+diff --git a/packages/context/agent-instructions/src/files.ts b/packages/context/agent-instructions/src/files.ts
+index de3650d..6b66a00 100644
+--- a/packages/context/agent-instructions/src/files.ts
++++ b/packages/context/agent-instructions/src/files.ts
+@@ -53,6 +53,7 @@ export interface ProbedInstructionFile extends InstructionFile {
+ 
+ interface DiscoverOptions {
+   cwd: string
++  projectRootBoundary?: string
+   /**
+    * Already-resolved harness home. The plugin resolves it once at mount and
+    * passes it down so reconciliation and baseline loading cannot disagree.
+@@ -234,12 +235,21 @@ export async function findProjectRoot(
+   markers: readonly string[],
+   fileSystem?: FileSystem,
+   signal?: AbortSignal,
++  boundary?: string,
+ ): Promise<string> {
+   let current = resolve(cwd)
++  const rootBoundary = boundary === undefined ? undefined : resolve(boundary)
++  if (rootBoundary !== undefined) {
++    const path = relative(rootBoundary, current)
++    if (path === '..' || path.startsWith('../') || path.startsWith('..\\') || isAbsolute(path)) {
++      throw new Error('agent-instructions: cwd is outside projectRootBoundary')
++    }
++  }
+   for (;;) {
+     for (const marker of markers) {
+       if (await existsAsMarker(join(current, marker), fileSystem, signal)) return current
+     }
++    if (current === rootBoundary) return current
+     const parent = dirname(current)
+     if (parent === current) return resolve(cwd)
+     current = parent
+@@ -355,7 +365,7 @@ async function discoverInstructionFiles(
+ 
+   const cwd = resolve(options.cwd)
+   const projectRoot = options.projectRoot
+-    ?? await findProjectRoot(cwd, config.projectRootMarkers, fileSystem, options.signal)
++    ?? await findProjectRoot(cwd, config.projectRootMarkers, fileSystem, options.signal, config.projectRootBoundary)
+   for (const dir of ancestorChain(projectRoot, cwd)) {
+     for (const candidates of [config.instructionFileCandidates, config.localInstructionFileCandidates]) {
+       for (const file of await allExistingInstructionFiles(dir, projectRoot, candidates, fileSystem, options.signal)) {
+diff --git a/packages/context/agent-instructions/src/index.ts b/packages/context/agent-instructions/src/index.ts
+index ec752e0..166af93 100644
+--- a/packages/context/agent-instructions/src/index.ts
++++ b/packages/context/agent-instructions/src/index.ts
+@@ -124,7 +124,7 @@ export function apply(ctx: Context, config: Config): void {
+     let desiredBaseline = false
+     const authorityMessages = [...claimed]
+     const cwd = await ctx.workingDirectory.ensure(agent, signal)
+-    const projectRoot = await findProjectRoot(cwd, resolved.projectRootMarkers, fileSystem, signal)
++    const projectRoot = await findProjectRoot(cwd, resolved.projectRootMarkers, fileSystem, signal, resolved.projectRootBoundary)
+     const identity = workspaceBaselineIdentity(resolved, cwd, projectRoot)
+     if (touchedPaths.length === 0 && pending.length > 0
+       && baselinePreparations.get(agent.session)?.identity === identity) return pending[0]
+diff --git a/packages/context/agent-instructions/src/state.ts b/packages/context/agent-instructions/src/state.ts
+index 9727d7a..d17c9ec 100644
+--- a/packages/context/agent-instructions/src/state.ts
++++ b/packages/context/agent-instructions/src/state.ts
+@@ -270,7 +270,7 @@ export async function reconcileInstructionContext(
+   // TODO(frozen-project-root): retain the baseline root for the loop instance;
+   // recomputing it after marker edits reinterprets the existing relative scope keys.
+   const projectRoot = options.projectRoot
+-    ?? await findProjectRoot(cwd, resolved.projectRootMarkers, fileSystem, options.signal)
++    ?? await findProjectRoot(cwd, resolved.projectRootMarkers, fileSystem, options.signal, resolved.projectRootBoundary)
+   const scopes = new Set<string>()
+   const baselineScopes = new Set<string>()
+   const addDirScopes = (target: Set<string>, directory: string): void => {

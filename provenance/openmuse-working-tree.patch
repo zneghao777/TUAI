@@ -1,0 +1,247 @@
+diff --git a/apps/worker/src/browser.ts b/apps/worker/src/browser.ts
+index d86ad33..b6c5e77 100644
+--- a/apps/worker/src/browser.ts
++++ b/apps/worker/src/browser.ts
+@@ -68,6 +68,8 @@ export async function createBrowserManager(
+   const proxy = await createProxy();
+   const directory = (id: string) =>
+     join(archived.has(id) ? archiveDir : dataDir, validateSessionId(id));
++  const temporaryDirectory = (id: string) =>
++    join("/tmp", `openmuse-downloads-${validateSessionId(id)}`);
+   for (const [folder, cold] of [
+     [dataDir, false],
+     [archiveDir, true],
+@@ -83,7 +85,10 @@ export async function createBrowserManager(
+       } catch {
+         /* Incomplete metadata is not a restorable profile. */
+       }
+-      if (sessions.has(id)) await readDownloadFailures(directory(id), true);
++      if (sessions.has(id)) {
++        await rm(temporaryDirectory(id), { recursive: true, force: true });
++        await readDownloadFailures(directory(id), true);
++      }
+     }
+   }
+   async function persist(session: Session) {
+@@ -172,26 +177,51 @@ export async function createBrowserManager(
+     }
+     return refresh(id);
+   }
+-  async function closeSession(id: string) {
++  async function closeSession(id: string, status: "closed" | "error" = "closed") {
+     const instance = running.get(id);
+     const stored = sessions.get(id);
+     if (!stored) throw new WorkerError("SESSION_NOT_FOUND", "Browser session not found.", 404);
+     if (instance) {
+-      try {
+-        await instance.context.storageState({ path: join(directory(id), "storage.json") });
+-      } catch {
+-        // Cookie persistence is best-effort during teardown. A crashed or
+-        // unreachable browser must still release its context and session slot.
++      if (status === "closed") {
++        try {
++          await instance.context.storageState({ path: join(directory(id), "storage.json") });
++        } catch {
++          // Cookie persistence is best-effort; a crashed browser must still be released.
++        }
+       }
+       await instance.context.close().catch(() => {});
+       await Promise.allSettled(instance.pending);
+       running.delete(id);
+     }
+-    const result: Session = { ...stored, status: "closed", updatedAt: new Date().toISOString() };
++    // Completed downloads and persistent profiles live in /data, not this transient cache.
++    await rm(temporaryDirectory(id), { recursive: true, force: true });
++    const result: Session = { ...stored, status, updatedAt: new Date().toISOString() };
+     sessions.set(id, result);
+     await persist(result);
+     return result;
+   }
++  async function sessionOperation<T>(id: string, operation: () => Promise<T>) {
++    return serial(id, async () => {
++      try {
++        return await operation();
++      } catch (error) {
++        const unavailable =
++          (error instanceof WorkerError && error.code === "SESSION_CLOSED") ||
++          (error instanceof Error &&
++            /(?:page|browser|target|context).*(?:crashed|closed)|ERR_INSUFFICIENT_RESOURCES/i.test(
++              error.message,
++            ));
++        if (!unavailable) throw error;
++        if (sessions.has(id)) await closeSession(id, "error");
++        throw new WorkerError(
++          "BROWSER_UNAVAILABLE",
++          "The browser stopped responding and its session resources were released. Reopen it to continue; no page action was retried.",
++          503,
++          { cause: error },
++        );
++      }
++    });
++  }
+   // Only inactive profiles are moved. Atomic same-volume renames retain cookies,
+   // storage and downloads; no browsing data is deleted to make room for a task.
+   async function reserveProfile(id: string) {
+@@ -237,7 +267,14 @@ export async function createBrowserManager(
+     control?: "pause" | "handoff",
+   ) {
+     await validatePublicUrl(url);
+-    if (running.has(id)) return navigate(id, url);
++    if (running.has(id)) {
++      try {
++        return await navigate(id, url);
++      } catch (error) {
++        await closeSession(id, "error");
++        throw error;
++      }
++    }
+     if (running.size >= maxSessions)
+       throw new WorkerError(
+         "SESSION_LIMIT",
+@@ -247,7 +284,7 @@ export async function createBrowserManager(
+     await reserveProfile(id);
+     const previous = sessions.get(id);
+     const profileDir = join(directory(id), "profile");
+-    const tempDirectory = join("/tmp", `openmuse-downloads-${id}`);
++    const tempDirectory = temporaryDirectory(id);
+     await mkdir(profileDir, { recursive: true, mode: 0o700 });
+     await mkdir(tempDirectory, { recursive: true, mode: 0o700 });
+     let context: BrowserContext;
+@@ -267,6 +304,8 @@ export async function createBrowserManager(
+           XDG_CACHE_HOME: tempDirectory,
+         },
+         headless,
++        // Use the container's dedicated /dev/shm instead of its small /tmp tmpfs.
++        ignoreDefaultArgs: ["--disable-dev-shm-usage"],
+         ...(options.browserChannel ? { channel: options.browserChannel } : {}),
+         viewport: { width: 1280, height: 800 },
+         proxy: { server: proxy.url, bypass: "<-loopback>" },
+@@ -319,7 +358,15 @@ export async function createBrowserManager(
+       if (control || !agent) await runBrowserAgent(page, { kind: control ?? "handoff" });
+       const instance: Running = { context, page, touched: Date.now(), pending: new Set() };
+       running.set(id, instance);
++      const releaseFailed = () => {
++        void serial(id, async () => {
++          if (running.get(id) === instance) await closeSession(id, "error");
++        }).catch(() => {});
++      };
++      context.on("close", releaseFailed);
++      page.on("crash", releaseFailed);
+       context.on("page", (popup) => {
++        popup.on("crash", releaseFailed);
+         if (instance.viewport) void popup.setViewportSize(instance.viewport).catch(() => {});
+       });
+       page.on("dialog", (dialog) => {
+@@ -386,12 +433,12 @@ export async function createBrowserManager(
+     list: () => [...sessions.values()],
+     create: (id: string, url: string, agent = false, control?: "pause" | "handoff") =>
+       serial("create", () => serial(id, () => createSession(id, url, agent, control))),
+-    navigate: (id: string, url: string) => serial(id, () => navigate(id, url)),
++    navigate: (id: string, url: string) => sessionOperation(id, () => navigate(id, url)),
+     closeSession: (id: string) => serial(id, () => closeSession(id)),
+     screenshot: (id: string) =>
+-      serial(id, () => active(id).page.screenshot({ type: "png", timeout: 10_000 })),
++      sessionOperation(id, () => active(id).page.screenshot({ type: "png", timeout: 10_000 })),
+     read: (id: string) =>
+-      serial(id, async () => {
++      sessionOperation(id, async () => {
+         const { page } = active(id);
+         await validatePublicUrl(page.url());
+         // Evaluation is fixed by the worker; callers cannot inject JavaScript.
+@@ -418,7 +465,7 @@ export async function createBrowserManager(
+         return result;
+       }),
+     input: (id: string, input: Record<string, unknown>) =>
+-      serial(id, async () => {
++      sessionOperation(id, async () => {
+         const instance = active(id),
+           { page } = instance;
+         if (!agentHuman(page))
+@@ -475,7 +522,7 @@ export async function createBrowserManager(
+         return refresh(id);
+       }),
+     agent: (id: string, command: BrowserAgentCommand) =>
+-      serial(id, async () => {
++      sessionOperation(id, async () => {
+         if (command.kind === "handoff" && !running.has(id)) {
+           const saved = sessions.get(id);
+           if (!saved) throw new WorkerError("NOT_FOUND", "Browser session not found", 404);
+@@ -510,7 +557,7 @@ export async function createBrowserManager(
+     close: async () => {
+       clearInterval(sweeper);
+       await Promise.allSettled([...queues.values()]);
+-      await Promise.allSettled([...running.keys()].map(closeSession));
++      await Promise.allSettled([...running.keys()].map((id) => serial(id, () => closeSession(id))));
+       await proxy.close();
+     },
+   };
+diff --git a/apps/worker/tests/lifecycle.test.ts b/apps/worker/tests/lifecycle.test.ts
+index f594887..7a02cc0 100644
+--- a/apps/worker/tests/lifecycle.test.ts
++++ b/apps/worker/tests/lifecycle.test.ts
+@@ -1,8 +1,8 @@
+ import assert from "node:assert/strict";
+-import { type ChildProcess, fork } from "node:child_process";
++import { type ChildProcess, execFileSync, fork } from "node:child_process";
+ import { randomBytes, randomUUID } from "node:crypto";
+ import { once } from "node:events";
+-import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
++import { mkdtemp, readdir, readFile, rm, stat } from "node:fs/promises";
+ import { request } from "node:http";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+@@ -215,6 +215,54 @@ test("worker capacity is configurable and rejects unsafe resource values", async
+     assert.throws(() => workerCapacity({ WORKER_MAX_SESSIONS: value }), /WORKER_MAX_SESSIONS/);
+ });
+ 
++test("a failed reopening releases the browser slot and temporary cache, retaining saved storage", {
++  timeout: 30000,
++}, async (t) => {
++  const fixture = await createBrowserFixture();
++  const directory = await mkdtemp(join(tmpdir(), "browser-reopen-cleanup-"));
++  const first = randomUUID(),
++    second = randomUUID();
++  const browser = await createBrowserManager(
++    { dataDir: directory, maxSessions: 1 },
++    fixture.createProxy,
++  );
++  t.after(async () => {
++    await browser.close();
++    await fixture.close();
++    await rm(directory, { recursive: true, force: true });
++    for (const id of [first, second])
++      await rm(join("/tmp", `openmuse-downloads-${id}`), { recursive: true, force: true });
++  });
++  await browser.create(first, `${fixtureOrigin}/seed`);
++  await assert.rejects(browser.create(first, `${fixtureOrigin}/redirect-private`), {
++    code: "NAVIGATION_FAILED",
++  });
++  assert.equal(browser.list().filter((session) => session.status === "active").length, 0);
++  await assert.rejects(stat(join("/tmp", `openmuse-downloads-${first}`)), { code: "ENOENT" });
++  await browser.create(second, `${fixtureOrigin}/page`);
++  await browser.closeSession(second);
++  await assert.rejects(stat(join("/tmp", `openmuse-downloads-${second}`)), { code: "ENOENT" });
++  await browser.create(first, `${fixtureOrigin}/state`);
++  assert.equal((await browser.read(first)).text, "retained");
++  if (process.platform !== "win32") {
++    const profile = `--user-data-dir=${join(directory, first, "profile")}`;
++    const processLine = execFileSync("ps", ["-axo", "pid=,command="], { encoding: "utf8" })
++      .split("\n")
++      .find((line) => line.includes(profile) && !line.includes("--type="));
++    assert.ok(processLine, "find only this fixture's Chromium process");
++    const pid = Number(/^\s*(\d+)/.exec(processLine)?.[1]);
++    assert.ok(pid > 1 && pid !== process.pid);
++    process.kill(pid, "SIGKILL");
++    for (let attempt = 0; attempt < 100; attempt++) {
++      if (browser.list().find((session) => session.id === first)?.status === "error") break;
++      await new Promise((resolve) => setTimeout(resolve, 20));
++    }
++    assert.equal(browser.list().find((session) => session.id === first)?.status, "error");
++    await assert.rejects(stat(join("/tmp", `openmuse-downloads-${first}`)), { code: "ENOENT" });
++    await browser.create(second, `${fixtureOrigin}/page`);
++  }
++});
++
+ test("worker defaults to full Chromium and validates headless configuration", async () => {
+   const { workerHeadless } = await import("../src/config.ts");
+   assert.equal(workerHeadless({}), false);

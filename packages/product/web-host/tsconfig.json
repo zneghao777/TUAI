@@ -1,0 +1,142 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../../vendor/cordis"
+    },
+    {
+      "path": "../../../vendor/schemastery"
+    },
+    {
+      "path": "../../api/gateway/tsconfig.host.json"
+    },
+    {
+      "path": "../../api/remote-access/tsconfig.host.json"
+    },
+    {
+      "path": "../../api/remotes/tsconfig.host.json"
+    },
+    {
+      "path": "../../api/session-controller/tsconfig.host.json"
+    },
+    {
+      "path": "../../api/settings-controller"
+    },
+    {
+      "path": "../../api/workspace-controller/tsconfig.host.json"
+    },
+    {
+      "path": "../../api/workspace-files/tsconfig.host.json"
+    },
+    {
+      "path": "../../client/connection/tsconfig.host.json"
+    },
+    {
+      "path": "../../client/file-upload/tsconfig.host.json"
+    },
+    {
+      "path": "../../client/locale/tsconfig.host.json"
+    },
+    {
+      "path": "../../client/ui-chat/tsconfig.host.json"
+    },
+    {
+      "path": "../../client/ui-conversation/tsconfig.host.json"
+    },
+    {
+      "path": "../../client/ui-theme/tsconfig.host.json"
+    },
+    {
+      "path": "../../compaction/command-compact"
+    },
+    {
+      "path": "../../context/file-reference-local"
+    },
+    {
+      "path": "../../context/session-reference"
+    },
+    {
+      "path": "../../core/agent-default-model"
+    },
+    {
+      "path": "../../feedback/command-feedback"
+    },
+    {
+      "path": "../../feedback/message-feedback"
+    },
+    {
+      "path": "../../goal/command-goal"
+    },
+    {
+      "path": "../../goal/goal"
+    },
+    {
+      "path": "../../host/frontend-static"
+    },
+    {
+      "path": "../../host/webserver"
+    },
+    {
+      "path": "../../interaction/commands"
+    },
+    {
+      "path": "../../session-query/session-log-export/tsconfig.host.json"
+    },
+    {
+      "path": "../../session-query/session-query-sqlite"
+    },
+    {
+      "path": "../../session/session-projection-cache"
+    },
+    {
+      "path": "../../session/session-title"
+    },
+    {
+      "path": "../../settings/settings"
+    },
+    {
+      "path": "../../storage/storage"
+    },
+    {
+      "path": "../../storage/storage-domain"
+    },
+    {
+      "path": "../../storage/storage-json"
+    },
+    {
+      "path": "../../typert/loader"
+    },
+    {
+      "path": "../../typert/protocol"
+    },
+    {
+      "path": "../../typert/registry"
+    },
+    {
+      "path": "../../workspace/workspace"
+    },
+    {
+      "path": "../agent-runtime"
+    },
+    {
+      "path": "../../core/tools"
+    },
+    {
+      "path": "../browser-service"
+    },
+    {
+      "path": "../task-runtime"
+    },
+    {
+      "path": "../../goal/goal"
+    },
+    {
+      "path": "../host-config"
+    }
+  ]
+}

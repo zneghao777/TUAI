@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh">
+  <meta charset="utf-8" /><title>P4 受控出行网站</title>
+  <style>
+    body {
+      font: 16px system-ui;
+      margin: 16px;
+      color: #172c24;
+      background: #f5f8f6;
+    }
+    main {
+      max-width: 1200px;
+      margin: auto;
+    }
+    label {
+      display: inline-grid;
+      gap: 6px;
+      margin: 6px;
+    }
+    input,
+    textarea,
+    select,
+    button {
+      font: inherit;
+      padding: 8px;
+      border: 1px solid #9caf9f;
+      border-radius: 6px;
+    }
+    button {
+      cursor: pointer;
+    }
+    section {
+      padding: 12px;
+      margin: 12px 0;
+      background: white;
+      border-radius: 12px;
+    }
+    #result {
+      white-space: pre-wrap;
+    }
+    textarea {
+      width: 450px;
+      height: 70px;
+    }
+  </style>
+  <div
+    id="input-echo"
+    style="
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      z-index: 99;
+      background: rgb(0, 0, 0);
+    "
+    aria-hidden="true"
+  ></div>
+  <main>
+    <h1>出行查询</h1>
+    <section>
+      <label>出发站<input id="from" aria-label="出发站" value="Milano" /></label>
+      <label>到达站<input id="to" aria-label="到达站" value="Roma" /></label>
+      <label
+        >出发日期<input id="date" aria-label="出发日期" type="date" value="2026-11-15"
+      /></label>
+      <button id="search">查询车次</button><button hidden>查询车次</button>
+      <div id="result"></div>
+    </section>
+    <section>
+      <h2>登录</h2>
+      <label>姓名<input id="name" aria-label="姓名" autocomplete="off" /></label
+      ><label
+        >口令<input id="password" aria-label="口令" type="password" autocomplete="off" /></label
+      ><button id="login">登录</button><button id="expire">使登录过期</button
+      ><output id="identity">未登录</output>
+    </section>
+    <section>
+      <label>旅行备注<textarea id="note" aria-label="旅行备注"></textarea></label
+      ><button id="save">保存备注</button><output id="saved"></output
+      ><label><input id="terms" type="checkbox" />同意测试条款</label>
+      <label
+        >席别<select id="seat" aria-label="席别">
+          <option value="standard">Standard</option>
+          <option value="premium">Premium</option>
+        </select></label
+      >
+    </section>
+    <section id="order">
+      <h2>订单准备</h2>
+      <p>
+        测试商户：P4 Travel；Milano → Roma；EUR
+        35；未付款，未出票。乘客：合成测试用户。仅创建测试预订。
+      </p>
+      <label
+        >故障模式<select id="fault" aria-label="故障模式">
+          <option value="none">正常回执</option>
+          <option value="after-accept">受理后断线</option>
+        </select></label
+      >
+      <button id="submit">创建测试预订</button><button id="reconcile">只读核验预订</button
+      ><a href="/download" download>下载行程</a><output id="order-state"></output>
+    </section>
+    <section>
+      <button id="reorder">重排页面</button>
+      <div id="dynamic"><button>动态目标</button></div>
+      <div id="shadow"></div>
+      <iframe title="测试 Frame" src="/frame"></iframe
+      ><a href="/frame" target="_blank">打开关联页面</a
+      ><canvas width="200" height="100" aria-label="不支持的 Canvas"></canvas>
+    </section>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id),
+      intent = crypto.randomUUID()
+    let logged = false
+    const event = (kind, value) =>
+      fetch('/api/events', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ kind, value, at: Date.now() }),
+      })
+    $('shadow').attachShadow({ mode: 'open' }).innerHTML =
+      '<label>Shadow note<input aria-label="Shadow note"></label>'
+    $('search').onclick = () => {
+      $('result').textContent =
+        `${$('from').value} → ${$('to').value}\n${$('date').value} 09:30 - 12:40，EUR 35`
+      event('search', { from: $('from').value, to: $('to').value, date: $('date').value })
+    }
+    $('login').onclick = () => {
+      logged = true
+      $('identity').textContent = '已登录：' + $('name').value
+      $('password').value = ''
+      event('login', true)
+    }
+    $('expire').onclick = () => {
+      logged = false
+      $('identity').textContent = '登录已过期'
+      event('login-expired', true)
+    }
+    $('save').onclick = () => {
+      $('saved').textContent = $('note').value
+      event('note', $('note').value)
+    }
+    $('reorder').onclick = () => {
+      $('dynamic').prepend(document.createElement('p'))
+      $('dynamic').firstChild.textContent = '动态重排 ' + Date.now()
+    }
+    $('submit').onclick = async () => {
+      event('submit-click', intent)
+      if (!logged || !$('terms').checked) {
+        $('order-state').textContent = '需要登录并同意测试条款'
+        return
+      }
+      try {
+        const r = await fetch('/api/order', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ intent, date: $('date').value, fault: $('fault').value }),
+        })
+        const v = await r.json()
+        $('order-state').textContent = JSON.stringify(v)
+      } catch {
+        $('order-state').textContent = '结果未知，需要核验'
+      }
+    }
+    $('reconcile').onclick = async () => {
+      $('order-state').textContent = JSON.stringify(
+        await (await fetch('/api/order?intent=' + encodeURIComponent(intent))).json(),
+      )
+    }
+    let inputCount = 0
+    document.addEventListener('input', (e) => {
+      if (e.target.type !== 'password') {
+        inputCount++
+        $('input-echo').style.background =
+          `rgb(${(inputCount * 47) % 256},${(inputCount * 83) % 256},${(inputCount * 119) % 256})`
+        event('input', {
+          id: e.target.id,
+          value: e.target.value,
+          at: Date.now(),
+          count: inputCount,
+        })
+      }
+    })
+    $('fault').value = new URL(location.href).searchParams.get('fault') ?? 'none'
+    window.fixtureEvidence = () => ({
+      from: $('from').value,
+      to: $('to').value,
+      note: $('note').value,
+      identity: $('identity').textContent,
+      intent,
+      logged,
+      result: $('result').textContent,
+      order: $('order-state').textContent,
+    })
+  </script>
+</html>

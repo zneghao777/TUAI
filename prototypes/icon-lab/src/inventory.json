@@ -1,0 +1,1584 @@
+{
+  "scope": "源码目录与引用，不代表运行时可达性；品牌 Logo、供应商与站点商标保留",
+  "registry": [
+    {
+      "id": "new-chat-outline",
+      "symbols": ["IconNewChatOutlineRegular", "IconNewChatOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx", "line": 4 },
+        { "path": "packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx", "line": 59 },
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 23 },
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 349 },
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 350 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 23 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 356 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "search-outline",
+      "symbols": ["IconSearchOutlineRegular", "IconSearchOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 10 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 165 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 43 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 3
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 18
+        },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 6 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 35 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/search-row.tsx", "line": 2 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/search-row.tsx", "line": 27 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 24 },
+        {
+          "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx",
+          "line": 1314
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx",
+          "line": 1413
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "globe-outline",
+      "symbols": ["IconGlobeOutlineRegular", "IconGlobeOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 6 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 48 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 23 },
+        {
+          "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserTitle.tsx",
+          "line": 3
+        },
+        {
+          "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserTitle.tsx",
+          "line": 16
+        },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/web-row.tsx", "line": 2 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/web-row.tsx", "line": 21 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "settings-outline",
+      "symbols": ["IconSettingsOutlineRegular", "IconSettingsOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/ui.tsx", "line": 3 },
+        { "path": "apps/web/src/ui.tsx", "line": 223 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "panel-left-outline",
+      "symbols": ["IconPanelLeftOutlineRegular", "IconPanelLeftOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-dockkit/src/components/FloatLayer.tsx", "line": 20 },
+        { "path": "packages/client/ui-dockkit/src/components/FloatLayer.tsx", "line": 137 },
+        { "path": "packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx", "line": 4 },
+        { "path": "packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx", "line": 44 },
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 23 },
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 262 },
+        {
+          "path": "packages/client/ui-sidebar-right/src/client/shell/ExpandButton.tsx",
+          "line": 19
+        },
+        {
+          "path": "packages/client/ui-sidebar-right/src/client/shell/ExpandButton.tsx",
+          "line": 49
+        },
+        {
+          "path": "packages/client/ui-sidebar-right/src/client/shell/SidebarRight.tsx",
+          "line": 36
+        },
+        {
+          "path": "packages/client/ui-sidebar-right/src/client/shell/SidebarRight.tsx",
+          "line": 294
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "ellipsis-outline",
+      "symbols": ["IconEllipsisOutlineRegular", "IconEllipsisOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 7 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 459 },
+        { "path": "apps/web/src/components/SessionSidebar.tsx", "line": 5 },
+        { "path": "apps/web/src/components/SessionSidebar.tsx", "line": 261 },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx",
+          "line": 6
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx",
+          "line": 38
+        },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 22 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 342 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 779 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "plus-outline",
+      "symbols": ["IconPlusOutlineRegular", "IconPlusOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx", "line": 21 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx", "line": 527 },
+        { "path": "packages/client/ui-dockkit/src/components/TabPanel.tsx", "line": 29 },
+        { "path": "packages/client/ui-dockkit/src/components/TabPanel.tsx", "line": 422 },
+        { "path": "packages/client/ui-primitives/src/ZoomControls.tsx", "line": 5 },
+        { "path": "packages/client/ui-primitives/src/ZoomControls.tsx", "line": 88 },
+        { "path": "packages/client/ui-workspace/src/client/WorkspacePicker.tsx", "line": 14 },
+        { "path": "packages/client/ui-workspace/src/client/WorkspacePicker.tsx", "line": 108 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "check-outline",
+      "symbols": ["IconCheckOutlineRegular", "IconCheckOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/MessageIconActions.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/MessageIconActions.tsx", "line": 63 },
+        { "path": "packages/client/ui-commands/src/client/PopupSelectView.tsx", "line": 19 },
+        { "path": "packages/client/ui-commands/src/client/PopupSelectView.tsx", "line": 152 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 8 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 250 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 15 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 110 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 39 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 616 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 659 },
+        { "path": "packages/client/ui-primitives/src/CodeToolbar.tsx", "line": 4 },
+        { "path": "packages/client/ui-primitives/src/CodeToolbar.tsx", "line": 57 },
+        { "path": "packages/client/ui-primitives/src/ConnectionIndicator.tsx", "line": 3 },
+        { "path": "packages/client/ui-primitives/src/ConnectionIndicator.tsx", "line": 68 },
+        { "path": "packages/client/ui-primitives/src/JsonTree.tsx", "line": 9 },
+        { "path": "packages/client/ui-primitives/src/JsonTree.tsx", "line": 151 },
+        { "path": "packages/client/ui-primitives/src/Menu.tsx", "line": 6 },
+        { "path": "packages/client/ui-primitives/src/Menu.tsx", "line": 489 },
+        { "path": "packages/client/ui-primitives/src/StateDot.tsx", "line": 3 },
+        { "path": "packages/client/ui-primitives/src/StateDot.tsx", "line": 75 },
+        { "path": "packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx", "line": 4 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx",
+          "line": 54
+        },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 8 },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "line": 589
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "line": 648
+        },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionReplyView.tsx", "line": 7 },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionReplyView.tsx", "line": 57 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "branch-outline",
+      "symbols": ["IconBranchOutlineRegular", "IconBranchOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/MessageIconActions.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/MessageIconActions.tsx", "line": 79 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 5 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 22 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 37 },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ForkSession.tsx",
+          "line": 2
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ForkSession.tsx",
+          "line": 22
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "chevron-down-outline",
+      "symbols": ["IconChevronDownOutlineRegular", "IconChevronDownOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/SessionSidebar.tsx", "line": 4 },
+        { "path": "apps/web/src/components/SessionSidebar.tsx", "line": 133 },
+        { "path": "apps/web/src/ui.tsx", "line": 6 },
+        { "path": "apps/web/src/ui.tsx", "line": 129 },
+        { "path": "packages/client/locale/src/client/LanguageRow.tsx", "line": 9 },
+        { "path": "packages/client/locale/src/client/LanguageRow.tsx", "line": 62 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 5 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 122 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatView.tsx", "line": 12 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatView.tsx", "line": 262 },
+        { "path": "packages/client/ui-chat/src/client/chat/CompactionItem.tsx", "line": 8 },
+        { "path": "packages/client/ui-chat/src/client/chat/CompactionItem.tsx", "line": 66 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx", "line": 3 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx", "line": 59 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 6 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 43 },
+        { "path": "packages/client/ui-chat/src/client/settings/PreferenceRow.tsx", "line": 4 },
+        { "path": "packages/client/ui-chat/src/client/settings/PreferenceRow.tsx", "line": 38 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 8 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 187 },
+        {
+          "path": "packages/client/ui-conversation/src/client/settings/EnterBehaviorRow.tsx",
+          "line": 6
+        },
+        {
+          "path": "packages/client/ui-conversation/src/client/settings/EnterBehaviorRow.tsx",
+          "line": 71
+        },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx", "line": 8 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx", "line": 60 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx", "line": 11 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx", "line": 83 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 39 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 493 },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionRow.tsx",
+          "line": 12
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionRow.tsx",
+          "line": 101
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.tsx",
+          "line": 6
+        },
+        {
+          "path": "packages/client/ui-permission-presets/src/client/PermissionSelect.tsx",
+          "line": 192
+        },
+        { "path": "packages/client/ui-primitives/src/DisclosureRow.tsx", "line": 4 },
+        { "path": "packages/client/ui-primitives/src/DisclosureRow.tsx", "line": 79 },
+        { "path": "packages/client/ui-primitives/src/ZoomControls.tsx", "line": 5 },
+        { "path": "packages/client/ui-primitives/src/ZoomControls.tsx", "line": 77 },
+        { "path": "packages/client/ui-theme/src/client/FontSizeRow.tsx", "line": 11 },
+        { "path": "packages/client/ui-theme/src/client/FontSizeRow.tsx", "line": 79 },
+        { "path": "packages/client/ui-theme/src/client/FontSizeRow.tsx", "line": 94 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx", "line": 91 },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 8 },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "line": 506
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "line": 545
+        },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 618 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "chevron-left-outline",
+      "symbols": ["IconChevronLeftOutlineRegular", "IconChevronLeftOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-attachment/src/AttachmentRail.tsx", "line": 8 },
+        { "path": "packages/client/ui-attachment/src/AttachmentRail.tsx", "line": 146 },
+        { "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx", "line": 6 },
+        {
+          "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx",
+          "line": 82
+        },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 8 },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 690 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "chevron-right-outline",
+      "symbols": ["IconChevronRightOutlineRegular", "IconChevronRightOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-attachment/src/AttachmentRail.tsx", "line": 8 },
+        { "path": "packages/client/ui-attachment/src/AttachmentRail.tsx", "line": 167 },
+        { "path": "packages/client/ui-chat/src/client/chat/CompactionItem.tsx", "line": 9 },
+        { "path": "packages/client/ui-chat/src/client/chat/CompactionItem.tsx", "line": 66 },
+        { "path": "packages/client/ui-input-trigger/src/client/MenuView.tsx", "line": 19 },
+        { "path": "packages/client/ui-input-trigger/src/client/MenuView.tsx", "line": 111 },
+        { "path": "packages/client/ui-input-trigger/src/client/MenuView.tsx", "line": 211 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 39 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 516 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 522 },
+        { "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx", "line": 7 },
+        {
+          "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx",
+          "line": 83
+        },
+        { "path": "packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx", "line": 4 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx",
+          "line": 100
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx",
+          "line": 132
+        },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 9 },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 698 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "triangle-right-fill",
+      "symbols": ["IconTriangleRightFillRegular", "IconTriangleRightFillMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 24 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 313 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "chevron-up-outline",
+      "symbols": ["IconChevronUpOutlineRegular", "IconChevronUpOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 6 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 122 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 8 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 187 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx", "line": 11 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx", "line": 83 },
+        { "path": "packages/client/ui-primitives/src/DisclosureRow.tsx", "line": 4 },
+        { "path": "packages/client/ui-primitives/src/DisclosureRow.tsx", "line": 84 },
+        { "path": "packages/client/ui-theme/src/client/FontSizeRow.tsx", "line": 11 },
+        { "path": "packages/client/ui-theme/src/client/FontSizeRow.tsx", "line": 70 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx", "line": 86 },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 9 },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "line": 506
+        },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "line": 545
+        },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 618 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "close-outline",
+      "symbols": ["IconCloseOutlineRegular", "IconCloseOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 5 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 190 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 8 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 261 },
+        { "path": "packages/client/ui-dockkit/src/components/FloatLayer.tsx", "line": 20 },
+        { "path": "packages/client/ui-dockkit/src/components/FloatLayer.tsx", "line": 145 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 15 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 121 },
+        { "path": "packages/client/ui-primitives/src/ImageLightbox.tsx", "line": 3 },
+        { "path": "packages/client/ui-primitives/src/ImageLightbox.tsx", "line": 61 },
+        { "path": "packages/client/ui-primitives/src/Modal.tsx", "line": 7 },
+        { "path": "packages/client/ui-primitives/src/Modal.tsx", "line": 79 },
+        { "path": "packages/client/ui-primitives/src/QuotePreview.tsx", "line": 5 },
+        { "path": "packages/client/ui-primitives/src/QuotePreview.tsx", "line": 86 },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx",
+          "line": 7
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx",
+          "line": 60
+        },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 9 },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 514 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "close-fill",
+      "symbols": ["IconCloseFillRegular", "IconCloseFillMedium"],
+      "sources": [
+        { "path": "packages/client/ui-attachment/src/FileCard.tsx", "line": 2 },
+        { "path": "packages/client/ui-attachment/src/FileCard.tsx", "line": 71 },
+        { "path": "packages/client/ui-attachment/src/client/ComposerAttachments.tsx", "line": 7 },
+        { "path": "packages/client/ui-attachment/src/client/ComposerAttachments.tsx", "line": 148 },
+        { "path": "packages/client/ui-dockkit/src/components/TabPanel.tsx", "line": 29 },
+        { "path": "packages/client/ui-dockkit/src/components/TabPanel.tsx", "line": 391 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 39 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 555 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 22 },
+        {
+          "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx",
+          "line": 1343
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "close-circle-fill",
+      "symbols": ["IconCloseCircleFillRegular", "IconCloseCircleFillMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "copy-outline",
+      "symbols": ["IconCopyOutlineRegular", "IconCopyOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/MessageIconActions.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/MessageIconActions.tsx", "line": 63 },
+        { "path": "packages/client/ui-primitives/src/CodeToolbar.tsx", "line": 4 },
+        { "path": "packages/client/ui-primitives/src/CodeToolbar.tsx", "line": 57 },
+        { "path": "packages/client/ui-primitives/src/JsonTree.tsx", "line": 9 },
+        { "path": "packages/client/ui-primitives/src/JsonTree.tsx", "line": 152 },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionReplyView.tsx", "line": 7 },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionReplyView.tsx",
+          "line": 57
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/SessionId.tsx",
+          "line": 2
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/SessionId.tsx",
+          "line": 13
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "refresh-outline",
+      "symbols": ["IconRefreshOutlineRegular", "IconRefreshOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ArtifactPane.tsx", "line": 5 },
+        { "path": "apps/web/src/components/ArtifactPane.tsx", "line": 152 },
+        { "path": "packages/client/ui-attachment/src/MessageImage.tsx", "line": 4 },
+        { "path": "packages/client/ui-attachment/src/MessageImage.tsx", "line": 125 },
+        { "path": "packages/client/ui-attachment/src/client/ComposerAttachments.tsx", "line": 7 },
+        { "path": "packages/client/ui-attachment/src/client/ComposerAttachments.tsx", "line": 121 },
+        { "path": "packages/client/ui-primitives/src/ConnectionIndicator.tsx", "line": 3 },
+        { "path": "packages/client/ui-primitives/src/ConnectionIndicator.tsx", "line": 86 },
+        { "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx", "line": 9 },
+        {
+          "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx",
+          "line": 85
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 20
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 330
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 393
+        },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 20 },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 215 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "like-outline",
+      "symbols": ["IconLikeOutlineRegular", "IconLikeOutlineMedium"],
+      "sources": [
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "line": 13
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "line": 97
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "like-fill",
+      "symbols": ["IconLikeFillRegular", "IconLikeFillMedium"],
+      "sources": [
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "line": 13
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "line": 97
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "dislike-outline",
+      "symbols": ["IconDislikeOutlineRegular", "IconDislikeOutlineMedium"],
+      "sources": [
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "line": 13
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "line": 112
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "dislike-fill",
+      "symbols": ["IconDislikeFillRegular", "IconDislikeFillMedium"],
+      "sources": [
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "line": 13
+        },
+        {
+          "path": "packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx",
+          "line": 112
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "share-outline",
+      "symbols": ["IconShareOutlineRegular", "IconShareOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "deliver-doc",
+      "symbols": ["IconDeliverDocRegular", "IconDeliverDocMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "edit-outline",
+      "symbols": ["IconEditOutlineRegular", "IconEditOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 6 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 442 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 6 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 44 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 45 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 9 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 281 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 363 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 15 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 164 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 3
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 21
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 22
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/file-mutation-row.tsx",
+          "line": 2
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/file-mutation-row.tsx",
+          "line": 11
+        },
+        { "path": "packages/client/ui-user-questions/src/client/PlanReviewPanel.tsx", "line": 3 },
+        { "path": "packages/client/ui-user-questions/src/client/PlanReviewPanel.tsx", "line": 75 },
+        { "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx", "line": 10 },
+        {
+          "path": "packages/client/ui-user-questions/src/client/QuestionComposer.tsx",
+          "line": 653
+        },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 21 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 288 },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/RenameSession.tsx",
+          "line": 8
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/RenameSession.tsx",
+          "line": 30
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "think-outline",
+      "symbols": ["IconThinkOutlineRegular", "IconThinkOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 8 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 40 },
+        { "path": "packages/client/ui-chat/src/client/chat/ReasoningRow.tsx", "line": 3 },
+        { "path": "packages/client/ui-chat/src/client/chat/ReasoningRow.tsx", "line": 9 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "agent-preset-outline",
+      "symbols": ["IconAgentPresetOutlineRegular", "IconAgentPresetOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 5 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 50 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 5 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 20 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 21 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 38 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "browse-outline",
+      "symbols": ["IconBrowseOutlineRegular", "IconBrowseOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 5 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 41 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 42 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 49 },
+        { "path": "packages/client/ui-chat/src/client/chat/ContextInjectionRow.tsx", "line": 3 },
+        { "path": "packages/client/ui-chat/src/client/chat/ContextInjectionRow.tsx", "line": 53 },
+        { "path": "packages/client/ui-chat/src/client/chat/SystemPromptRow.tsx", "line": 3 },
+        { "path": "packages/client/ui-chat/src/client/chat/SystemPromptRow.tsx", "line": 30 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 3
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 19
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/read-family-row.tsx",
+          "line": 10
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/read-family-row.tsx",
+          "line": 48
+        },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/web-row.tsx", "line": 2 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/web-row.tsx", "line": 21 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "context-injection-outline",
+      "symbols": ["IconContextInjectionOutlineRegular", "IconContextInjectionOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ContextInjectionRow.tsx", "line": 3 },
+        { "path": "packages/client/ui-chat/src/client/chat/ContextInjectionRow.tsx", "line": 55 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 6 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 17 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "link-outline",
+      "symbols": ["IconLinkOutlineRegular", "IconLinkOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx", "line": 8 },
+        { "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx", "line": 97 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "right-up-outline",
+      "symbols": ["IconRightUpOutlineRegular", "IconRightUpOutlineMedium"],
+      "sources": [
+        {
+          "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx",
+          "line": 10
+        },
+        {
+          "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx",
+          "line": 101
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "enhance-outline",
+      "symbols": ["IconEnhanceOutlineRegular", "IconEnhanceOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "trash-outline",
+      "symbols": ["IconTrashOutlineRegular", "IconTrashOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 11 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 444 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 10 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 298 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 372 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 16 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 169 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 23 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 289 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "warning-outline",
+      "symbols": ["IconWarningOutlineRegular", "IconWarningOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 12 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 368 },
+        { "path": "packages/client/ui-attachment/src/client/ComposerAttachments.tsx", "line": 7 },
+        { "path": "packages/client/ui-attachment/src/client/ComposerAttachments.tsx", "line": 107 },
+        { "path": "packages/client/ui-chat/src/client/chat/QuotaNoticeHost.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/QuotaNoticeHost.tsx", "line": 23 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx", "line": 21 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx", "line": 445 },
+        { "path": "packages/client/ui-message-feedback/src/client/FeedbackDialog.tsx", "line": 13 },
+        { "path": "packages/client/ui-message-feedback/src/client/FeedbackDialog.tsx", "line": 81 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 40 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 672 },
+        { "path": "packages/client/ui-primitives/src/RiskConfirmation.tsx", "line": 6 },
+        { "path": "packages/client/ui-primitives/src/RiskConfirmation.tsx", "line": 68 },
+        { "path": "packages/client/ui-workspace/src/client/toast/Toast.tsx", "line": 2 },
+        { "path": "packages/client/ui-workspace/src/client/toast/Toast.tsx", "line": 42 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "check-circle-fill",
+      "symbols": ["IconCheckCircleFillRegular", "IconCheckCircleFillMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "warning-triangle-outline",
+      "symbols": ["IconWarningTriangleOutlineRegular", "IconWarningTriangleOutlineMedium"],
+      "sources": [
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/excel/excel.tsx",
+          "line": 5
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/excel/excel.tsx",
+          "line": 55
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/excel/excel.tsx",
+          "line": 61
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx",
+          "line": 7
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx",
+          "line": 46
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "user-outline",
+      "symbols": ["IconUserOutlineRegular", "IconUserOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "users-outline",
+      "symbols": ["IconUsersOutlineRegular", "IconUsersOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 7 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 30 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "paper-plane-outline",
+      "symbols": ["IconPaperPlaneOutlineRegular", "IconPaperPlaneOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 19 },
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 5 },
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 44 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "stop-fill",
+      "symbols": ["IconStopFillRegular", "IconStopFillMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "paperclip-outline",
+      "symbols": ["IconPaperclipOutlineRegular", "IconPaperclipOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-conversation/src/client/apply.ts", "line": 6 },
+        { "path": "packages/client/ui-conversation/src/client/apply.ts", "line": 137 },
+        { "path": "packages/client/ui-conversation/src/client/apply.ts", "line": 318 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "loading-outline",
+      "symbols": ["IconLoadingOutlineRegular", "IconLoadingOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-attachment/src/MessageImage.tsx", "line": 4 },
+        { "path": "packages/client/ui-attachment/src/MessageImage.tsx", "line": 144 },
+        { "path": "packages/client/ui-primitives/src/ImagePreview.tsx", "line": 3 },
+        { "path": "packages/client/ui-primitives/src/ImagePreview.tsx", "line": 32 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "download-outline",
+      "symbols": ["IconDownloadOutlineRegular", "IconDownloadOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 5 },
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 47 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "play-outline",
+      "symbols": ["IconPlayOutlineRegular", "IconPlayOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 16 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 152 },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 19
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 315
+        },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 21 },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 203 },
+        { "path": "packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx", "line": 4 },
+        { "path": "packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx", "line": 55 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "pause-outline",
+      "symbols": ["IconPauseOutlineRegular", "IconPauseOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 16 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 145 },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 19
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 315
+        },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 21 },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 203 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "fullscreen-outline",
+      "symbols": ["IconFullscreenOutlineRegular", "IconFullscreenOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "code-outline",
+      "symbols": ["IconCodeOutlineRegular", "IconCodeOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 6 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 47 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 3
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 23
+        },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 6 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 34 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "cordis-plugin-outline",
+      "symbols": ["IconCordisPluginOutlineRegular", "IconCordisPluginOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 6 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 26 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 6 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 33 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "api-outline",
+      "symbols": ["IconApiOutlineRegular", "IconApiOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 5 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 46 },
+        { "path": "packages/client/ui-chat/src/client/chat/CompactionItem.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/CompactionItem.tsx", "line": 60 },
+        { "path": "packages/client/ui-chat/src/client/chat/GenericCommandCard.tsx", "line": 3 },
+        { "path": "packages/client/ui-chat/src/client/chat/GenericCommandCard.tsx", "line": 9 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 3
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 20
+        },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx", "line": 27 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "personalization-outline",
+      "symbols": ["IconPersonalizationOutlineRegular", "IconPersonalizationOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "project-add-outline",
+      "symbols": ["IconProjectAddOutlineRegular", "IconProjectAddOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 23 },
+        {
+          "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx",
+          "line": 1376
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "folder-open-outline",
+      "symbols": ["IconFolderOpenOutlineRegular", "IconFolderOpenOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "folder-open",
+      "symbols": ["IconFolderOpenRegular", "IconFolderOpenMedium"],
+      "sources": [
+        { "path": "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx", "line": 8 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx", "line": 58 },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 20 },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 89 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 22 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 310 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "folder-close",
+      "symbols": ["IconFolderCloseRegular", "IconFolderCloseMedium"],
+      "sources": [
+        { "path": "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx", "line": 8 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx", "line": 57 },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 20 },
+        { "path": "packages/client/ui-sidebar-files/src/client/FilesBody.tsx", "line": 89 },
+        { "path": "packages/client/ui-workspace/src/client/WorkspacePicker.tsx", "line": 14 },
+        { "path": "packages/client/ui-workspace/src/client/WorkspacePicker.tsx", "line": 140 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 22 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 310 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 23 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 158 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "tree-corner",
+      "symbols": ["IconTreeCornerRegular", "IconTreeCornerMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "light-outline",
+      "symbols": ["IconLightOutlineRegular", "IconLightOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-theme/src/client/AppearanceRow.tsx", "line": 11 },
+        { "path": "packages/client/ui-theme/src/client/AppearanceRow.tsx", "line": 32 },
+        { "path": "packages/client/ui-theme/src/client/AppearanceRow.tsx", "line": 33 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "dark-outline",
+      "symbols": ["IconDarkOutlineRegular", "IconDarkOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-theme/src/client/AppearanceRow.tsx", "line": 11 },
+        { "path": "packages/client/ui-theme/src/client/AppearanceRow.tsx", "line": 34 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "followsystem-outline",
+      "symbols": ["IconFollowsystemOutlineRegular", "IconFollowsystemOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-theme/src/client/AppearanceRow.tsx", "line": 11 },
+        { "path": "packages/client/ui-theme/src/client/AppearanceRow.tsx", "line": 35 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "data-outline",
+      "symbols": ["IconDataOutlineRegular", "IconDataOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 40 },
+        { "path": "packages/client/ui-model-selection/src/client/ModelSelect.tsx", "line": 486 },
+        { "path": "packages/client/ui-model-selection/src/client/index.ts", "line": 25 },
+        { "path": "packages/client/ui-model-selection/src/client/index.ts", "line": 133 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "database-outline",
+      "symbols": ["IconDatabaseOutlineRegular", "IconDatabaseOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/StatsPills.tsx", "line": 9 },
+        { "path": "packages/client/ui-chat/src/client/chat/StatsPills.tsx", "line": 305 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnUsagePanel.tsx", "line": 4 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnUsagePanel.tsx", "line": 49 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnUsagePanel.tsx", "line": 62 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "clock-outline",
+      "symbols": ["IconClockOutlineRegular", "IconClockOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 5 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 24 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 31 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 22 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 164 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "gauge-outline",
+      "symbols": ["IconGaugeOutlineRegular", "IconGaugeOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/StatsPills.tsx", "line": 9 },
+        { "path": "packages/client/ui-chat/src/client/chat/StatsPills.tsx", "line": 255 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "send-outline",
+      "symbols": ["IconSendOutlineRegular", "IconSendOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 9 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 316 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 381 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "queue-outline",
+      "symbols": ["IconQueueOutlineRegular", "IconQueueOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 25 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 9 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 181 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 198 },
+        { "path": "packages/client/ui-conversation/src/client/queue/QueueDock.tsx", "line": 328 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 24 },
+        {
+          "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx",
+          "line": 168
+        },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 307 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "checklist-outline",
+      "symbols": ["IconChecklistOutlineRegular", "IconChecklistOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx", "line": 11 },
+        { "path": "packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx", "line": 79 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 36 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/todo-row.tsx", "line": 2 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/todo-row.tsx", "line": 65 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "list-pen-outline",
+      "symbols": ["IconListPenOutlineRegular", "IconListPenOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "goal-outline",
+      "symbols": ["IconGoalOutlineRegular", "IconGoalOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx", "line": 18 },
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 5 },
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 42 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 15 },
+        { "path": "packages/client/ui-goal/src/client/GoalBar.tsx", "line": 137 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 6 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/details-row.tsx", "line": 32 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "sparkle",
+      "symbols": ["IconSparkleRegular", "IconSparkleMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 53 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 4
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/GenericToolCard.tsx",
+          "line": 24
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "inspect-outline",
+      "symbols": ["IconInspectOutlineRegular", "IconInspectOutlineMedium"],
+      "sources": [
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx",
+          "line": 3
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx",
+          "line": 59
+        },
+        { "path": "packages/client/ui-tool/src/client/tool/components/ToolRow.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/components/ToolRow.tsx", "line": 364 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx", "line": 5 },
+        { "path": "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx", "line": 160 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "skill-outline",
+      "symbols": ["IconSkillOutlineRegular", "IconSkillOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "question-outline",
+      "symbols": ["IconQuestionOutlineRegular", "IconQuestionOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 52 },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx",
+          "line": 3
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx",
+          "line": 32
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx",
+          "line": 43
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/ask-question-row.tsx",
+          "line": 2
+        },
+        {
+          "path": "packages/client/ui-tool/src/client/tool/toolviews/ask-question-row.tsx",
+          "line": 358
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "info-outline",
+      "symbols": ["IconInfoOutlineRegular", "IconInfoOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-primitives/src/settings-form/fields.tsx", "line": 10 },
+        { "path": "packages/client/ui-primitives/src/settings-form/fields.tsx", "line": 74 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "plugin-pinwheel-outline",
+      "symbols": ["IconPluginPinwheelOutlineRegular", "IconPluginPinwheelOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "alarm-clock-outline",
+      "symbols": ["IconAlarmClockOutlineRegular", "IconAlarmClockOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "archive-outline",
+      "symbols": ["IconArchiveOutlineRegular", "IconArchiveOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 4 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 428 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 443 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 21 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 507 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 21 },
+        {
+          "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx",
+          "line": 307
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx",
+          "line": 18
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx",
+          "line": 44
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx",
+          "line": 75
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "wrap-lines-outline",
+      "symbols": ["IconWrapLinesOutlineRegular", "IconWrapLinesOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-primitives/src/JsonTree.tsx", "line": 9 },
+        { "path": "packages/client/ui-primitives/src/JsonTree.tsx", "line": 439 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "nowrap-fill",
+      "symbols": ["IconNowrapFillRegular", "IconNowrapFillMedium"],
+      "sources": [
+        { "path": "packages/client/ui-primitives/src/CodeToolbar.tsx", "line": 4 },
+        { "path": "packages/client/ui-primitives/src/CodeToolbar.tsx", "line": 52 },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 19
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 305
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "wrap-fill",
+      "symbols": ["IconWrapFillRegular", "IconWrapFillMedium"],
+      "sources": [
+        { "path": "packages/client/ui-primitives/src/CodeToolbar.tsx", "line": 4 },
+        { "path": "packages/client/ui-primitives/src/CodeToolbar.tsx", "line": 52 },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 20
+        },
+        {
+          "path": "packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx",
+          "line": 305
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "compare-split-outline",
+      "symbols": ["IconCompareSplitOutlineRegular", "IconCompareSplitOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "plan-outline",
+      "symbols": ["IconPlanOutlineRegular", "IconPlanOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 7 },
+        { "path": "packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx", "line": 51 },
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 5 },
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 43 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "compact-outline",
+      "symbols": ["IconCompactOutlineRegular", "IconCompactOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 5 },
+        { "path": "packages/client/ui-commands/src/client/presentation.ts", "line": 45 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "shield-outline",
+      "symbols": ["IconShieldOutlineRegular", "IconShieldOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "check-circle-outline",
+      "symbols": ["IconCheckCircleOutlineRegular", "IconCheckCircleOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-primitives/src/Toast.tsx", "line": 4 },
+        { "path": "packages/client/ui-primitives/src/Toast.tsx", "line": 85 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "unarchive-outline",
+      "symbols": ["IconUnarchiveOutlineRegular", "IconUnarchiveOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 24 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 569 },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx",
+          "line": 18
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx",
+          "line": 44
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx",
+          "line": 75
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "pin-outline",
+      "symbols": ["IconPinOutlineRegular", "IconPinOutlineMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 9 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 440 },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/PinSession.tsx",
+          "line": 11
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/PinSession.tsx",
+          "line": 41
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/PinSession.tsx",
+          "line": 70
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "pin-fill",
+      "symbols": ["IconPinFillRegular", "IconPinFillMedium"],
+      "sources": [
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 8 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 418 },
+        { "path": "apps/web/src/components/ChatSidebar.tsx", "line": 440 },
+        { "path": "apps/web/src/components/SessionSidebar.tsx", "line": 6 },
+        { "path": "apps/web/src/components/SessionSidebar.tsx", "line": 242 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 23 },
+        { "path": "packages/client/ui-workspace/src/client/rows/Rows.tsx", "line": 469 },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/PinSession.tsx",
+          "line": 11
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/PinSession.tsx",
+          "line": 41
+        },
+        {
+          "path": "packages/client/ui-workspace/src/client/session-actions/PinSession.tsx",
+          "line": 70
+        }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "flat-list-outline",
+      "symbols": ["IconFlatListOutlineRegular", "IconFlatListOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 23 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 160 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "workspace-tree-outline",
+      "symbols": ["IconWorkspaceTreeOutlineRegular", "IconWorkspaceTreeOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 25 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 159 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "chevrons-up-down-outline",
+      "symbols": ["IconChevronsUpDownOutlineRegular", "IconChevronsUpDownOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 22 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 163 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "drag-handle-outline",
+      "symbols": ["IconDragHandleOutlineRegular", "IconDragHandleOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "archive-off-outline",
+      "symbols": ["IconArchiveOffOutlineRegular", "IconArchiveOffOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 21 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 167 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "archive-check-outline",
+      "symbols": ["IconArchiveCheckOutlineRegular", "IconArchiveCheckOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 21 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 169 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "sliders-two-outline",
+      "symbols": ["IconSlidersTwoOutlineRegular", "IconSlidersTwoOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 24 },
+        { "path": "packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx", "line": 198 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "microphone-outline",
+      "symbols": ["IconMicrophoneOutlineRegular", "IconMicrophoneOutlineMedium"],
+      "sources": [],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "apps-add-outline",
+      "symbols": ["IconAppsAddOutlineRegular", "IconAppsAddOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 23 },
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 116 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    },
+    {
+      "id": "apps-add-compact-outline",
+      "symbols": ["IconAppsAddOutlineRegular", "IconAppsAddOutlineMedium"],
+      "sources": [
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 23 },
+        { "path": "packages/client/ui-sidebar/src/client/SidebarRoot.tsx", "line": 116 }
+      ],
+      "registry": "packages/client/ui-primitives/src/icons/index.tsx"
+    }
+  ],
+  "codeTypes": [
+    "angular",
+    "c",
+    "clojure",
+    "cmake",
+    "cpp",
+    "csharp",
+    "css",
+    "dart",
+    "docker",
+    "elixir",
+    "env",
+    "erlang",
+    "flutter",
+    "git",
+    "go",
+    "graphql",
+    "haskell",
+    "ini",
+    "java",
+    "javascript",
+    "json",
+    "kotlin",
+    "lua",
+    "makefile",
+    "node",
+    "objective-c",
+    "perl",
+    "php",
+    "powershell",
+    "protobuf",
+    "python",
+    "r",
+    "react",
+    "ruby",
+    "rust",
+    "scala",
+    "shell",
+    "solidity",
+    "sql",
+    "svelte",
+    "swift",
+    "toml",
+    "typescript",
+    "vue",
+    "wasm",
+    "xml",
+    "yaml",
+    "zig"
+  ],
+  "fileSource": "packages/client/ui-primitives/src/code-file-types.ts",
+  "inline": [
+    { "path": "apps/web/src/components/ComposerControls.tsx", "line": 435 },
+    { "path": "apps/web/src/components/kit.tsx", "line": 74 },
+    { "path": "packages/client/ui-attachment/src/DropOverlay.tsx", "line": 44 },
+    { "path": "packages/client/ui-chat/src/client/chat/RunningWhaleTail.tsx", "line": 14 },
+    { "path": "packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx", "line": 120 },
+    { "path": "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx", "line": 103 },
+    { "path": "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx", "line": 570 },
+    { "path": "packages/client/ui-dockkit/src/components/TabPanel.tsx", "line": 47 },
+    { "path": "packages/client/ui-primitives/src/BrandWordmark.tsx", "line": 19 },
+    { "path": "packages/client/ui-primitives/src/CodeFileIcon.tsx", "line": 18 },
+    { "path": "packages/client/ui-primitives/src/FileTypeIcon.tsx", "line": 158 },
+    { "path": "packages/client/ui-primitives/src/FishLogo.tsx", "line": 17 },
+    { "path": "packages/client/ui-primitives/src/JsonTree.tsx", "line": 451 },
+    { "path": "packages/client/ui-primitives/src/LinkIcon.tsx", "line": 55 },
+    { "path": "packages/client/ui-primitives/src/PermissionIcon.tsx", "line": 11 },
+    { "path": "packages/client/ui-primitives/src/QuotePreview.tsx", "line": 11 },
+    { "path": "packages/client/ui-primitives/src/SiteGlyph.tsx", "line": 145 },
+    { "path": "packages/client/ui-primitives/src/StateDot.tsx", "line": 53 },
+    { "path": "packages/client/ui-primitives/src/ZoomControls.tsx", "line": 68 },
+    { "path": "packages/client/ui-sidebar-browser/src/client/view/BrowserBody.tsx", "line": 25 },
+    { "path": "packages/client/ui-sidebar-right/src/client/shell/SidebarRight.tsx", "line": 249 },
+    {
+      "path": "packages/client/ui-sidebar-right/src/client/tabs/guide/GuideMoreIcon.tsx",
+      "line": 8
+    },
+    { "path": "packages/client/ui-sidebar-right/src/client/tabs/guide/GuideTitle.tsx", "line": 20 },
+    { "path": "packages/client/ui-theme/src/client/icon-sprite.ts", "line": 2 },
+    { "path": "packages/client/ui-theme/src/client/index.ts", "line": 512 }
+  ]
+}

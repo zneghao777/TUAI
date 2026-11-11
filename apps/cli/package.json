@@ -1,0 +1,22 @@
+{
+  "name": "@tuai/cli",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "workspace:*",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:*",
+    "@deepseek-ai/cordis-plugin-include": "workspace:*",
+    "@deepseek-ai/cordis-plugin-group": "workspace:*",
+    "@deepseek-ai/dsh-cmdline": "workspace:*",
+    "js-yaml": "4.3.2",
+    "zod": "4.4.3",
+    "@tuai/host-config": "workspace:*",
+    "@tuai/agent-runtime": "workspace:*",
+    "@tuai/web-host": "workspace:*",
+    "@deepseek-ai/dsh-client-connection": "workspace:*"
+  }
+}

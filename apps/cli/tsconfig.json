@@ -1,0 +1,37 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../vendor/cordis"
+    },
+    {
+      "path": "../../vendor/loader"
+    },
+    {
+      "path": "../../vendor/include"
+    },
+    {
+      "path": "../../vendor/group"
+    },
+    {
+      "path": "../../packages/boot/cmdline"
+    },
+    {
+      "path": "../../packages/product/host-config"
+    },
+    {
+      "path": "../../packages/product/agent-runtime"
+    },
+    {
+      "path": "../../packages/product/web-host"
+    },
+    {
+      "path": "../../packages/client/connection/tsconfig.host.json"
+    }
+  ]
+}

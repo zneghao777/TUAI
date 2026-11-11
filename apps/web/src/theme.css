@@ -1,0 +1,133 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans SC', sans-serif;
+  color: #293631;
+  background: #f4f6f3;
+  font-size: 15px;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  --canvas: #f4f6f3;
+  --mist: #eaf0eb;
+  --ink: #293631;
+  --muted: #63726a;
+  --accent: #58786d;
+  --accent-pressed: #46665b;
+  --glass: rgba(255, 255, 255, 0.9);
+  --line: rgba(49, 61, 80, 0.09);
+  --shadow: 0 8px 30px -8px rgba(40, 48, 60, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+}
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+input,
+textarea,
+select {
+  caret-color: var(--accent);
+}
+::selection {
+  background: #dce9df;
+  color: var(--ink);
+}
+a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+button,
+textarea,
+input,
+select {
+  min-width: 0;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.65;
+  max-height: 420px;
+  overflow: auto;
+  background: var(--mist);
+  padding: 14px;
+  border-radius: 12px;
+}
+small {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 12px 0 20px;
+}
+legend {
+  font-weight: 600;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+input:not([type='radio']):not([type='checkbox']):not([type='range']),
+select {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--field-background, var(--glass));
+  padding: 9px 12px;
+}
+input:focus,
+select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+button:disabled {
+  opacity: 0.45;
+}
+h1,
+h2,
+h3,
+h4,
+p {
+  overflow-wrap: anywhere;
+}
+h3 {
+  font-size: 16px;
+  line-height: 1.7;
+}
+h4 {
+  font-size: 13px;
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

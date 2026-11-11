@@ -1,0 +1,15 @@
+image: node:26.8.1
+
+stages:
+  - verify
+
+core-quality:
+  stage: verify
+  script:
+    - npx --yes pnpm@11.28.5 install --frozen-lockfile
+    - npx --yes pnpm@11.28.5 run check
+    - npx --yes pnpm@11.28.5 run verify:clean
+  artifacts:
+    when: always
+    paths:
+      - reports/

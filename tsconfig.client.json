@@ -1,0 +1,111 @@
+{
+  "extends": "./tsconfig.base.client.json",
+  "files": [],
+  "references": [
+    {
+      "path": "packages/api/gateway/tsconfig.client.json"
+    },
+    {
+      "path": "packages/api/remote-access/tsconfig.client.json"
+    },
+    {
+      "path": "packages/api/remotes/tsconfig.client.json"
+    },
+    {
+      "path": "packages/api/session-controller/tsconfig.client.json"
+    },
+    {
+      "path": "packages/api/workspace-controller/tsconfig.client.json"
+    },
+    {
+      "path": "packages/api/workspace-files/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/connection/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/file-upload/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/locale/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/product-analytics/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/resources"
+    },
+    {
+      "path": "packages/client/shortcuts/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/store"
+    },
+    {
+      "path": "packages/client/ui-approval"
+    },
+    {
+      "path": "packages/client/ui-attachment"
+    },
+    {
+      "path": "packages/client/ui-chat/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/ui-conversation/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/ui-dockkit"
+    },
+    {
+      "path": "packages/client/ui-file-drag"
+    },
+    {
+      "path": "packages/client/ui-input-trigger"
+    },
+    {
+      "path": "packages/client/ui-layout"
+    },
+    {
+      "path": "packages/client/ui-primitives"
+    },
+    {
+      "path": "packages/client/ui-renderer"
+    },
+    {
+      "path": "packages/client/ui-session"
+    },
+    {
+      "path": "packages/client/ui-settings/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/ui-sidebar"
+    },
+    {
+      "path": "packages/client/ui-sidebar-browser/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/ui-sidebar-documentpreview/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/ui-sidebar-right"
+    },
+    {
+      "path": "packages/client/ui-slots"
+    },
+    {
+      "path": "packages/client/ui-theme/tsconfig.client.json"
+    },
+    {
+      "path": "packages/client/ui-tool"
+    },
+    {
+      "path": "packages/client/ui-workspace"
+    },
+    {
+      "path": "packages/product/platform"
+    },
+    {
+      "path": "packages/session-query/session-log-export/tsconfig.client.json"
+    }
+  ]
+}

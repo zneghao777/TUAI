@@ -1,0 +1,211 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../../vendor/cordis"
+    },
+    {
+      "path": "../../attachment/attachment-local"
+    },
+    {
+      "path": "../../compaction/command-compact"
+    },
+    {
+      "path": "../../compaction/compaction-basic"
+    },
+    {
+      "path": "../../compaction/compaction-image-offload"
+    },
+    {
+      "path": "../../compaction/compaction-tool-result-pruner"
+    },
+    {
+      "path": "../../context/agent-instructions"
+    },
+    {
+      "path": "../../context/file-reference-local"
+    },
+    {
+      "path": "../../context/session-reference"
+    },
+    {
+      "path": "../../context/time-context"
+    },
+    {
+      "path": "../../core/agent"
+    },
+    {
+      "path": "../../core/agent-loop"
+    },
+    {
+      "path": "../../core/session"
+    },
+    {
+      "path": "../../core/system-prompt"
+    },
+    {
+      "path": "../../core/tool-executor-native"
+    },
+    {
+      "path": "../../core/tools"
+    },
+    {
+      "path": "../../credentials/credentials"
+    },
+    {
+      "path": "../../experimental/auto-review"
+    },
+    {
+      "path": "../../experimental/tool-terminal/tsconfig.json"
+    },
+    {
+      "path": "../../feedback/command-feedback"
+    },
+    {
+      "path": "../../fs/fs"
+    },
+    {
+      "path": "../../fs/fs-sandbox"
+    },
+    {
+      "path": "../../fs/tool-fs"
+    },
+    {
+      "path": "../../fs/tool-fs-search/tsconfig.json"
+    },
+    {
+      "path": "../../goal/command-goal"
+    },
+    {
+      "path": "../../goal/goal"
+    },
+    {
+      "path": "../../goal/goal-round-driver"
+    },
+    {
+      "path": "../../goal/tool-goal"
+    },
+    {
+      "path": "../../guard/repeat-tool-reminder"
+    },
+    {
+      "path": "../../guard/timeout-policy"
+    },
+    {
+      "path": "../../interaction/permission-presets"
+    },
+    {
+      "path": "../../interaction/tool-ask-user"
+    },
+    {
+      "path": "../../interaction/user-approval"
+    },
+    {
+      "path": "../../interaction/user-questions"
+    },
+    {
+      "path": "../../jobs/jobs-local/tsconfig.json"
+    },
+    {
+      "path": "../../jobs/tool-jobs/tsconfig.json"
+    },
+    {
+      "path": "../../llm/llm"
+    },
+    {
+      "path": "../../llm/llm-deepseek"
+    },
+    {
+      "path": "../../llm/llm-deepseek-api-key"
+    },
+    {
+      "path": "../../llm/llm-retry"
+    },
+    {
+      "path": "../../llm/token-meter"
+    },
+    {
+      "path": "../../plan/plan-mode"
+    },
+    {
+      "path": "../../sandbox/sandbox-local"
+    },
+    {
+      "path": "../../sandbox/sandbox-policy"
+    },
+    {
+      "path": "../../session-query/session-log-export/tsconfig.host.json"
+    },
+    {
+      "path": "../../session/session-persistence-jsonl"
+    },
+    {
+      "path": "../../session/session-projection"
+    },
+    {
+      "path": "../../session/tool-working-directory"
+    },
+    {
+      "path": "../../session/working-directory"
+    },
+    {
+      "path": "../../shell/bash-sandbox"
+    },
+    {
+      "path": "../../shell/shell-env"
+    },
+    {
+      "path": "../../shell/tool-bash"
+    },
+    {
+      "path": "../../spill/spill-local"
+    },
+    {
+      "path": "../../spill/spill-policy"
+    },
+    {
+      "path": "../../subprocess/subprocess-local"
+    },
+    {
+      "path": "../../terminal/terminal-bash/tsconfig.json"
+    },
+    {
+      "path": "../../terminal/terminal/tsconfig.json"
+    },
+    {
+      "path": "../../todo/tool-todo/tsconfig.json"
+    },
+    {
+      "path": "../../web/tool-web/tsconfig.json"
+    },
+    {
+      "path": "../../web/web-fetch-http/tsconfig.json"
+    },
+    {
+      "path": "../../web/web-search-deepseek/tsconfig.json"
+    },
+    {
+      "path": "../../web/web/tsconfig.json"
+    },
+    {
+      "path": "../host-config"
+    },
+    {
+      "path": "../../skill/skill"
+    },
+    {
+      "path": "../../skill/tool-skill"
+    },
+    {
+      "path": "../browser-service"
+    },
+    {
+      "path": "../task-runtime"
+    }
+  ]
+}

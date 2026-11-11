@@ -1,0 +1,92 @@
+import { italianConversationExtra } from './italian-conversation-extra'
+import type { ConversationKey } from '@deepseek-ai/dsh-client-ui-conversation/src/client/locales.ts'
+
+/** Product-owned Italian text for the conversation controls. */
+export const italianConversation = {
+  ...italianConversationExtra,
+  'error.createFailed': 'Impossibile creare la sessione. Riprova.',
+  'error.sessionNotReady': 'La sessione non è pronta. Riprova.',
+  'error.sendUncertain':
+    'L’invio non è ancora confermato. Controlla la connessione prima di riprovare; l’identità della richiesta originale è stata conservata.',
+  'error.sendRejected':
+    '{message}. L’Host ha rifiutato la richiesta; modificala prima di inviarla di nuovo.',
+  'error.uploadInterrupted':
+    'Caricamento incompleto. Rimuovi questo elemento e seleziona di nuovo il file.',
+  'error.pendingLimit':
+    'Troppe richieste sono in attesa di conferma. Controlla la connessione e la cronologia della sessione.',
+
+  'quote.remove': 'Rimuovi citazione',
+  'shortcut.newline': 'Vai a capo',
+  'shortcut.complementary': 'Usa l’altra modalità di invio',
+  'shortcut.slash': 'Apri il menu dei comandi',
+  'shortcut.mention': 'Apri il menu dei riferimenti',
+  'hint.plan': 'Descrivi l’attività per generare un piano',
+  'hint.goal': 'Inserisci un obiettivo; l’agente continuerà a lavorare',
+  'hint.goal.active':
+    'Obiettivo in corso. Usa edit per modificare, pause per sospendere, resume per riprendere o clear per cancellare',
+  'placeholder.plan': 'Descrivi l’attività per generare un piano',
+  'placeholder.default': 'Chatta con TUAI',
+  'placeholder.unavailable': 'Sessione non disponibile',
+  'placeholder.parentOffline':
+    'La sessione principale è offline. Non puoi inviare messaggi, ma puoi interrompere l’esecuzione.',
+  'placeholder.hero': 'Chatta con TUAI',
+  'placeholder.workspace': 'Scegli un’area di lavoro per iniziare',
+  'placeholder.steerQueue': 'Cmd/Ctrl+Invio inserisce tutti i messaggi in coda nel prossimo passo',
+  'input.commands': 'Aggiungi file o usa un comando',
+  'input.file': 'File',
+  'input.stop': 'Interrompi generazione',
+  'input.send': 'Invia messaggio',
+  'input.send.queue': 'Accoda messaggio',
+  'input.send.steer': 'Intervieni nel prossimo passo',
+  'attachment.pending': 'Allegati da inviare',
+  'attachment.scrollLeft': 'Scorri allegati a sinistra',
+  'attachment.scrollRight': 'Scorri allegati a destra',
+  'attachment.dropTitle': 'Trascina qui file o immagini',
+  'attachment.dropDesc': 'Immagini: massimo {count}, {size} ciascuna',
+  'attachment.dropBlocked': 'Non è possibile aggiungere file o immagini ora',
+  'attachment.directoryDesktopOnly':
+    'Le cartelle sono supportate solo nell’app desktop; nel browser aggiungi singoli file',
+  'attachment.pathUnavailable':
+    'Impossibile leggere il percorso della cartella. Trascinala di nuovo.',
+  'attachment.pathUnsupported':
+    'Il percorso contiene caratteri non supportati. Rinominalo e riprova.',
+  'image.pending': 'Immagini da inviare',
+  'image.openOriginal': 'Apri originale',
+  'image.openOriginalLabel': '{label}, apri originale',
+  'image.remove': 'Rimuovi immagine {name}',
+  'image.original': 'Originale',
+  'image.label': 'Immagine',
+  'image.loadFailed': 'Caricamento immagine non riuscito. Seleziona per riprovare.',
+  'image.loading': 'Caricamento immagine…',
+  'image.preview': 'Anteprima originale',
+  'image.closePreview': 'Chiudi anteprima originale',
+  'image.unsupportedType': 'Sono supportati solo PNG, JPG, WebP e GIF',
+  'image.tooMany': 'Puoi aggiungere al massimo {count} immagini per messaggio',
+  'image.fileTooLarge': 'Ogni immagine può avere al massimo {size}',
+  'image.totalTooLarge': 'Le immagini superano {size} complessivi. Rimuovine alcune.',
+  'image.tooManyPixels': 'Risoluzione troppo alta. Comprimi l’immagine e riprova.',
+  'image.dimensionTooLarge':
+    'Le dimensioni dell’immagine non possono superare {size} px. Riducile e riprova.',
+  'image.modelUnsupported':
+    'Il modello corrente non supporta le immagini. Scegli un modello compatibile.',
+  'image.sendFailed': 'Invio immagine non riuscito ({reason}). Aggiungila di nuovo e riprova.',
+  'file.pending': 'File da inviare',
+  'file.remove': 'Rimuovi file {name}',
+  'file.uploading': 'Caricamento…',
+  'file.uploadFailed': 'Caricamento non riuscito. Seleziona per riprovare.',
+  'file.retry': 'Riprova a caricare {name}',
+  'file.stillUploading': 'Attendi il completamento del caricamento prima di inviare',
+  'file.sessionUnavailable': 'Sessione non disponibile; impossibile caricare il file',
+  'file.notStaged': 'Il file non è stato caricato. Aggiungilo di nuovo e riprova.',
+  'file.label': 'File',
+  'context.aria': 'Contesto utilizzato: {percent}',
+  'context.used': 'Contesto utilizzato',
+  'context.system': 'Prompt di sistema',
+  'context.tools': 'Definizioni degli strumenti',
+  'context.messages': 'Messaggi della chat',
+  'settings.enter.title': 'Invio durante l’esecuzione',
+  'settings.enter.description':
+    'Comportamento di Invio e del pulsante di invio mentre l’agente lavora; Cmd/Ctrl+Invio usa l’altra modalità',
+  'settings.enter.queue': 'Accoda',
+  'settings.enter.steer': 'Intervieni',
+} satisfies Record<ConversationKey, string>

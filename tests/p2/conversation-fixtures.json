@@ -1,0 +1,13 @@
+[
+  "packages/client/ui-chat/tests/conversation.client.spec.ts",
+  "packages/client/ui-chat/tests/event-projection.client.spec.ts",
+  "packages/client/ui-chat/tests/process-groups.client.spec.ts",
+  "packages/client/ui-chat/tests/conversation-node-definitions.client.spec.ts",
+  "packages/client/ui-chat/tests/turn-metrics.client.spec.ts",
+  "packages/client/ui-chat/tests/chat-node-source.client.spec.ts",
+  "packages/client/ui-chat/tests/chat-node-bottom.client.spec.ts",
+  "packages/client/ui-chat/tests/tool-call-tree.client.spec.ts",
+  "packages/client/ui-conversation/tests/conversation-assembler.client.spec.ts",
+  "packages/client/ui-chat/tests/chat-store.client.spec.ts",
+  "packages/client/ui-chat/tests/chat-scroll-overflow.client.spec.ts"
+]

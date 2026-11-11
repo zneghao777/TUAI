@@ -1,0 +1,569 @@
+diff --git a/packages/api/gateway/src/index.ts b/packages/api/gateway/src/index.ts
+index 878c77c..a23e616 100644
+--- a/packages/api/gateway/src/index.ts
++++ b/packages/api/gateway/src/index.ts
+@@ -210,6 +210,13 @@ export class TypertGatewayError extends RemoteError<TypertGatewayErrorCode> {
+  * @typert service typertGateway
+  */
+ export class TypertGatewayService extends Service implements TypertGateway {
++  private readonly admissionGuards = new Set<(request: Pick<InvokeRemoteRequest, 'namespace' | 'method' | 'args'>) => void>()
++
++  /** Lifecycle admission is independent of caller authorization and activates no receiver. */
++  guard(check: (request: Pick<InvokeRemoteRequest, 'namespace' | 'method' | 'args'>) => void): () => void {
++    this.admissionGuards.add(check)
++    return () => { this.admissionGuards.delete(check) }
++  }
+   static inject = ['typert', 'remoteAccess']
+   static Config: z<Config> = z.object({
+     websocketHeartbeatIntervalMs: z.number().step(1).min(1).max(MAX_TIMER_DELAY_MS)
+@@ -789,6 +796,8 @@ export class TypertGatewayService extends Service implements TypertGateway {
+     const descriptor = this.resolveDescriptor(request.namespace, request.method, endpoint)
+     assertExactArguments(request.args, descriptor, endpoint)
+     const validated = validateArguments(descriptor, request.args, endpoint)
++    for (const check of this.admissionGuards)
++      check({ namespace: request.namespace, method: request.method, args: validated })
+     // Access precedes lookup resolution, so a refused call activates nothing.
+     // oxlint-disable-next-line typescript/no-unnecessary-condition -- other packages merge non-owner kinds into PrincipalMap.
+     if (request.peer.principal.kind !== 'owner') {
+diff --git a/packages/api/gateway/src/types.ts b/packages/api/gateway/src/types.ts
+index 83ae7f0..34396bd 100644
+--- a/packages/api/gateway/src/types.ts
++++ b/packages/api/gateway/src/types.ts
+@@ -146,6 +146,8 @@ export type TypertGatewayErrorCode =
+ 
+ /** Host dispatcher consumed by Connection adapters. */
+ export interface TypertGateway {
++  /** Register a product lifecycle guard applied to validated calls, including owner calls. */
++  guard(check: (request: Pick<InvokeRemoteRequest, 'namespace' | 'method' | 'args'>) => void): () => void
+   /** Carrier adapter shared by WebSocket and in-process transports. */
+   readonly wireStream: TypertGatewayWireStream
+ 
+diff --git a/packages/api/session-controller/src/index.ts b/packages/api/session-controller/src/index.ts
+index a7511c4..4581680 100644
+--- a/packages/api/session-controller/src/index.ts
++++ b/packages/api/session-controller/src/index.ts
+@@ -118,6 +118,8 @@ type ResolvedConfig = Config & { readonly listWorkSliceMs: number }
+ 
+ /** Host integrations replaceable by direct unit tests. */
+ export interface SessionControllerInternals {
++  /** Product lifecycle admission; unavailable Sessions cannot be listed or addressed over Remote. */
++  readonly sessionAvailable?: (sessionId: SessionId) => boolean
+   /** Host-owned placement of newly created Sessions. */
+   readonly prepareCreate?: (request: SessionCreateRequest) => Promise<SessionCreateRequest>
+   /** Native default-application handoff. */
+@@ -155,6 +157,7 @@ export class SessionController extends TypertRemoteService {
+   })
+ 
+   private readonly prepareCreate: SessionControllerInternals['prepareCreate']
++  private readonly sessionAvailable: (sessionId: SessionId) => boolean
+   private agents!: ApiSessionAgentController
+   private commands!: SessionCommandController
+   private controlState!: SessionControlController
+@@ -176,6 +179,7 @@ export class SessionController extends TypertRemoteService {
+   constructor(ctx: Context, config: Config, internals: SessionControllerInternals = {}) {
+     super(ctx, 'sessionController', { namespace: 'session' })
+     this.prepareCreate = internals.prepareCreate
++    this.sessionAvailable = internals.sessionAvailable ?? (() => true)
+     this.listWorkSliceMs = SessionController.Config(config).listWorkSliceMs
+     this.fileApplications = internals.fileApplications ?? nativeFileApplications
+     this.openFileApplication = internals.openFileApplication ?? openNativeFileApplication
+@@ -192,7 +196,7 @@ export class SessionController extends TypertRemoteService {
+     this.agents.initialize()
+     this.commands = new SessionCommandController(ctx, this.agents, process.cwd())
+     ctx.effect(() => ctx.fileUploads.registerAgentResolver(async (sessionId) => {
+-      const result = await this.agents.resolveAgent(sessionId)
++      const result = await this.resolveAgent(sessionId)
+       if ('error' in result) throw result.error
+       return result.agent
+     }), 'session-controller: file-upload Agent resolver')
+@@ -214,13 +218,14 @@ export class SessionController extends TypertRemoteService {
+     ctx.plugin(ArchivedSessionGate)
+ 
+     ctx.on('session/created', (session) => {
++      if (!this.sessionAvailable(session.id)) return
+       ctx.emit('api-session/added', this.listState.summaryFor(session))
+     })
+     ctx.on('session/disposed', (session) => {
+       ctx.emit('api-session/removed', session.id)
+     })
+     const publishAgentAvailability = ({ agent }: { agent: Agent }): undefined => {
+-      if (ctx.sessions.get(agent.id) === agent.session) {
++      if (this.sessionAvailable(agent.id) && ctx.sessions.get(agent.id) === agent.session) {
+         ctx.emit('api-session/added', this.listState.summaryFor(agent.session))
+       }
+     }
+@@ -257,6 +262,8 @@ export class SessionController extends TypertRemoteService {
+    * @returns the live Agent or the stable Session-domain failure.
+    */
+   resolveAgent(sessionId: SessionId): Promise<ApiSessionAgentResult> {
++    if (!this.sessionAvailable(sessionId))
++      throw new RemoteError('session/not-found', '该会话已删除', { sessionId })
+     return this.agents.resolveAgent(sessionId)
+   }
+ 
+@@ -269,7 +276,7 @@ export class SessionController extends TypertRemoteService {
+   @Remote('list')
+   async list(_request: SessionListRequest, signal: AbortSignal): Promise<SessionListValue> {
+     const items = await this.listState.list(signal)
+-    return { items: items.filter(item => this.ctx.remoteAccess.allows({ kind: 'session', id: item.sessionId })) }
++    return { items: items.filter(item => this.sessionAvailable(item.sessionId) && this.ctx.remoteAccess.allows({ kind: 'session', id: item.sessionId })) }
+   }
+ 
+   /**
+@@ -283,7 +290,7 @@ export class SessionController extends TypertRemoteService {
+   @Remote('search')
+   async search(request: SessionSearchRequest, signal: AbortSignal): Promise<SessionSearchValue> {
+     const result = await this.listState.search(request.query, signal)
+-    return { ...result, items: result.items.filter(item => this.ctx.remoteAccess.allows({ kind: 'session', id: item.sessionId })) }
++    return { ...result, items: result.items.filter(item => this.sessionAvailable(item.sessionId) && this.ctx.remoteAccess.allows({ kind: 'session', id: item.sessionId })) }
+   }
+ 
+   /**
+@@ -595,12 +602,12 @@ export class SessionController extends TypertRemoteService {
+       switch (frame.type) {
+         case 'baseline': {
+           const projections = Object.fromEntries(Object.entries(frame.value.projections)
+-            .filter(([sessionId]) => this.ctx.remoteAccess.allows({ kind: 'session', id: sessionId as SessionId })))
++            .filter(([sessionId]) => this.sessionAvailable(sessionId as SessionId) && this.ctx.remoteAccess.allows({ kind: 'session', id: sessionId as SessionId })))
+           yield { type: 'baseline', value: { ...frame.value, projections } }
+           break
+         }
+         case 'projection':
+-          if (this.ctx.remoteAccess.allows({ kind: 'session', id: frame.sessionId })) yield frame
++          if (this.sessionAvailable(frame.sessionId) && this.ctx.remoteAccess.allows({ kind: 'session', id: frame.sessionId })) yield frame
+           break
+         /* v8 ignore next -- closed control-frame union. */
+         default:
+diff --git a/packages/client/ui-chat/src/client/apply.ts b/packages/client/ui-chat/src/client/apply.ts
+index f127442..38e3faa 100644
+--- a/packages/client/ui-chat/src/client/apply.ts
++++ b/packages/client/ui-chat/src/client/apply.ts
+@@ -86,6 +86,7 @@ export const inject = [
+ export interface ChatHostActions {
+   /** Hide accounting surfaces while retaining statistics and timing. */
+   showUsage?: boolean
++  allowFork?: boolean
+   openFile(sessionId: SessionId, path: string, options?: import('./contract/slots.ts').OpenFileOptions): Promise<void>
+   openSession(sessionId: SessionId): void
+ }
+@@ -314,7 +315,7 @@ export function mountChat(ctx: Context, actions: ChatHostActions): void {
+             },
+             read: () => chatScrollPositions.get(sessionId) ?? null,
+           },
+-          forkAt: (seq) => {
++          forkAt: actions.allowFork === false ? undefined : (seq) => {
+             const turn = [...chat.getSnapshot().timeline.turns.values()].find(turn => turn.end?.seq === seq)
+             const messageId = turn?.data.get('turn-tail')?.closing?.finalNode.messageId
+             ctx.sessions.fork({ sessionId, atSeq: seq, increaseTitle: true, onCreated: (childId) => {
+diff --git a/packages/client/ui-chat/src/client/chat/TurnTailNodeView.tsx b/packages/client/ui-chat/src/client/chat/TurnTailNodeView.tsx
+index c29b831..a86e255 100644
+--- a/packages/client/ui-chat/src/client/chat/TurnTailNodeView.tsx
++++ b/packages/client/ui-chat/src/client/chat/TurnTailNodeView.tsx
+@@ -67,7 +67,7 @@ export const TurnTailNodeView = memo(function TurnTailNodeView({
+         clock="end"
+         // The branch action owns boundary resolution: it sends the real
+         // turn/end seq it already has, and the Host cuts exactly there.
+-        onBranch={forkAllowed ? () => { forkAt(data.seq) } : undefined}
++        onBranch={forkAllowed && forkAt !== undefined ? () => { forkAt(data.seq) } : undefined}
+         branchUnavailable={data.branchUnavailable || hasLaterChatNode}
+         className={css.actions}
+         extraActions={assistantActions}
+diff --git a/packages/client/ui-chat/src/client/contract/slots.ts b/packages/client/ui-chat/src/client/contract/slots.ts
+index 3f62fa0..f52c724 100644
+--- a/packages/client/ui-chat/src/client/contract/slots.ts
++++ b/packages/client/ui-chat/src/client/contract/slots.ts
+@@ -216,7 +216,7 @@ export interface ChatNodeOwnerProps {
+   cwd?: string | undefined
+   openFile: (path: string, options?: OpenFileOptions) => void
+   inspectCall: ((callId: ToolCallId) => void) | undefined
+-  forkAt: (seq: number) => void
++  forkAt: ((seq: number) => void) | undefined
+   /** Session-authorized image loader supplied by the Chat view. */
+   loadImage: MessageImageLoader
+   fileMentions: (owner: TurnTailOwnerProps) => MarkdownFileMentions | undefined
+@@ -329,7 +329,7 @@ export interface ChatViewInjected {
+     save: (position: ChatScrollPosition | null) => void
+     read: () => ChatScrollPosition | null
+   }
+-  forkAt: (seq: number) => void
++  forkAt: ((seq: number) => void) | undefined
+   fileMentions: (owner: TurnTailOwnerProps) => MarkdownFileMentions | undefined
+ }
+ 
+diff --git a/packages/client/ui-chat/src/client/locale.ts b/packages/client/ui-chat/src/client/locale.ts
+index 6f0e6ed..5ca9bef 100644
+--- a/packages/client/ui-chat/src/client/locale.ts
++++ b/packages/client/ui-chat/src/client/locale.ts
+@@ -86,8 +86,8 @@ export const zh = {
+   'chat.loadError': '历史加载失败：{message}（{code}）',
+   'chat.loadOlder': '加载更早',
+   'chat.toBottom': '回到底部',
+-  'chat.deepDiving': '深度求索中',
+-  'chat.deepDivingFor': '深度求索中，用时 {duration} ···',
++  'chat.deepDiving': '正在思考',
++  'chat.deepDivingFor': '正在思考，用时 {duration} ···',
+   'chat.turnNavigation.label': '轮次导航',
+   'chat.turnNavigation.jump': '跳转到第 {turn} 轮',
+   'chat.turnNavigation.jumpLoad': '加载并跳转到第 {turn} 轮',
+diff --git a/packages/client/ui-chat/tests/chat-view.client.spec.tsx b/packages/client/ui-chat/tests/chat-view.client.spec.tsx
+index f17eb0f..2e4fba4 100644
+--- a/packages/client/ui-chat/tests/chat-view.client.spec.tsx
++++ b/packages/client/ui-chat/tests/chat-view.client.spec.tsx
+@@ -1884,7 +1884,7 @@ describe('ChatView', () => {
+     expect(writeText).toHaveBeenCalledWith('interrupt now')
+     expect(within(pendingBubble as HTMLElement).queryByRole('button', { name: '在新对话中分支' })).toBeNull()
+     expect(turnProcessControl(view.container)).toBeNull()
+-    expect(runningContent(view.container)?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(runningContent(view.container)?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     // The status stays on the running Turn's tail; the steering waiting for the next Step follows it.
+     expect(view.getByRole('status').compareDocumentPosition(view.getByText('interrupt now'))
+       & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
+@@ -2718,7 +2718,7 @@ describe('ChatView', () => {
+     const view = render(<h.ChatView {...h.props} />)
+     expect(renderedFlowKinds(view.container)).toEqual(['user', 'turn-process'])
+     expect(turnProcessControl(view.container)).toBeNull()
+-    expect(runningContent(view.container)?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(runningContent(view.container)?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     expect(view.container.querySelector('[data-chat-flow-kind="system-prompt"]')).toBeNull()
+ 
+     act(() => {
+@@ -2865,7 +2865,7 @@ describe('ChatView', () => {
+     })
+     const view = render(<h.ChatView {...h.props} />)
+     expect(turnProcessControl(view.container)).toBeNull()
+-    expect(runningContent(view.container)?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(runningContent(view.container)?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     const processRow = view.getByText('inspect').closest('[data-chat-flow-kind="assistant-step"]') as HTMLElement
+     expect(processRow.getAttribute('hidden')).toBeNull()
+ 
+@@ -3666,9 +3666,9 @@ describe('ChatView', () => {
+     const view = render(<h.ChatView {...h.props} />)
+     expect(view.getByTestId('tool-seat-r1')).toBeTruthy()
+     expect(h.toolOwners[0]?.block).toMatchObject({ callId: 'r1', argsRaw: '{"command":"cmd-r1"}' })
+-    expect(view.getByRole('status').textContent).toBe('深度求索中')
++    expect(view.getByRole('status').textContent).toBe('正在思考')
+     expect(turnProcessControl(view.container)).toBeNull()
+-    expect(runningContent(view.container)?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(runningContent(view.container)?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+   }))
+ 
+   it('keeps the Tool renderer mounted when a running call settles into log order', () => {
+@@ -3728,9 +3728,9 @@ describe('ChatView', () => {
+     const view = render(<h.ChatView {...h.props} />)
+     const status = view.getByRole('status')
+     const content = runningContent(view.container)!
+-    expect(content.textContent).toMatch(/^深度求索中，用时 \d+分\d+秒 ···$/)
++    expect(content.textContent).toMatch(/^正在思考，用时 \d+分\d+秒 ···$/)
+     expect(turnProcessControl(view.container)).toBeNull()
+-    expect(status.textContent).toBe('深度求索中')
++    expect(status.textContent).toBe('正在思考')
+     expect(status.getAttribute('aria-live')).toBe('polite')
+     expect(status.getAttribute('aria-atomic')).toBe('true')
+     expect(content.closest('[aria-live]')).toBeNull()
+@@ -3743,23 +3743,23 @@ describe('ChatView', () => {
+         role: 'user', source: { kind: 'user' },
+       }] } })
+     })
+-    expect(content.textContent).toMatch(/^深度求索中，用时 \d+分\d+秒 ···$/)
++    expect(content.textContent).toMatch(/^正在思考，用时 \d+分\d+秒 ···$/)
+     const beforeTick = content.textContent
+     act(() => { vi.advanceTimersByTime(2_000) })
+-    expect(content.textContent).toMatch(/^深度求索中，用时 \d+分\d+秒 ···$/)
++    expect(content.textContent).toMatch(/^正在思考，用时 \d+分\d+秒 ···$/)
+     expect(content.textContent).not.toBe(beforeTick)
+     expect(view.getByRole('status')).toBe(status)
+-    expect(status.textContent).toBe('深度求索中')
++    expect(status.textContent).toBe('正在思考')
+     act(() => {
+       h.setSession({ testInbox: { 'next-turn': [], 'next-step': [] } })
+       h.setChat({ nodes: [trigger, { ...steering(2, 'also', 1), time: 128_000 }] })
+     })
+     expect(runningContent(view.container)).toBe(content)
+-    expect(content.textContent).toMatch(/^深度求索中，用时 \d+分\d+秒 ···$/)
++    expect(content.textContent).toMatch(/^正在思考，用时 \d+分\d+秒 ···$/)
+     expect(view.getByText('also').closest('[data-pending-steering]')).toBeNull()
+     act(() => { vi.advanceTimersByTime(1_000) })
+-    expect(content.textContent).toMatch(/^深度求索中，用时 \d+分\d+秒 ···$/)
+-    expect(status.textContent).toBe('深度求索中')
++    expect(content.textContent).toMatch(/^正在思考，用时 \d+分\d+秒 ···$/)
++    expect(status.textContent).toBe('正在思考')
+     view.unmount()
+     expect(vi.getTimerCount()).toBe(0)
+   }))
+@@ -3771,15 +3771,15 @@ describe('ChatView', () => {
+     )
+     const view = render(<h.ChatView {...h.props} />)
+     const content = runningContent(view.container)!
+-    expect(content.textContent).toBe('深度求索中，用时 9秒 ···')
++    expect(content.textContent).toBe('正在思考，用时 9秒 ···')
+     act(() => { h.setConnection('connecting') })
+     act(() => { vi.advanceTimersByTime(5_000) })
+-    expect(content.textContent).toBe('深度求索中，用时 9秒 ···')
++    expect(content.textContent).toBe('正在思考，用时 9秒 ···')
+     act(() => { h.setConnection('disconnected') })
+     act(() => { vi.advanceTimersByTime(5_000) })
+-    expect(content.textContent).toBe('深度求索中，用时 9秒 ···')
++    expect(content.textContent).toBe('正在思考，用时 9秒 ···')
+     act(() => { h.setConnection('connected') })
+-    expect(content.textContent).toBe('深度求索中，用时 19秒 ···')
++    expect(content.textContent).toBe('正在思考，用时 19秒 ···')
+   }))
+ 
+   it('the running clock reads hours once the turn passes an hour', withClock(3_600_000, () => {
+@@ -3791,14 +3791,14 @@ describe('ChatView', () => {
+     )
+     const view = render(<h.ChatView {...h.props} />)
+     const content = runningContent(view.container)!
+-    expect(content.textContent).toMatch(/^深度求索中，用时 \d+分\d+秒 ···$/)
++    expect(content.textContent).toMatch(/^正在思考，用时 \d+分\d+秒 ···$/)
+     act(() => { vi.advanceTimersByTime(1_000) })
+-    expect(content.textContent).toMatch(/^深度求索中，用时 \d+小时\d+分\d+秒 ···$/)
++    expect(content.textContent).toMatch(/^正在思考，用时 \d+小时\d+分\d+秒 ···$/)
+     const hourlyText = content.textContent
+     act(() => { vi.advanceTimersByTime(303_000) })
+-    expect(content.textContent).toMatch(/^深度求索中，用时 \d+小时\d+分\d+秒 ···$/)
++    expect(content.textContent).toMatch(/^正在思考，用时 \d+小时\d+分\d+秒 ···$/)
+     expect(content.textContent).not.toBe(hourlyText)
+-    expect(view.getByRole('status').textContent).toBe('深度求索中')
++    expect(view.getByRole('status').textContent).toBe('正在思考')
+     view.unmount()
+     expect(vi.getTimerCount()).toBe(0)
+   }))
+@@ -4581,8 +4581,8 @@ describe('ChatView', () => {
+     const column = view.container.querySelector('[data-chat-flow]')!
+     const status = column.querySelector('[data-chat-running]')
+     expect([...column.children].filter(child => !child.hasAttribute('data-text-interaction-surface')).at(-1)).toBe(status)
+-    expect(within(status as HTMLElement).getByRole('status').textContent).toBe('深度求索中')
+-    expect(status?.lastElementChild?.textContent).toBe('深度求索中')
++    expect(within(status as HTMLElement).getByRole('status').textContent).toBe('正在思考')
++    expect(status?.lastElementChild?.textContent).toBe('正在思考')
+     const icon = status?.querySelector('svg')?.parentElement
+     expect(icon?.getAttribute('aria-hidden')).toBe('true')
+     expect(icon?.firstElementChild?.tagName).toBe('SPAN')
+diff --git a/packages/client/ui-chat/tests/running-status.client.spec.tsx b/packages/client/ui-chat/tests/running-status.client.spec.tsx
+index c7e5f0f..6f4a6f0 100644
+--- a/packages/client/ui-chat/tests/running-status.client.spec.tsx
++++ b/packages/client/ui-chat/tests/running-status.client.spec.tsx
+@@ -26,14 +26,14 @@ function statusHarness(startTime?: number) {
+ describe('RunningStatus', () => {
+   it('waits for an open Turn start before allocating its clock', () => {
+     const view = statusHarness()
+-    expect(view.content()?.textContent).toBe('深度求索中')
++    expect(view.content()?.textContent).toBe('正在思考')
+     expect(vi.getTimerCount()).toBe(0)
+     view.set(1_000)
+-    expect(view.content()?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(view.content()?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     expect(view.content()?.querySelectorAll('[data-shimmer="true"]')).toHaveLength(1)
+     expect(vi.getTimerCount()).toBe(1)
+     view.set()
+-    expect(view.content()?.textContent).toBe('深度求索中')
++    expect(view.content()?.textContent).toBe('正在思考')
+     expect(vi.getTimerCount()).toBe(0)
+   })
+ 
+@@ -43,40 +43,40 @@ describe('RunningStatus', () => {
+     const status = view.getByRole('status')
+     const initialText = content?.textContent
+     act(() => { vi.advanceTimersByTime(2_000) })
+-    expect(content?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(content?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     expect(content?.textContent).not.toBe(initialText)
+     view.set(7_000)
+     expect(view.content()).toBe(content)
+-    expect(content?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(content?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     expect(vi.getTimerCount()).toBe(1)
+     const nextTurnText = content?.textContent
+     act(() => { vi.advanceTimersByTime(2_000) })
+-    expect(content?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(content?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     expect(content?.textContent).not.toBe(nextTurnText)
+     expect(view.getByRole('status')).toBe(status)
+-    expect(status.textContent).toBe('深度求索中')
++    expect(status.textContent).toBe('正在思考')
+     view.unmount()
+     expect(vi.getTimerCount()).toBe(0)
+   })
+ 
+   it('keeps the duration nonnegative when the start is ahead of the local clock', () => {
+     const view = statusHarness(6_000)
+-    expect(view.content()?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(view.content()?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     expect(view.content()?.textContent).not.toContain('-')
+     act(() => { vi.advanceTimersByTime(3_000) })
+-    expect(view.content()?.textContent).toMatch(/^深度求索中，用时 \d+秒 ···$/)
++    expect(view.content()?.textContent).toMatch(/^正在思考，用时 \d+秒 ···$/)
+     expect(view.content()?.textContent).not.toContain('-')
+   })
+ 
+   it('freezes the duration while paused and resumes from the Turn start', () => {
+     const view = statusHarness(1_000)
+-    expect(view.content()?.textContent).toBe('深度求索中，用时 4秒 ···')
++    expect(view.content()?.textContent).toBe('正在思考，用时 4秒 ···')
+     view.set(1_000, true)
+     expect(vi.getTimerCount()).toBe(0)
+     act(() => { vi.advanceTimersByTime(5_000) })
+-    expect(view.content()?.textContent).toBe('深度求索中，用时 4秒 ···')
++    expect(view.content()?.textContent).toBe('正在思考，用时 4秒 ···')
+     view.set(1_000)
+-    expect(view.content()?.textContent).toBe('深度求索中，用时 9秒 ···')
++    expect(view.content()?.textContent).toBe('正在思考，用时 9秒 ···')
+     expect(vi.getTimerCount()).toBe(1)
+   })
+ })
+diff --git a/packages/client/ui-conversation/src/client/locales.ts b/packages/client/ui-conversation/src/client/locales.ts
+index 45f11ed..bf12d8a 100644
+--- a/packages/client/ui-conversation/src/client/locales.ts
++++ b/packages/client/ui-conversation/src/client/locales.ts
+@@ -18,10 +18,10 @@ export const zh = {
+   'hint.goal': '输入目标，智能体将持续执行',
+   'hint.goal.active': '当前目标进行中。可输入 edit 修改 / pause 暂停 / resume 继续 / clear 清除',
+   'placeholder.plan': PLAN_NEXT_ACTION_ZH,
+-  'placeholder.default': '发消息或创建任务, / 调用指令, @ 文件或对话',
++  'placeholder.default': '和天质AI一起对话',
+   'placeholder.unavailable': '会话不可用',
+   'placeholder.parentOffline': '父会话已离线，无法继续发送；仍可停止当前运行',
+-  'placeholder.hero': '描述你想要构建的内容, / 调用指令, @ 文件或对话',
++  'placeholder.hero': '和天质AI一起对话',
+   'placeholder.workspace': '选择一个工作区开始',
+   'placeholder.steerQueue': 'Cmd/Ctrl+Enter 插话发送全部排队消息',
+   'input.commands': '添加文件或调用指令',
+diff --git a/packages/client/ui-layout/src/client/AppFrame.tsx b/packages/client/ui-layout/src/client/AppFrame.tsx
+index 5614947..6682bd0 100644
+--- a/packages/client/ui-layout/src/client/AppFrame.tsx
++++ b/packages/client/ui-layout/src/client/AppFrame.tsx
+@@ -33,7 +33,7 @@ export type AppFrameProps =
+ 
+ /** Center column grid item (session-body building block). */
+ function CenterColumn(props: { children?: ReactNode }) {
+-  return <div className={css.centerCol}>{props.children}</div>
++  return <div className={css.centerCol} data-center-col>{props.children}</div>
+ }
+ 
+ /** Subscribe to the main key without subscribing the column frame to each panel id. */
+@@ -259,6 +259,7 @@ export function AppFrame({
+     <div
+       ref={frameRef}
+       className={css.frame}
++      data-layout-frame
+       style={{
+         ...(document.documentElement.hasAttribute('data-windows-titlebar')
+           ? { '--dsh-windows-sidebar-width': `${cols.sidebar}px` } : {}),
+@@ -277,7 +278,7 @@ export function AppFrame({
+         useSessions={useSessions}
+         usePanelInfo={usePanelInfo}
+       />
+-      <div className={css.sidebarCol}>
++      <div className={css.sidebarCol} data-sidebar-col>
+         {sidebar}
+       </div>
+       <>
+diff --git a/packages/client/ui-workspace/src/client/contract/toast.ts b/packages/client/ui-workspace/src/client/contract/toast.ts
+index 94d3b51..2789af0 100644
+--- a/packages/client/ui-workspace/src/client/contract/toast.ts
++++ b/packages/client/ui-workspace/src/client/contract/toast.ts
+@@ -31,7 +31,7 @@ export type ToastEntryProps<P extends PropsRuntime<'workspace.toast'>> =
+   }>
+ /** Archive adapters additionally read the existing viewing store. */
+ export interface ArchiveToastInjected extends ToastDisplayInjected<'archived' | 'stoppedAndArchived'> {
+-  filterAction: (t: PropsLocale<'workspace'>['t'], dismiss: () => void) => NonNullable<ToastDisplay['actions']>[number]
++  filterAction: (t: PropsLocale<'workspace'>['t'], dismiss: () => void) => NonNullable<ToastDisplay['actions']>[number] | undefined
+ }
+ /** Archive adapter props with its injected action and viewing-state seats. */
+ export type ArchiveToastEntryProps =
+diff --git a/packages/client/ui-workspace/src/client/index.ts b/packages/client/ui-workspace/src/client/index.ts
+index 632e653..7e1df7e 100644
+--- a/packages/client/ui-workspace/src/client/index.ts
++++ b/packages/client/ui-workspace/src/client/index.ts
+@@ -114,7 +114,7 @@ export const inject = [
+  * framework's global hooks.
+  * @param ctx - client root context.
+  */
+-export interface Config { managedSessions?: boolean }
++export interface Config { managedSessions?: boolean; simpleChat?: boolean }
+ export function apply(ctx: Context, config: Config = {}): void {
+   const sessions = ctx.get('sessions') as ISessions
+   const workspaces = ctx.get('workspaces') as IWorkspaces
+@@ -218,7 +218,7 @@ export function apply(ctx: Context, config: Config = {}): void {
+     unarchiveSession,
+   })
+   installWorkspaceShortcuts(ctx, uiWorkspace, shortcutControls, archiveInjected().archiveSession,
+-    (reason) => { notify({ kind: 'shortcutForkFailed', reason }) })
++    (reason) => { notify({ kind: 'shortcutForkFailed', reason }) }, config.simpleChat)
+   const archiveConfirmInjected = (): SessionArchiveConfirmInjected => ({
+     hooks: { archiveRequest },
+     settleSessionArchive: () => { archiveRequest.set(null) },
+@@ -262,7 +262,7 @@ export function apply(ctx: Context, config: Config = {}): void {
+       openSession(sessionId)
+     },
+   }
+-  registerToasts(ctx, viewStore, toastActions)
++  registerToasts(ctx, viewStore, toastActions, config.simpleChat)
+   const rowToastInjected = (): Pick<RowToastInjected, 'hooks' | 'dismissToast'> => ({
+     hooks: { toast: rowToast },
+     dismissToast: () => { rowToast.set(null) },
+diff --git a/packages/client/ui-workspace/src/client/shortcuts.ts b/packages/client/ui-workspace/src/client/shortcuts.ts
+index ed9852b..6797ccb 100644
+--- a/packages/client/ui-workspace/src/client/shortcuts.ts
++++ b/packages/client/ui-workspace/src/client/shortcuts.ts
+@@ -61,6 +61,7 @@ export function installWorkspaceShortcuts(
+   controls: ReturnType<typeof createWorkspaceShortcutControls>,
+   archiveSession: (sessionId: SessionId) => void,
+   reportForkFailure: (reason: 'unavailable' | 'failed') => void,
++  simpleChat = false,
+ ): void {
+   const t = ctx.locale.bind('workspace')
+   const current = () => Object.values(ctx.sessions.list.getSnapshot().byId)
+@@ -80,9 +81,9 @@ export function installWorkspaceShortcuts(
+   }
+   register('session.new', () => t('session.new'), ['new session', 'new chat'], 'KeyN', ['primary'], ['primary', 'alt'],
+     () => ({ status: 'handled', run: () => { navigation.startSession() } }))
+-  register('session.search', () => t('search.sessions.aria'), ['search sessions'], 'KeyK', ['primary'], ['primary', 'alt'],
++  if (!simpleChat) register('session.search', () => t('search.sessions.aria'), ['search sessions'], 'KeyK', ['primary'], ['primary', 'alt'],
+     () => ({ status: 'handled', run: controls.search }))
+-  register('workspace.add', () => t('workspace.add'), ['add workspace', 'open folder'], 'KeyO', ['primary'], ['primary', 'alt'],
++  if (!simpleChat) register('workspace.add', () => t('workspace.add'), ['add workspace', 'open folder'], 'KeyO', ['primary'], ['primary', 'alt'],
+     () => {
+       const reason = addReason()
+       return reason === null ? { status: 'handled', run: controls.add } : { status: 'blocked', reason }
+@@ -93,7 +94,7 @@ export function installWorkspaceShortcuts(
+       ? { status: 'blocked', reason: t('shortcut.noSession') }
+       : { status: 'handled', run: () => { controls.rename(target.id, target.title?.trim() ?? '') } }
+   })
+-  register('session.fork', () => t('menu.fork'), ['fork session'], 'KeyF', ['primary', 'alt'], ['primary', 'shift'], () => {
++  if (!simpleChat) register('session.fork', () => t('menu.fork'), ['fork session'], 'KeyF', ['primary', 'alt'], ['primary', 'shift'], () => {
+     const target = current()
+     if (target === undefined) return { status: 'blocked', reason: t('shortcut.noSession') }
+     if (target.blank) return { status: 'blocked', reason: t('shortcut.noCompletedTurn') }
+diff --git a/packages/client/ui-workspace/src/client/toast/Toast.tsx b/packages/client/ui-workspace/src/client/toast/Toast.tsx
+index fea6c6d..01e58e1 100644
+--- a/packages/client/ui-workspace/src/client/toast/Toast.tsx
++++ b/packages/client/ui-workspace/src/client/toast/Toast.tsx
+@@ -22,9 +22,10 @@ export function ArchiveToastEntry(props: ArchiveToastEntryProps) {
+   const { dismissToast, display, filterAction, useStore, t, renderFactorySlot, seq } = props
+   const archivedVisible = useStore(state => (state.archivedFilter ?? 'default') !== 'default')
+   const fields = display(props, t, dismissToast)
++  const filter = archivedVisible ? undefined : filterAction(t, dismissToast)
+   return renderFactorySlot('workspace.toast.content', {
+     ...fields,
+-    actions: [...fields.actions ?? [], ...archivedVisible ? [] : [filterAction(t, dismissToast)]],
++    actions: [...fields.actions ?? [], ...filter === undefined ? [] : [filter]],
+     seq,
+     onDone: dismissToast,
+   })
+diff --git a/packages/client/ui-workspace/src/client/toast/register.ts b/packages/client/ui-workspace/src/client/toast/register.ts
+index efadbf8..a05506f 100644
+--- a/packages/client/ui-workspace/src/client/toast/register.ts
++++ b/packages/client/ui-workspace/src/client/toast/register.ts
+@@ -14,8 +14,9 @@ export function registerToasts(
+   ctx: Context,
+   viewStore: WorkspaceViewStoreHandle,
+   actions: Pick<RowToastActions, 'undoArchive' | 'showArchived' | 'openForkSource'>,
++  simpleChat = false,
+ ): void {
+-  const archiveFilterAction: ArchiveToastInjected['filterAction'] = (t, dismiss) => ({
++  const archiveFilterAction: ArchiveToastInjected['filterAction'] = (t, dismiss) => simpleChat ? undefined : ({
+     prefix: t('toast.archivedOr'), label: t('toast.archivedFilter'),
+     onClick: () => { dismiss(); actions.showArchived() },
+   })

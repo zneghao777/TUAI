@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TUAI — 消息排队与插话工作区</title>
+<!-- Tailwind CSS CDN with forms and container queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              graphite: '#282D35',
+              secondary: '#717783',
+              tertiary: '#9AA0AC',
+              canvas: '#F5F6F8',
+              canvasAlt: '#EDF0F4',
+              accent: '#536985',
+              accentActive: '#445A75',
+              borderLight: 'rgba(49, 61, 80, 0.08)',
+              glassBg: 'rgba(255, 255, 255, 0.78)',
+              glassBgHover: 'rgba(255, 255, 255, 0.92)',
+              pillBg: 'rgba(240, 243, 246, 0.85)'
+            }
+          },
+          boxShadow: {
+            'pearl-glass': '0 12px 36px -8px rgba(40, 48, 60, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.95)',
+            'subtle-card': '0 2px 8px rgba(35, 45, 60, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
+            'toast': '0 16px 32px rgba(25, 33, 44, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Glass & Ambient Styles -->
+<style data-purpose="frosted-glass-effects">
+    body {
+      background-color: #F5F6F8;
+      background-image:
+        radial-gradient(at 10% 12%, rgba(225, 233, 242, 0.7) 0px, transparent 55%),
+        radial-gradient(at 88% 85%, rgba(230, 235, 243, 0.6) 0px, transparent 60%);
+      color: #282D35;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .frosted-glass-panel {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(24px) saturate(110%);
+      -webkit-backdrop-filter: blur(24px) saturate(110%);
+      border: 1px solid rgba(49, 61, 80, 0.08);
+      box-shadow: 0 12px 36px -8px rgba(40, 48, 60, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    .frosted-glass-pill {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(49, 61, 80, 0.07);
+      box-shadow: 0 2px 6px rgba(40, 48, 60, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(113, 119, 131, 0.2);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(113, 119, 131, 0.35);
+    }
+  </style>
+<style data-purpose="ambient-interactive-glow">
+    #ambient-glow {
+      position: fixed;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(162, 185, 214, 0.25) 0%, rgba(200, 214, 230, 0.08) 50%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.6s ease;
+      opacity: 0;
+      filter: blur(20px);
+    }
+  </style>
+<!-- END: Custom Glass & Ambient Styles -->
+</head>
+<body class="flex h-screen w-screen overflow-hidden select-none">
+<!-- Interactive Ambient Glow Follower -->
+<div aria-hidden="true" id="ambient-glow"></div>
+<!-- Toast Notification Container -->
+<div class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 pointer-events-none opacity-0 translate-y-[-12px]" data-purpose="toast-feedback" id="toast-container">
+<div class="frosted-glass-panel px-4 py-2.5 rounded-full shadow-toast flex items-center space-x-2 text-xs text-brand-graphite font-medium border border-blue-100">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span id="toast-text">已转达当前执行，模型将尽量在下一步纳入</span>
+</div>
+</div>
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-64 h-full flex flex-col justify-between py-4 px-3.5 border-r border-[rgba(49,61,80,0.06)] bg-[rgba(255,255,255,0.45)] backdrop-blur-xl relative z-10" data-purpose="primary-sidebar">
+<!-- Top Brand & Header -->
+<div>
+<div class="flex items-center justify-between px-2 mb-4">
+<div class="flex items-center space-x-2.5">
+<!-- 4-point Star Logo -->
+<div class="w-7 h-7 rounded-lg bg-brand-canvasAlt/90 flex items-center justify-center border border-[rgba(49,61,80,0.06)] text-brand-accent">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+</div>
+<div>
+<div class="text-[13px] font-semibold text-brand-graphite tracking-tight leading-none">TUAI</div>
+<div class="text-[10px] text-brand-secondary mt-0.5 leading-none">个人工作区 · 已连接</div>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-brand-secondary hover:text-brand-graphite hover:bg-white/70 transition-colors" title="收起边栏">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect>
+<line x1="9" x2="9" y1="3" y2="21"></line>
+</svg>
+</button>
+</div>
+<!-- New Chat Button -->
+<button class="w-full h-9 mb-3 rounded-xl border border-[rgba(49,61,80,0.07)] bg-white/70 hover:bg-white/95 text-brand-graphite text-xs font-medium flex items-center justify-between px-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all group">
+<div class="flex items-center space-x-2">
+<svg class="w-3.5 h-3.5 text-brand-secondary group-hover:text-brand-graphite transition-colors" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+<span>新会话</span>
+</div>
+<span class="text-[10px] text-brand-tertiary bg-gray-100/80 px-1.5 py-0.5 rounded font-mono">⌘N</span>
+</button>
+<!-- Search Input -->
+<div class="relative mb-3">
+<svg class="w-3.5 h-3.5 absolute left-3 top-2.5 text-brand-tertiary" fill="none" stroke="currentColor" stroke-width="1.7" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+<input class="w-full h-8 pl-8 pr-3 text-xs bg-[rgba(235,238,242,0.6)] focus:bg-white text-brand-graphite placeholder-brand-tertiary rounded-lg border-transparent focus:border-[rgba(83,105,133,0.3)] focus:ring-0 transition-all outline-none" placeholder="搜索会话" type="text"/>
+</div>
+<!-- Folder Accordion -->
+<div class="mb-3">
+<button class="w-full flex items-center justify-between px-2 py-1.5 text-xs text-brand-secondary hover:text-brand-graphite rounded-lg transition-colors">
+<div class="flex items-center space-x-2">
+<svg class="w-3.5 h-3.5 text-brand-secondary" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+<span>个人工作区</span>
+</div>
+<svg class="w-3 h-3 text-brand-tertiary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+<!-- History Section -->
+<div class="space-y-4">
+<div>
+<div class="px-2 text-[10px] font-medium text-brand-tertiary mb-1">今天</div>
+<!-- Active Conversation -->
+<a class="w-full flex items-center space-x-2.5 px-2.5 py-2 rounded-xl text-xs font-medium text-brand-graphite bg-white/95 border border-[rgba(49,61,80,0.08)] shadow-[0_1px_4px_rgba(0,0,0,0.03)] transition-all" href="#">
+<svg class="w-3.5 h-3.5 text-brand-accent flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">项目资料整理</span>
+</a>
+<a class="w-full flex items-center space-x-2.5 px-2.5 py-1.5 mt-0.5 rounded-lg text-xs text-brand-secondary hover:text-brand-graphite hover:bg-white/60 transition-all" href="#">
+<svg class="w-3.5 h-3.5 text-brand-tertiary flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">周末短途旅行</span>
+</a>
+</div>
+<div>
+<div class="px-2 text-[10px] font-medium text-brand-tertiary mb-1">更早</div>
+<a class="w-full flex items-center space-x-2.5 px-2.5 py-1.5 rounded-lg text-xs text-brand-secondary hover:text-brand-graphite hover:bg-white/60 transition-all" href="#">
+<svg class="w-3.5 h-3.5 text-brand-tertiary flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">一周饮食安排</span>
+</a>
+<a class="w-full flex items-center space-x-2.5 px-2.5 py-1.5 mt-0.5 rounded-lg text-xs text-brand-secondary hover:text-brand-graphite hover:bg-white/60 transition-all" href="#">
+<svg class="w-3.5 h-3.5 text-brand-tertiary flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">读书笔记整理</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Sidebar Bottom Footer -->
+<div class="pt-3 border-t border-[rgba(49,61,80,0.06)] flex items-center justify-between">
+<button class="flex items-center space-x-2 px-2.5 py-1.5 rounded-lg text-xs text-brand-graphite hover:bg-white/80 transition-colors">
+<div class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px] text-brand-accent font-semibold">
+          ↑
+        </div>
+<span class="font-medium">个人空间</span>
+</button>
+<button class="p-1.5 rounded-lg text-brand-secondary hover:text-brand-graphite hover:bg-white/70 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative z-10" data-purpose="chat-workspace">
+<!-- Top Navigation Bar -->
+<header class="h-14 px-8 flex items-center justify-between border-b border-[rgba(49,61,80,0.06)] bg-[rgba(255,255,255,0.4)] backdrop-blur-md">
+<div class="flex items-center space-x-2">
+<h1 class="text-sm font-semibold text-brand-graphite">项目资料整理</h1>
+<div class="flex items-center space-x-1.5 text-xs text-brand-secondary pl-2 border-l border-gray-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="text-[11px]">个人工作区 · 已连接</span>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<!-- Source Attachment Badge -->
+<button class="frosted-glass-pill px-3 py-1 rounded-full text-xs text-brand-secondary hover:text-brand-graphite flex items-center space-x-1.5 transition-colors">
+<svg class="w-3.5 h-3.5 text-brand-secondary" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+</svg>
+<span>来源文件 (1)</span>
+</button>
+<button class="p-1.5 rounded-lg text-brand-secondary hover:text-brand-graphite hover:bg-white/60 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<line x1="4" x2="4" y1="21" y2="14"></line>
+<line x1="4" x2="4" y1="10" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="12"></line>
+<line x1="12" x2="12" y1="8" y2="3"></line>
+<line x1="20" x2="20" y1="21" y2="16"></line>
+<line x1="20" x2="20" y1="12" y2="3"></line>
+<line x1="1" x2="7" y1="14" y2="14"></line>
+<line x1="9" x2="15" y1="8" y2="8"></line>
+<line x1="17" x2="23" y1="16" y2="16"></line>
+</svg>
+</button>
+<button class="p-1.5 rounded-lg text-brand-secondary hover:text-brand-graphite hover:bg-white/60 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="1"></circle>
+<circle cx="19" cy="12" r="1"></circle>
+<circle cx="5" cy="12" r="1"></circle>
+</svg>
+</button>
+</div>
+</header>
+<!-- Scrollable Conversation Feed -->
+<div class="flex-1 overflow-y-auto px-4 py-6" data-purpose="chat-stream-history" id="messages-container">
+<div class="max-w-[760px] mx-auto space-y-7">
+<!-- Timestamp -->
+<div class="text-center">
+<span class="inline-block text-[11px] text-brand-tertiary bg-white/50 border border-[rgba(49,61,80,0.05)] px-3 py-1 rounded-full backdrop-blur-sm">
+            今天 14:32
+          </span>
+</div>
+<!-- User Message Group -->
+<div class="flex flex-col items-end space-y-2">
+<div class="frosted-glass-pill px-4 py-2.5 rounded-2xl rounded-tr-sm text-[13px] text-brand-graphite bg-white/90 shadow-subtle-card leading-relaxed">
+            帮我整理这份项目资料，列出重点和下一步需要确认的事。
+          </div>
+<!-- Uploaded File Badge -->
+<div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/70 border border-[rgba(49,61,80,0.06)] text-xs text-brand-graphite shadow-sm">
+<svg class="w-3.5 h-3.5 text-brand-secondary" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+</svg>
+<span class="font-medium text-[11px]">项目资料.pdf</span>
+<span class="text-[10px] text-brand-tertiary">2.4 MB</span>
+</div>
+</div>
+<!-- AI Assistant Streaming Message -->
+<div class="flex items-start space-x-3.5">
+<!-- Assistant Avatar -->
+<div class="w-7 h-7 rounded-xl bg-white/90 border border-[rgba(49,61,80,0.07)] flex items-center justify-center text-brand-accent shadow-sm flex-shrink-0 mt-0.5">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+</div>
+<div class="flex-1 space-y-3.5 text-[13px] text-brand-graphite leading-relaxed">
+<p class="font-medium text-brand-graphite">好的，正在结合资料内容梳理主要脉络。</p>
+<!-- Tool Invocation Status Capsule -->
+<div class="flex items-center justify-between px-3.5 py-2 rounded-xl bg-white/60 border border-[rgba(49,61,80,0.06)] text-xs">
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="text-brand-secondary">读取文件</span>
+<span class="text-brand-tertiary">·</span>
+<span class="text-brand-graphite font-medium">项目资料.pdf</span>
+<span class="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200/50 px-1.5 py-0.2 rounded">已完成</span>
+</div>
+<button class="text-brand-tertiary hover:text-brand-secondary flex items-center space-x-1 text-[11px]">
+<span>展开摘要</span>
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+<!-- Streaming Document Markdown Body -->
+<div class="space-y-3 pt-1 text-[13px] leading-relaxed">
+<p>我把资料归纳成了两部分：已经确定的安排，以及仍需你确认的事项。</p>
+<div>
+<p class="font-semibold text-brand-graphite mb-1.5">目前重点：</p>
+<ul class="space-y-1 list-disc list-inside text-brand-graphite/90 pl-1">
+<li>下周先完成资料补齐和方案评审</li>
+<li>核心方案已初步对齐</li>
+</ul>
+</div>
+<div>
+<p class="font-semibold text-brand-graphite mb-1.5">接下来需要确认：</p>
+<ol class="space-y-1 list-decimal list-inside text-brand-graphite/90 pl-1">
+<li>方案评审的具体时间安排；</li>
+<li>各业务模块的关键负责人及交接节点。</li>
+</ol>
+</div>
+</div>
+<!-- Realtime Streaming Control Ribbon -->
+<div class="flex items-center space-x-3 pt-2">
+<div class="flex items-center space-x-2 text-xs text-brand-secondary" id="stream-indicator">
+<div class="flex space-x-1 items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-accent animate-ping"></span>
+</div>
+<span class="text-brand-secondary font-medium" id="stream-status-text">正在整理...</span>
+</div>
+<button class="frosted-glass-pill px-2.5 py-1 rounded-lg text-xs text-brand-secondary hover:text-brand-graphite flex items-center space-x-1 border border-[rgba(49,61,80,0.08)] hover:bg-white transition-all shadow-sm" id="btn-stop-stream">
+<span class="inline-block w-2 h-2 rounded-[2px] border border-current"></span>
+<span id="btn-stop-text">停止</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BEGIN: LightWeightQueueAndInputArea -->
+<div class="w-full px-6 pb-6 pt-1" data-purpose="queue-and-composer-section">
+<div class="max-w-[760px] mx-auto space-y-2.5">
+<!-- ======================= 消息排队区 (轻量消息队列区 - 核心交互) ======================= -->
+<div class="space-y-1.5" data-purpose="message-queue-list" id="queue-container">
+<!-- Queue Item 1: IN EDITING MODE -->
+<div class="frosted-glass-pill px-3 py-2 rounded-2xl border border-[rgba(83,105,133,0.18)] bg-white/95 shadow-sm transition-all" data-state="editing" id="queue-item-1">
+<!-- View state container (Hidden when editing) -->
+<div class="queue-view-mode hidden items-center justify-between text-xs">
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+<span class="text-brand-tertiary">排队中 ·</span>
+<span class="queue-item-text font-medium text-brand-graphite">再补一份下周行动清单</span>
+</div>
+<div class="flex items-center space-x-2 text-[11px] text-brand-secondary">
+<button class="btn-queue-edit hover:text-brand-graphite">编辑</button>
+<span class="text-gray-300">|</span>
+<button class="btn-queue-remove hover:text-red-500">移除</button>
+</div>
+</div>
+<!-- Edit state container (Active) -->
+<div class="queue-edit-mode flex items-center space-x-2 text-xs">
+<div class="flex items-center space-x-1.5 flex-shrink-0 text-brand-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+<span class="text-[11px] text-brand-tertiary">编辑中:</span>
+</div>
+<input class="flex-1 py-0.5 px-2 text-xs bg-slate-50/90 border border-slate-200 rounded-lg text-brand-graphite focus:outline-none focus:border-brand-accent focus:bg-white" id="queue-input-1" type="text" value="再补一份下周行动清单"/>
+<div class="flex items-center space-x-1.5 flex-shrink-0 text-[11px]">
+<button class="px-2.5 py-1 bg-brand-accent text-white rounded-lg hover:bg-brand-accentActive font-medium shadow-xs transition-colors" id="btn-save-item-1">
+                  保存
+                </button>
+<button class="px-2 py-1 text-brand-secondary hover:text-brand-graphite rounded-lg transition-colors" id="btn-cancel-item-1">
+                  取消
+                </button>
+</div>
+</div>
+</div>
+<!-- Queue Item 2: STANDARD QUEUED ITEM -->
+<div class="frosted-glass-pill px-3 py-1.5 rounded-2xl border border-[rgba(49,61,80,0.06)] bg-white/75 hover:bg-white/90 shadow-sm transition-all" data-state="viewing" id="queue-item-2">
+<div class="queue-view-mode flex items-center justify-between text-xs">
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+<span class="text-brand-tertiary">排队中 ·</span>
+<span class="queue-item-text text-brand-graphite">按优先级排序</span>
+</div>
+<div class="flex items-center space-x-2 text-[11px] text-brand-secondary">
+<button class="btn-queue-edit hover:text-brand-graphite">编辑</button>
+<span class="text-gray-300">|</span>
+<button class="btn-queue-remove hover:text-red-500">移除</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ======================= 主输入框面板 (Main Input Glass Container) ======================= -->
+<div class="frosted-glass-panel rounded-3xl p-3 border border-[rgba(49,61,80,0.09)] shadow-pearl-glass bg-white/80 transition-all focus-within:bg-white/95 focus-within:border-[rgba(83,105,133,0.3)]">
+<!-- Textarea Draft -->
+<textarea class="w-full bg-transparent border-0 resize-none text-[13px] text-brand-graphite placeholder-brand-tertiary focus:ring-0 p-1.5 leading-relaxed outline-none" id="composer-textarea" placeholder="输入后续问题，或使用快捷指令..." rows="2">按紧急程度标红关键节点...</textarea>
+<!-- Input Footer Control Bar -->
+<div class="flex items-center justify-between pt-2 px-1">
+<!-- Left Badges & Selectors -->
+<div class="flex items-center space-x-2">
+<button class="p-1.5 text-brand-secondary hover:text-brand-graphite rounded-lg hover:bg-white/80 transition-colors" title="添加附件">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+</svg>
+</button>
+<!-- Model Selector Pill -->
+<button class="frosted-glass-pill px-2.5 py-1 rounded-full text-xs text-brand-graphite flex items-center space-x-1 hover:bg-white transition-colors border border-[rgba(49,61,80,0.06)]">
+<svg class="w-3 h-3 text-brand-accent" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+<span class="font-medium text-[11px]">DeepSeek</span>
+<svg class="w-2.5 h-2.5 text-brand-tertiary ml-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+<!-- Permission / Execution Confirmation Pill -->
+<button class="frosted-glass-pill px-2.5 py-1 rounded-full text-xs text-brand-secondary flex items-center space-x-1.5 hover:bg-white transition-colors border border-[rgba(49,61,80,0.06)]">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+<span class="text-[11px]">标准 · 操作需确认</span>
+<svg class="w-2.5 h-2.5 text-brand-tertiary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+<!-- Right Queue/Interrupt Trigger Buttons -->
+<div class="flex items-center space-x-2">
+<!-- Interrupt Button ("立即插话") -->
+<button class="px-3 py-1.5 rounded-xl text-xs font-medium text-brand-secondary hover:text-brand-graphite hover:bg-white/90 border border-transparent hover:border-[rgba(49,61,80,0.08)] transition-all flex items-center space-x-1.5" id="btn-interrupt" title="提交一条供当前执行采纳的补充；已接受不等于已经执行">
+<svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+<span>立即插话</span>
+</button>
+<!-- Queue Submit Button ("排队发送") -->
+<button class="px-4 py-1.5 rounded-xl text-xs font-medium text-white bg-brand-accent hover:bg-brand-accentActive shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 active:scale-[0.98]" id="btn-queue-send">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="8" x2="21" y1="6" y2="6"></line>
+<line x1="8" x2="21" y1="12" y2="12"></line>
+<line x1="8" x2="21" y1="18" y2="18"></line>
+<line x1="3" x2="3.01" y1="6" y2="6"></line>
+<line x1="3" x2="3.01" y1="12" y2="12"></line>
+<line x1="3" x2="3.01" y1="18" y2="18"></line>
+</svg>
+<span>排队发送</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: LightWeightQueueAndInputArea -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: Client Scripts -->
+<!-- Ambient Cursor Glow Controller -->
+<script>(()=>{const el=document.getElementById('ambient-glow');if(!el)return;const mq=matchMedia('(prefers-reduced-motion: reduce)');let x=0,y=0,tx=0,ty=0,raf=null,inside=false;Object.assign(el.style,{left:'0',top:'0',width:'220px',height:'220px',pointerEvents:'none',opacity:'0'});function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;inside=false;el.style.opacity='0';}function frame(){x+=(tx-x)*.12;y+=(ty-y)*.12;el.style.transform='translate3d('+(x-110)+'px,'+(y-110)+'px,0)';raf=inside&&(Math.abs(tx-x)>.1||Math.abs(ty-y)>.1)?requestAnimationFrame(frame):null;}window.addEventListener('pointermove',e=>{if(mq.matches||navigator.maxTouchPoints>0||e.pointerType==='touch')return;tx=e.clientX;ty=e.clientY;if(!inside){x=tx;y=ty;}inside=true;el.style.opacity='.65';if(raf===null)raf=requestAnimationFrame(frame);},{passive:true});document.addEventListener('mouseleave',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});mq.addEventListener('change',stop);})();</script>
+<!-- Queue and Stream Interactive Handlers -->
+<script>document.addEventListener('DOMContentLoaded',()=>{
+const $=id=>document.getElementById(id), box=$('queue-container'), draft=$('composer-textarea'), send=$('btn-queue-send'), steer=$('btn-interrupt'), stop=$('btn-stop-stream');
+document.getElementById('toast-container')?.remove();
+let items=[{id:1,text:'再补一份下周行动清单'},{id:2,text:'按优先级排序'}],nextId=3,editing=1,run='running',timer=null;
+const note=document.createElement('div');note.setAttribute('role','status');note.style.cssText='font-size:12px;color:#536985;min-height:20px;padding:4px 10px';box.before(note);
+const review=document.createElement('div');review.style.cssText='display:flex;gap:12px;font-size:11px;color:#717783;padding:2px 10px';review.textContent='状态演示：';box.before(review);
+function notice(t){note.textContent=t;}
+function button(t,fn){const b=document.createElement('button');b.type='button';b.textContent=t;b.style.cssText='border:0;background:transparent;color:#536985;padding:4px 7px;white-space:nowrap';b.onclick=fn;return b;}
+review.append(button('取用首项',()=>{if(!items.length)return notice('暂无可取用的排队消息');const used=items.shift();editing=null;render();notice('已开始处理：'+used.text+'。该项已离开队列，不能再编辑。');}),button('清空队列',()=>{items=[];editing=null;render();notice('队列已清空；当前执行仍保持原状态。');}),button('重置',()=>location.reload()));
+box.style.maxHeight='180px';box.style.overflowY='auto';
+function render(){box.replaceChildren();if(!items.length){const empty=document.createElement('div');empty.textContent='暂无排队消息';empty.style.cssText='padding:10px 14px;color:#717783;font-size:12px;background:#ffffffa8;border-radius:16px';box.append(empty);}for(const item of items){const row=document.createElement('div');row.dataset.queueId=item.id;row.style.cssText='display:flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid #313d5010;background:#ffffffbb;border-radius:16px;font-size:12px';if(editing===item.id){const input=document.createElement('input');input.value=item.text;input.setAttribute('aria-label','编辑排队消息');input.style.cssText='min-width:0;flex:1;border:1px solid #e0e5ed;border-radius:10px;padding:5px 9px;background:#f8fafc';const save=()=>{const text=input.value.trim();if(!text)return notice('排队内容不能为空。');item.text=text;editing=null;render();notice('排队消息已保存。');};row.append(input,button('保存',save),button('取消',()=>{editing=null;render();notice('已取消编辑，保留原内容。');}));input.onkeydown=e=>{if(e.isComposing)return;if(e.key==='Enter'){e.preventDefault();save();}if(e.key==='Escape'){editing=null;render();}};}else{const label=document.createElement('span');label.textContent='排队中 · '+item.text;label.style.cssText='flex:1;min-width:0;overflow-wrap:anywhere';row.append(label,button('编辑',()=>{editing=item.id;render();}),button('移除',()=>{items=items.filter(x=>x.id!==item.id);render();notice('已移除排队消息。');}));}box.append(row);}sync();}
+function sync(){const empty=!draft.value.trim();send.disabled=empty||run==='stopping';steer.disabled=empty||run!=='running';send.style.opacity=send.disabled?'.45':'1';steer.style.opacity=steer.disabled?'.45':'1';}
+send.onclick=()=>{const text=draft.value.trim();if(!text||run==='stopping')return;items.push({id:nextId++,text});draft.value='';render();notice('已接受并加入队列；尚未执行。');};
+steer.onclick=()=>{const text=draft.value.trim();if(!text||run!=='running')return;draft.value='';sync();notice('插话已接受，等待当前执行采纳；未加入普通队列。');};
+stop.onclick=()=>{if(run!=='running')return;run='stopping';stop.disabled=true;$('stream-status-text').textContent='正在停止…';$('btn-stop-text').textContent='停止中';sync();timer=setTimeout(()=>{run='stopped';$('stream-status-text').textContent='已停止';$('btn-stop-text').textContent='已停止';$('stream-indicator').querySelectorAll('.animate-ping').forEach(e=>e.classList.remove('animate-ping'));notice('当前执行已停止。已经发生的操作不会因此撤销；排队消息尚未处理。');sync();},500);};
+draft.addEventListener('input',sync);draft.addEventListener('keydown',e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(e.metaKey||e.ctrlKey)steer.click();else send.click();}});
+window.addEventListener('pagehide',()=>clearTimeout(timer));render();
+});</script>
+<!-- END: Client Scripts -->
+</body></html>

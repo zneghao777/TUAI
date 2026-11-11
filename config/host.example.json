@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "hostId": "example-host",
+  "profile": "production",
+  "credentialReferences": {
+    "deepseek": { "source": "environment", "name": "TUAI_SECRET_MODEL" }
+  }
+}

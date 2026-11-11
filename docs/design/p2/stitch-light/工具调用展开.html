@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TUAI — 工具调用展开</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pearl: {
+              50: '#FBFBFC',
+              100: '#F5F6F8',
+              200: '#EDF0F4',
+              300: '#E2E6EC',
+              400: '#CBD1DB',
+              500: '#A4ACB9',
+            },
+            graphite: {
+              DEFAULT: '#282D35',
+              secondary: '#717783',
+              tertiary: '#9AA0AC',
+              border: 'rgba(49, 61, 80, 0.08)',
+              hover: 'rgba(49, 61, 80, 0.04)',
+            },
+            slateMist: {
+              light: '#657B99',
+              DEFAULT: '#536985',
+              active: '#445A75',
+              bg: 'rgba(83, 105, 133, 0.08)',
+            },
+            sageSuccess: {
+              DEFAULT: '#369A6E',
+              bg: 'rgba(54, 154, 110, 0.1)',
+              border: 'rgba(54, 154, 110, 0.22)',
+            },
+            warnOrange: {
+              DEFAULT: '#E67E22',
+              bg: 'rgba(230, 126, 34, 0.1)',
+            },
+            failRed: {
+              DEFAULT: '#D9534F',
+              bg: 'rgba(217, 83, 79, 0.1)',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          boxShadow: {
+            'pearl-panel': '0 4px 20px -2px rgba(36, 46, 66, 0.04), 0 1px 3px rgba(36, 46, 66, 0.02)',
+            'pearl-popover': '0 12px 36px -4px rgba(36, 46, 66, 0.09), 0 2px 8px rgba(36, 46, 66, 0.04)',
+            'inner-white': 'inset 0 1px 0 rgba(255, 255, 255, 0.95)',
+            'recessed-soft': 'inset 0 1px 2px rgba(40, 45, 53, 0.03), 0 1px 0 rgba(255, 255, 255, 0.8)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Glass & Ambient Styles -->
+<style data-purpose="frosted-glass-system">
+    /* Frosted glass backdrop utilities */
+    .glass-surface {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(24px) saturate(110%);
+      -webkit-backdrop-filter: blur(24px) saturate(110%);
+      border: 1px solid rgba(49, 61, 80, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 24px -2px rgba(40, 50, 70, 0.04);
+    }
+
+    .glass-card-subtle {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(49, 61, 80, 0.06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(49, 61, 80, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    /* Ambient cursor glow orb */
+    #ambient-glow {
+      position: fixed;
+      width: 280px;
+      height: 280px;
+      margin-left: -140px;
+      margin-top: -140px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(147, 178, 214, 0.16) 0%, rgba(220, 230, 244, 0.08) 45%, rgba(245, 246, 248, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(83, 105, 133, 0.16);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(83, 105, 133, 0.28);
+    }
+  </style>
+<!-- END: Custom Glass & Ambient Styles -->
+</head>
+<body class="h-full bg-[#F5F6F8] text-graphite antialiased select-none font-sans overflow-hidden flex flex-row">
+<!-- Ambient Mouse Follower Light Layer -->
+<div aria-hidden="true" id="ambient-glow"></div>
+<!-- BEGIN: MainSidebar -->
+<aside class="w-[240px] shrink-0 h-full flex flex-col border-r border-[rgba(49,61,80,0.07)] bg-[#F5F6F8]/85 backdrop-blur-xl relative z-10 select-none" data-purpose="sidebar-navigation">
+<!-- Workspace Brand Header -->
+<div class="h-16 px-4 flex items-center justify-between border-b border-[rgba(49,61,80,0.05)]">
+<div class="flex items-center space-x-2.5">
+<!-- 4-point star brand glyph (linear 1.5px stroke) -->
+<div class="w-8 h-8 rounded-xl bg-white flex items-center justify-center shadow-inner-white border border-[rgba(49,61,80,0.08)] text-slateMist">
+<svg class="w-4 h-4 text-slateMist" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold tracking-tight text-graphite leading-tight">TUAI</span>
+<span class="text-[11px] text-graphite-secondary">个人工作区 · 已连接</span>
+</div>
+</div>
+<!-- Collapse Sidebar Button -->
+<button class="w-7 h-7 rounded-lg text-graphite-secondary hover:text-graphite hover:bg-[rgba(49,61,80,0.05)] flex items-center justify-center transition-colors" title="收起边栏">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<rect height="18" rx="2" width="18" x="3" y="3"></rect>
+<path d="M9 3v18"></path>
+</svg>
+</button>
+</div>
+<!-- Action Section: New Chat & Search -->
+<div class="p-3 space-y-2">
+<!-- New Chat Button -->
+<button class="w-full h-9 px-3 rounded-xl bg-white hover:bg-white/90 text-graphite font-medium text-xs flex items-center justify-between border border-[rgba(49,61,80,0.08)] shadow-[0_1px_2px_rgba(0,0,0,0.03)] hover:shadow transition-all group">
+<div class="flex items-center space-x-2">
+<svg class="w-3.5 h-3.5 text-graphite-secondary group-hover:text-graphite" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+<span>新会话</span>
+</div>
+<span class="text-[10px] font-mono text-graphite-tertiary border border-[rgba(49,61,80,0.1)] px-1.5 py-0.5 rounded bg-[#F8F9FA]">⌘N</span>
+</button>
+<!-- Session Search Bar -->
+<div class="relative">
+<svg class="w-3.5 h-3.5 absolute left-3 top-2.5 text-graphite-tertiary" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+<input class="w-full h-8 pl-8 pr-3 text-xs bg-[rgba(238,241,246,0.6)] hover:bg-[rgba(238,241,246,0.9)] focus:bg-white text-graphite placeholder-graphite-tertiary rounded-lg border border-[rgba(49,61,80,0.06)] focus:border-slateMist/40 focus:outline-none focus:ring-0 transition-colors" placeholder="搜索会话" type="text"/>
+</div>
+</div>
+<!-- Workspace Select Dropdown Trigger -->
+<div class="px-3 pb-1">
+<div class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-graphite hover:bg-[rgba(49,61,80,0.04)] cursor-pointer transition-colors">
+<div class="flex items-center space-x-2">
+<svg class="w-3.5 h-3.5 text-graphite-secondary" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="font-medium text-[12px]">个人工作区</span>
+</div>
+<svg class="w-3 h-3 text-graphite-tertiary" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+</div>
+<!-- History List (Scrollable) -->
+<div class="flex-1 overflow-y-auto px-3 py-2 space-y-4">
+<!-- Section: 今天 -->
+<div>
+<div class="px-2 pb-1.5 text-[11px] font-medium text-graphite-tertiary">今天</div>
+<div class="space-y-0.5">
+<!-- Active Item: 项目资料整理 -->
+<div class="w-full px-2.5 py-2 rounded-xl text-xs flex items-center space-x-2 bg-white text-graphite font-medium shadow-recessed-soft border border-[rgba(49,61,80,0.08)] cursor-pointer transition-all">
+<svg class="w-3.5 h-3.5 text-slateMist shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">项目资料整理</span>
+</div>
+<!-- Inactive Item -->
+<div class="w-full px-2.5 py-2 rounded-xl text-xs flex items-center space-x-2 text-graphite-secondary hover:text-graphite hover:bg-[rgba(49,61,80,0.04)] cursor-pointer transition-colors">
+<svg class="w-3.5 h-3.5 text-graphite-tertiary shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">周末短途旅行</span>
+</div>
+</div>
+</div>
+<!-- Section: 更早 -->
+<div>
+<div class="px-2 pb-1.5 text-[11px] font-medium text-graphite-tertiary">更早</div>
+<div class="space-y-0.5">
+<div class="w-full px-2.5 py-2 rounded-xl text-xs flex items-center space-x-2 text-graphite-secondary hover:text-graphite hover:bg-[rgba(49,61,80,0.04)] cursor-pointer transition-colors">
+<svg class="w-3.5 h-3.5 text-graphite-tertiary shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">一周饮食安排</span>
+</div>
+<div class="w-full px-2.5 py-2 rounded-xl text-xs flex items-center space-x-2 text-graphite-secondary hover:text-graphite hover:bg-[rgba(49,61,80,0.04)] cursor-pointer transition-colors">
+<svg class="w-3.5 h-3.5 text-graphite-tertiary shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">读书笔记整理</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Account/Settings Section -->
+<div class="p-3 border-t border-[rgba(49,61,80,0.06)] flex items-center justify-between">
+<div class="flex items-center space-x-2 px-1 text-xs text-graphite font-medium">
+<div class="w-6 h-6 rounded-full bg-slateMist/15 border border-slateMist/25 flex items-center justify-center text-slateMist text-[11px] font-semibold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M12 19V5M5 12l7-7 7 7"></path>
+</svg>
+</div>
+<span>个人空间</span>
+</div>
+<button class="w-7 h-7 rounded-lg text-graphite-secondary hover:text-graphite hover:bg-[rgba(49,61,80,0.06)] flex items-center justify-center transition-colors" title="工作区设置">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: MainSidebar -->
+<!-- BEGIN: MainChatWorkspace -->
+<main class="flex-1 flex flex-col h-full relative overflow-hidden bg-gradient-to-b from-[#F7F8FA] via-[#F4F5F8] to-[#EFF2F6]">
+<!-- Workspace Top Header Bar -->
+<header class="h-16 px-8 flex items-center justify-between border-b border-[rgba(49,61,80,0.06)] bg-white/50 backdrop-blur-md shrink-0 z-10">
+<!-- Title & Connection Status -->
+<div class="flex items-center space-x-3">
+<h1 class="text-sm font-semibold text-graphite tracking-tight">项目资料整理</h1>
+<div class="flex items-center space-x-1.5 text-xs text-graphite-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20"></span>
+<span class="text-[12px]">个人工作区 · 已连接</span>
+</div>
+</div>
+<!-- Top Right Action Controls -->
+<div class="flex items-center space-x-2">
+<button class="h-8 px-3 rounded-full bg-white border border-[rgba(49,61,80,0.08)] shadow-sm hover:shadow text-xs text-graphite flex items-center space-x-1.5 transition-all">
+<svg class="w-3.5 h-3.5 text-graphite-secondary" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+</svg>
+<span class="font-medium text-[12px]">来源文件 (1)</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-white/80 hover:bg-white border border-[rgba(49,61,80,0.08)] text-graphite-secondary hover:text-graphite flex items-center justify-center transition-all shadow-sm" title="参数配置">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<line x1="4" x2="4" y1="21" y2="14"></line>
+<line x1="4" x2="4" y1="10" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="12"></line>
+<line x1="12" x2="12" y1="8" y2="3"></line>
+<line x1="20" x2="20" y1="21" y2="16"></line>
+<line x1="20" x2="20" y1="12" y2="3"></line>
+<line x1="1" x2="7" y1="14" y2="14"></line>
+<line x1="9" x2="15" y1="8" y2="8"></line>
+<line x1="17" x2="23" y1="16" y2="16"></line>
+</svg>
+</button>
+<button class="w-8 h-8 rounded-full bg-white/80 hover:bg-white border border-[rgba(49,61,80,0.08)] text-graphite-secondary hover:text-graphite flex items-center justify-center transition-all shadow-sm" title="更多选项">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="1"></circle>
+<circle cx="19" cy="12" r="1"></circle>
+<circle cx="5" cy="12" r="1"></circle>
+</svg>
+</button>
+</div>
+</header>
+<!-- Scrollable Chat Stream Area -->
+<div class="flex-1 overflow-y-auto px-6 py-6 scroll-smooth z-10" id="chat-stream-container">
+<div class="max-w-[760px] mx-auto space-y-6">
+<!-- Timestamp Pill -->
+<div class="flex justify-center">
+<span class="text-[11px] font-medium text-graphite-tertiary px-2.5 py-0.5 rounded-full bg-white/50 border border-[rgba(49,61,80,0.05)]">今天 14:32</span>
+</div>
+<!-- BEGIN: UserMessageBlock -->
+<section class="flex flex-col items-end space-y-2" data-purpose="user-message-row">
+<!-- Text Bubble -->
+<div class="max-w-[560px] px-4 py-3 rounded-2xl bg-white text-graphite text-[13.5px] leading-relaxed shadow-[0_2px_12px_rgba(40,50,70,0.03)] border border-[rgba(49,61,80,0.08)]">
+            帮我整理这份项目资料，列出重点和下一步需要确认的事。
+          </div>
+<!-- Attached File Card Pill -->
+<div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/80 border border-[rgba(49,61,80,0.08)] shadow-sm text-xs text-graphite">
+<svg class="w-4 h-4 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+<span class="font-medium text-[12px]">项目资料.pdf</span>
+<span class="text-[11px] text-graphite-tertiary">2.4 MB</span>
+</div>
+</section>
+<!-- END: UserMessageBlock -->
+<!-- BEGIN: AssistantResponseBlock -->
+<section class="space-y-4 pt-1" data-purpose="assistant-message-row">
+<!-- Assistant Header & Intro -->
+<div class="flex items-start space-x-3">
+<!-- Brand Icon Avatar -->
+<div class="w-7 h-7 rounded-xl bg-white flex items-center justify-center shadow-inner-white border border-[rgba(49,61,80,0.08)] text-slateMist shrink-0 mt-0.5">
+<svg class="w-3.5 h-3.5 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.7" viewbox="0 0 24 24">
+<path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
+</svg>
+</div>
+<div class="text-[13.5px] text-graphite font-normal pt-0.5">
+              好的，正在结合资料内容梳理主要脉络。
+            </div>
+</div>
+<!-- CORE: Expanded Tool Call Component Container -->
+<div class="ml-10 space-y-2" data-purpose="expanded-tool-call-container">
+<!-- Tool Call Top Summary Banner (Interactive Toggle) -->
+<div class="w-full px-3.5 py-2 rounded-xl glass-pill flex items-center justify-between cursor-pointer hover:border-slateMist/30 transition-all select-none group" id="tool-summary-banner" onclick="toggleToolCardExpansion()">
+<div class="flex items-center space-x-2.5">
+<!-- Status Dot -->
+<span class="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20" id="summary-status-dot"></span>
+<span class="text-xs font-medium text-graphite">读取文件</span>
+<span class="text-xs text-graphite-secondary">·</span>
+<span class="text-xs text-graphite-secondary font-mono">项目资料.pdf</span>
+<!-- Pill Badge -->
+<span class="px-2 py-0.5 text-[11px] font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60" id="summary-badge-status">已完成</span>
+</div>
+<div class="flex items-center space-x-1 text-graphite-tertiary group-hover:text-graphite text-xs transition-colors">
+<span class="text-[11px]" id="tool-toggle-text">收起明细</span>
+<svg class="w-3.5 h-3.5 transform transition-transform duration-200 rotate-180" fill="none" id="tool-toggle-chevron" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+</div>
+<!-- Tool Call Detailed Frosted Panel (Expanded by Default) -->
+<div class="glass-surface rounded-2xl p-4 border border-[rgba(49,61,80,0.09)] space-y-3.5 transition-all duration-300" id="tool-detail-card">
+<!-- State Switcher Header: Low-key interactive bar for previewing different tool states -->
+<div class="flex items-center justify-between pb-2 border-b border-[rgba(49,61,80,0.06)] text-[11px]">
+<div class="flex items-center space-x-1 text-graphite-tertiary font-medium">
+<span>工具调用状态预览:</span>
+</div>
+<div class="flex items-center space-x-1.5" data-purpose="preview-state-switches">
+<button class="px-2 py-0.5 rounded-full text-[11px] font-medium transition-all bg-slateMist text-white shadow-xs" id="btn-state-completed" onclick="setToolState('completed')">
+                    成功完成
+                  </button>
+<button class="px-2 py-0.5 rounded-full text-[11px] text-graphite-secondary hover:text-graphite hover:bg-[rgba(49,61,80,0.06)] transition-all" id="btn-state-running" onclick="setToolState('running')">
+                    运行中
+                  </button>
+<button class="px-2 py-0.5 rounded-full text-[11px] text-graphite-secondary hover:text-graphite hover:bg-[rgba(49,61,80,0.06)] transition-all" id="btn-state-failed" onclick="setToolState('failed')">
+                    读取失败
+                  </button>
+</div>
+</div>
+<!-- Tool Identity & Execution Metas -->
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="px-2.5 py-1 rounded-lg bg-[rgba(83,105,133,0.08)] text-slateMist font-mono text-[11px] font-semibold tracking-wide border border-slateMist/15">
+                    read_document
+                  </span>
+<span class="text-xs text-graphite font-medium">项目资料.pdf</span>
+<span class="px-2 py-0.5 text-[11px] rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium" id="detail-card-badge">
+                    已完成
+                  </span>
+</div>
+<!-- Execution Duration Badge -->
+<div class="flex items-center space-x-1.5 text-xs text-graphite-tertiary">
+<svg class="w-3.5 h-3.5 text-graphite-tertiary" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span class="font-mono text-[11.5px]" id="execution-time-label">耗时 1.2s</span>
+</div>
+</div>
+<!-- Metadata Grid -->
+<div class="grid grid-cols-3 gap-2.5 p-3 rounded-xl bg-white/60 border border-[rgba(49,61,80,0.06)] text-xs">
+<div>
+<div class="text-[11px] text-graphite-tertiary mb-0.5">目标文件</div>
+<div class="font-mono text-graphite text-[12px] truncate" title="项目资料.pdf">项目资料.pdf</div>
+</div>
+<div>
+<div class="text-[11px] text-graphite-tertiary mb-0.5">页码范围</div>
+<div class="font-mono text-graphite text-[12px]">1 — 18 页</div>
+</div>
+<div>
+<div class="text-[11px] text-graphite-tertiary mb-0.5">解析模式</div>
+<div class="text-graphite text-[12px]">结构化语义抽取</div>
+</div>
+</div>
+<!-- Lightweight Tab Switch: [参数] / [输出] -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center p-0.5 rounded-lg bg-[rgba(49,61,80,0.05)] border border-[rgba(49,61,80,0.04)]">
+<button class="px-2.5 py-1 text-[11px] font-medium rounded-md text-graphite-secondary hover:text-graphite transition-all" id="tab-btn-params" onclick="switchToolTab('params')">
+                    参数 (JSON)
+                  </button>
+<button class="px-2.5 py-1 text-[11px] font-medium rounded-md bg-white text-graphite shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all" id="tab-btn-output" onclick="switchToolTab('output')">
+                    输出内容 (Output)
+                  </button>
+</div>
+<!-- Action Toolbar -->
+<div class="flex items-center space-x-1.5">
+<button class="px-2.5 py-1 rounded-lg text-[11px] text-graphite-secondary hover:text-graphite hover:bg-white border border-transparent hover:border-[rgba(49,61,80,0.08)] transition-all flex items-center space-x-1" onclick="copyOutputContent(this)">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+<span id="copy-btn-label">复制输出</span>
+</button>
+<button class="px-2 py-1 rounded-lg text-[11px] text-graphite-secondary hover:text-graphite hover:bg-white border border-transparent hover:border-[rgba(49,61,80,0.08)] transition-all" onclick="toggleToolCardExpansion()">
+                    收起
+                  </button>
+</div>
+</div>
+<!-- Dynamic Tab Content: Output Pane (Default) -->
+<div class="block" id="tool-tab-output">
+<div class="p-3 rounded-xl bg-white/75 border border-[rgba(49,61,80,0.06)] font-sans text-xs leading-relaxed text-graphite space-y-1.5">
+<div class="flex items-center space-x-1.5 text-emerald-700 font-medium pb-1 border-b border-[rgba(49,61,80,0.05)]">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span>正文提取完成，共 18 页解析无异常</span>
+</div>
+<p class="text-graphite pt-1 font-normal">
+                    已提取项目核心目标、时间安排推进表、以及当前待确认事项 3 项。
+                  </p>
+<p class="text-graphite-secondary text-[11.5px]">
+                    正文段落解析完成，包含 4 个核心章节与行动计划草案，已载入上下文缓冲区供智能体分析。
+                  </p>
+</div>
+</div>
+<!-- Dynamic Tab Content: Parameters Pane (Hidden) -->
+<div class="hidden" id="tool-tab-params">
+<pre class="p-3 rounded-xl bg-white/75 border border-[rgba(49,61,80,0.06)] font-mono text-[11px] text-slateMist leading-relaxed overflow-x-auto"><code>{
+  "document_id": "doc_202505_pdf_9281a",
+  "filename": "项目资料.pdf",
+  "page_start": 1,
+  "page_end": 18,
+  "strategy": "structured_ocr_layout",
+  "preserve_tables": true
+}</code></pre>
+</div>
+<!-- Nested Execution Sub-Steps / Sub-Records -->
+<div class="pt-1 space-y-1.5 border-t border-[rgba(49,61,80,0.06)]">
+<div class="text-[11px] font-medium text-graphite-tertiary px-1">子任务执行链 (2)</div>
+<!-- Sub-step 1: Expanded -->
+<div class="p-2.5 rounded-xl bg-white/40 border border-[rgba(49,61,80,0.05)] space-y-1.5">
+<div class="flex items-center justify-between text-xs cursor-pointer" onclick="toggleSubStep(1)">
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="font-medium text-graphite text-[12px]">1. 读取正文 (1-18页)</span>
+<span class="text-[11px] text-graphite-tertiary">· 已完成</span>
+</div>
+<svg class="w-3.5 h-3.5 text-graphite-tertiary transform rotate-180 transition-transform" fill="none" id="substep-chevron-1" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<!-- Substep 1 detail -->
+<div class="text-[11px] text-graphite-secondary pl-3.5 pt-0.5 border-l-2 border-emerald-500/20" id="substep-content-1">
+                    完成 14,290 个字符转录，识别章节标题 4 个，生成段落索引 28 处。
+                  </div>
+</div>
+<!-- Sub-step 2: Compact -->
+<div class="p-2.5 rounded-xl bg-white/40 border border-[rgba(49,61,80,0.05)] space-y-1.5">
+<div class="flex items-center justify-between text-xs cursor-pointer" onclick="toggleSubStep(2)">
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="font-medium text-graphite text-[12px]">2. 提取表格与附件清单</span>
+<span class="text-[11px] text-graphite-tertiary">· 已完成</span>
+</div>
+<svg class="w-3.5 h-3.5 text-graphite-tertiary transition-transform" fill="none" id="substep-chevron-2" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<!-- Substep 2 detail (folded by default) -->
+<div class="hidden text-[11px] text-graphite-secondary pl-3.5 pt-0.5 border-l-2 border-emerald-500/20" id="substep-content-2">
+                    解析表格 2 张（时间进度表、人员职责表），导出为 Markdown 标准表单。
+                  </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Structured Assistant Synthesis Content -->
+<div id="tool-followup" class="ml-10 text-[13.5px] leading-relaxed text-graphite space-y-3 pt-1">
+<p>我把资料归纳成了两部分：已经确定的安排，以及仍需你确认的事项。</p>
+<!-- Focus Points Section -->
+<div class="space-y-1.5">
+<div class="font-medium text-graphite">目前重点：</div>
+<ul class="space-y-1 pl-4 text-graphite-secondary list-disc marker:text-graphite-tertiary">
+<li><span class="text-graphite font-normal">下周先完成资料补齐和方案评审</span></li>
+<li><span class="text-graphite font-normal">核心方案已初步对齐</span></li>
+</ul>
+</div>
+<!-- Confirmations Needed Section -->
+<div class="space-y-1.5 pt-1">
+<div class="font-medium text-graphite">接下来需要确认：</div>
+<ol class="space-y-1 pl-4 text-graphite-secondary list-decimal marker:text-graphite-tertiary">
+<li><span class="text-graphite font-normal">方案评审的具体时间安排；</span></li>
+<li><span class="text-graphite font-normal">各业务模块的关键负责人及交接节点。</span></li>
+</ol>
+</div>
+<!-- Streaming / Status Pill Indicator -->
+<div class="pt-2 flex items-center space-x-2">
+<div class="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-white/70 border border-[rgba(49,61,80,0.08)] shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-slateMist"></span>
+<span class="text-xs text-graphite-secondary">正在整理建议…</span>
+</div>
+<button class="px-2.5 py-1 rounded-full text-xs text-graphite-secondary hover:text-graphite hover:bg-white/80 border border-transparent hover:border-[rgba(49,61,80,0.08)] transition-all flex items-center space-x-1">
+<svg class="w-3 h-3 text-graphite-tertiary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="12" rx="1.5" width="12" x="6" y="6"></rect>
+</svg>
+<span>停止</span>
+</button>
+</div>
+</div>
+</section>
+<!-- END: AssistantResponseBlock -->
+</div>
+</div>
+<!-- BEGIN: InputAreaSection -->
+<div class="px-8 pb-6 pt-2 shrink-0 z-20" data-purpose="chat-input-wrapper">
+<div class="max-w-[760px] mx-auto space-y-2">
+<!-- Pending Queue Pill Ribbon -->
+<div class="flex items-center justify-between px-3.5 py-1.5 rounded-full bg-white/60 border border-[rgba(49,61,80,0.06)] shadow-xs backdrop-blur-md">
+<div class="flex items-center space-x-2 text-xs text-graphite-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-slateMist/70"></span>
+<span>排队中 · 再补一份下周行动清单</span>
+</div>
+<div class="flex items-center space-x-2 text-[11px] text-graphite-tertiary">
+<button class="hover:text-graphite transition-colors">编辑</button>
+<span>|</span>
+<button class="hover:text-graphite transition-colors">移除</button>
+</div>
+</div>
+<!-- Main Glass Input Box Container (24px rounded) -->
+<div class="rounded-3xl glass-surface p-3.5 border border-[rgba(49,61,80,0.09)] shadow-[0_8px_32px_rgba(40,50,70,0.06)] space-y-3 transition-all focus-within:border-slateMist/35 focus-within:shadow-[0_8px_32px_rgba(40,50,70,0.09)]">
+<!-- Textarea -->
+<textarea class="w-full resize-none bg-transparent border-0 p-1 text-sm text-graphite placeholder-graphite-tertiary focus:ring-0 focus:outline-none" placeholder="输入后续问题，或使用快捷指令..." rows="2"></textarea>
+<!-- Input Footer Controls -->
+<div class="flex items-center justify-between pt-1">
+<!-- Left Config Buttons -->
+<div class="flex items-center space-x-2">
+<!-- Attachment Button -->
+<button class="w-8 h-8 rounded-full hover:bg-[rgba(49,61,80,0.06)] text-graphite-secondary hover:text-graphite flex items-center justify-center transition-colors" title="添加附件">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+</svg>
+</button>
+<!-- Model Selector Dropdown Pill -->
+<button class="h-7 px-2.5 rounded-full bg-white/70 hover:bg-white text-graphite text-xs font-medium border border-[rgba(49,61,80,0.08)] flex items-center space-x-1.5 shadow-xs transition-all">
+<svg class="w-3.5 h-3.5 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
+</svg>
+<span>DeepSeek</span>
+<svg class="w-3 h-3 text-graphite-tertiary" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+<!-- Permission / Mode Pill -->
+<button class="h-7 px-2.5 rounded-full bg-white/70 hover:bg-white text-graphite-secondary hover:text-graphite text-xs border border-[rgba(49,61,80,0.08)] flex items-center space-x-1.5 shadow-xs transition-all">
+<span class="w-1.5 h-1.5 rounded-full bg-slateMist"></span>
+<span>标准 · 操作需确认</span>
+<svg class="w-3 h-3 text-graphite-tertiary" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+<!-- Right Execution Buttons -->
+<div class="flex items-center space-x-2">
+<button class="h-8 px-3 rounded-full text-xs font-medium text-graphite-secondary hover:text-graphite hover:bg-white/80 transition-colors">
+                立即插话
+              </button>
+<button class="h-8 px-4 rounded-full bg-slateMist hover:bg-slateMist-active text-white text-xs font-medium shadow-sm hover:shadow flex items-center space-x-1.5 transition-all">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
+</svg>
+<span>排队发送</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: InputAreaSection -->
+</main>
+<!-- END: MainChatWorkspace -->
+<!-- BEGIN: Interactive Logic Scripts -->
+<script>(()=>{const el=document.getElementById('ambient-glow');if(!el)return;const mq=matchMedia('(prefers-reduced-motion: reduce)');let x=0,y=0,tx=0,ty=0,raf=null,inside=false;Object.assign(el.style,{left:'0',top:'0',width:'220px',height:'220px',pointerEvents:'none',opacity:'0'});function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;inside=false;el.style.opacity='0';}function frame(){x+=(tx-x)*.12;y+=(ty-y)*.12;el.style.transform='translate3d('+(x-110)+'px,'+(y-110)+'px,0)';raf=inside&&(Math.abs(tx-x)>.1||Math.abs(ty-y)>.1)?requestAnimationFrame(frame):null;}window.addEventListener('pointermove',e=>{if(mq.matches||navigator.maxTouchPoints>0||e.pointerType==='touch')return;tx=e.clientX;ty=e.clientY;if(!inside){x=tx;y=ty;}inside=true;el.style.opacity='.65';if(raf===null)raf=requestAnimationFrame(frame);},{passive:true});document.addEventListener('mouseleave',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});mq.addEventListener('change',stop);})();</script>
+<script data-purpose="tool-card-interactions">
+    // 1. Tool Call Expand / Collapse Toggle
+    let isToolExpanded = true;
+    function toggleToolCardExpansion() {
+      const card = document.getElementById('tool-detail-card');
+      const toggleChevron = document.getElementById('tool-toggle-chevron');
+      const toggleText = document.getElementById('tool-toggle-text');
+
+      isToolExpanded = !isToolExpanded;
+
+      if (isToolExpanded) {
+        card.classList.remove('hidden');
+        toggleChevron.classList.add('rotate-180');
+        toggleText.textContent = '收起明细';
+      } else {
+        card.classList.add('hidden');
+        toggleChevron.classList.remove('rotate-180');
+        toggleText.textContent = '展开摘要';
+      }
+    }
+
+    // 2. Tab Switching between Params and Output
+    function switchToolTab(tab) {
+      const outputTab = document.getElementById('tool-tab-output');
+      const paramsTab = document.getElementById('tool-tab-params');
+      const btnOutput = document.getElementById('tab-btn-output');
+      const btnParams = document.getElementById('tab-btn-params');
+
+      if (tab === 'output') {
+        outputTab.classList.remove('hidden');
+        paramsTab.classList.add('hidden');
+        btnOutput.className = "px-2.5 py-1 text-[11px] font-medium rounded-md bg-white text-graphite shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all";
+        btnParams.className = "px-2.5 py-1 text-[11px] font-medium rounded-md text-graphite-secondary hover:text-graphite transition-all";
+      } else {
+        paramsTab.classList.remove('hidden');
+        outputTab.classList.add('hidden');
+        btnParams.className = "px-2.5 py-1 text-[11px] font-medium rounded-md bg-white text-graphite shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all";
+        btnOutput.className = "px-2.5 py-1 text-[11px] font-medium rounded-md text-graphite-secondary hover:text-graphite transition-all";
+      }
+    }
+
+    // 3. Nested Execution Substeps Toggle
+    function toggleSubStep(stepIndex) {
+      const content = document.getElementById(`substep-content-${stepIndex}`);
+      const chevron = document.getElementById(`substep-chevron-${stepIndex}`);
+
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        chevron.classList.add('rotate-180');
+      } else {
+        content.classList.add('hidden');
+        chevron.classList.remove('rotate-180');
+      }
+    }
+
+    // 4. State Preview Switcher (Completed / Running / Failed)
+    function setToolState(state) {
+      const bannerStatus = document.getElementById('summary-badge-status');
+      const bannerDot = document.getElementById('summary-status-dot');
+      const detailBadge = document.getElementById('detail-card-badge');
+      const timeLabel = document.getElementById('execution-time-label');
+
+      const btnComp = document.getElementById('btn-state-completed');
+      const btnRun = document.getElementById('btn-state-running');
+      const btnFail = document.getElementById('btn-state-failed');
+
+      // Reset button styles
+      [btnComp, btnRun, btnFail].forEach(btn => {
+        btn.className = "px-2 py-0.5 rounded-full text-[11px] text-graphite-secondary hover:text-graphite hover:bg-[rgba(49,61,80,0.06)] transition-all";
+      });
+
+      if (state === 'completed') {
+        btnComp.className = "px-2 py-0.5 rounded-full text-[11px] font-medium transition-all bg-slateMist text-white shadow-xs";
+        bannerStatus.className = "px-2 py-0.5 text-[11px] font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60";
+        bannerStatus.textContent = "已完成";
+        detailBadge.className = "px-2 py-0.5 text-[11px] rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium";
+        detailBadge.textContent = "已完成";
+        bannerDot.className = "w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20";
+        timeLabel.textContent = "耗时 1.2s";
+      } else if (state === 'running') {
+        btnRun.className = "px-2 py-0.5 rounded-full text-[11px] font-medium transition-all bg-slateMist text-white shadow-xs";
+        bannerStatus.className = "px-2 py-0.5 text-[11px] font-medium rounded-full bg-amber-50 text-amber-700 border border-amber-200/60 animate-pulse";
+        bannerStatus.textContent = "执行中...";
+        detailBadge.className = "px-2 py-0.5 text-[11px] rounded-full bg-amber-50 text-amber-700 border border-amber-200/60 font-medium";
+        detailBadge.textContent = "读取流解析中";
+        bannerDot.className = "w-2 h-2 rounded-full bg-amber-500 ring-2 ring-amber-500/20 animate-pulse";
+        timeLabel.textContent = "进行中 0.8s";
+      } else if (state === 'failed') {
+        btnFail.className = "px-2 py-0.5 rounded-full text-[11px] font-medium transition-all bg-slateMist text-white shadow-xs";
+        bannerStatus.className = "px-2 py-0.5 text-[11px] font-medium rounded-full bg-rose-50 text-rose-700 border border-rose-200/60";
+        bannerStatus.textContent = "解析中断";
+        detailBadge.className = "px-2 py-0.5 text-[11px] rounded-full bg-rose-50 text-rose-700 border border-rose-200/60 font-medium";
+        detailBadge.textContent = "只读重试本步骤";
+        bannerDot.className = "w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-500/20";
+        timeLabel.textContent = "耗时 2.4s (异常)";
+      }
+    }
+
+    // 5. Copy Output Feedback
+    function copyOutputContent(button) {
+      const label = document.getElementById('copy-btn-label');
+      label.textContent = "已复制";
+      setTimeout(() => {
+        label.textContent = "复制输出";
+      }, 1600);
+    }
+  </script>
+<!-- END: Interactive Logic Scripts -->
+<script>(()=>{
+const original=setToolState, output=document.getElementById('tool-tab-output'), success=output.innerHTML;
+const nested=document.getElementById('substep-content-1').parentElement.parentElement;
+let version=0,mode='completed';
+setToolState=function(state){const v=++version;mode=state;original(state);document.getElementById('tool-followup').hidden=state!=='completed';document.getElementById('execution-time-label').textContent=state==='completed'?'演示记录':state==='running'?'执行中':'读取未完成';nested.hidden=state!=='completed';output.replaceChildren();if(state==='completed'){output.innerHTML=success;}else{const message=document.createElement('p');message.style.cssText='padding:12px;line-height:1.7';message.textContent=state==='running'?'正在读取项目资料.pdf，等待工具返回结果…':'读取失败：当前文件不可访问。已保留已有内容，可检查文件后重试这个只读步骤。';output.append(message);if(state==='failed'){const retry=document.createElement('button');retry.textContent='重试本步骤（只读）';retry.style.cssText='padding:8px 12px;border-radius:12px;background:#536985;color:white;margin:0 12px 12px';retry.onclick=()=>{setToolState('running');const runVersion=version;setTimeout(()=>{if(runVersion===version)setToolState('completed');},600);};output.append(retry);}}};
+copyOutputContent=async function(){const label=document.getElementById('copy-btn-label');try{await navigator.clipboard.writeText(output.innerText);label.textContent='已复制';}catch{label.textContent='复制失败，请选择文本复制';}setTimeout(()=>label.textContent='复制输出',1800);};
+setToolState('completed');
+})();</script></body></html>

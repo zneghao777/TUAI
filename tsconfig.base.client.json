@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES2024", "DOM", "DOM.Iterable", "ESNext.Disposable"],
+    "types": ["react", "react-dom", "client-build-environment"],
+    "typeRoots": ["./scripts/types", "./node_modules/@types"]
+  }
+}

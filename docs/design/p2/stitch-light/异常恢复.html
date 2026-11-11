@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TUAI — 异常恢复</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#F5F6F8',
+            mist: '#EDF0F4',
+            graphite: '#282D35',
+            secondary: '#717783',
+            slateMist: '#536985',
+            slateMistActive: '#445A75',
+            borderSubtle: 'rgba(49, 61, 80, 0.08)',
+            borderHighlight: 'rgba(255, 255, 255, 0.95)',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+          },
+          boxShadow: {
+            glass: '0 4px 20px -2px rgba(40, 45, 53, 0.05), 0 2px 6px -1px rgba(40, 45, 53, 0.02)',
+            cardHover: '0 10px 25px -3px rgba(40, 45, 53, 0.08), 0 4px 10px -2px rgba(40, 45, 53, 0.03)',
+            banner: '0 8px 30px rgba(40, 45, 53, 0.06)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Glass & Ambient Styles -->
+<style data-purpose="glass-effects">
+    .frosted-glass {
+      background-color: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(24px) saturate(110%);
+      -webkit-backdrop-filter: blur(24px) saturate(110%);
+      border: 1px solid rgba(49, 61, 80, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 20px -2px rgba(40, 45, 53, 0.04);
+    }
+
+    .frosted-sidebar {
+      background-color: rgba(248, 249, 251, 0.82);
+      backdrop-filter: blur(30px) saturate(110%);
+      -webkit-backdrop-filter: blur(30px) saturate(110%);
+      border-right: 1px solid rgba(49, 61, 80, 0.08);
+    }
+
+    .frosted-notice-banner {
+      background-color: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px) saturate(120%);
+      border: 1px solid rgba(217, 119, 6, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 24px -4px rgba(40, 45, 53, 0.06);
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(113, 119, 131, 0.2);
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(113, 119, 131, 0.35);
+    }
+
+    /* Ambient cursor follower glow */
+    #ambientGlow {
+      pointer-events: none;
+      position: fixed;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(162, 185, 214, 0.16) 0%, rgba(220, 228, 238, 0.06) 45%, rgba(245, 246, 248, 0) 70%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.8s ease-out;
+      opacity: 0;
+      z-index: 1;
+    }
+  </style>
+<!-- END: Custom Glass & Ambient Styles -->
+</head>
+<body class="bg-canvas text-graphite font-sans antialiased h-screen overflow-hidden flex relative select-none">
+<!-- Interactive Background Glow Element -->
+<div id="ambientGlow"></div>
+<!-- BEGIN: Left Sidebar -->
+<aside class="w-64 h-full frosted-sidebar flex flex-col justify-between p-4 z-20 shrink-0">
+<!-- Top Workspace Section -->
+<div class="flex flex-col space-y-4">
+<!-- Brand & Workspace Title -->
+<div class="flex items-center justify-between px-2 py-1">
+<div class="flex items-center space-x-2.5">
+<!-- 4-point Star Brand Logo -->
+<div class="w-7 h-7 rounded-lg bg-white/90 border border-slateMist/20 flex items-center justify-center shadow-sm">
+<svg class="w-4 h-4 text-slateMist" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"></path>
+</svg>
+</div>
+<div>
+<h1 class="text-sm font-semibold tracking-tight text-graphite flex items-center space-x-1.5">
+<span>TUAI</span>
+</h1>
+<p class="text-[11px] text-secondary" id="sidebarStatusText">个人工作区 · 连接中断</p>
+</div>
+</div>
+<!-- Collapse Sidebar Icon -->
+<button class="p-1.5 rounded-lg text-secondary hover:text-graphite hover:bg-black/5 transition" title="收起边栏">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect>
+<line x1="9" x2="9" y1="3" y2="21"></line>
+</svg>
+</button>
+</div>
+<!-- New Chat Button -->
+<button class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/70 hover:bg-white border border-borderSubtle text-graphite shadow-sm transition group text-sm">
+<div class="flex items-center space-x-2">
+<svg class="w-4 h-4 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24">
+<path d="M12 5v14M5 12h14"></path>
+</svg>
+<span>新会话</span>
+</div>
+<kbd class="text-[10px] text-secondary font-mono bg-black/[0.04] px-1.5 py-0.5 rounded border border-black/[0.06]">⌘N</kbd>
+</button>
+<!-- Search Box -->
+<div class="relative">
+<svg class="w-4 h-4 text-secondary absolute left-3 top-2.5" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+<input class="w-full pl-9 pr-3 py-1.5 text-xs bg-black/[0.03] border-none rounded-xl text-graphite placeholder-secondary focus:ring-1 focus:ring-slateMist/40 focus:bg-white/90 transition" placeholder="搜索会话" type="text"/>
+</div>
+<!-- Workspace Category Accordion -->
+<div class="flex items-center justify-between px-2 pt-1 text-xs text-secondary font-medium">
+<div class="flex items-center space-x-1.5">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+<span>个人工作区</span>
+</div>
+<svg class="w-3.5 h-3.5 text-secondary" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M6 9l6 6 6-6"></path>
+</svg>
+</div>
+<!-- Session Lists -->
+<div class="space-y-4 pt-1 text-xs">
+<div>
+<div class="text-[11px] text-secondary/70 font-medium px-2 mb-1.5">今天</div>
+<!-- Active Conversation Item -->
+<div class="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-white text-graphite shadow-sm border border-borderSubtle font-medium">
+<div class="flex items-center space-x-2 truncate">
+<svg class="w-3.5 h-3.5 text-slateMist shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">项目资料整理</span>
+</div>
+</div>
+<!-- Inactive Conversation Item -->
+<div class="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/60 text-secondary hover:text-graphite transition mt-1 cursor-pointer">
+<div class="flex items-center space-x-2 truncate">
+<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">周末短途旅行</span>
+</div>
+</div>
+</div>
+<div>
+<div class="text-[11px] text-secondary/70 font-medium px-2 mb-1.5">更早</div>
+<div class="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/60 text-secondary hover:text-graphite transition cursor-pointer">
+<div class="flex items-center space-x-2 truncate">
+<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">一周饮食安排</span>
+</div>
+</div>
+<div class="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/60 text-secondary hover:text-graphite transition mt-1 cursor-pointer">
+<div class="flex items-center space-x-2 truncate">
+<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="truncate">读书笔记整理</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom User Bar -->
+<div class="pt-3 border-t border-borderSubtle flex items-center justify-between">
+<button class="flex items-center space-x-2 px-2.5 py-1.5 rounded-xl hover:bg-white/70 transition text-graphite text-xs font-medium">
+<div class="w-6 h-6 rounded-full bg-slateMist/15 border border-slateMist/20 flex items-center justify-center text-slateMist">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24">
+<path d="M12 19V5M5 12l7-7 7 7"></path>
+</svg>
+</div>
+<span>个人空间</span>
+</button>
+<button class="p-1.5 rounded-lg text-secondary hover:text-graphite hover:bg-white/70 transition" title="设置">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: Left Sidebar -->
+<!-- BEGIN: Main Chat Workspace -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative z-10 bg-canvas">
+<!-- BEGIN: Top Navigation Header -->
+<header class="h-14 border-b border-borderSubtle px-6 flex items-center justify-between shrink-0 bg-white/40 backdrop-blur-md">
+<!-- Title & Status -->
+<div class="flex items-center space-x-3">
+<h2 class="text-sm font-semibold text-graphite tracking-tight">项目资料整理</h2>
+<div class="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-black/[0.03] text-[11px] text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" id="headerStatusDot"></span>
+<span id="headerStatusText">连接中断 · 待恢复</span>
+</div>
+</div>
+<!-- Right Header Actions -->
+<div class="flex items-center space-x-2">
+<button class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white/70 hover:bg-white text-secondary hover:text-graphite border border-borderSubtle text-xs transition shadow-sm">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+</svg>
+<span>来源文件 (1)</span>
+</button>
+<button class="p-2 rounded-xl bg-white/70 hover:bg-white text-secondary hover:text-graphite border border-borderSubtle transition" title="会话选项">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<line x1="4" x2="4" y1="21" y2="14"></line>
+<line x1="4" x2="4" y1="10" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="12"></line>
+<line x1="12" x2="12" y1="8" y2="3"></line>
+<line x1="20" x2="20" y1="21" y2="16"></line>
+<line x1="20" x2="20" y1="12" y2="3"></line>
+<line x1="1" x2="7" y1="14" y2="14"></line>
+<line x1="9" x2="15" y1="8" y2="8"></line>
+<line x1="17" x2="23" y1="16" y2="16"></line>
+</svg>
+</button>
+<button class="p-2 rounded-xl bg-white/70 hover:bg-white text-secondary hover:text-graphite border border-borderSubtle transition" title="更多操作">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="1"></circle>
+<circle cx="19" cy="12" r="1"></circle>
+<circle cx="5" cy="12" r="1"></circle>
+</svg>
+</button>
+</div>
+</header>
+<!-- END: Top Navigation Header -->
+<!-- BEGIN: Floating Subtle Recovery Banner -->
+<div class="px-6 pt-3 flex justify-center w-full transition-all duration-300" id="recoveryBannerContainer">
+<div class="max-w-[760px] w-full frosted-notice-banner rounded-2xl px-4 py-2.5 flex items-center justify-between shadow-banner border-amber-200/40" id="recoveryBanner"><div class="flex items-center space-x-3"><div class="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-700 flex items-center justify-center shrink-0" id="bannerIcon"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg></div><div><div class="text-xs font-semibold text-graphite flex items-center space-x-1.5"><span id="bannerTitle">网络连接中断 · 当前执行状态待同步</span><span class="text-[11px] font-normal text-secondary">· 已接受的请求不会重新发送</span></div><div class="text-[11px] text-secondary mt-0.5" id="bannerSubtitle">已显示内容与草稿妥善保留，连接恢复后将核对最新状态并继续接收更新。</div></div></div><div class="flex items-center space-x-2 shrink-0"><button class="px-3 py-1.5 rounded-xl bg-slateMist hover:bg-slateMistActive text-white text-xs font-medium transition shadow-sm flex items-center space-x-1.5 active:scale-95" id="btnReconnect" onclick="handleReconnectAction()"><svg class="w-3.5 h-3.5" fill="none" id="reconnectSpinIcon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span id="btnReconnectText">重新连接</span></button></div></div>
+</div>
+<!-- END: Floating Subtle Recovery Banner -->
+<!-- BEGIN: Chat Scroll View Area -->
+<div class="flex-1 overflow-y-auto px-6 py-4 custom-scroll flex flex-col items-center">
+<div class="w-full max-w-[760px] flex flex-col space-y-6 pb-6">
+<!-- Timestamp Pill -->
+<div class="flex justify-center">
+<span class="text-[11px] text-secondary/80 bg-black/[0.03] px-2.5 py-0.5 rounded-full">
+            今天 14:32
+          </span>
+</div>
+<!-- User Original Prompt Bubble -->
+<div class="flex flex-col items-end space-y-2">
+<div class="max-w-[85%] bg-white/95 rounded-2xl rounded-tr-sm px-4 py-3 shadow-sm border border-borderSubtle text-graphite text-xs sm:text-sm leading-relaxed">
+            帮我整理这份项目资料，列出重点和下一步需要确认的事。
+          </div>
+<!-- Uploaded Attachment Card -->
+<div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/80 border border-borderSubtle text-xs text-graphite shadow-sm">
+<svg class="w-4 h-4 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+<span class="font-medium">项目资料.pdf</span>
+<span class="text-[11px] text-secondary">2.4 MB</span>
+</div>
+</div>
+<!-- Assistant Message Container -->
+<div class="flex items-start space-x-3 pt-2">
+<!-- Assistant Avatar -->
+<div class="w-7 h-7 rounded-xl bg-white/90 border border-borderSubtle flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+<svg class="w-4 h-4 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+</div>
+<!-- Message Body -->
+<div class="flex-1 space-y-3">
+<p class="text-sm font-medium text-graphite">好的，正在结合资料内容梳理主要脉络。</p>
+<!-- Dynamic Scenario Context Container (Switchable) -->
+<div class="space-y-3.5" id="dynamicCaseContent"><div class="frosted-glass rounded-2xl p-3.5 border border-borderSubtle space-y-3 text-xs"><div class="flex items-center justify-between"><div class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-amber-400 animate-ping" id="contentPingDot"></span><span class="text-secondary font-medium" id="contentHeaderLabel">读取文件 · 项目资料.pdf</span><span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-800 text-[10px] font-medium border border-amber-500/20" id="contentTagBadge">等待同步</span></div><button class="text-secondary hover:text-graphite flex items-center space-x-1 text-[11px] transition"><span>展开摘要</span><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></button></div><div class="text-graphite/90 space-y-2 pt-1 leading-relaxed border-t border-black/[0.04]"><p>我把资料归纳成了两部分：已经确定的安排，以及仍需你确认的事项。</p><p class="font-medium text-graphite pt-1">目前重点：</p><ul class="list-disc list-inside space-y-1 text-secondary"><li>下周先完成资料补齐和方案评审</li><li>核心方案已初步对齐</li></ul><p class="font-medium text-graphite pt-1">接下来需要确认：</p><ol class="list-decimal list-inside space-y-1 text-secondary"><li>方案评审的具体时间安排；</li><li>各业务模块的关键负责人及交接节点。</li></ol></div><div class="flex items-center justify-between pt-2 border-t border-black/[0.04] text-[11px] text-secondary" id="syncStatusIndicator"><div class="flex items-center space-x-2"><div class="w-1.5 h-3 bg-slateMist/60 animate-pulse rounded-sm"></div><span id="syncStatusLabel">连接恢复后将核对执行进度并无缝续接...</span></div><div class="text-[10px] text-secondary/70" id="syncStatusRight">上下文已保留 · 免重复提交</div></div></div></div>
+<!-- Context Preservation Reminder Note -->
+<div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-black/[0.02] border border-black/[0.04] text-[11px] text-secondary max-w-max" id="contextPreserveNote"><svg class="w-3.5 h-3.5 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg><span id="contextPreserveNoteText">连接恢复后将首先同步最新状态，原回答将平滑更新，不会新增重复消息或盲目重做有副作用的操作。</span></div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Chat Scroll View Area -->
+<!-- BEGIN: Scenario Switcher Strip (Testing & Demonstration Hub) -->
+<div class="w-full flex justify-center py-1.5 bg-black/[0.02] border-t border-borderSubtle/60 text-[11px] z-10 shrink-0">
+<div class="flex items-center space-x-1 overflow-x-auto px-4 max-w-[860px]">
+<span class="text-secondary mr-2 shrink-0">切换异常场景:</span>
+<button class="px-2.5 py-1 rounded-lg bg-white border border-borderSubtle text-graphite font-medium shadow-xs transition" id="tab-network" onclick="setScenario('network')">
+          1. 连接中断恢复
+        </button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-white/80 border border-transparent text-secondary hover:text-graphite transition" id="tab-model" onclick="setScenario('model')">
+          2. 模型暂不可用
+        </button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-white/80 border border-transparent text-secondary hover:text-graphite transition" id="tab-tool" onclick="setScenario('tool')">
+          3. 只读工具失败
+        </button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-white/80 border border-transparent text-secondary hover:text-graphite transition" id="tab-upload" onclick="setScenario('upload')">
+          4. 附件上传失败
+        </button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-white/80 border border-transparent text-secondary hover:text-graphite transition" id="tab-expired" onclick="setScenario('expired')">
+          5. 审批卡已失效
+        </button>
+</div>
+</div>
+<!-- END: Scenario Switcher Strip -->
+<!-- BEGIN: Bottom Input Composer Area -->
+<div class="w-full flex justify-center px-6 pb-6 pt-2 z-10">
+<div class="w-full max-w-[760px] flex flex-col space-y-2">
+<!-- Queued Prompt Notice Pill (Preserved from Screen 3) -->
+<div class="flex items-center justify-between px-3.5 py-1.5 rounded-full bg-white/70 border border-borderSubtle text-[11px] text-secondary shadow-xs">
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-slateMist"></span>
+<span>排队中 · 再补一份下周行动清单</span>
+</div>
+<div class="flex items-center space-x-2">
+<button class="hover:text-graphite transition">编辑</button>
+<span class="text-black/10">|</span>
+<button class="hover:text-graphite transition">移除</button>
+</div>
+</div>
+<!-- Main Glass Input Box -->
+<div class="frosted-glass rounded-3xl p-3 shadow-glass flex flex-col space-y-3 relative group transition">
+<!-- Textarea with Preserved Draft -->
+<div class="relative">
+<textarea class="w-full bg-transparent border-none text-graphite text-xs sm:text-sm placeholder-secondary focus:ring-0 resize-none p-1.5 font-normal leading-relaxed custom-scroll" id="draftInput" placeholder="输入后续问题，或使用快捷指令..." rows="2">请把行动项按优先级排列</textarea>
+<!-- Draft Preserved Tooltip Marker -->
+<div class="absolute right-1 top-1 flex items-center space-x-1 text-[10px] text-slateMist bg-slateMist/10 px-2 py-0.5 rounded-md font-normal">
+<svg class="w-3 h-3 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+<polyline points="17 21 17 13 7 13 7 21"></polyline>
+<polyline points="7 3 7 8 15 8"></polyline>
+</svg>
+<span>草稿已就绪（异常未丢失）</span>
+</div>
+</div>
+<!-- Bottom Control Bar inside Input Card -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center space-x-2">
+<!-- Attachment Button -->
+<button class="p-2 rounded-xl text-secondary hover:text-graphite hover:bg-black/5 transition" title="添加附件">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+</svg>
+</button>
+<!-- Model Selector Dropdown Button -->
+<button class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl bg-black/[0.03] hover:bg-black/[0.06] text-graphite text-xs transition border border-transparent">
+<svg class="w-3.5 h-3.5 text-slateMist" fill="none" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"></path>
+</svg>
+<span class="font-medium">DeepSeek</span>
+<svg class="w-3 h-3 text-secondary" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M6 9l6 6 6-6"></path>
+</svg>
+</button>
+<!-- Safety / Policy Dropdown Button -->
+<button class="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-black/[0.03] hover:bg-black/[0.06] text-secondary hover:text-graphite text-xs transition">
+<span class="w-1.5 h-1.5 rounded-full bg-slateMist"></span>
+<span>标准 · 操作需确认</span>
+<svg class="w-3 h-3 text-secondary" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M6 9l6 6 6-6"></path>
+</svg>
+</button>
+</div>
+<!-- Right Controls & Conditional Send Button -->
+<div class="flex items-center space-x-3">
+<button class="text-xs text-secondary hover:text-graphite transition">
+                立即插话
+              </button>
+<!-- Disabled or Reconnected Send Button -->
+<div class="relative group/sendbtn">
+<button class="flex items-center space-x-1.5 px-4 py-2 rounded-2xl bg-slateMist/50 text-white/80 cursor-not-allowed text-xs font-medium transition shadow-xs" disabled="" id="btnSendMessage">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+<span id="btnSendText">排队发送</span>
+</button>
+<!-- Tooltip for Disabled Reason -->
+<div class="absolute bottom-full right-0 mb-2 hidden group-hover/sendbtn:flex items-center space-x-1 px-2.5 py-1 bg-graphite text-white text-[10px] rounded-lg shadow-lg whitespace-nowrap z-30" id="btnSendTooltip">
+<svg class="w-3 h-3 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" x2="12" y1="8" y2="12"></line>
+<line x1="12" x2="12.01" y1="16" y2="16"></line>
+</svg>
+<span>等待连接恢复后发送 (草稿已留存)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Bottom Input Composer Area -->
+</main>
+<!-- END: Main Chat Workspace -->
+<!-- BEGIN: Interactive Logic Script -->
+<script>(()=>{const el=document.getElementById('ambientGlow');if(!el)return;const mq=matchMedia('(prefers-reduced-motion: reduce)');let x=0,y=0,tx=0,ty=0,raf=null,inside=false;Object.assign(el.style,{left:'0',top:'0',width:'220px',height:'220px',pointerEvents:'none',opacity:'0'});function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;inside=false;el.style.opacity='0';}function frame(){x+=(tx-x)*.12;y+=(ty-y)*.12;el.style.transform='translate3d('+(x-110)+'px,'+(y-110)+'px,0)';raf=inside&&(Math.abs(tx-x)>.1||Math.abs(ty-y)>.1)?requestAnimationFrame(frame):null;}window.addEventListener('pointermove',e=>{if(mq.matches||navigator.maxTouchPoints>0||e.pointerType==='touch')return;tx=e.clientX;ty=e.clientY;if(!inside){x=tx;y=ty;}inside=true;el.style.opacity='.65';if(raf===null)raf=requestAnimationFrame(frame);},{passive:true});document.addEventListener('mouseleave',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});mq.addEventListener('change',stop);})();</script>
+<script>const $r=id=>document.getElementById(id),caseBox=$r('dynamicCaseContent'),networkTemplate=caseBox.innerHTML,draftField=$r('draftInput'),sendAction=$r('btnSendMessage');
+let scenario='network',generation=0,recoveryTimer=null,networkDone=false,sendBlocked=true;
+const interject=[...document.querySelectorAll('button')].find(e=>e.textContent.trim()==='立即插话');
+function connection(text,online){$r('sidebarStatusText').textContent='个人工作区 · '+text;$r('headerStatusText').textContent=text;$r('headerStatusDot').className='w-1.5 h-1.5 rounded-full '+(online?'bg-emerald-500':'bg-amber-500');}
+function lock(locked){sendBlocked=locked;sendAction.disabled=locked||!draftField.value.trim();sendAction.style.opacity=sendAction.disabled?'.5':'1';if(interject){interject.disabled=locked;interject.style.opacity=locked?'.4':'1';}}
+function action(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='padding:8px 12px;border-radius:12px;background:#536985;color:white;font-size:12px;margin:10px 8px 0 0';b.onclick=fn;return b;}
+function panel(title,desc){caseBox.replaceChildren();const card=document.createElement('div');card.className='frosted-glass rounded-2xl p-4 border border-borderSubtle';const h=document.createElement('h3');h.textContent=title;h.style.cssText='font-size:14px;font-weight:600';const p=document.createElement('p');p.textContent=desc;p.style.cssText='font-size:13px;line-height:1.7;margin:12px 0;color:#717783';p.setAttribute('role','status');card.append(h,p);caseBox.append(card);return {card,p};}
+function delayed(button,working,done){const v=generation;button.disabled=true;button.textContent=working;recoveryTimer=setTimeout(()=>{if(v===generation)done();},600);}
+function handleReconnectAction(){if(scenario!=='network'||networkDone||$r('btnReconnect').disabled)return;const v=generation;$r('btnReconnect').disabled=true;$r('btnReconnectText').textContent='重连中…';connection('重连中',false);$r('syncStatusLabel').textContent='正在核对会话最新状态…';recoveryTimer=setTimeout(()=>{if(v!==generation)return;networkDone=true;connection('已恢复 · 已连接',true);$r('bannerTitle').textContent='连接已恢复，最新状态已同步';$r('bannerSubtitle').textContent='原回答已更新，正在继续接收更新；没有重新发送旧请求。';$r('btnReconnectText').textContent='已恢复连接';$r('contentTagBadge').textContent='已同步';$r('syncStatusLabel').textContent='最新进度已同步 · 继续接收更新';$r('syncStatusRight').textContent='保留同一条回答';lock(false);},700);}
+function setScenario(type){generation++;clearTimeout(recoveryTimer);scenario=type;networkDone=false;for(const t of['network','model','tool','upload','expired']){$r('tab-'+t).style.background=t===type?'white':'transparent';$r('tab-'+t).setAttribute('aria-pressed',String(t===type));}
+$r('recoveryBannerContainer').style.display=type==='network'?'':'none';$r('contextPreserveNoteText').textContent='已显示内容与草稿保留。结果未知时先核对，不自动重做已接受的操作。';lock(true);
+if(type==='network'){caseBox.innerHTML=networkTemplate;connection('连接中断 · 待恢复',false);$r('bannerTitle').textContent='网络连接中断 · 当前执行状态待同步';$r('bannerSubtitle').textContent='已显示内容与草稿保留，连接恢复后核对最新状态并继续接收更新。';$r('btnReconnect').disabled=false;$r('btnReconnectText').textContent='重新连接';return;}
+connection('已连接',true);
+if(type==='model'){const {card,p}=panel('模型暂不可用','当前模型服务暂不可用，草稿和已有回答已保留。更换模型不会自动重发旧请求。');
+card.append(action('查看原因',()=>p.textContent='模型服务暂不可用。可检查配置或选择当前已配置的备用模型；原请求状态仍需核对。'),action('更换模型',()=>{if(card.querySelector('select'))return;const select=document.createElement('select');select.setAttribute('aria-label','选择备用模型');for(const label of['请选择模型','备用模型（演示）']){const op=document.createElement('option');op.textContent=label;select.append(op);}select.style.cssText='display:block;margin-top:12px;padding:8px;border-radius:10px';card.append(select,action('应用选择',()=>{if(!select.selectedIndex){p.textContent='请先选择模型。';return;}p.textContent='已选择备用模型。未重新发送旧请求，请核对当前执行结果后继续。';lock(false);}));}));
+}else if(type==='tool'){const {card,p}=panel('只读工具失败 · 项目资料.pdf','当前文件不可读取。已有消息保留；此入口仅重试读取步骤，不重复执行整个任务。');
+card.append(action('检查文件',()=>p.textContent='请核对当前工作区中的文件位置与读取权限。'),action('重试本步骤（只读）',function(){const b=this;delayed(b,'正在重试…',()=>{b.textContent='读取已恢复';p.textContent='读取步骤已恢复（原型演示）；等待后续任务继续。';lock(false);});}));
+}else if(type==='upload'){const {card,p}=panel('附件上传失败 · 补充材料.pdf','附件尚未被接收，文字草稿仍保留。可重试上传或移除此附件。');
+const retry=action('重试上传',()=>delayed(retry,'上传中…',()=>{p.textContent='附件已上传，尚未发送到会话。';retry.textContent='已上传';remove.disabled=true;lock(false);})),remove=action('移除附件',()=>{generation++;clearTimeout(recoveryTimer);p.textContent='已移除失败附件，文字草稿仍保留。';retry.disabled=true;remove.disabled=true;lock(false);});card.append(retry,remove);
+}else if(type==='expired'){const {card,p}=panel('审批已失效 · 保存行动清单','目标：个人工作区 / 行动清单.md。当前审批请求已失效，旧决定不能生效。');
+const old=action('仅允许本次（已失效）',()=>{});old.disabled=true;old.style.opacity='.4';card.append(old,action('刷新状态',()=>{p.textContent='当前没有新的有效审批。旧审批保持失效，未执行写入。';}));
+}}
+draftField.addEventListener('input',()=>lock(sendBlocked));sendAction.onclick=()=>{if(sendAction.disabled||!draftField.value.trim())return;draftField.value='';lock(false);$r('contextPreserveNoteText').textContent='新草稿已接受并加入队列；没有重新发送旧请求。';};setScenario('network');</script>
+<!-- END: Interactive Logic Script -->
+</body></html>

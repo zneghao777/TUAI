@@ -1,0 +1,118 @@
+{
+  "stage": "P0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "node": "v26.8.1",
+  "packageManager": "pnpm@11.28.5",
+  "result": "passed",
+  "verifiedAt": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "installation": {
+    "downloaded": 58,
+    "reused": 0,
+    "workspacePackages": 12
+  },
+  "runId": "RUN-20261027-P0-08",
+  "sourceBaseRevision": "0f3a66e",
+  "acceptanceScope": "隔离 P0 基线加本次修复；不是当前 P1 工作区的完整阶段验收",
+  "runtimeFingerprint": "ff0a1c32a7f78c80fe06a108d1e662fa35410b8603f4a9df8253a114138db35f",
+  "tests": {
+    "product": 14,
+    "upstream": 58,
+    "regressions": 6,
+    "total": 72,
+    "skipped": 0
+  },
+  "regressionBeforeFix": {
+    "tests": 6,
+    "failed": 6
+  },
+  "steps": [
+    {
+      "command": "pnpm install --frozen-lockfile --store-dir <empty-temporary-store>",
+      "exitCode": 0,
+      "elapsedMs": 5893
+    },
+    {
+      "command": "pnpm run check",
+      "exitCode": 0,
+      "elapsedMs": 20252
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/cli/src/boot.ts",
+      "sha256": "3ef4dbf234c276bbeda1685c3e3497afbd4784bfcaaf25c3c12a3bbc3518e77f"
+    },
+    {
+      "path": "apps/cli/src/index.ts",
+      "sha256": "a56539af65f0beca78bfbc2c6bde0104d3d543209cc7d455e4d9eaf3e28420a5"
+    },
+    {
+      "path": "packages/product/host-config/src/index.ts",
+      "sha256": "55602f549b0da55408871217533e54736c2fdd9e3483f1b12784a2008d5e1e68"
+    },
+    {
+      "path": "tests/p0-regressions.test.mjs",
+      "sha256": "97595611b22220084d47e6454481fdc024fcb426e42abc95958893347fbad0cd"
+    },
+    {
+      "path": "tests/fixtures/host-config-race.mjs",
+      "sha256": "ea81a47d9b8bb5cf4ca96fdc015c4bc0fb0c1bc8207c0f09d16494d3477f3271"
+    }
+  ],
+  "p1Compatibility": {
+    "scope": "未提交 P1 源码的隔离快照",
+    "installBuildTypecheck": "passed",
+    "p0Regressions": 6,
+    "productionProfileCheckExitCode": 0,
+    "productTests": "not passed; first TZ-010 assertion reproduced with original and patched boot; combined run stopped",
+    "phaseAcceptance": false
+  },
+  "limitations": [
+    "macOS arm64 实测；不是跨平台安装或断电恢复验收",
+    "首次配置原子发布需要文件系统支持硬链接，不支持时失败",
+    "P1 由其他窗口推进，本次不改变其任务状态",
+    "独立提交 P0 修复；未推送、未运行远程 CI"
+  ],
+  "initialAcceptance": {
+    "stage": "P0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "node": "v26.8.1",
+    "packageManager": "pnpm@11.28.5",
+    "result": "passed",
+    "runtimeFingerprint": "fdd90f2e9ca09dee3ac8eb8aa186671fd4c0341fc35d6a30beccc7b87bcd40e8",
+    "verifiedAt": "2026-10-27",
+    "timezone": "Asia/Shanghai",
+    "installation": {
+      "downloaded": 58,
+      "reused": 0,
+      "workspacePackages": 12
+    },
+    "tests": {
+      "product": 8,
+      "upstream": 58,
+      "skipped": 0
+    },
+    "steps": [
+      {
+        "command": "pnpm install --frozen-lockfile --store-dir <empty-temporary-store>",
+        "exitCode": 0,
+        "elapsedMs": 3608
+      },
+      {
+        "command": "pnpm run check",
+        "exitCode": 0,
+        "elapsedMs": 7506
+      }
+    ],
+    "limitations": [
+      "本地 macOS arm64 验收，非跨平台安装验收",
+      "未推送、未触发远程 CI",
+      "前端选型暂缓；P1 核心尚未迁入"
+    ]
+  },
+  "filesBasis": "以下为隔离 P0 的源码摘要；CLI 只含 P0 入口及失败退出补丁，不是当前含 P1 代码的完整入口",
+  "commitScope": "仅本次 P0 修复、6 项回归及验收记录；排除其他窗口的 P1 修改"
+}

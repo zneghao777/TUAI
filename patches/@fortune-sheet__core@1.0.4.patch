@@ -1,0 +1,278 @@
+diff --git a/dist/index.esm.js b/dist/index.esm.js
+index 5c9820b1a261305d500e69eeaf350821872beaf4..0a37773f5898e3340da8cb07899ebd3c5fdc1b97 100644
+--- a/dist/index.esm.js
++++ b/dist/index.esm.js
+@@ -52070,4 +52070,100 @@
++// Italian strings for the read-only workbook preview. Keep the remaining editor resources unchanged.
++var itPreview = Object.assign({}, en, {
++  generalDialog: Object.assign({}, en.generalDialog, {
++  "partiallyError": "Impossibile eseguire l’operazione su celle unite parzialmente",
++  "readOnlyError": "Operazione non disponibile in sola lettura",
++  "dataNullError": "I dati richiesti non sono disponibili",
++  "noSeletionError": "Seleziona prima un intervallo",
++  "cannotSelectMultiple": "Seleziona un solo intervallo"
++}),
++  button: Object.assign({}, en.button, {
++  "confirm": "Conferma",
++  "cancel": "Annulla",
++  "close": "Chiudi",
++  "update": "Aggiorna",
++  "delete": "Elimina",
++  "insert": "Inserisci",
++  "prevPage": "Precedente",
++  "nextPage": "Successiva",
++  "total": "Totale:"
++}),
++  info: Object.assign({}, en.info, {
++  "detailUpdate": "Aperto",
++  "detailSave": "Ripristinato dalla cache locale",
++  "row": "",
++  "column": "",
++  "loading": "Caricamento…",
++  "copy": "Copia",
++  "return": "Esci",
++  "rename": "Rinomina",
++  "tips": "Rinomina la cartella di lavoro",
++  "noName": "Foglio di calcolo senza titolo",
++  "wait": "In attesa dell’aggiornamento",
++  "add": "Aggiungi",
++  "addLast": "altre righe in fondo",
++  "backTop": "Torna all’inizio",
++  "pageInfo": "Totale ${total}, ${totalPage} pagine, pagina corrente ${currentPage}",
++  "nextPage": "Successiva",
++  "tipInputNumber": "Inserisci un numero",
++  "tipInputNumberLimit": "Inserisci un valore tra 1 e 100",
++  "tipRowHeightLimit": "L’altezza della riga deve essere tra 0 e 545",
++  "tipColumnWidthLimit": "La larghezza della colonna deve essere tra 0 e 2038",
++  "pageInfoFull": "Totale ${total}, ${totalPage} pagine; tutti i dati sono visualizzati",
++  "sheetIsFocused": "Blocco del focus sul foglio attivato.",
++  "sheetNotFocused": "Blocco del focus sul foglio disattivato.",
++  "sheetSrIntro": "Per attivare o disattivare il focus sul foglio, premi Maiusc, Ctrl e F.",
++  "currentCellInput": "Contenuto della cella corrente",
++  "newSheet": "Nuovo foglio",
++  "sheetOptions": "Opzioni del foglio",
++  "Dropdown": "Menu a discesa",
++  "zoomIn": "Aumenta zoom",
++  "zoomOut": "Riduci zoom",
++  "toggleSheetFocusShortcut": "Attiva o disattiva il focus sul foglio: Maiusc, Ctrl e F.",
++  "selectRangeShortcut": "Seleziona un intervallo: Maiusc e frecce.",
++  "autoFillDownShortcut": "Riempimento automatico verso il basso: Ctrl o Cmd e D.",
++  "autoFillRightShortcut": "Riempimento automatico verso destra: Ctrl o Cmd e R.",
++  "boldTextShortcut": "Grassetto: Ctrl o Cmd e B.",
++  "copyShortcut": "Copia: Ctrl o Cmd e C.",
++  "pasteShortcut": "Incolla: Ctrl o Cmd e V.",
++  "undoShortcut": "Annulla: Ctrl o Cmd e Z.",
++  "redoShortcut": "Ripeti: Ctrl o Cmd, Maiusc e Z.",
++  "deleteCellContentShortcut": "Elimina il contenuto: Canc o Backspace.",
++  "confirmCellEditShortcut": "Conferma e passa alla cella inferiore: Invio.",
++  "moveRightShortcut": "Passa a destra: Tab.",
++  "moveLeftShortcut": "Passa a sinistra: Maiusc e Tab.",
++  "shortcuts": "Scorciatoie da tastiera"
++}),
++  rightclick: Object.assign({}, en.rightclick, {
++  "copy": "Copia",
++  "copyAs": "Copia come",
++  "paste": "Incolla",
++  "noMulti": "Questa operazione richiede un solo intervallo; selezionane uno"
++}),
++  sheetconfig: Object.assign({}, en.sheetconfig, {
++  "delete": "Elimina",
++  "copy": "Copia",
++  "rename": "Rinomina",
++  "changeColor": "Cambia colore",
++  "hide": "Nascondi",
++  "unhide": "Mostra",
++  "moveLeft": "Sposta a sinistra",
++  "moveRight": "Sposta a destra",
++  "resetColor": "Ripristina colore",
++  "cancelText": "Annulla",
++  "chooseText": "Conferma colore",
++  "focus": "Focus",
++  "tipNameRepeat": "Esiste già un foglio con questo nome",
++  "noMoreSheet": "La cartella di lavoro deve contenere almeno un foglio visibile",
++  "confirmDelete": "Eliminare il foglio",
++  "redoDelete": "Puoi annullare con Ctrl+Z",
++  "noHide": "Deve rimanere almeno un foglio visibile",
++  "chartEditNoOpt": "Operazione non disponibile durante la modifica del grafico",
++  "sheetNameSpecCharError": "Il nome contiene caratteri non consentiti",
++  "sheetNamecannotIsEmptyError": "Il nome del foglio non può essere vuoto"
++}),
++});
+ var localeObj = {
++  it: itPreview,
+   en: en,
+   zh: zh,
+   es: es,
+@@ -62866,7 +62962,7 @@ function rangeValueToHtml(ctx, sheetId, ranges) {
+         if (_.isNil(c_value)) {
+           c_value = "";
+         }
+-        column += escapeHTMLTag(c_value);
++        column += _.escape(c_value);
+       } else {
+         var _style = "";
+         if (borderInfoCompute && borderInfoCompute["".concat(r, "_").concat(c)]) {
+@@ -73869,6 +73965,7 @@ var Canvas = /*#__PURE__*/function () {
+   }, {
+     key: "drawFreezeLine",
+     value: function drawFreezeLine(_ref2) {
++      if (this.sheetCtx.allowEdit === false) return;
+       var horizontalTop = _ref2.horizontalTop,
+         verticalLeft = _ref2.verticalLeft;
+       var renderCtx = this.canvasElement.getContext("2d");
+@@ -77244,6 +77341,16 @@ function handleGlobalWheel(ctx, e, cache, scrollbarX, scrollbarY) {
+   var _cache$searchDialog;
+   if (((_cache$searchDialog = cache.searchDialog) === null || _cache$searchDialog === void 0 ? void 0 : _cache$searchDialog.mouseEnter) && ctx.showSearch && ctx.showReplace) return;
+   if (ctx.filterContextMenu != null) return;
++  // Read-only trackpad panning follows pixel deltas on both axes without a gesture lock.
++  if (ctx.allowEdit === false && e.deltaMode === 0) {
++    scrollbarX.scrollLeft += e.deltaX;
++    scrollbarY.scrollTop += e.deltaY;
++    // Keep React scrollbar effects aligned with the browser-clamped offsets.
++    ctx.scrollLeft = scrollbarX.scrollLeft;
++    ctx.scrollTop = scrollbarY.scrollTop;
++    e.preventDefault();
++    return;
++  }
+   var scrollLeft = scrollbarX.scrollLeft;
+   var scrollTop = scrollbarY.scrollTop;
+   var visibledatacolumn_c = ctx.visibledatacolumn;
+diff --git a/dist/index.js b/dist/index.js
+index 04113a18dee9feee28e9434ee3023626c800e7d3..08bef64db73918e743fbfb2dc218ae2c27171444 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -52080,4 +52080,100 @@
++// Italian strings for the read-only workbook preview. Keep the remaining editor resources unchanged.
++var itPreview = Object.assign({}, en, {
++  generalDialog: Object.assign({}, en.generalDialog, {
++  "partiallyError": "Impossibile eseguire l’operazione su celle unite parzialmente",
++  "readOnlyError": "Operazione non disponibile in sola lettura",
++  "dataNullError": "I dati richiesti non sono disponibili",
++  "noSeletionError": "Seleziona prima un intervallo",
++  "cannotSelectMultiple": "Seleziona un solo intervallo"
++}),
++  button: Object.assign({}, en.button, {
++  "confirm": "Conferma",
++  "cancel": "Annulla",
++  "close": "Chiudi",
++  "update": "Aggiorna",
++  "delete": "Elimina",
++  "insert": "Inserisci",
++  "prevPage": "Precedente",
++  "nextPage": "Successiva",
++  "total": "Totale:"
++}),
++  info: Object.assign({}, en.info, {
++  "detailUpdate": "Aperto",
++  "detailSave": "Ripristinato dalla cache locale",
++  "row": "",
++  "column": "",
++  "loading": "Caricamento…",
++  "copy": "Copia",
++  "return": "Esci",
++  "rename": "Rinomina",
++  "tips": "Rinomina la cartella di lavoro",
++  "noName": "Foglio di calcolo senza titolo",
++  "wait": "In attesa dell’aggiornamento",
++  "add": "Aggiungi",
++  "addLast": "altre righe in fondo",
++  "backTop": "Torna all’inizio",
++  "pageInfo": "Totale ${total}, ${totalPage} pagine, pagina corrente ${currentPage}",
++  "nextPage": "Successiva",
++  "tipInputNumber": "Inserisci un numero",
++  "tipInputNumberLimit": "Inserisci un valore tra 1 e 100",
++  "tipRowHeightLimit": "L’altezza della riga deve essere tra 0 e 545",
++  "tipColumnWidthLimit": "La larghezza della colonna deve essere tra 0 e 2038",
++  "pageInfoFull": "Totale ${total}, ${totalPage} pagine; tutti i dati sono visualizzati",
++  "sheetIsFocused": "Blocco del focus sul foglio attivato.",
++  "sheetNotFocused": "Blocco del focus sul foglio disattivato.",
++  "sheetSrIntro": "Per attivare o disattivare il focus sul foglio, premi Maiusc, Ctrl e F.",
++  "currentCellInput": "Contenuto della cella corrente",
++  "newSheet": "Nuovo foglio",
++  "sheetOptions": "Opzioni del foglio",
++  "Dropdown": "Menu a discesa",
++  "zoomIn": "Aumenta zoom",
++  "zoomOut": "Riduci zoom",
++  "toggleSheetFocusShortcut": "Attiva o disattiva il focus sul foglio: Maiusc, Ctrl e F.",
++  "selectRangeShortcut": "Seleziona un intervallo: Maiusc e frecce.",
++  "autoFillDownShortcut": "Riempimento automatico verso il basso: Ctrl o Cmd e D.",
++  "autoFillRightShortcut": "Riempimento automatico verso destra: Ctrl o Cmd e R.",
++  "boldTextShortcut": "Grassetto: Ctrl o Cmd e B.",
++  "copyShortcut": "Copia: Ctrl o Cmd e C.",
++  "pasteShortcut": "Incolla: Ctrl o Cmd e V.",
++  "undoShortcut": "Annulla: Ctrl o Cmd e Z.",
++  "redoShortcut": "Ripeti: Ctrl o Cmd, Maiusc e Z.",
++  "deleteCellContentShortcut": "Elimina il contenuto: Canc o Backspace.",
++  "confirmCellEditShortcut": "Conferma e passa alla cella inferiore: Invio.",
++  "moveRightShortcut": "Passa a destra: Tab.",
++  "moveLeftShortcut": "Passa a sinistra: Maiusc e Tab.",
++  "shortcuts": "Scorciatoie da tastiera"
++}),
++  rightclick: Object.assign({}, en.rightclick, {
++  "copy": "Copia",
++  "copyAs": "Copia come",
++  "paste": "Incolla",
++  "noMulti": "Questa operazione richiede un solo intervallo; selezionane uno"
++}),
++  sheetconfig: Object.assign({}, en.sheetconfig, {
++  "delete": "Elimina",
++  "copy": "Copia",
++  "rename": "Rinomina",
++  "changeColor": "Cambia colore",
++  "hide": "Nascondi",
++  "unhide": "Mostra",
++  "moveLeft": "Sposta a sinistra",
++  "moveRight": "Sposta a destra",
++  "resetColor": "Ripristina colore",
++  "cancelText": "Annulla",
++  "chooseText": "Conferma colore",
++  "focus": "Focus",
++  "tipNameRepeat": "Esiste già un foglio con questo nome",
++  "noMoreSheet": "La cartella di lavoro deve contenere almeno un foglio visibile",
++  "confirmDelete": "Eliminare il foglio",
++  "redoDelete": "Puoi annullare con Ctrl+Z",
++  "noHide": "Deve rimanere almeno un foglio visibile",
++  "chartEditNoOpt": "Operazione non disponibile durante la modifica del grafico",
++  "sheetNameSpecCharError": "Il nome contiene caratteri non consentiti",
++  "sheetNamecannotIsEmptyError": "Il nome del foglio non può essere vuoto"
++}),
++});
+ var localeObj = {
++  it: itPreview,
+   en: en,
+   zh: zh,
+   es: es,
+@@ -62876,7 +62972,7 @@ function rangeValueToHtml(ctx, sheetId, ranges) {
+         if (___default['default'].isNil(c_value)) {
+           c_value = "";
+         }
+-        column += escapeHTMLTag(c_value);
++        column += ___default['default'].escape(c_value);
+       } else {
+         var _style = "";
+         if (borderInfoCompute && borderInfoCompute["".concat(r, "_").concat(c)]) {
+@@ -73879,6 +73975,7 @@ var Canvas = /*#__PURE__*/function () {
+   }, {
+     key: "drawFreezeLine",
+     value: function drawFreezeLine(_ref2) {
++      if (this.sheetCtx.allowEdit === false) return;
+       var horizontalTop = _ref2.horizontalTop,
+         verticalLeft = _ref2.verticalLeft;
+       var renderCtx = this.canvasElement.getContext("2d");
+@@ -77254,6 +77351,16 @@ function handleGlobalWheel(ctx, e, cache, scrollbarX, scrollbarY) {
+   var _cache$searchDialog;
+   if (((_cache$searchDialog = cache.searchDialog) === null || _cache$searchDialog === void 0 ? void 0 : _cache$searchDialog.mouseEnter) && ctx.showSearch && ctx.showReplace) return;
+   if (ctx.filterContextMenu != null) return;
++  // Read-only trackpad panning follows pixel deltas on both axes without a gesture lock.
++  if (ctx.allowEdit === false && e.deltaMode === 0) {
++    scrollbarX.scrollLeft += e.deltaX;
++    scrollbarY.scrollTop += e.deltaY;
++    // Keep React scrollbar effects aligned with the browser-clamped offsets.
++    ctx.scrollLeft = scrollbarX.scrollLeft;
++    ctx.scrollTop = scrollbarY.scrollTop;
++    e.preventDefault();
++    return;
++  }
+   var scrollLeft = scrollbarX.scrollLeft;
+   var scrollTop = scrollbarY.scrollTop;
+   var visibledatacolumn_c = ctx.visibledatacolumn;

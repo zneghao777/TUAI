@@ -1,0 +1,122 @@
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx b/packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx
+index 9561970..32e5b6d 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx
++++ b/packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx
+@@ -38,6 +38,7 @@ export type { LoadedPage } from './text/lines.ts'
+ 
+ /** Private registration inputs; the framework binds the registry source to useDocumentPreviews. */
+ export interface TextPreviewInjected extends TextInjected {
++  readonly formatRemoteError?: (message: string) => string
+   readonly hooks: { readonly documentPreviews: ObservableSnapshot<readonly DocumentPreviewDefinition[]> }
+ }
+ 
+@@ -57,7 +58,7 @@ export type TextPreviewProps =
+ export function TextPreview({
+   useTabInfo, useResource, useStore, actions, loadPage, reloadPages,
+   loadAll, reloadAll, prepareRenderer, useDocumentPreviews, renderSlot, t,
+-  addResource, setResources,
++  addResource, setResources, formatRemoteError,
+ }: TextPreviewProps): ReactNode {
+   const { tab } = useTabInfo()
+   const { navigation, signal } = tab
+@@ -240,7 +241,7 @@ export function TextPreview({
+           // With nothing read the body's own failure already says it, so the
+           // bar would only repeat the same line.
+           <p className={css.changed} data-textpreview-meta-failed={meta.failure.code}>
+-            <span>{failureLine(t, meta.failure)}</span>
++            <span>{failureLine(t, meta.failure, formatRemoteError)}</span>
+             <ActionButton
+               type="button"
+               className={css.action}
+@@ -361,7 +362,7 @@ export function TextPreview({
+         {current?.failure !== undefined && (hasContent
+           ? (
+             <p className={css.statusLine} data-textpreview-failed={current.failure.code}>
+-              <span>{failureLine(t, current.failure)}</span>
++              <span>{failureLine(t, current.failure, formatRemoteError)}</span>
+               <ActionButton
+                 type="button"
+                 className={css.action}
+@@ -380,7 +381,7 @@ export function TextPreview({
+             // Metadata observation remains owned by the resource provider.
+             <div className={css.empty} data-textpreview-failed={current.failure.code}>
+               <FileTypeIcon kind={classifyFileType(name)} size={36} className={css.emptyIcon} />
+-              <p className={css.emptyLine}>{failureLine(t, current.failure)}</p>
++              <p className={css.emptyLine}>{failureLine(t, current.failure, formatRemoteError)}</p>
+               {emptyFailureRecourse(current.failure) === 'open' && fileOwner !== undefined
+                 && renderSlot('sidebar.right.tab.document.unpreviewable', fileOwner)}
+               {emptyFailureRecourse(current.failure) === 'retry' && (
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/failure-line.ts b/packages/client/ui-sidebar-documentpreview/src/client/failure-line.ts
+index 625e384..5e66020 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/failure-line.ts
++++ b/packages/client/ui-sidebar-documentpreview/src/client/failure-line.ts
+@@ -21,7 +21,7 @@ function humanBytes(bytes: number): string {
+  * @param failure - the settled Remote failure.
+  * @returns the line to show in place of the file.
+  */
+-export function failureLine(t: TranslateNS<'sidebarDocumentPreview'>, failure: RemoteFailure): string {
++export function failureLine(t: TranslateNS<'sidebarDocumentPreview'>, failure: RemoteFailure, formatRemoteError?: (message: string) => string): string {
+   switch (failure.code) {
+     case 'workspace-file/not-found': return t('error.notFound')
+     case 'workspace-file/too-large':
+@@ -30,7 +30,7 @@ export function failureLine(t: TranslateNS<'sidebarDocumentPreview'>, failure: R
+     case 'workspace-file/not-regular-file': return t('error.notRegularFile')
+     // Carrier and unclassified host failures reach the reader as themselves:
+     // this panel knows nothing useful to add to a transport-level message.
+-    default: return t('error.unavailable', { message: failure.message })
++    default: return t('error.unavailable', { message: formatRemoteError?.(failure.message) ?? failure.message })
+   }
+ }
+ 
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/index.ts b/packages/client/ui-sidebar-documentpreview/src/client/index.ts
+index 670ba33..ee94f59 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/index.ts
++++ b/packages/client/ui-sidebar-documentpreview/src/client/index.ts
+@@ -53,6 +53,8 @@ export type { DocumentLoadMode, DocumentPreviewDefinition } from './document/reg
+ 
+ declare module '@deepseek-ai/cordis' {
+   interface Context {
++    /** Optional product translation for Host-provided error messages. */
++    formatRemoteError?: (message: string) => string
+     /** File-extension renderer registrations, independent from their keyed document bodies. */
+     documentPreviews: DocumentPreviewRegistry
+   }
+@@ -111,6 +113,7 @@ export function apply(ctx: ClientContext): void {
+       },
+       inject: (sessionId, actions): TextPreviewInjected => ({
+         ...face(sessionId, actions), hooks: { documentPreviews: source },
++        formatRemoteError: message => ctx.get('formatRemoteError')?.(message) ?? message,
+       }),
+     },
+     TextPreview,
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/office/index.ts b/packages/client/ui-sidebar-documentpreview/src/client/office/index.ts
+index 832787a..d8b76fd 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/office/index.ts
++++ b/packages/client/ui-sidebar-documentpreview/src/client/office/index.ts
+@@ -51,7 +51,9 @@ export function apply(ctx: Context, config: Config['office']): void {
+   const documentT = ctx.locale.bind('sidebarDocumentPreview')
+   const face = officeFace(
+     (file, signal) => read(file, signal),
+-    failure => 'code' in failure ? failureLine(documentT, failure) : documentT('error.unavailable', { message: failure.message }),
++    failure => 'code' in failure
++      ? failureLine(documentT, failure, message => ctx.get('formatRemoteError')?.(message) ?? message)
++      : documentT('error.unavailable', { message: ctx.get('formatRemoteError')?.(failure.message) ?? failure.message }),
+   )
+   ctx.effect(() => ctx.slots.inject('sidebar.right.tab.document', () => ctx.slots.register({
+     name: 'sidebar.right.tab.document', key: id, locale: 'sidebarOffice', store,
+diff --git a/packages/client/ui-sidebar-documentpreview/tests/failure-line.client.spec.ts b/packages/client/ui-sidebar-documentpreview/tests/failure-line.client.spec.ts
+index 134cf3e..1dd43d5 100644
+--- a/packages/client/ui-sidebar-documentpreview/tests/failure-line.client.spec.ts
++++ b/packages/client/ui-sidebar-documentpreview/tests/failure-line.client.spec.ts
+@@ -32,6 +32,11 @@ describe('failureLine', () => {
+   it('passes any other failure through in its own words', () => {
+     expect(failureLine(t, failure('gateway/internal', {}, 'socket closed'))).toBe('error.unavailable(message=socket closed)')
+   })
++
++  it('formats host messages when the product provides a translator', () => {
++    expect(failureLine(t, failure('gateway/internal', {}, 'translated by host'), message => `localized: ${message}`))
++      .toBe('error.unavailable(message=localized: translated by host)')
++  })
+ })
+ 
+ describe('emptyFailureRecourse', () => {

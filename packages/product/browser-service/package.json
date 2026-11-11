@@ -1,0 +1,23 @@
+{
+  "name": "@tuai/browser-service",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./types": {
+      "types": "./lib/types/types.d.ts",
+      "default": "./lib/types.js"
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "workspace:*",
+    "@tuai/host-config": "workspace:*",
+    "@tuai/task-runtime": "workspace:*",
+    "@tuai/ego-connector": "workspace:*",
+    "zod": "4.4.3"
+  }
+}

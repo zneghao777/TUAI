@@ -1,0 +1,4085 @@
+{
+  "schemaVersion": 1,
+  "batchId": "M3",
+  "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
+  "status": "verified-local-p2",
+  "scope": "P2 实际启用能力及其运行、类型和资源闭包；未注册插件不表示能力已启用",
+  "rollbackRevision": "707321e668c3e70d989fcd499388e3bab9b86f8e",
+  "packages": [
+    {
+      "path": "packages/client/connection",
+      "name": "@deepseek-ai/dsh-client-connection",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/connection/README.i18n.yaml",
+          "sha256": "a0a8b1fa60c0edb4714a37e867597fa1a0fdf36fb5bf42a4aeabcc5cc6a33bb9"
+        },
+        {
+          "path": "packages/client/connection/README.md",
+          "sha256": "c84b049e4d7bd8957e9edfb7e30aace595ac6e62b470efda629d56b701ca6337"
+        },
+        {
+          "path": "packages/client/connection/README.zh.md",
+          "sha256": "d352865f0285408baab54d49d6b796fc0fe0d0d9da8c4b7883064a77715f2cdf"
+        },
+        {
+          "path": "packages/client/connection/locale/de.json",
+          "sha256": "a82fb70eed734921bade04afc5020e1f813289575b9100c4a62f5affe1c463db"
+        },
+        {
+          "path": "packages/client/connection/locale/en.json",
+          "sha256": "5a56253386fe2b3f49cf168788b3673cc2985b1b5833dca4b2302cd8470ca0ef"
+        },
+        {
+          "path": "packages/client/connection/locale/es.json",
+          "sha256": "46c3b31ee19861b5c1b035ef3e9d9d8f4a192970a5b0907d33cfe8532bb29a9e"
+        },
+        {
+          "path": "packages/client/connection/locale/fr.json",
+          "sha256": "3bd880dfbac5dab442c5f82658bb1d0228307b09492c75d2a82c39c2e11c0d59"
+        },
+        {
+          "path": "packages/client/connection/locale/ja.json",
+          "sha256": "936a046e54429c9eec005cfe8a5db7dfa04010fa301acf7d2391ce1388bec599"
+        },
+        {
+          "path": "packages/client/connection/locale/pt.json",
+          "sha256": "a8f87e3814864f7287c99755612268625decce0ea4fca64174be58cd73e107ed"
+        },
+        {
+          "path": "packages/client/connection/locale/ru.json",
+          "sha256": "5d8d27c37984c6dc51e8cfa0dfcaa0b8506891263136c9e35d46c83f045b9a6d"
+        },
+        {
+          "path": "packages/client/connection/locale/zh.json",
+          "sha256": "3738e489124919fb718ed19a7bc0d158fd10920d848e62a3f55fe7f5a845adfe"
+        },
+        {
+          "path": "packages/client/connection/package.json",
+          "sha256": "b9cd9b0db26856abf229e9a9281188f2190440e1d3d2d3a75c74682aa1b50390"
+        },
+        {
+          "path": "packages/client/connection/src/api-path.ts",
+          "sha256": "8d420a69c9e80584818433e3d909f09e9be13bc9a9d6a5be3bb02c427c328934"
+        },
+        {
+          "path": "packages/client/connection/src/api-request-trust.ts",
+          "sha256": "879a4f497ad41355771303a5956851da04661be24b08435fe7bf13d42e1e3b9b"
+        },
+        {
+          "path": "packages/client/connection/src/browser-auth.ts",
+          "sha256": "f1ebdb9fa8706414852420393d9f34b2d604a128928a2f5852d4832ce38b45f7"
+        },
+        {
+          "path": "packages/client/connection/src/client/api.ts",
+          "sha256": "54aa86f493b80693b2a6ce89bfc5df6105386717bb5307866d11320345c8a747"
+        },
+        {
+          "path": "packages/client/connection/src/client/connection.ts",
+          "sha256": "efe3168500645825630af073428bf88f21e7b92e15d73d12fb849ba4e480bd41"
+        },
+        {
+          "path": "packages/client/connection/src/client/index.ts",
+          "sha256": "b508d7ab09e83685336d1e9d3649f4c9cf77ca7825835069201b04a66e60c31d"
+        },
+        {
+          "path": "packages/client/connection/src/client/random-uuid.ts",
+          "sha256": "c037b0e0224ca27a70682fd86d06e3527e6f45acf467b0b70a56e1d8c3000f7c"
+        },
+        {
+          "path": "packages/client/connection/src/client/rpc.ts",
+          "sha256": "8a55426351dfc3b4150b6fdd60daf20735824cbb90b4b806321ec442c639e460"
+        },
+        {
+          "path": "packages/client/connection/src/client/socket.ts",
+          "sha256": "f9ef8a0ec2cc0b0ca5b85b90dcc7615d16e5722d3799cbba35c9228208828d61"
+        },
+        {
+          "path": "packages/client/connection/src/connect-protocol.ts",
+          "sha256": "ebae51ec20464a50fdd5a840bda57e5660fa3f2ffbc027a93f3e96ea39f784cc"
+        },
+        {
+          "path": "packages/client/connection/src/http-bridge.ts",
+          "sha256": "182a668579ec5701489f54449bb4b0e63e80b77f90edc147b993b1acba4bae86"
+        },
+        {
+          "path": "packages/client/connection/src/index.ts",
+          "sha256": "33a14e80298e0a0bc7bafef515d853d13584cd2433844b3dc2a89d4980d315e1"
+        },
+        {
+          "path": "packages/client/connection/src/loopback-hostname.ts",
+          "sha256": "4c21ef048250d543659c29a4876e820e90bdeb452f424dfbdbc19f3b500efa62"
+        },
+        {
+          "path": "packages/client/connection/src/peer.ts",
+          "sha256": "ceba1eda231ee9554a3620607360165479078cce994f74e13df83a53a92e6cc3"
+        },
+        {
+          "path": "packages/client/connection/src/recovery-config.ts",
+          "sha256": "677ba43668fc82c7e9da4c7e79389aae9d594055f49a5073349edd38ee111d6e"
+        },
+        {
+          "path": "packages/client/connection/src/rpc-host.ts",
+          "sha256": "55cd4aaf34103aba890146a8168ec88ba45c0373e55367a74d4f547ed579bcf7"
+        },
+        {
+          "path": "packages/client/connection/src/rpc-schema.ts",
+          "sha256": "4224e854bb62b0c195c5a401683322fdc69cadf2a0cf27abd3fb7690ee35ffb2"
+        },
+        {
+          "path": "packages/client/connection/src/rpc.ts",
+          "sha256": "74ba5632fea441a4c76de677ddeb840de51a775b42514c0908a3ef207339d94b"
+        },
+        {
+          "path": "packages/client/connection/tests/api-helpers.client.spec.ts",
+          "sha256": "11c4f970ab9eef7ff01eb30cf119bad4087e0d331958d6681308c13cff2551b9"
+        },
+        {
+          "path": "packages/client/connection/tests/api-request-trust.host.spec.ts",
+          "sha256": "5095da7ebaf4027966ac5832a589c65cda125f8fafdaec593609e4615c90d6e8"
+        },
+        {
+          "path": "packages/client/connection/tests/binary-rpc.host.spec.ts",
+          "sha256": "91e125c2376bc6e583be9c61e396dc6eae6a068af44354e855fe310a9118cba0"
+        },
+        {
+          "path": "packages/client/connection/tests/browser-auth.host.spec.ts",
+          "sha256": "301573e075b23b72da79354eb15b9e4c4d84e435b8d973cb387dd6408374a540"
+        },
+        {
+          "path": "packages/client/connection/tests/browser-credentials.ts",
+          "sha256": "8d35d8d0d488cb0cb73587424d629a6bdcb5a12fd6ce0b41c697cb5978a9010b"
+        },
+        {
+          "path": "packages/client/connection/tests/client-apply.client.spec.ts",
+          "sha256": "572a51bf24e5474af771193937186f845ede0b8f434a8dead502b1561dc7a40a"
+        },
+        {
+          "path": "packages/client/connection/tests/connection.client.spec.ts",
+          "sha256": "caf7547ac609fd18007a3bf0076d1994616c0d953212f34adcf6f62de7f47c70"
+        },
+        {
+          "path": "packages/client/connection/tests/fake-generation.client.ts",
+          "sha256": "5ff61e9705d9bc78e2a967c6f11ce4e653bbefb6014eec5be7fa2418305d27cf"
+        },
+        {
+          "path": "packages/client/connection/tests/fetch-routes.host.spec.ts",
+          "sha256": "e7905b98898bf31367fc5aba3ccbdc5bdbbcca65e081fbfc44c39a116e9ec901"
+        },
+        {
+          "path": "packages/client/connection/tests/generation.client.spec.ts",
+          "sha256": "9efbefe01b50df11e9a5639f149706b4cbdbd3a6bb8bad72fe7217220895c800"
+        },
+        {
+          "path": "packages/client/connection/tests/http-bridge.host.spec.ts",
+          "sha256": "b58bb80073a5c3ee7e953a9e10cf7fa35903cba46422e00ae7d019c2f4df7f8a"
+        },
+        {
+          "path": "packages/client/connection/tests/loopback-hostname.client.spec.ts",
+          "sha256": "02ed986d027ef8c0f49e4d22d19367ebb1fabee699246e8ecdff769dda574fc8"
+        },
+        {
+          "path": "packages/client/connection/tests/node-half.host.spec.ts",
+          "sha256": "69c82d56d74a8b743b41114d71919086a293ae3d235491e52776a99f22c2614d"
+        },
+        {
+          "path": "packages/client/connection/tests/recovery-config.client.spec.ts",
+          "sha256": "876c9567d889102245f58ae51dc3560427b77860af38d32d33d3c757475df6c0"
+        },
+        {
+          "path": "packages/client/connection/tests/rpc-schema.host.spec.ts",
+          "sha256": "58047cd37bf29cd2fa06fbde9e066e5194c9c70d1b4ae0d4806ea05ce8178951"
+        },
+        {
+          "path": "packages/client/connection/tests/socket.client.spec.ts",
+          "sha256": "d18e914a63729f80bef2b53587de85a1a66fd497fe7944ba6041eeb450c6968d"
+        },
+        {
+          "path": "packages/client/connection/tsconfig.client.json",
+          "sha256": "eb232b97d17fbd86340e3de6bb609769ca399e675368bac42ffa60eac18f4118"
+        },
+        {
+          "path": "packages/client/connection/tsconfig.host.json",
+          "sha256": "d5c4c3ff4d3d2a1e6be3550bd5bbfd9dbefd86dd9f5ef97c13f3658cbfc1c2ae"
+        },
+        {
+          "path": "packages/client/connection/tsconfig.json",
+          "sha256": "ad1b25d36ea100440140e543e2a2af188178934da74eadce1b27ef14e91b335e"
+        },
+        {
+          "path": "packages/client/connection/tsdown.config.ts",
+          "sha256": "7a85c40b58dd4483b58cfaaa2ce122430fd592d83f4b5f7bd9b5d70febb45f33"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/connection/package.json",
+          "sha256": "4f1925599a72dba5f714eb1e63e55a09a5b3d76588d86e92f68eb2e526af0e46",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/connection/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/host/webserver",
+      "name": "@deepseek-ai/dsh-host-webserver",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/host/webserver/README.i18n.yaml",
+          "sha256": "32f05f35f92056e5e6a40e35c09bb06a39dc0e4e8b10aaca8066db1fd7626482"
+        },
+        {
+          "path": "packages/host/webserver/README.md",
+          "sha256": "f0c70c991131180210d034507679365e92ada09905c4f892133bb01a556a1a94"
+        },
+        {
+          "path": "packages/host/webserver/README.zh.md",
+          "sha256": "c722c3ed762da5ca568d1e0cd41bdeb34f241feef40e4765f9d1965f5e262e80"
+        },
+        {
+          "path": "packages/host/webserver/locale/de.json",
+          "sha256": "8dcdc7faf93cf094c79a4af232ef2c10ebe25daa1f9c3bb5b2ce04de0782be96"
+        },
+        {
+          "path": "packages/host/webserver/locale/en.json",
+          "sha256": "ac266b30653884433cefa579038d25827a16b9ed1e2528b8234ffdd3e17ef87a"
+        },
+        {
+          "path": "packages/host/webserver/locale/es.json",
+          "sha256": "04045a5d5f7d400603a1d7766b487e2a2f5c05ac702288907f384f863b1c5183"
+        },
+        {
+          "path": "packages/host/webserver/locale/fr.json",
+          "sha256": "286056e566c03452e23b3e5c69c84b169253c40936e4ee50d00401fb283b963c"
+        },
+        {
+          "path": "packages/host/webserver/locale/ja.json",
+          "sha256": "63bb5a00b6146b941a96c8a93d3134ea239141e4b92923cac5bfb606d1a6320a"
+        },
+        {
+          "path": "packages/host/webserver/locale/pt.json",
+          "sha256": "0ba39bf6e80738ccf4c2c5c3f8fa6a3077ec71387f13d2be6442e10f1d840bde"
+        },
+        {
+          "path": "packages/host/webserver/locale/ru.json",
+          "sha256": "f2f11d154570ced8354e76817cde4c2ddff31a0e5e05f10138cbff017919ff3d"
+        },
+        {
+          "path": "packages/host/webserver/locale/zh.json",
+          "sha256": "6fc489ad3d9bae4d24ce9ad05fffbcc5cd70d6f1d33bd314bcbd2e04bfdf6c36"
+        },
+        {
+          "path": "packages/host/webserver/package.json",
+          "sha256": "cf184a9da3b837c2403f60fe57081207c121342276ba2f4223a819a5efdc8738"
+        },
+        {
+          "path": "packages/host/webserver/src/index.ts",
+          "sha256": "84bc7eeb1777f6a759ed880d81f04d15270ab533eb3206c32218a7d81c94cf2d"
+        },
+        {
+          "path": "packages/host/webserver/src/injections.ts",
+          "sha256": "9a9687608fe7b5cbf8d2d13b081db283251c10efadbcdde75485342807c47b93"
+        },
+        {
+          "path": "packages/host/webserver/tests/tls-fixture.ts",
+          "sha256": "a8bcdc57165919342547d2917ba578ffd0c21dd4d2ab4706a7ebfd35aefcdf3f"
+        },
+        {
+          "path": "packages/host/webserver/tests/webserver.spec.ts",
+          "sha256": "7d76e01ebf90d5bef0a5438be23262cff2cd4d99ca376e80f01820fa4d2cbdcf"
+        },
+        {
+          "path": "packages/host/webserver/tsconfig.json",
+          "sha256": "412413fe6411ead4ba0f874aa0588fb6a2d1cbfefc6473b436e23e4c3e87b532"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/host/webserver/package.json",
+          "sha256": "b981a730ad3e3c32cf9b6377640c50bc3dd665af170066c5e696ceb34aba8f36",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/host/webserver/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/api/gateway",
+      "name": "@deepseek-ai/dsh-api-gateway",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/api/gateway/README.i18n.yaml",
+          "sha256": "ebff859f5750f05d67d6574189d9acd025fd25e8c4deb8556a0803a70ed832e9"
+        },
+        {
+          "path": "packages/api/gateway/README.md",
+          "sha256": "8965b24857f5131d67fe7992c8c1f3747e9bc4bd2f89f95d228e9d0d4687d060"
+        },
+        {
+          "path": "packages/api/gateway/README.zh.md",
+          "sha256": "57ae81c9fc63195f39594ab24164d0c61d76aa865f9483cd45bfd620933647f9"
+        },
+        {
+          "path": "packages/api/gateway/locale/de.json",
+          "sha256": "99893296077abeb0c64a03a10b5479eaab33c40f470f869d6a28f4e5433e80ba"
+        },
+        {
+          "path": "packages/api/gateway/locale/en.json",
+          "sha256": "16c842cbf46292c91a1a171f0f78185c14fc386ebbefa231341ba3bf7574150c"
+        },
+        {
+          "path": "packages/api/gateway/locale/es.json",
+          "sha256": "b256ae67a6109ebff7b204fdb7d99141f73f1f68dc182151dd80ea9c9203899c"
+        },
+        {
+          "path": "packages/api/gateway/locale/fr.json",
+          "sha256": "c7937940cdf03b0ade7833fff3af0b6eee4920f477c7d25aea056915dcff8710"
+        },
+        {
+          "path": "packages/api/gateway/locale/ja.json",
+          "sha256": "d67c769681398976b7084af6e77f331ec30ed8cc9985ea01d1903446a949e15b"
+        },
+        {
+          "path": "packages/api/gateway/locale/pt.json",
+          "sha256": "5821c388dde3fb01f8c6c18138d18cdace29a0033f19e0572c51f6d02dd0f49a"
+        },
+        {
+          "path": "packages/api/gateway/locale/ru.json",
+          "sha256": "88ae32f4d0e05edf9bcd8286d7c898224d4c150a777d860d036a4180fd4c741f"
+        },
+        {
+          "path": "packages/api/gateway/locale/zh.json",
+          "sha256": "da4c349ac5a6a198e04bea766b80d692f28a6c9ae302aacef4cdfeab9ab52094"
+        },
+        {
+          "path": "packages/api/gateway/package.json",
+          "sha256": "ab5212d6827a8476335c4547b3d8936ccb3a05f1978083510b6a5734c6c5b8bc"
+        },
+        {
+          "path": "packages/api/gateway/src/access.ts",
+          "sha256": "ae4559eb608ed87effdfaceb02b451d577cb414cb589bf5137001e2924e79546"
+        },
+        {
+          "path": "packages/api/gateway/src/client/index.ts",
+          "sha256": "67b346bbb099b65ec37c6fcedb08e4efeae2aee291fe1809e7a2d6fea080030c"
+        },
+        {
+          "path": "packages/api/gateway/src/client/journal-stream.ts",
+          "sha256": "b867f384cc49fca6d8c0cd4731e0e0ec2b6819c2dacefdca78aa51cb8b1ae013"
+        },
+        {
+          "path": "packages/api/gateway/src/client/remote-events.ts",
+          "sha256": "f8ea8a49a63ff58ffa47f0201a9cd0438b0574f688ea021d6905548decd87085"
+        },
+        {
+          "path": "packages/api/gateway/src/client/remote-stream.ts",
+          "sha256": "0baca65bbdc5cc55c43e6c92c1affcf152a98a25e4a9e6304da9d706e778f92a"
+        },
+        {
+          "path": "packages/api/gateway/src/client/snapshot-stream.ts",
+          "sha256": "d02390b6ae57bbdafa257d832d26dc1c5530f0f250e8a989bc8f3a1f888ea031"
+        },
+        {
+          "path": "packages/api/gateway/src/client/stream-client.ts",
+          "sha256": "4acd9e39179f9c1e9ffe899f5ed08b54564a30ef1f194cc5ef19ad539d7f0d97"
+        },
+        {
+          "path": "packages/api/gateway/src/index.ts",
+          "sha256": "44b50e4407e41ba6602667b9b42f32cee51423fddf947a15ae6d80bd9ef1680d"
+        },
+        {
+          "path": "packages/api/gateway/src/remote-error-codes.ts",
+          "sha256": "01a5522d5c2328aaea391dcfedd96bf9a6e1dda112e075a4ecfca9ba91ae38cf"
+        },
+        {
+          "path": "packages/api/gateway/src/stream-protocol.ts",
+          "sha256": "c0d26dd8d3be737cbb9ae8ecf4e7084d1fb31b37693e94d7e79263c4aa8ce040"
+        },
+        {
+          "path": "packages/api/gateway/src/stream-server.ts",
+          "sha256": "80a08c0274600c3ef7c0479ca3cb110a559fb6697942f9821bd33f6e2c5f0f07"
+        },
+        {
+          "path": "packages/api/gateway/src/types.ts",
+          "sha256": "2e59c902bf01bf61fdb230ea324c5f54b405f92ee2b30ce1dbbc4816702d4183"
+        },
+        {
+          "path": "packages/api/gateway/tests/authenticated-node.client.spec.ts",
+          "sha256": "f8c6cb837fd0ae7cd6b278e4166abd0d228e1b93418ed9442e02bf96e94e0384"
+        },
+        {
+          "path": "packages/api/gateway/tests/browser-credentials.ts",
+          "sha256": "fe21412595d6ec536e1084538e1f858fee0de74f28d7d6ec9f2283b9cff62daa"
+        },
+        {
+          "path": "packages/api/gateway/tests/control-retry.client.spec.ts",
+          "sha256": "0249601ee75dd1fcb73635b8de3c23f57dba14557176715a88d42eb39b4a33b4"
+        },
+        {
+          "path": "packages/api/gateway/tests/echo-stream.host.spec.ts",
+          "sha256": "c954f4d0e3f369d012f6871668fbbd2c61595807c7f8d936855f5065bf955d0e"
+        },
+        {
+          "path": "packages/api/gateway/tests/gateway-access.host.spec.ts",
+          "sha256": "de58ae195f04944017a4b564c38b7a7846a17ef9c2047a96e26987dd3aba7bbd"
+        },
+        {
+          "path": "packages/api/gateway/tests/gateway-stream.host.spec.ts",
+          "sha256": "bbb4a09b285dd579ed21c6d2a4b8990c794283b1a9ad698bf244bfaf6b0eb569"
+        },
+        {
+          "path": "packages/api/gateway/tests/gateway.client.spec.ts",
+          "sha256": "293121bb3e33a4d35515c9e69984d6f75a5be8f872e28b488aa9a17b96965c29"
+        },
+        {
+          "path": "packages/api/gateway/tests/gateway.host.spec.ts",
+          "sha256": "1ca9014a25019d027a146d3b58210aef84bc4cfc86197ffc1c3df93ddea5157a"
+        },
+        {
+          "path": "packages/api/gateway/tests/journal-stream.client.spec.ts",
+          "sha256": "fa97e14151c2da25daae0834917cdaf1b15fd32ed1d5819683515cb8c12d8705"
+        },
+        {
+          "path": "packages/api/gateway/tests/operator-connect-fixture.ts",
+          "sha256": "52b374772f29e49dc56fc82079c68f5cd25f9bbfaaccd84caa0a0cb855e5e141"
+        },
+        {
+          "path": "packages/api/gateway/tests/operator-connect.host.spec.ts",
+          "sha256": "a0aeb9a5215de0a913aa5007c5e937f1361f7608f5c1112910117b9dcb894105"
+        },
+        {
+          "path": "packages/api/gateway/tests/peer.ts",
+          "sha256": "6e05033ef8db1abf7dd524cfcd04801a9d24e179bc0e1d4cf053d558540abd03"
+        },
+        {
+          "path": "packages/api/gateway/tests/remote-event-protocol.host.spec.ts",
+          "sha256": "2a06b705cef87e25dfdccd24e7ba6d81c3cd68ddebda2de18ffd564c561bf1b6"
+        },
+        {
+          "path": "packages/api/gateway/tests/stream-protocol.host.spec.ts",
+          "sha256": "6dd437e6679f6c1fd400880edd13363b4cb94699a92fd398324ea73668174235"
+        },
+        {
+          "path": "packages/api/gateway/tests/stream-server.host.spec.ts",
+          "sha256": "1319c927fe62111922918e896ccd6089b780e95c7a3d6ff0cb6c6a743bbfbcac"
+        },
+        {
+          "path": "packages/api/gateway/tests/strict-source.host.spec.ts",
+          "sha256": "4b307cad3c49b93e4d146cd1af4322a615e47555b7d126bb2b71c52f2f6a2231"
+        },
+        {
+          "path": "packages/api/gateway/tsconfig.client.json",
+          "sha256": "07ea4e0989185de32cbbb27f25ab8c57a9d770200626a8bb564a67af386fd896"
+        },
+        {
+          "path": "packages/api/gateway/tsconfig.host.json",
+          "sha256": "26b9e5fe6bf9035dc363a17bf8d5ec82eb43e23ba53ffe799770e4615c860438"
+        },
+        {
+          "path": "packages/api/gateway/tsconfig.json",
+          "sha256": "ad1b25d36ea100440140e543e2a2af188178934da74eadce1b27ef14e91b335e"
+        },
+        {
+          "path": "packages/api/gateway/tsdown.config.ts",
+          "sha256": "13423114db55478720e47a59607d28af3b5008698ef81bfc0a784d186fd02c5d"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/api/gateway/package.json",
+          "sha256": "e9b388d8447bd63f5f2a110269a617c5b922a9741457072287ce22f3b7db83e0",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/api/gateway/src/index.ts",
+          "sha256": "eeab3243fa9b8d6b59e408ebe03d3905666027ca5235c4d0b1ab6a764df86dd0",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        },
+        {
+          "path": "packages/api/gateway/src/types.ts",
+          "sha256": "f14f70127e60b53e65a5a6fe3a29a9bbf56835dc6a428265c9c2562e1c86c701",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/api/gateway/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/util/deque",
+      "name": "@deepseek-ai/dsh-deque",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/util/deque/README.i18n.yaml",
+          "sha256": "c1300210842f51890601b382373b22f022fb17341410a3416c30b2d6952d4a02"
+        },
+        {
+          "path": "packages/util/deque/README.md",
+          "sha256": "c88de63d26005d3e86a91dba9675224c5cccfe0d34c7e30f527743801fc2c6a0"
+        },
+        {
+          "path": "packages/util/deque/README.zh.md",
+          "sha256": "21896f1fa648a9e372d9868a4d8b62ec4f7028c472184d81c8bca0a68ae02848"
+        },
+        {
+          "path": "packages/util/deque/benchmarks/drain.ts",
+          "sha256": "6a142eae321dbf383aec23f82cc81c997da5ba16928d4ed11d0959deefd68f97"
+        },
+        {
+          "path": "packages/util/deque/package.json",
+          "sha256": "f4fc7abcf0ee354239ff09f3112162ccd1dc9d9103e1238654a60295315ccce4"
+        },
+        {
+          "path": "packages/util/deque/src/index.ts",
+          "sha256": "6dd9b24cc99aeeffb1e70c880306d76ced4a3b769dbd2131d7f129fa8a6649e7"
+        },
+        {
+          "path": "packages/util/deque/tests/deque.spec.ts",
+          "sha256": "756472e37fe1da715b36dd43213d0686f4ef36c879df486ca74b8bfa232ba7a9"
+        },
+        {
+          "path": "packages/util/deque/tsconfig.json",
+          "sha256": "7e86a9ae63aca473186b138ad589d9da22e4df8cfe64f2b74995d2726014d721"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/util/deque/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/api/remote-access",
+      "name": "@deepseek-ai/dsh-api-remote-access",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/api/remote-access/README.i18n.yaml",
+          "sha256": "acbf4bc9482e16d3a5735d665ffe7d9148a85ef0eff8bf3060cff079f3c5ce2d"
+        },
+        {
+          "path": "packages/api/remote-access/README.md",
+          "sha256": "a64c1ecdbbd68ed3db2c53936cae73fef21d59065c125a420fbd3eac602a55fa"
+        },
+        {
+          "path": "packages/api/remote-access/README.zh.md",
+          "sha256": "e35a14dcd2fc335c36a2175f3a2a15945f12a4fa2bbdfa6344bd8d2a03f3ed38"
+        },
+        {
+          "path": "packages/api/remote-access/locale/de.json",
+          "sha256": "88fdaf154187bd6da2de430b5723b817ef78e367f241a8d7f81fbc23f7ffdcfd"
+        },
+        {
+          "path": "packages/api/remote-access/locale/en.json",
+          "sha256": "a083f4074d1314983f82148d46f26f9b44a2b0db07c1c9c32e271405fe4d3af8"
+        },
+        {
+          "path": "packages/api/remote-access/locale/es.json",
+          "sha256": "a7d0e8e60a434b05027beb81b898c80daf55f18dae01109bc600d9b6177506df"
+        },
+        {
+          "path": "packages/api/remote-access/locale/fr.json",
+          "sha256": "8b8422198f876d199425ccac1a5ab9610c1246a80f1a4be67cc58437dd694991"
+        },
+        {
+          "path": "packages/api/remote-access/locale/ja.json",
+          "sha256": "13cdeb5a099e4565934c94620e5e5115c049266840b48575205155a436467f77"
+        },
+        {
+          "path": "packages/api/remote-access/locale/pt.json",
+          "sha256": "b4b5487622b9196b5a946a5015e158a012501086d306e4f562ad5f8756c46230"
+        },
+        {
+          "path": "packages/api/remote-access/locale/ru.json",
+          "sha256": "85b08803cc5762df269d58945f2403eff423b1ce6c6381a4e09fe484c4b5c8bd"
+        },
+        {
+          "path": "packages/api/remote-access/locale/zh.json",
+          "sha256": "3c773950e47917ba4f1ef58c8c14f8c826099168278841247d2f32c8f308163c"
+        },
+        {
+          "path": "packages/api/remote-access/package.json",
+          "sha256": "533958b0ccaa3f40158524c6703f02cb6abdebcef407815da1a1a3b9ae176823"
+        },
+        {
+          "path": "packages/api/remote-access/src/client/index.ts",
+          "sha256": "2a2dd98c42c460e3e062e451c84456e5058c524d7cd11bc62b90be6494b64da0"
+        },
+        {
+          "path": "packages/api/remote-access/src/client/mount.ts",
+          "sha256": "9590e77cedeca25d134bdf1bb35834fa5f6a2e38208d707e91572f577bdbe571"
+        },
+        {
+          "path": "packages/api/remote-access/src/client/state.ts",
+          "sha256": "4dda65e6c1df20b11396c43d146fda43e938e3d99acde0ed4c1f0de8419f051c"
+        },
+        {
+          "path": "packages/api/remote-access/src/client/when-allowed.ts",
+          "sha256": "df9e316b6a3460692d2e43dc0f7c059520b4bc68865b5f0561cb0261790a2625"
+        },
+        {
+          "path": "packages/api/remote-access/src/index.ts",
+          "sha256": "fdbd14722dcecb20311aa9feb84b3046a231ecab4431271d7ab1363f14eda09c"
+        },
+        {
+          "path": "packages/api/remote-access/src/snapshot.ts",
+          "sha256": "5e8411d33f23f825cd82c7e64cbf021c6c4c7ba6541dab5081044e52b51f9240"
+        },
+        {
+          "path": "packages/api/remote-access/src/types.ts",
+          "sha256": "06cb0fbe12dddb23d817cc32cea88bf39caf25e7b0ab83a5d1318d0ec1ec0646"
+        },
+        {
+          "path": "packages/api/remote-access/tests/client-access.client.spec.ts",
+          "sha256": "aad971e0fedcb83391ec821cd41d7f1b74b74ed071daacccbd1b92cfa74c3ae7"
+        },
+        {
+          "path": "packages/api/remote-access/tests/remote-access.host.spec.ts",
+          "sha256": "f82497984f827fad2ed3ab09e7e997ece1d239d79589d11662fd71bdef1aac55"
+        },
+        {
+          "path": "packages/api/remote-access/tsconfig.client.json",
+          "sha256": "b5c289bddccd84423b44129557b29b3a1c0de01c7c8a45fc7ae16699a010816f"
+        },
+        {
+          "path": "packages/api/remote-access/tsconfig.host.json",
+          "sha256": "6ac9558ae75029e38e050571d522e489ab4022a53339e157e76a54bace69d490"
+        },
+        {
+          "path": "packages/api/remote-access/tsconfig.json",
+          "sha256": "9ae2773ce422b78211f4ed8c2d4f6adb6737a9d0f33c4c392b1ea01a41bec759"
+        },
+        {
+          "path": "packages/api/remote-access/tsdown.config.ts",
+          "sha256": "8ec634455961b2ad025f2173622100bdaf4e9d665e9fb27b5afb3bc36cb08451"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/api/remote-access/package.json",
+          "sha256": "efa977f15c0eb196704cca36864bfe5f56bfb095b43bc14ceda00806acb87236",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/api/remote-access/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/client/ui-slots",
+      "name": "@deepseek-ai/dsh-client-ui-slots",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-slots/README.i18n.yaml",
+          "sha256": "9f7f95d8db57b77eb76093d5feac7e55bd09d77bd2d35c16ae1ad780a7dc8ea4"
+        },
+        {
+          "path": "packages/client/ui-slots/README.md",
+          "sha256": "2d0b5c390ae9553aa1804de8b3d9c43501ee47010b2986ad7d5b5090ff688c23"
+        },
+        {
+          "path": "packages/client/ui-slots/README.zh.md",
+          "sha256": "c257c13c0edc4d0963487a1ef75a357998a38b6ae41781549e28d5958c3b6a07"
+        },
+        {
+          "path": "packages/client/ui-slots/package.json",
+          "sha256": "2775c52af54359733f249d4ce7275236f676986278abefaf60bee8fbdd2ce363"
+        },
+        {
+          "path": "packages/client/ui-slots/src/index.ts",
+          "sha256": "43989fb355e1e85316caa70b28de3294f9d6e7b179199a4e429dcd1ef73f2e24"
+        },
+        {
+          "path": "packages/client/ui-slots/src/renderer.ts",
+          "sha256": "43ba3492fff724ffbe71d0b4bcfca410ab695d019aa2e163d2c8dd56cab1a849"
+        },
+        {
+          "path": "packages/client/ui-slots/src/store.ts",
+          "sha256": "4233ae32911848aa771910286e5f41b4c683e8c5b16da190935082ac4249cca0"
+        },
+        {
+          "path": "packages/client/ui-slots/tests/core.client.spec.ts",
+          "sha256": "2963fd108c55f88f182151bd40d5c95701900daf94c4e2b09c1829bb3648fb9c"
+        },
+        {
+          "path": "packages/client/ui-slots/tests/dynamic-keys.client.spec.ts",
+          "sha256": "0b5e9e56cb2bf0531fca18fe4e14a2bc5a16708bab4451f333bae6d7a7ecb1cf"
+        },
+        {
+          "path": "packages/client/ui-slots/tests/type-chain.client.spec.tsx",
+          "sha256": "cce8a0882cc3fabebd0bebb81b845bb7e04713e4931b3b738c3500ee384e612f"
+        },
+        {
+          "path": "packages/client/ui-slots/tsconfig.json",
+          "sha256": "20dd9e91da16d5ee9e2f3756a98aea6caed11a28a8b4c49b82a5145f8560c530"
+        },
+        {
+          "path": "packages/client/ui-slots/tsdown.config.ts",
+          "sha256": "42604c814f8e74f711ffaba697fef15324ab97ae47725e80a567950d35e3ee51"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-slots/package.json",
+          "sha256": "02714a1f13a50b7c858c6f1ce58adbbcb71c61eb80470e3e4458dfd788a2f1ea",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-slots/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/client/store",
+      "name": "@deepseek-ai/dsh-client-store",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/store/README.i18n.yaml",
+          "sha256": "4b7f7ea2e87c568ec34d1660d776c43619118199767f570fcbbbf15915839fdf"
+        },
+        {
+          "path": "packages/client/store/README.md",
+          "sha256": "1ae4f1a0a0934098a4bf51b9c8676e504d55ab292510b6282adc52b43fd2b852"
+        },
+        {
+          "path": "packages/client/store/README.zh.md",
+          "sha256": "e2628714b24281d2f1402df9f13bd827b518692ed8854d494b10c7b44663cd18"
+        },
+        {
+          "path": "packages/client/store/package.json",
+          "sha256": "e837cfe7cb55c7787a395d12023803b5a7a4aa15833ac15784d7e9ddac239253"
+        },
+        {
+          "path": "packages/client/store/src/contract.ts",
+          "sha256": "d4ba75c2559f22713f1f3659d03fce6cf17b6f1c1fe82a9615b71f6a504e9e81"
+        },
+        {
+          "path": "packages/client/store/src/index.ts",
+          "sha256": "6969ed123830868c44d90b664cd40d81d4f6a8fd18245a695fdc3cca38c9da08"
+        },
+        {
+          "path": "packages/client/store/tests/store.client.spec.ts",
+          "sha256": "4d4ac8414d603f603e2004b2018549d9d03a90d09e59505ad5450a4786db755d"
+        },
+        {
+          "path": "packages/client/store/tsconfig.json",
+          "sha256": "c468dcada413a8142a31bdc33720a21c709d9a1ee9cddb851ec0f9d36d4047d5"
+        },
+        {
+          "path": "packages/client/store/tsdown.config.ts",
+          "sha256": "42604c814f8e74f711ffaba697fef15324ab97ae47725e80a567950d35e3ee51"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/store/package.json",
+          "sha256": "816049f839f5101513fd25d0196a9bb96bec533aaf65313bd507e2438ad2348b",
+          "reason": "实际浏览器产物不使用上游构建内联方式；将 Zustand/Immer/React/共享绑定运行依赖明确声明，保持单份身份"
+        },
+        {
+          "path": "packages/client/store/src/index.ts",
+          "sha256": "113fb91c8572f4d3ecc8293306cab4e6ac40bf6959225ae1d1c445b2f7d3d2d9",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/store/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/client/ui-renderer",
+      "name": "@deepseek-ai/dsh-client-ui-renderer",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/ui-renderer/README.i18n.yaml",
+          "sha256": "3557e044f3babc030f6d0790936fd9077771fe22c9fdc5ccdefd9134c9619a68"
+        },
+        {
+          "path": "packages/client/ui-renderer/README.md",
+          "sha256": "bfd27c6b6ef9a4abdd34d6439c389a6709e12d7edff93dc9cb979d66cd8838b4"
+        },
+        {
+          "path": "packages/client/ui-renderer/README.zh.md",
+          "sha256": "b60fa7e998d8453338f3b336224b318ae104da303a4870cef380c30b8d62bf42"
+        },
+        {
+          "path": "packages/client/ui-renderer/locale/de.json",
+          "sha256": "fc1a786d4b93b9b495c1c816217cd258c5e3108d1b4f9ba42c566877e438cd99"
+        },
+        {
+          "path": "packages/client/ui-renderer/locale/en.json",
+          "sha256": "5ac786b8bfb844aca4b8cc3493bc68d37385c7fdb14084e39217c0f472e904ac"
+        },
+        {
+          "path": "packages/client/ui-renderer/locale/es.json",
+          "sha256": "6befb8cc2cd5cf9c3b58f14c5402b1550ecbbd6dcc57a3d9f3837108677e9e1b"
+        },
+        {
+          "path": "packages/client/ui-renderer/locale/fr.json",
+          "sha256": "bbeb7ea3defbb3dd6e98b0667c43e0f44b25a4e277fc51cf3e6efcc9376894a7"
+        },
+        {
+          "path": "packages/client/ui-renderer/locale/ja.json",
+          "sha256": "df187a8eb9a07e0e6124df45ec291c58c4d8df84fbce66a2dfbed0d9cb8c417a"
+        },
+        {
+          "path": "packages/client/ui-renderer/locale/pt.json",
+          "sha256": "ae9c2d72081924f2fd4c0aade6238bb2d2489bc0e220974aa98d90d0c6c4359f"
+        },
+        {
+          "path": "packages/client/ui-renderer/locale/ru.json",
+          "sha256": "21ed5b784397b0081af6954988a5aadc96e3e07450a2ef463014da1e69215edd"
+        },
+        {
+          "path": "packages/client/ui-renderer/locale/zh.json",
+          "sha256": "2a9fd66170e21bba4bf6402c20ef68d09d68903857a91d8ce8959d469a4c9217"
+        },
+        {
+          "path": "packages/client/ui-renderer/package.json",
+          "sha256": "b0c9593d8d16f5915cd6695f47360d6ddaa76ab4c969859cea3bb6819e1051b5"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/app.tsx",
+          "sha256": "cd3328d22018734edfa72ade57f7806edfb5254c0b9a08b323373624a2e48d64"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/bind.ts",
+          "sha256": "91e70ae7ae0eca972de8c809b3e6ea77cc8d228bae6886ee782ae496cc1d4f45"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/bindings.tsx",
+          "sha256": "ceaf302fcb4eb4ec419fc92c5b39f3667d753e67584dffbaf4540a67fc4f6672"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/errors.ts",
+          "sha256": "594e7de016772aa6ffa3b00a83387b891d660cfb6cbbe719e82ec28871b8edac"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/index.ts",
+          "sha256": "bc0e0e4beaefa5d1b20cd94b64d65a38e9500b6d0a830de300b1c24e5394bb3c"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/registry.ts",
+          "sha256": "6b8b6b969d8bcf0314ea20438a223f3a90e1bd516571faecae5c3c01008ecf21"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/scoped-slots.tsx",
+          "sha256": "ff53b648f9a6fbd59bc13b89fbe33c67b32421c99ab7923689bfa1b47cea95c1"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/use-sync-external-store.d.ts",
+          "sha256": "88a8490fa853c36930c81fa53a5e3219c33a904b541fbbecc73956299c8a7105"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/index.ts",
+          "sha256": "650c95e1bff0cfdd2c00e4eaa29e5cb1d9103845500c3d244c04603a3b6bd2f6"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/app.client.spec.tsx",
+          "sha256": "01180abfa102ed2836f280cf4fe4025a2a420395a692381a56c9afe6f964ae7c"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/bind.client.spec.tsx",
+          "sha256": "ace1b4ccd8916e0312f2276e25710cc24e876059a03582c0b6ec45f0302e366e"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/factory-slots.client.spec.tsx",
+          "sha256": "78880f7a7c8d72bd3a936ddd989385ca1d88b1388c2f6263b34035edecf409df"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/inline-slots.client.spec.tsx",
+          "sha256": "31a58619b859b357a51fdf8e4429968da676ae881136bf03837c7f42020c394c"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/keyed-hook-member.client.spec.tsx",
+          "sha256": "362b916a2a21fb306a30eac7d0575cac0cc74c3ce011c988e4e328694a52af22"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/reconnect.client.spec.tsx",
+          "sha256": "6c3a2dfd1fa57236b581d8df6f76a33c27e0d97f0a5a614231bcac006abb38e0"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/registry.client.spec.ts",
+          "sha256": "169192cd55a4aa6308acc5dcc6e536d8dfb6da7d60b05d5b35d34991ded3c12b"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/scoped-slots-real-core.client.spec.tsx",
+          "sha256": "37cf5bbf632249a74bbe2c9ae22fde81db7a4f5447edcd42c68d82c84026e1b6"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx",
+          "sha256": "eba86742edce8901f36d823e7604acbe98b112f23d8e72e8ba3584450f2eee6d"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/session-provider.client.spec.tsx",
+          "sha256": "3dec672773b05b9e2dcc65bef5eac8b6b327757be4ec39b47278ecf44ce2d378"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/stale-authorization.client.spec.tsx",
+          "sha256": "8c0d04267fbe09c72e22e9845b41514de01d8de31c45898094c7cbce23a45cbe"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/ui-renderer.client.spec.tsx",
+          "sha256": "71dad508173f45b64e148caa4b0ee62c168e13cf63da685468833a2ad1f0f31c"
+        },
+        {
+          "path": "packages/client/ui-renderer/tests/use-projection.client.spec.tsx",
+          "sha256": "57a8029c677742c8a91e0fbba98baf49298d47e894219a91073c71ca9be49695"
+        },
+        {
+          "path": "packages/client/ui-renderer/tsconfig.json",
+          "sha256": "6c821a12d8d675aa8b90247623a5f8a81350b3024784733b01c2d2d1ad898810"
+        },
+        {
+          "path": "packages/client/ui-renderer/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/ui-renderer/package.json",
+          "sha256": "9caaba8bae89e29a53a4ce243b79fc597a399d02b1f6caa2996ef81db5b8fdd6",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为；TZ-070 适配 React 19"
+        },
+        {
+          "path": "packages/client/ui-renderer/src/client/index.ts",
+          "sha256": "61b9fab1a44beb27c8ae95aa39c132ecaef49e320be9d5db39456ea13e8a6d03",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/ui-renderer/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/typert/generator",
+      "name": "@deepseek-ai/dsh-typert-generator",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/typert/generator/README.i18n.yaml",
+          "sha256": "58b4246ea5c74c90348b284781d6ec8a5864d77780f25279636abc72de45b289"
+        },
+        {
+          "path": "packages/typert/generator/README.md",
+          "sha256": "aeafce89a5c60fed16c0d7208788ef0b552a0dddaf51ff31b9421c028f381602"
+        },
+        {
+          "path": "packages/typert/generator/README.zh.md",
+          "sha256": "3647ea47762eee3981b96972e1e8c2d696d8a12f0471c0add2db7303b43840bb"
+        },
+        {
+          "path": "packages/typert/generator/package.json",
+          "sha256": "dcf1c6a4b8360c6e6bf086d026f43da6f7fee2c164a6785de8ca66adab4a8cc0"
+        },
+        {
+          "path": "packages/typert/generator/src/analyzer.ts",
+          "sha256": "12ff5493fcac7edf73e7fef9d478de35d8a8137f649907848fd99e58f77b57d4"
+        },
+        {
+          "path": "packages/typert/generator/src/artifact-files.ts",
+          "sha256": "1d417396691def6fd1592364bf96338349c99e425c0d6bcbfae296b271ada285"
+        },
+        {
+          "path": "packages/typert/generator/src/build-output-guard.ts",
+          "sha256": "e1022ceff1ec201e5f6cc97dd78239dab34f1213317eb8c493b684c020cc92e7"
+        },
+        {
+          "path": "packages/typert/generator/src/cordis-catalog.ts",
+          "sha256": "a5e4cbd618f4c116cd2568e5aed8d8a7dfc819a00ab78e05b7ce51443a3e27e6"
+        },
+        {
+          "path": "packages/typert/generator/src/emitter.ts",
+          "sha256": "f41f1bbe1e633b841b80155e1a93752dcbc011677c4f2a919151a7e8734d2bf1"
+        },
+        {
+          "path": "packages/typert/generator/src/index.ts",
+          "sha256": "c98b1b5776c46bbf9c7b3c0bf713792e9da186543cc9ab5cbd221a41870d5394"
+        },
+        {
+          "path": "packages/typert/generator/src/model.ts",
+          "sha256": "1f764bf3c28d6f9baaad89f3b5366192c40832fede3b46cbb11573de5f1c9879"
+        },
+        {
+          "path": "packages/typert/generator/src/renderer.ts",
+          "sha256": "179c9f35eac45c2f860f549312fdfdb41fe4d78375c3691f5257053fe82d4331"
+        },
+        {
+          "path": "packages/typert/generator/src/tool-schema.ts",
+          "sha256": "1a98a2048640e296178bcc33aa8e2f177b20461c1b6c6cd760b2f7fc352f54e5"
+        },
+        {
+          "path": "packages/typert/generator/src/tsdown-plugin.ts",
+          "sha256": "d8e1ea65a1219e7a82dd41be738bbf546e722445f0d33ecef7722a66221a8b8e"
+        },
+        {
+          "path": "packages/typert/generator/src/worker.ts",
+          "sha256": "954aafc09e0826648ed082848934ca09aa14b2b36fa390b34d67a61fbf08dadc"
+        },
+        {
+          "path": "packages/typert/generator/src/workspace.ts",
+          "sha256": "5f3ec7e04cc1ae82b1e7e718501c8bea0dfbf38d32c6aac008613bb04fae2283"
+        },
+        {
+          "path": "packages/typert/generator/tests/.generated-model-O7FJNT/host.mjs",
+          "sha256": "f4a0f57682ca31c658cbe99077354679f67e701bcbc425ab71182270a1669b4a"
+        },
+        {
+          "path": "packages/typert/generator/tests/.generated-model-qwn8sk/host.mjs",
+          "sha256": "f4a0f57682ca31c658cbe99077354679f67e701bcbc425ab71182270a1669b4a"
+        },
+        {
+          "path": "packages/typert/generator/tests/__snapshots__/type-model.spec.ts.snap",
+          "sha256": "91014f55f36cc5ff66e3d1caf99b862a0550202ee97ee0388e96e6b3277d9f98"
+        },
+        {
+          "path": "packages/typert/generator/tests/cordis-catalog-contract.spec.ts",
+          "sha256": "bc1862a7e403bcd9648a40e5f5147d730105e079e7119a6098c520a5fcaa9415"
+        },
+        {
+          "path": "packages/typert/generator/tests/cordis-catalog.spec.ts",
+          "sha256": "80d919caf67d06588b1d5af18adecff181074e3359d53da1af6d66f31e03d405"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/package.json",
+          "sha256": "f76d2733a22ad88a873689b64afe8dceaeb2cdf33e99f7ec50ce348801994f99"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/packages/domain/package.json",
+          "sha256": "3a8998877d56b57192bc6bdfcc512ef741f284e0d0f03f7ed38c6ec6af97ca60"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/packages/domain/src/index.ts",
+          "sha256": "52f3a72ac289ed66f7a5fb7ff09aeb2cbe3773e8d27a4920a1165b24ec413c65"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/packages/domain/src/types.ts",
+          "sha256": "c50a5e94baadcd2a03b9efe1472ef47b15ddea7d00f87ae7a9aae42e0b737347"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/packages/domain/tsconfig.json",
+          "sha256": "28af26dff7123bc212dd0afa71ba9f2e81fe0b704198bd452582b5e9c0d1725a"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/packages/remote/package.json",
+          "sha256": "c9e80a4a7ac92c24ba8b89b664eb97c412b26fd4a3997ec6a45779ac51af9f8e"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/packages/remote/src/index.ts",
+          "sha256": "85e1bf81fdc3796528f81c692d44da5e0de5d016eb68b68a46f2f6f9d3e07217"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/packages/remote/src/types.ts",
+          "sha256": "73ab25b935c0e14ca2c74059a37c99e092fd93fed03eb36d7f61dc81cfe412fa"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/packages/remote/tsconfig.json",
+          "sha256": "09593bae523210668dba595167df471bb0b30b54621bdc2462d0246d31ab0fed"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/tsconfig.base.json",
+          "sha256": "0807cc0a3161d11db7810c97a7731c5acbc24e509edb99701e835cca8cde540b"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/tsconfig.host.json",
+          "sha256": "ef8844e8e493d7160d3b04a78ea53dba35aae105d9d3fe9737a26b1e154695b7"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/remote-model/typert-protocol.d.ts",
+          "sha256": "2fb03022e6ffc87a9fbf1219f8cb602c707cca669fa827c0566b6cbe14edb7fe"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/cordis.d.ts",
+          "sha256": "0aedcba40a2d7dbc461738abf4506ef0783a5815bd3bb4142f4dc3d47a734c02"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/package.json",
+          "sha256": "89db51b71fd7cd93ce93cb503868e6b74d8c17df8b4d93ce054df2c205cf6b5e"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/client/package.json",
+          "sha256": "d7353bd37a668e58afc54ad50019cf3092be32f76a5ec8dbb8aa0b4ed58b0f05"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/client/src/index.ts",
+          "sha256": "4deaba8f4e7c4a4da1e5ed4c7c247f108200b644031437a459f2327b2613627d"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/client/tsconfig.json",
+          "sha256": "78193dbb3fc18a9a0e7e414c77c62564ea4f883d1e4fc609b144e7ea5e10c02f"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/host/package.json",
+          "sha256": "7d49f81db021905cb785b78de6b56acc006cc285f39b0316a1e5c3157584d7d4"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/host/src/index.ts",
+          "sha256": "5ad495ba396a96935af4376aa57b921eb96820e81e95d678bd9dbaf816813911"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/host/src/models.ts",
+          "sha256": "451daa347c0349f46cd848051b4536c9100a150f0cf0e9c047ba8415e0407146"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/host/tsconfig.json",
+          "sha256": "49829e22570df8658439db166b9e8a3fc3456f39c5f3cc84e9ca3e75b0c7f0df"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/write/package.json",
+          "sha256": "f0d0a02abe2ad8b3ecc486ee9b7fc35181e1d033e41f6769d10e59a68fad9118"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/write/src/index.ts",
+          "sha256": "af488283f124d869a5ef0c9242d3dfb84ef16774f2f03b31a8f84aef515d6b56"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/packages/write/tsconfig.json",
+          "sha256": "49829e22570df8658439db166b9e8a3fc3456f39c5f3cc84e9ca3e75b0c7f0df"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/tsconfig.base.json",
+          "sha256": "86879b33cbf6ec2c7010010471f2b5ef507f394d5eb64ae22d03962215ffcdef"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/tsconfig.client.json",
+          "sha256": "3e52aeeb470e8ab3f1703dee8a94ecda2630a1dab7fa0fec4e3f11bca8d6729b"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/tsconfig.host.json",
+          "sha256": "e091f8ca90badb6d54b65b8d4217f66bd1091e30c345f048a4f5bc0ef15d4bf4"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/tsconfig.json",
+          "sha256": "4c06431b332126d14c2bf8cf239e8b8e4ba9751cc76efc1a06be841cfd921ad3"
+        },
+        {
+          "path": "packages/typert/generator/tests/fixtures/type-model/tsconfig.write.json",
+          "sha256": "9bf6c581e83ed45b01981d50e563f0da0750adaf49f4f6b6e809159a45aba772"
+        },
+        {
+          "path": "packages/typert/generator/tests/remote-metadata.spec.ts",
+          "sha256": "343214dff3526d4c52a3477be01740c995d87276c3b5b6876fd3240bc59f8c02"
+        },
+        {
+          "path": "packages/typert/generator/tests/remote-model.spec.ts",
+          "sha256": "34d5def9b8498ec0f648de65833f6fe2a48aaa6a0326e158a5b88cfd1a6b15f8"
+        },
+        {
+          "path": "packages/typert/generator/tests/remote-module.ts",
+          "sha256": "9a2d917f6501b477369cdc6363758777d99865f6bb272cc1e42d84f081442c21"
+        },
+        {
+          "path": "packages/typert/generator/tests/renderer.spec.ts",
+          "sha256": "7a8b19032041e15c43231af553a68037be46c8a67e9ea0869b9905e50813e477"
+        },
+        {
+          "path": "packages/typert/generator/tests/schema-emitter.spec.ts",
+          "sha256": "0759067f7586a995c54a7ccc25b9675d6d45aabf32e1266094f1d673153025f8"
+        },
+        {
+          "path": "packages/typert/generator/tests/tools-catalog.spec.ts",
+          "sha256": "4e415b9dcb92e77e1fb3573c07ed78d369dc4045a3ce2c17db432dd67b3b467c"
+        },
+        {
+          "path": "packages/typert/generator/tests/tsdown-plugin-worker.spec.ts",
+          "sha256": "81947683cef1dfcffbbcb90a0bd71251d8144cd0ecaeddb70fea9a44a6f8e0b8"
+        },
+        {
+          "path": "packages/typert/generator/tests/tsdown-plugin.spec.ts",
+          "sha256": "48b9e0d9072db14c15a1cf8bf559cb0443e889ed47f583a60b30b151403c38ad"
+        },
+        {
+          "path": "packages/typert/generator/tests/type-model-workspace.ts",
+          "sha256": "179dfb8c25a0c190d484f171d7c2289e32c003cdc84e2a6c6bcd0412be8554a3"
+        },
+        {
+          "path": "packages/typert/generator/tests/type-model.spec.ts",
+          "sha256": "377739c92ce79c6db985c93573dfd1e4dbeeed9cb0e1211f2b17627332788863"
+        },
+        {
+          "path": "packages/typert/generator/tsconfig.json",
+          "sha256": "33862d7bd979a1b1f2559a5c81f248ffd72f822bbb3cd7e4a045858a2f14c1fa"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/typert/generator/package.json",
+          "sha256": "3fda8a8639e6e47da43c9860e801988ea68cc31e846d19708c150dc4ee186efe",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/typert/generator/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/typert/loader",
+      "name": "@deepseek-ai/dsh-typert-loader",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/typert/loader/README.i18n.yaml",
+          "sha256": "a590f28a1bf98b7ba99681365fbabf2dc4e0343725719dd4db437834b86cd5ae"
+        },
+        {
+          "path": "packages/typert/loader/README.md",
+          "sha256": "06ff8d9faefdcc045169ac3e69378d1cd1137cadfabb25f40817185afa5fbbf4"
+        },
+        {
+          "path": "packages/typert/loader/README.zh.md",
+          "sha256": "e87b5da6c1bf16d6ec335cf6dbdcab9cdf8a00aebabaebcad6515809c822c039"
+        },
+        {
+          "path": "packages/typert/loader/locale/de.json",
+          "sha256": "9ba0b019d03d45e91b1934d8a03686489c72a3122c840e303cf5ad3c2199775e"
+        },
+        {
+          "path": "packages/typert/loader/locale/en.json",
+          "sha256": "f17eb9eb37e86c3cb2c34cf1684164ad1edb32de9b0e8e19716c1a5a391cd9ae"
+        },
+        {
+          "path": "packages/typert/loader/locale/es.json",
+          "sha256": "0e30b3fcae675d676b33d36a3bb95fbf7265b2ca56b91b1209b9e43a360faabf"
+        },
+        {
+          "path": "packages/typert/loader/locale/fr.json",
+          "sha256": "05edeae421b3dd93e4f4e2cfdf888e911a0f690e28ab3c7b434b037b7e4da158"
+        },
+        {
+          "path": "packages/typert/loader/locale/ja.json",
+          "sha256": "44a8ec6bc5216ed2b124b20978cf8d4e5104b26c9b381e66e6216f6d0e56e391"
+        },
+        {
+          "path": "packages/typert/loader/locale/pt.json",
+          "sha256": "333be1a1aa7aadce377168bb5b086a622316b8a18a431e7a937b078df4eb296a"
+        },
+        {
+          "path": "packages/typert/loader/locale/ru.json",
+          "sha256": "f9bae8a4cbc458a4c7be4ddfbf041938f50335998aaab5b8c42f517f8df10e6d"
+        },
+        {
+          "path": "packages/typert/loader/locale/zh.json",
+          "sha256": "6c258c1c63bfc8b28e0e6582a543895d682028f17630ff96660980170baa87c2"
+        },
+        {
+          "path": "packages/typert/loader/package.json",
+          "sha256": "c17a9fa8cb37094137f5682422547212fcf3c383f239836e007fe20efa851bf6"
+        },
+        {
+          "path": "packages/typert/loader/src/index.ts",
+          "sha256": "36c3adc83094b56c9f021eca0b5be2050b254b237b7c980b4c1da56645a6d379"
+        },
+        {
+          "path": "packages/typert/loader/tests/lazy-info.spec.ts",
+          "sha256": "73b505a914b29ae10c37c82b418c711eb403cdfe65ed67cf9621b47c94e40c1a"
+        },
+        {
+          "path": "packages/typert/loader/tests/loader.spec.ts",
+          "sha256": "6ef496447b95ffeef16695afc069d4072d940ea1343a5cd4e15aabb940f5ca9f"
+        },
+        {
+          "path": "packages/typert/loader/tsconfig.json",
+          "sha256": "42b28693b9e3ce37dc66068b7f2c05705c6df56a9ed6c9e9fb3027ad99be4953"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/typert/loader/package.json",
+          "sha256": "bd1e723c3971936c371b4d1ad770a344605a11e55d482640deb5d5dfba153756",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/typert/loader/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/typert/registry",
+      "name": "@deepseek-ai/dsh-typert-registry",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/typert/registry/README.i18n.yaml",
+          "sha256": "32fc014eae4b78adc2c4d4af667ce60d5fed235f94e9cba05e569bf13c57f3f1"
+        },
+        {
+          "path": "packages/typert/registry/README.md",
+          "sha256": "e036a2f514fdaf59fb6f74c10255da31162513b546a1a9930910506ab5ed8db9"
+        },
+        {
+          "path": "packages/typert/registry/README.zh.md",
+          "sha256": "072484f50f35d59a8a7cfbab41555ffbdc1b8c570ce350a9fcd0e4f7382780c5"
+        },
+        {
+          "path": "packages/typert/registry/locale/de.json",
+          "sha256": "ffa6a8d9b60dba8ac1cca9232014a5a41673a0a31d75ff1310567e201ef20422"
+        },
+        {
+          "path": "packages/typert/registry/locale/en.json",
+          "sha256": "bcea707c61627769460c1c5db2a42aba087e19cd47eada686733fcd860fdd0f7"
+        },
+        {
+          "path": "packages/typert/registry/locale/es.json",
+          "sha256": "3e017b247681622d004cf87bad1f3b553915a5be229ad2b3b09088c4004b48a3"
+        },
+        {
+          "path": "packages/typert/registry/locale/fr.json",
+          "sha256": "14ced19a1520a89c12ef337a4b0bdb1b9e7d31e33097100eb81f670d16e66d7c"
+        },
+        {
+          "path": "packages/typert/registry/locale/ja.json",
+          "sha256": "ff39368da274f3865747f817071be33fe233fb3af87a43afb1d72ec4bbf670c2"
+        },
+        {
+          "path": "packages/typert/registry/locale/pt.json",
+          "sha256": "f7db04b107d64a4d9afdd303393eb32727a6f77004480b05bcf67b37545d6861"
+        },
+        {
+          "path": "packages/typert/registry/locale/ru.json",
+          "sha256": "2a7a9dae49ce0faf1bcf22a1ac2d33ff777b96e0afe383411a2346790d1a45c6"
+        },
+        {
+          "path": "packages/typert/registry/locale/zh.json",
+          "sha256": "062a44f3d521eafc83528d2db1132c57584b51f20c392e18765255ee56e67b6c"
+        },
+        {
+          "path": "packages/typert/registry/package.json",
+          "sha256": "dde90cadee231bd440c2a247df88d4d6e3a40cb349cc6d5d4450031e906f792b"
+        },
+        {
+          "path": "packages/typert/registry/src/client/index.ts",
+          "sha256": "277a158156b24bc158d8379851e6330d29328ef321716dbd2420ce6d602ede57"
+        },
+        {
+          "path": "packages/typert/registry/src/index.ts",
+          "sha256": "a6c1aa498660cb50d768c867411943d3760e2bbb8dcd016c950c6294ed626e2a"
+        },
+        {
+          "path": "packages/typert/registry/src/service.ts",
+          "sha256": "ed1373acaa3256e7cd78239b6b8eec58d9b62fe0064ec8a253fc4feea908f514"
+        },
+        {
+          "path": "packages/typert/registry/src/types.ts",
+          "sha256": "462f577ca91f8b4807107b89ec3d58935f10053634e4dfe890dce762d8349c41"
+        },
+        {
+          "path": "packages/typert/registry/tests/typert.spec.ts",
+          "sha256": "5732c68c15acfe4c98c91b12b10af0b2958c1c91410e141300546251a7071a90"
+        },
+        {
+          "path": "packages/typert/registry/tsconfig.json",
+          "sha256": "a9748a9671a0136745ab7d607f48afc025c9aa58c859a88ceea208176e0936b2"
+        },
+        {
+          "path": "packages/typert/registry/tsdown.config.ts",
+          "sha256": "13423114db55478720e47a59607d28af3b5008698ef81bfc0a784d186fd02c5d"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/typert/registry/package.json",
+          "sha256": "913d9edda748a63401707b1bd049fd8c23456744e90b41d4340c486f18c33f12",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/typert/registry/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/test-support/remote-mock",
+      "name": "@deepseek-ai/dsh-remote-mock",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/test-support/remote-mock/README.i18n.yaml",
+          "sha256": "28534813bcb4b3650e32bb180607faad666525b823512e6cc35c2c4be3404667"
+        },
+        {
+          "path": "packages/test-support/remote-mock/README.md",
+          "sha256": "1a4614048d55f34d26bf932c96ece5a07e169d809f885b7ca25aedc58562262d"
+        },
+        {
+          "path": "packages/test-support/remote-mock/README.zh.md",
+          "sha256": "326bde846c405387b76a186484eb8ae1205d668542050a87e0e818529ddb974c"
+        },
+        {
+          "path": "packages/test-support/remote-mock/package.json",
+          "sha256": "223a39440db7b9b9934f4019f9e1e6ad7c6315421635b6b1f7a7ddb3a3d6257d"
+        },
+        {
+          "path": "packages/test-support/remote-mock/src/index.ts",
+          "sha256": "872fcc9497e7ec2505514f5ddad0f3e01bbad71e1b01ef3fd58ca7accaf7b400"
+        },
+        {
+          "path": "packages/test-support/remote-mock/src/log.ts",
+          "sha256": "9be14858686a2302cf35f392c77b5357e111b3dcdb5408a71519996a37f47523"
+        },
+        {
+          "path": "packages/test-support/remote-mock/src/remote-mock.ts",
+          "sha256": "dfa0119fdf3d0aa6102c0781bc0a9b75c9082bc7ee9597941c5c94fc4a3cc0df"
+        },
+        {
+          "path": "packages/test-support/remote-mock/src/remote-proxy.ts",
+          "sha256": "a7cdfe3c2ccad8d7f6a3f7277c184bfd042f92eb19a79d0885f48ffa590b144b"
+        },
+        {
+          "path": "packages/test-support/remote-mock/src/streams.ts",
+          "sha256": "a4334c18a052fffd27735675dcbb2903c7633b5665ac2bcc109afafad637c9c2"
+        },
+        {
+          "path": "packages/test-support/remote-mock/tests/proxy-types.client.spec.ts",
+          "sha256": "f0c258d13e86f0de34f19f082290cac408ca5e1cb4d5910e4b2d19b18cce04fb"
+        },
+        {
+          "path": "packages/test-support/remote-mock/tests/proxy.client.spec.ts",
+          "sha256": "5616758b2b80a2e341c85c8a18f7e8611b7e0fa5c3ed1da364ac5e99c0a3a417"
+        },
+        {
+          "path": "packages/test-support/remote-mock/tests/rpc.client.spec.ts",
+          "sha256": "2478f957c1fe4407233929db775a96f7aca7365caa2144e6b5cc706055996cc8"
+        },
+        {
+          "path": "packages/test-support/remote-mock/tests/streams.client.spec.ts",
+          "sha256": "cac4bd0c85d59fa66af80065261268fc47c7002ca9de39b4480db53ef5106b70"
+        },
+        {
+          "path": "packages/test-support/remote-mock/tests/unary.client.spec.ts",
+          "sha256": "2b86ab1f04e368dc2266c80770abd6a6c77aefdadd1148d27a17dd7bde441d88"
+        },
+        {
+          "path": "packages/test-support/remote-mock/tsconfig.json",
+          "sha256": "b1c637dc10bc0767fc2e15d7ed5599e1489e4baf5aa1bb1e416ea3684f589708"
+        },
+        {
+          "path": "packages/test-support/remote-mock/tsdown.config.ts",
+          "sha256": "15d257f618a4e2ce28453fbe7f2020dee277280e71c9bc856940e452be09dbbc"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/test-support/remote-mock/package.json",
+          "sha256": "ea418072a58e155c1c008833e0cad3b23158295c1ac7ddb1ec380ab1ac3e6721",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/test-support/remote-mock/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/credentials/credentials-local",
+      "name": "@deepseek-ai/dsh-credentials-local",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/credentials/credentials-local/README.i18n.yaml",
+          "sha256": "2627a9363969bc7f94a92537b111d3fa49a179deb5f1bd92164118f700f9ed9d"
+        },
+        {
+          "path": "packages/credentials/credentials-local/README.md",
+          "sha256": "860ea63f2f74680cd9be7f8d08983b459081c469edf1c168ff64b20a7775fef7"
+        },
+        {
+          "path": "packages/credentials/credentials-local/README.zh.md",
+          "sha256": "64593b554538675113472349254bd30ace052caf1e7d568f75b000794c49b035"
+        },
+        {
+          "path": "packages/credentials/credentials-local/locale/de.json",
+          "sha256": "414bb45ad0f0e95d1268dcd75265ad54f2df455bd7d1831db68c4ede252e93c3"
+        },
+        {
+          "path": "packages/credentials/credentials-local/locale/en.json",
+          "sha256": "63a9134ddddd4fc7b177a30db9496a38ffd1dcf62f2851e632205c76eefdf2dd"
+        },
+        {
+          "path": "packages/credentials/credentials-local/locale/es.json",
+          "sha256": "19489e2631d3487ed862e50cf5b75f2290169918d4e663d35a6ba9f3e723e504"
+        },
+        {
+          "path": "packages/credentials/credentials-local/locale/fr.json",
+          "sha256": "ede057edaa6d5b3f0a9b60170a868f520734ea4310a94ce6feaa04019d8c413f"
+        },
+        {
+          "path": "packages/credentials/credentials-local/locale/ja.json",
+          "sha256": "11b30bce5dc353585a08e70e4915f30ce39ba94f5964008490f1ba06cb83ea49"
+        },
+        {
+          "path": "packages/credentials/credentials-local/locale/pt.json",
+          "sha256": "5febb4b6a537296a4c323ab0c33f3befd94c1f38ba8643fb073d8bc860052a80"
+        },
+        {
+          "path": "packages/credentials/credentials-local/locale/ru.json",
+          "sha256": "c25ead74191564b436127069554524bc2bd6f23f716219f90c6ec35160a68729"
+        },
+        {
+          "path": "packages/credentials/credentials-local/locale/zh.json",
+          "sha256": "40bcdc33b514e1326941f20c37122d1335d267d75e4d68f99c151750d90cd826"
+        },
+        {
+          "path": "packages/credentials/credentials-local/package.json",
+          "sha256": "e5b9b750282606eed28152f18d5807aa6f0454f3520f2de1c7e622cc6ec14d24"
+        },
+        {
+          "path": "packages/credentials/credentials-local/src/index.ts",
+          "sha256": "159f442540a8f1069acc438ae846b6900249b049d57b5735fca9b64df39c8300"
+        },
+        {
+          "path": "packages/credentials/credentials-local/tests/drain.spec.ts",
+          "sha256": "2a3c314acc7e99b7d91c69637ec1e8bcff824c3f5ff5f662bab744b4049b7627"
+        },
+        {
+          "path": "packages/credentials/credentials-local/tests/local.spec.ts",
+          "sha256": "10afdea76a5c0e277de17f5eb3fd89d1207525f70f6dbeb16eb1bf4e2e33e565"
+        },
+        {
+          "path": "packages/credentials/credentials-local/tests/migration.spec.ts",
+          "sha256": "b1fa45c3481211bda6ea3ce75544a04b5de5b7dfa1b4223d5ceed5fe0f9fc544"
+        },
+        {
+          "path": "packages/credentials/credentials-local/tests/records.spec.ts",
+          "sha256": "d879196bfafb0f7d31abf2298accc5951ce38351259251dcb33d1e24fc94cd34"
+        },
+        {
+          "path": "packages/credentials/credentials-local/tests/review-fixes.spec.ts",
+          "sha256": "1c90f8beef59d2da88b50f85c593022390ae2268032401fb3c874437ece8d29c"
+        },
+        {
+          "path": "packages/credentials/credentials-local/tests/watcher.spec.ts",
+          "sha256": "a29033b7fdf43decf57303ad485a8c38e8bdf1b08013350999a2f375a806e661"
+        },
+        {
+          "path": "packages/credentials/credentials-local/tsconfig.json",
+          "sha256": "550f591e7bef24c574c4f7d45840b239685150088c1a30b570e9bcb747176925"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/credentials/credentials-local/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/host/frontend-static",
+      "name": "@deepseek-ai/dsh-host-frontend-static",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/host/frontend-static/README.i18n.yaml",
+          "sha256": "bb80efe1b6e2a19b8067896fd0067743e3746afc0f8e0fb77348a4f7985ab624"
+        },
+        {
+          "path": "packages/host/frontend-static/README.md",
+          "sha256": "4e641c7a69505943d4ad8562a0094f7a1ff1ac3721cb56e6df432c2501ce8656"
+        },
+        {
+          "path": "packages/host/frontend-static/README.zh.md",
+          "sha256": "456a25589f27a7c67815b5c89f3cd46d1412979066d5acfc34b50543b419a5ea"
+        },
+        {
+          "path": "packages/host/frontend-static/locale/de.json",
+          "sha256": "0b8228abf689658d66c26e9bdb1984316f36e83bd1104f96aa1ed13ed9fe026f"
+        },
+        {
+          "path": "packages/host/frontend-static/locale/en.json",
+          "sha256": "f10735b7732670033aee3b1315987e89951e12668113390f5b7c1ef099d9c6ca"
+        },
+        {
+          "path": "packages/host/frontend-static/locale/es.json",
+          "sha256": "b9a5aaa379ca6c80d3d27c385a69d7d212e4a660a08e7d210c03b2f0e0550da4"
+        },
+        {
+          "path": "packages/host/frontend-static/locale/fr.json",
+          "sha256": "573c40bfad7fc8cc1f722ee37b4c8e19e4584b9bf8919c3e5d8a1d4441aae35a"
+        },
+        {
+          "path": "packages/host/frontend-static/locale/ja.json",
+          "sha256": "dace58ffcf9312988824ef54fae96ef406e284234b2b712f7aaff7533f461948"
+        },
+        {
+          "path": "packages/host/frontend-static/locale/pt.json",
+          "sha256": "e991b1a943aad230d2d8799cc837c8f113f02fe70db9659bef183ece49525dff"
+        },
+        {
+          "path": "packages/host/frontend-static/locale/ru.json",
+          "sha256": "e25c8478036041c65116eee04efd4da21523722de604fc1f75fe0f82153078b2"
+        },
+        {
+          "path": "packages/host/frontend-static/locale/zh.json",
+          "sha256": "67b32fcc418a26d149ca6128727f4d22e2612bcd1a3a739910d842e36195652d"
+        },
+        {
+          "path": "packages/host/frontend-static/package.json",
+          "sha256": "58c9cedf8a4195d7597adb70af1f4661ad3dec3e90d3b1b8b4231a67eab9fedf"
+        },
+        {
+          "path": "packages/host/frontend-static/src/index.ts",
+          "sha256": "d10693ae942859163d91daf72ceefee2ac4f830b1e81c21e30306060f59ac905"
+        },
+        {
+          "path": "packages/host/frontend-static/tests/frontend-static.spec.ts",
+          "sha256": "2bd4527d56aa24b9d5374d57f35cfba7b9f1ff84c15b5e09e2153a287b790515"
+        },
+        {
+          "path": "packages/host/frontend-static/tsconfig.json",
+          "sha256": "38c1e47ff46ff232ffc272137506bc94e4cba4c52d538ff75555ec501333717e"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/host/frontend-static/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/api/session-controller",
+      "name": "@deepseek-ai/dsh-api-session-controller",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/api/session-controller/README.i18n.yaml",
+          "sha256": "db9d3f845797262ce9811dfe36179c18c41af3ff98185ddc658b663f75491feb"
+        },
+        {
+          "path": "packages/api/session-controller/README.md",
+          "sha256": "ffe636f5b67ecc345d6747ebdd92bf3a1b3ed60263bd6ef7ada931686f1b9950"
+        },
+        {
+          "path": "packages/api/session-controller/README.zh.md",
+          "sha256": "695a509f523149ba6c2f49fc16386a5c87742ecdb9648814da0c47b6d4d8f29c"
+        },
+        {
+          "path": "packages/api/session-controller/locale/de.json",
+          "sha256": "73ce1c3990ec1ea35af6b243a9fa5867be800ac4a1fa8309dbef5d7dc41a1cfb"
+        },
+        {
+          "path": "packages/api/session-controller/locale/en.json",
+          "sha256": "a05124e3b01484003ec99fe64620b1e609a712b7a6efcd73b8f58a9c0bf5293b"
+        },
+        {
+          "path": "packages/api/session-controller/locale/es.json",
+          "sha256": "c58062baf6669e3754784af9886689e034dd4d435aeb36128c1bed9de8a9d613"
+        },
+        {
+          "path": "packages/api/session-controller/locale/fr.json",
+          "sha256": "af9a36e5b1ef16f7ed777aad2b41fb421cc08e2d375156a7a70336b983acb09c"
+        },
+        {
+          "path": "packages/api/session-controller/locale/ja.json",
+          "sha256": "e94b02462540256630a5cab9bf86e57499f013a8efacc8bb39e7cd8e8a984f19"
+        },
+        {
+          "path": "packages/api/session-controller/locale/pt.json",
+          "sha256": "8ffc93a8a3e243af7a10dfb61d1f976a06d17657a508eed9049e7d9734d335de"
+        },
+        {
+          "path": "packages/api/session-controller/locale/ru.json",
+          "sha256": "9fa8c60fb42ccd5a1769decc9dca20799fa5dd5bd7816af45f26964e59c70409"
+        },
+        {
+          "path": "packages/api/session-controller/locale/zh.json",
+          "sha256": "c075106d908cef46ada710dd96e7bad93f18e82b83faae7b784a275a914808f4"
+        },
+        {
+          "path": "packages/api/session-controller/package.json",
+          "sha256": "7d42084ec5880ea5f273376d9e582b6736f087f4f0d422c14d6f9a9a9ae6bd31"
+        },
+        {
+          "path": "packages/api/session-controller/src/agent.ts",
+          "sha256": "3c7c3d82d1a72aa61a4b6ba807ef7734cefe140941fc82701a68d46ee47fbc51"
+        },
+        {
+          "path": "packages/api/session-controller/src/archived-session-gate.ts",
+          "sha256": "1445070c0a9da7ebe7e3032a24ab9fcc4a803973ac12d4adf4b872ea0f0d0e18"
+        },
+        {
+          "path": "packages/api/session-controller/src/assistant-stream.ts",
+          "sha256": "ebe1cfa8156abdd1cc677cba8c8f08991120632d510554c05f0be772993e9272"
+        },
+        {
+          "path": "packages/api/session-controller/src/catalog.ts",
+          "sha256": "0554b609a5b46b8209e06a4be7c645931a71aece267f53d7be241957eb2dcf6b"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/contract/events.ts",
+          "sha256": "64acca2457e9853a5a0159e13a335412ab622e55b88f4a0ab71eb6d9c8430d8d"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/contract/session.ts",
+          "sha256": "fa0d217edc0a5ac2a6e90301a2320d2f62e81fac1db33dac38f96d14fdf179d1"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/contract/sessions.ts",
+          "sha256": "85725b6a54d662c54a5eb6f8f59fe3dfe4069e974a0eaa8b4e81d508742acf7d"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/contract/snapshot.ts",
+          "sha256": "2bce8bea78abba375566c1231bb090a89b0407af4082912542869ba0a69e72ac"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/index.ts",
+          "sha256": "d90c6dcb93af854c6789240556e0f483be142e9bfadbf1b50eeb10bd7cf09c53"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/ordered-baseline.ts",
+          "sha256": "0a7903af3ccce78150fed0d82d1eeab1784da4b434ab8db4f89edb1805678066"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/scope.ts",
+          "sha256": "b28c4b20cd640de8ee369aa5f60672c866d0ea6cce8190f849b7a62347f8649c"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/session-wire-event.ts",
+          "sha256": "22dc43f3fc68a28b366dee96a9e3450bc083dfdc7301c6cc5b48ce2acf73f534"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/assistant-stream.ts",
+          "sha256": "6a5dd6365dc47f26e26cbb243af453c5ae441d08fe5133203e66a69ec15667fc"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/history-records.ts",
+          "sha256": "e560d8aff073e46ea6936fcf4048b6785da0b986c0b085eba67a00a4cca86388"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/lineage.ts",
+          "sha256": "f67749598f79980b5d9ec400bd424560499c08bc53669dfee475dda587b2e2c3"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/manager.ts",
+          "sha256": "a5070b2834a66d2f62d0cbd9b698318de3f4e2eb170e59f2cd0cf55391e2aeee"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/notifier.ts",
+          "sha256": "34a7984f65b30363dde994f60b0b3a775955d4596dc60ab53cc6a043355be74e"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/projection-store.ts",
+          "sha256": "5a749f74857220eb9ba3e55aa0dad95cb470d8d9a7492b4d8169623b95bee564"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/remotes.ts",
+          "sha256": "0ea0f978301dbf926246668e46600bd576adb3ed093d55c271a4de1cac2149ba"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/service.ts",
+          "sha256": "098e69f3df69f377d376c314bf1e5535ce67645544f904d2e66dc0d9c55a9f4d"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/session.ts",
+          "sha256": "dcfe6a14f8ce0d88e101ae8ed1709512cfde0547216a3520bf69399e01681cc3"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/time-zone.ts",
+          "sha256": "f050fc997ef97c8e2d6ebbc964933f30f6140978487bec993642016bc8724d6a"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/transport.ts",
+          "sha256": "843cc49eedda548abc9261342f7f97acfe643b083d1b1c44c804405d1a76b90d"
+        },
+        {
+          "path": "packages/api/session-controller/src/commands.ts",
+          "sha256": "40f807d20d592e491fb299418c8ff88d53c28838531ed2505c36f041e771fc2b"
+        },
+        {
+          "path": "packages/api/session-controller/src/control.ts",
+          "sha256": "1c68ae048ae911ac2e169b92b0e038ae0a3adc13a02c25ceb0b46536c5821b57"
+        },
+        {
+          "path": "packages/api/session-controller/src/file-references.ts",
+          "sha256": "870a790822334996b731d05901e4dc4b6a8ac6dec431b697b2c95db41739d91b"
+        },
+        {
+          "path": "packages/api/session-controller/src/history.ts",
+          "sha256": "20a2b002816817b04d7bae25e429034f79dbfa445ec2f7d90e4525a9c1652db8"
+        },
+        {
+          "path": "packages/api/session-controller/src/index.ts",
+          "sha256": "e2ad5cb28f34c876de3d58bb562a4810f98f1537c1c4ea5a0787eea76080bd95"
+        },
+        {
+          "path": "packages/api/session-controller/src/list.ts",
+          "sha256": "d69b1545be63546ea8e668f21ed3dbb0859d850c1f7c7e0bbcd432c03faf1222"
+        },
+        {
+          "path": "packages/api/session-controller/src/media-references.ts",
+          "sha256": "9c0e4877f66fbf556eed33c32fd3bf7a111a9782ef1dcbea55960c922189698c"
+        },
+        {
+          "path": "packages/api/session-controller/src/remote-events.ts",
+          "sha256": "c44915bb22ce3bb812932fa3901de01b69da03a82e9aac3f14d92a906e226fb5"
+        },
+        {
+          "path": "packages/api/session-controller/src/skill-catalog.ts",
+          "sha256": "fb5cfc3c36fb36156a7be51c48b88bca841a43e11b9265cc94974a9074979d6e"
+        },
+        {
+          "path": "packages/api/session-controller/src/types.ts",
+          "sha256": "15bdc2c4241fe0a6621410d90c87ccf2536853d3dbd9128307855ad048a8876e"
+        },
+        {
+          "path": "packages/api/session-controller/tests/agent.host.spec.ts",
+          "sha256": "fff8e0de6ccc146e359e27de9d928e31ead4d7e7923aa817af2852cd138583df"
+        },
+        {
+          "path": "packages/api/session-controller/tests/archived-session-gate.host.spec.ts",
+          "sha256": "28625fb7e813609d106ffe2182f1f0cc6541d80ec4c38c033526af7eacbd5965"
+        },
+        {
+          "path": "packages/api/session-controller/tests/assistant-stream.client.spec.ts",
+          "sha256": "64bce30f20dd575555eefd421d73049ffb9b64abd770746f596489d519f2522e"
+        },
+        {
+          "path": "packages/api/session-controller/tests/assistant-stream.host.spec.ts",
+          "sha256": "af35ad78a971ea03ad0fa0198088481e700440b5bb53cd25f469fbe99a72b866"
+        },
+        {
+          "path": "packages/api/session-controller/tests/client-apply.client.spec.ts",
+          "sha256": "963c39eb342afa0cbf7fdb5992c30ec06d2a48d2a57550919adce865c16da42e"
+        },
+        {
+          "path": "packages/api/session-controller/tests/client-contract.client.spec.ts",
+          "sha256": "8aa271fe24eab42de6dd897d57089d3c9de3ef665a1e514eb7703f9915f121f2"
+        },
+        {
+          "path": "packages/api/session-controller/tests/commands-create-fork.host.spec.ts",
+          "sha256": "33e3b6ea4c73066e1d7617c069edc1f3ffff08fff4071d48d78721cd1538adb2"
+        },
+        {
+          "path": "packages/api/session-controller/tests/commands-queue-attachment.host.spec.ts",
+          "sha256": "9fed753be8a2d9c0653a3a903fa9073fadd95703b09a7ee96cde14e440212c82"
+        },
+        {
+          "path": "packages/api/session-controller/tests/commands-upload-file.host.spec.ts",
+          "sha256": "3d892be280f782d0b900d908c1ba93024e339415c271af33d107a1a1fda40eb0"
+        },
+        {
+          "path": "packages/api/session-controller/tests/control-queue.host.spec.ts",
+          "sha256": "df650ea0b571dbf4c823abd747b32390ff407cd2a4804e2669731d572fce0c7a"
+        },
+        {
+          "path": "packages/api/session-controller/tests/controller.host.spec.ts",
+          "sha256": "4c7e126a7ff4e0136e7581459c685a68ec75d460643669261c76e41b142023ad"
+        },
+        {
+          "path": "packages/api/session-controller/tests/event-script.client.ts",
+          "sha256": "0f3ebc483a2af3b515ba8b6babb004157062ae7e9b451fec1090f9465d7f68a5"
+        },
+        {
+          "path": "packages/api/session-controller/tests/file-references.host.spec.ts",
+          "sha256": "760b96adc394ab8a273589cf76549fd4ef6a054c13a90ca13025fa88b0404dcf"
+        },
+        {
+          "path": "packages/api/session-controller/tests/history-records.client.spec.ts",
+          "sha256": "42bc452dcbf4d5f1cbcb9ac5807bf05c43c7b4370d42265ed7db41d9e164637a"
+        },
+        {
+          "path": "packages/api/session-controller/tests/inbox-projection.client.spec.ts",
+          "sha256": "e66f5b1419b6fc26767b10090fba0471a3b67401b477890ad847a0ce94729a4c"
+        },
+        {
+          "path": "packages/api/session-controller/tests/lineage.client.spec.ts",
+          "sha256": "cb655b7cae4392d9de8616e3e80c7307d0c3a75f84e51d1725ca4756a00c4daf"
+        },
+        {
+          "path": "packages/api/session-controller/tests/list-scheduling.host.spec.ts",
+          "sha256": "0bf27ebbfab2ccaef110dac61833924de1af09d75244c912a22cd6ce0130655b"
+        },
+        {
+          "path": "packages/api/session-controller/tests/manager.client.spec.ts",
+          "sha256": "e2aef022b3a4f24eeeab0eec655e2d2848ab38c4382a398cd3532f041d7c814b"
+        },
+        {
+          "path": "packages/api/session-controller/tests/media-references.host.spec.ts",
+          "sha256": "9c4a339481f29f2f1fcef08c89ca115387668a97727d9df63f0110159a744aba"
+        },
+        {
+          "path": "packages/api/session-controller/tests/notifier.client.spec.ts",
+          "sha256": "9e8524c2978c9b48cd02442b64d4c0ea817fb3ae032273b469855dc82e3fae87"
+        },
+        {
+          "path": "packages/api/session-controller/tests/projection-discovery.host.spec.ts",
+          "sha256": "61a6dffa7d13c1bc39d2d397f9b2114a599570769084fe8d370dd238833ef9f5"
+        },
+        {
+          "path": "packages/api/session-controller/tests/projection-store.client.spec.ts",
+          "sha256": "f1855c8fc4b35bc01a9b1d326fd83e69c471ce72031f3af1261519b88690207e"
+        },
+        {
+          "path": "packages/api/session-controller/tests/reference-ownership.client.spec.ts",
+          "sha256": "08cea0666cce161bd6f65e57db3369a0abca8bed52f844a55cfb3a0fd1ca9a03"
+        },
+        {
+          "path": "packages/api/session-controller/tests/remote-access.host.spec.ts",
+          "sha256": "d6d003d051fa4a5591ed13d1bf36a4cab3298c39d68da6c7e138f9f70b3162cb"
+        },
+        {
+          "path": "packages/api/session-controller/tests/remote/bench.client.ts",
+          "sha256": "bbc1d4f53710fd60aeeb73723f0c7c1e5f80fbc8612faa8a1ca6f9eb45af6dec"
+        },
+        {
+          "path": "packages/api/session-controller/tests/remote/history.client.ts",
+          "sha256": "88dd4865c7a2b3653e6e04aa004674fff04a9b04e361b406a490c7f40da0f790"
+        },
+        {
+          "path": "packages/api/session-controller/tests/remote/session.client.ts",
+          "sha256": "54dd8d34b208666988392800548ed466c6999be3bc9f6d0eacefc9ffa80a50af"
+        },
+        {
+          "path": "packages/api/session-controller/tests/scope.client.spec.ts",
+          "sha256": "bf533138a07143f1af2149f27ff271c0a9a68f3de983f302211f7e64f7732f7f"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-cold.host.spec.ts",
+          "sha256": "0547404af4731b07d64f7b01eb1352afe32a85d63bfee3bb6b15f2e7f02a8d26"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-fork.host.spec.ts",
+          "sha256": "691ee22165f9f89088118f99f9a50f247664975ed5e4e3757f537b7bc078c60b"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-history-journal.host.spec.ts",
+          "sha256": "0032c5dbf3eb6c1059f6907335762447b280e73270a5e798dd52e2fb40cb83fc"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-list-blank.host.spec.ts",
+          "sha256": "5f5d9dc653804822b3897425313eed6442237506890d38b8dab019efaa1a4833"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-models.host.spec.ts",
+          "sha256": "f154e0006c02a800dae3467faa4d8b0b94695ebb66365d8f0a3ea472809d1433"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-open-workspace-path.host.spec.ts",
+          "sha256": "60062acf6b486d32e2e0cc5c2533fa45fa9c6fbb24f4928355b067cf9540e260"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-pending-submissions.client.spec.ts",
+          "sha256": "f23a07d0246bd1396e2368865bcdab1ade0eb8d6c14fc20930087aee082a2fc4"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-presets.host.spec.ts",
+          "sha256": "9e071fe31bce0f0ac3948478ac153b0076db1dbbf4ffaa27d805111636ecb3d5"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-projections.host.spec.ts",
+          "sha256": "1dee7da57410ba74ec8d1bcad746196979d6782ab6efb2dfa443e1cb8c0d576a"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-remote-rejection.client.spec.ts",
+          "sha256": "81b42300b55e4773cb630ebe234998c2ce0305472f82dac7b5b2eb0d662552ed"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-rename.host.spec.ts",
+          "sha256": "af0d1d8c8cb3f8f5eb73abc494f32b26e3b39cb9f63ec20eb33f8d25016828db"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-search.host.spec.ts",
+          "sha256": "fa7ee37dffb69ff0966303a2eaa8775e1421a5ccfc07f24dd61e15b776160865"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session-skills.host.spec.ts",
+          "sha256": "bda1cc60e0421e3ab01db36de42483224d8ddbea91865f27b4d92a3370f74ece"
+        },
+        {
+          "path": "packages/api/session-controller/tests/session.client.spec.ts",
+          "sha256": "4ba25287fbb356552417fc912d057fa623a8f590ed843cb522722d04c7af84cb"
+        },
+        {
+          "path": "packages/api/session-controller/tests/sessions-service.client.spec.ts",
+          "sha256": "cfccd3ffceb6ad5086a6b583da350fb03d9301a0174ead856b959907f969f053"
+        },
+        {
+          "path": "packages/api/session-controller/tests/subagent-catalog.host.spec.ts",
+          "sha256": "45fd372ce367ff09c99a52286157c7651f92f89f3cfb047a11415948f41024a7"
+        },
+        {
+          "path": "packages/api/session-controller/tests/summary-list.host.spec.ts",
+          "sha256": "f4b996014a06a6c0850252290e50925f230723df0b0c04fa78536994600273f6"
+        },
+        {
+          "path": "packages/api/session-controller/tests/summary-types.client.spec.ts",
+          "sha256": "9c0fe77a4a0f3d01c83a25385d17a685173ee86d31b1167a904635e256de958c"
+        },
+        {
+          "path": "packages/api/session-controller/tests/test-remote.ts",
+          "sha256": "73a418e17d741911092dfabcb9f0be00f808eb9d8c979d41a1459043efa33642"
+        },
+        {
+          "path": "packages/api/session-controller/tests/time-zone.client.spec.ts",
+          "sha256": "26aa0c4a16639833e224384e04db319a4934adbc1ebb800149aff9ca40626b52"
+        },
+        {
+          "path": "packages/api/session-controller/tests/transport.client.spec.ts",
+          "sha256": "e66693d115e87d703c019981a5d8f6451e30f203d6bc900e4dfbdda58a3e5488"
+        },
+        {
+          "path": "packages/api/session-controller/tests/transport.host.spec.ts",
+          "sha256": "552674c21adee5f3400d9df010c957ce4b0a0cbf3fef2a4c4d5f36f3b0f232ec"
+        },
+        {
+          "path": "packages/api/session-controller/tsconfig.client.json",
+          "sha256": "528291c006fbedf632516b38af09217f68611ab74dc5a75bf8bf61f52f59aabf"
+        },
+        {
+          "path": "packages/api/session-controller/tsconfig.host.json",
+          "sha256": "2a34ebdf50630917f3e354d2fc5c75ceab916eea4dc3e7f2d962b2a005e58a79"
+        },
+        {
+          "path": "packages/api/session-controller/tsconfig.json",
+          "sha256": "9ae2773ce422b78211f4ed8c2d4f6adb6737a9d0f33c4c392b1ea01a41bec759"
+        },
+        {
+          "path": "packages/api/session-controller/tsdown.config.ts",
+          "sha256": "8ec634455961b2ad025f2173622100bdaf4e9d665e9fb27b5afb3bc36cb08451"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/api/session-controller/package.json",
+          "sha256": "6ad9af2cbb115f9db3b1f2d1fb3609e7a4320d9750ccabc8704979318a52a9c1",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/api/session-controller/tsconfig.json",
+          "sha256": "ad1b25d36ea100440140e543e2a2af188178934da74eadce1b27ef14e91b335e",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/api/session-controller/src/index.ts",
+          "sha256": "623ff04310347d988b71891dc7fa5101aeaa72288cbcff1c1daa278cd6877d01",
+          "reason": "TZ-064：会话目录策略、原菜单公开入口、用量展示开关及按 Session 解析指令边界；保留原执行与投影实现；TZ-076 简化聊天区、删除准入与文案适配"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/contract/session.ts",
+          "sha256": "b9ca74eb4ded08d0b208965815f6a23f5e207eeab070e7305f576ef97aedd881",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/service.ts",
+          "sha256": "e6c6e11aa1e0c6819fe1096e23676f4baa7f20519ba2bb6e23c480bbb5dc9ce4",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/src/client/sessions/session.ts",
+          "sha256": "1cd5a14441d652846ed5cc98f5b8679c9aabe28f14e182e13367047aecde59d8",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；P4 追加语义相同的 Session 快照引用缓存，避免归还中的 React 更新循环"
+        },
+        {
+          "path": "packages/api/session-controller/src/commands.ts",
+          "sha256": "455d4afea1cd4cade2ad932c81af16aacbddf5d6b6df39b1f1cdd612fc971323",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/src/types.ts",
+          "sha256": "3dee0e497660956abb520d331d95fa123c355cc5c554c2f57a41b00f5c48cfd4",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        },
+        {
+          "path": "packages/api/session-controller/tests/commands-queue-attachment.host.spec.ts",
+          "sha256": "41e36c71271ea86654031ec89e88fa5d4100e3b7f8d2ef005e1ce3f953944e1a",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/api/session-controller/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/core/agent-default-model",
+      "name": "@deepseek-ai/dsh-agent-default-model",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/core/agent-default-model/README.i18n.yaml",
+          "sha256": "4f9ec92cbf319f6f9908dff2632abcbf0dd168edaa6f5cfc22c92ef6402d8cd1"
+        },
+        {
+          "path": "packages/core/agent-default-model/README.md",
+          "sha256": "9d9670afdd5d5db438703d43dbb2046f8669fa171ed032171a8dd5fddefd69f7"
+        },
+        {
+          "path": "packages/core/agent-default-model/README.zh.md",
+          "sha256": "a0fdb45e619970360490e303e55054b65c2901c7cd2617662b1f4c803fa5af32"
+        },
+        {
+          "path": "packages/core/agent-default-model/locale/de.json",
+          "sha256": "da747c58e0c594b4818b05340dad619de7bc16332af6ab678c0f151a3f594ad4"
+        },
+        {
+          "path": "packages/core/agent-default-model/locale/en.json",
+          "sha256": "f229454c6531b02fa47c89338a9c01358156483c8bebb7bafa7049a607c1f488"
+        },
+        {
+          "path": "packages/core/agent-default-model/locale/es.json",
+          "sha256": "a19021c9ad1ff493853ff8c00198f5c8b0fdc33b42d7451169275a6128245c2f"
+        },
+        {
+          "path": "packages/core/agent-default-model/locale/fr.json",
+          "sha256": "a9f1373192ed43e5692813f3b9ba0747b983bd615af821c56782ede739df67b9"
+        },
+        {
+          "path": "packages/core/agent-default-model/locale/ja.json",
+          "sha256": "b0d9d53566741e90eb2b942bd404927ada6dca86fbbad25193b60f8ed3582c83"
+        },
+        {
+          "path": "packages/core/agent-default-model/locale/pt.json",
+          "sha256": "4b514abcf9438fc412c5451a624b4d0b5878a71fd9833a48650f77b6fb201235"
+        },
+        {
+          "path": "packages/core/agent-default-model/locale/ru.json",
+          "sha256": "ade770c18745f5c34a4f671f64a8b2677b60ae25b5c19faa2f3922b96aa74f2e"
+        },
+        {
+          "path": "packages/core/agent-default-model/locale/zh.json",
+          "sha256": "7b01ac983a021bf854f7df0975d871502c6d9dadaa7526c0197104d930b5c909"
+        },
+        {
+          "path": "packages/core/agent-default-model/package.json",
+          "sha256": "d58167fbb538326ddd627b233a8cc13e83149494a5dc08480cfdb4803d388801"
+        },
+        {
+          "path": "packages/core/agent-default-model/src/index.ts",
+          "sha256": "d841737984875b31c7972e0d3023c0f41b9d4b09090d2cce902bbbaf3db338dc"
+        },
+        {
+          "path": "packages/core/agent-default-model/tests/agent-default-model.spec.ts",
+          "sha256": "855719b8adfc623cf635a76a7ac9aba1860d6679cd432d8e4e5cbcd968d97ab0"
+        },
+        {
+          "path": "packages/core/agent-default-model/tsconfig.json",
+          "sha256": "75c5cec00d1aaa7db5418021318b4ac41bfc8ef9efae209fc9e4f8f7ffdd6faf"
+        },
+        {
+          "path": "packages/core/agent-default-model/tsdown.config.ts",
+          "sha256": "4b8cdb973c4a15428b72c010024510b76bae3211a620fc5cd726b75e1aaf91f1"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/core/agent-default-model/package.json",
+          "sha256": "c9f1b7f3fbcac51ef5602b9570aa8752b3ade40f8e8ed54cac950fbb06a2eaee",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/core/agent-default-model/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/preset/agent-preset-registry",
+      "name": "@deepseek-ai/dsh-agent-preset-registry",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/preset/agent-preset-registry/README.i18n.yaml",
+          "sha256": "dd4b3a50270a0b88f5ef566ff229601c379c2961ac1025f339a5a60d0a263d22"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/README.md",
+          "sha256": "aae5a92fb089b19a62de245d5d131fa62affe9e45b01451e3c749f702280abb6"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/README.zh.md",
+          "sha256": "7971b73e50fa66b65672d945456861ba8c62ba95aaa0401fb2dffd943b5e81b8"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/locale/de.json",
+          "sha256": "ef414f50eaf51002db230ffac0cc9df5789195d2648acf711489ae9b66c00319"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/locale/en.json",
+          "sha256": "51fedcb9bff819c17f5d5d77c4ade8d3a9f21f71f96eb63ce6a5b973156947d5"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/locale/es.json",
+          "sha256": "dfa567fe2dbbe41cc1e9a146d2e971de30a1343ffb7de558d4d7c9bd64b3d903"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/locale/fr.json",
+          "sha256": "65afab19760b9a09e0ac14f35ac7f5fa5a7cc707943def3bad0df5009096f654"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/locale/ja.json",
+          "sha256": "e4eff1a209d250b0d151f19be98f42d2a8ee6b23cd1084b35d33b9cd866aba57"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/locale/pt.json",
+          "sha256": "73154712052e298c96947f0ab4eae8e9a1b0dad5b128f00ed073c398226ef946"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/locale/ru.json",
+          "sha256": "f5def8f504a40e660b902898312303d72699f33b17471d32e2d579dc000f939b"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/locale/zh.json",
+          "sha256": "56f7a54b4711e8e6b159fb54beb318d9d5cf81051eb73beaa751eed7fa89471f"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/package.json",
+          "sha256": "d8c5019e6e81ef5f88f5ce6c61e23647480aeb93c0724fbc0f2af80522711ad2"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/src/composition-inventory.ts",
+          "sha256": "974d33b69b99094d22fbefce05698f1e7a20c6845a4d6a7e4f7626c79a6cfd5d"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/src/definition.ts",
+          "sha256": "d952da79acd930954b8d1667ffe692b1e5223f853127b5cbda6de7cf9cd76903"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/src/display.ts",
+          "sha256": "0233d9615cde02a8f86c19afd4ea6c4bd88789b733c18f8266aa04b5f81cace3"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/src/index.ts",
+          "sha256": "feaf6a03efa4b5d755983ff5f64d2b09eeebbed1e93b4b917e16d17d0dddd844"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/src/mount.ts",
+          "sha256": "c008c324ca5b0e4d17dc167a440a0d30537d179905e99a8e67772968cec58917"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/src/preset.ts",
+          "sha256": "95a12c41d9fcd2587ebf70b4dbe32e8d1e73f5247c17f22dfaafb1909f313965"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/src/session.ts",
+          "sha256": "5322ac4f166e92e1591ba06499f24b9daa82fa7c4190b78350e05f0cdfcfceb7"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/src/types.ts",
+          "sha256": "7bedf4445ee33cfa223bb39166ffef62d8d4ac5f209c229f692d92ad5b8605b7"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/composition-inventory.spec.ts",
+          "sha256": "b48b36df2e5939db8693202f646b94f21d381265af389e373e3e5a9fda6f70d5"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/display.spec.ts",
+          "sha256": "d32e55fdf350ab12e2ef4c53f1e76af4e69bbd098a31e2004e5d08fd9e82990d"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/fixtures/plugins/contribute.js",
+          "sha256": "2ea8bad9981c1a24d2bb8e64896f915622d92627691287e1c5ec07b477ea1a8c"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/fixtures/plugins/global-service.js",
+          "sha256": "f4da24062942f4f003573d9905e4acf309cafbf8c6ded83051928f716294b0fe"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/fixtures/plugins/late-service.js",
+          "sha256": "9afb3dbc42120ba7667c145be89e42be1e7c20ad75b5ae81a87988259fe9a46e"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/fixtures/plugins/needs-missing.js",
+          "sha256": "f587abc7759637c6ce3bc1181c87a588159adb92254314f4944c6acd3cbcc2e9"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/fixtures/plugins/self-dispose.js",
+          "sha256": "71e754a307df1466fd8119c5652ccf0d5e72b90e9a63f559725de75820f81570"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/fixtures/plugins/throws.js",
+          "sha256": "219be62b5c9e7bb591b9b64a5b0b7326f4ce9cf095825d1df9cda0107760a4f1"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/harness.ts",
+          "sha256": "22cf6c1050253640fccbd331006258d0183f978f3b0bcdbedad2447b111dd950"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/mount.spec.ts",
+          "sha256": "81c60aadfc54b2bff0ed85def40ecbdf429e798afa2eddb52dc18edb61fed45c"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/registry.spec.ts",
+          "sha256": "9d1dea65d0f2cfafcead506af523630d0e45dab0ea2f7fb5050b6fbc308bd5ad"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/session.spec.ts",
+          "sha256": "5cc401e8d02c85db615c296c870b7fe55557d64ddfcf33e60068648d0724f77d"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tests/tool-executors.spec.ts",
+          "sha256": "afb095985b462246698a40805a897eb727f6d4091245e730226f73e9b87675b8"
+        },
+        {
+          "path": "packages/preset/agent-preset-registry/tsconfig.json",
+          "sha256": "8b5336ca4f9f0ffd90a5b3b75fd614a57e9b5992e6cce949ebc7aa154133ccae"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/preset/agent-preset-registry/package.json",
+          "sha256": "b17c48f1aeba708786ea6a5b88fcf1c2b3fcdb6d55d5943f7ad96195b9a75172",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/preset/agent-preset-registry/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/client/file-upload",
+      "name": "@deepseek-ai/dsh-client-file-upload",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/client/file-upload/README.i18n.yaml",
+          "sha256": "4c5db55311c9e123abf39461d55268e0e27e6e66eac8bc7c9f29e182bf21616a"
+        },
+        {
+          "path": "packages/client/file-upload/README.md",
+          "sha256": "fddb0dcf700c6d4b09f3a914400eafb77a69e3a0bc77663c1c72e13fe7402154"
+        },
+        {
+          "path": "packages/client/file-upload/README.zh.md",
+          "sha256": "b8f78c107e751a6f97459c59b989e0ac93f0e9e74b7377ef2069d4fe18e4c093"
+        },
+        {
+          "path": "packages/client/file-upload/locale/de.json",
+          "sha256": "8ad793a2881efc63c1e9a30555c6d8b96a57a34b3363f4b287eac8412c12bc29"
+        },
+        {
+          "path": "packages/client/file-upload/locale/en.json",
+          "sha256": "420231efcca9c87cd7652830d16dbf7b11a37de5e1428f06395901ac3096f68f"
+        },
+        {
+          "path": "packages/client/file-upload/locale/es.json",
+          "sha256": "65f1b6be4397b73b60aaaad4961ed0b3929e6d457df681677e2627a90c924aad"
+        },
+        {
+          "path": "packages/client/file-upload/locale/fr.json",
+          "sha256": "257beac381a861b0bd16901402b4bda172828ff36bd57ffc460fa58547479ce0"
+        },
+        {
+          "path": "packages/client/file-upload/locale/ja.json",
+          "sha256": "0e8e173eb27c471dae58d4102bfeac8bfc52136bc5d1be9fc8e9ed1240714463"
+        },
+        {
+          "path": "packages/client/file-upload/locale/pt.json",
+          "sha256": "0d1e0259864ad6b03cb72b8155446ff014247cd0e09ac99a6872c9dd552e53c0"
+        },
+        {
+          "path": "packages/client/file-upload/locale/ru.json",
+          "sha256": "6df9c2dc2415fe9a0a85204db14234126af0c29d0cb5055a2cacf5fd160e27bf"
+        },
+        {
+          "path": "packages/client/file-upload/locale/zh.json",
+          "sha256": "92f55257542472d2c19791bbbe819b2358a52a52d90882bc84809d34b0277f18"
+        },
+        {
+          "path": "packages/client/file-upload/package.json",
+          "sha256": "a926dcf5965c354b1444f3f64ae67bd5deeca7af65270a9c66730b2a20619a02"
+        },
+        {
+          "path": "packages/client/file-upload/src/client/contract.ts",
+          "sha256": "74af3861530c003660c2f6aa7ab4eea03633e7b43b1fb7989a11c869ac7f428a"
+        },
+        {
+          "path": "packages/client/file-upload/src/client/index.ts",
+          "sha256": "0055131531cd71087e2615410bb7bd7d2fc8bb1bcff78d85b2cc07a9789aef61"
+        },
+        {
+          "path": "packages/client/file-upload/src/client/runtime.ts",
+          "sha256": "70ed5d88275c4b0114823068f067efb24cab607d1f6a11275253844f634ea8b6"
+        },
+        {
+          "path": "packages/client/file-upload/src/http-route.ts",
+          "sha256": "5388b212f564936918779e7ac67026c720eaf4c8d5d56841535aae6e34da316f"
+        },
+        {
+          "path": "packages/client/file-upload/src/index.ts",
+          "sha256": "11b62acb7be56ac85969c1c35f1f7701a4c4460233ede739fd03fa68ea6d3920"
+        },
+        {
+          "path": "packages/client/file-upload/src/protocol.ts",
+          "sha256": "cf535d3e55e49465e07806b71b0a40df30709f4e9af8d28ce464a44ce6f17978"
+        },
+        {
+          "path": "packages/client/file-upload/src/types.ts",
+          "sha256": "83624f0f002a2c8618243bab65b77b2d7fbfd585e5bd1214928a13f44c9cea06"
+        },
+        {
+          "path": "packages/client/file-upload/tests/file-upload-http.host.spec.ts",
+          "sha256": "d9599988194e0a4224b134ea5f5041032e5f528a72698420dc858a7a1912c494"
+        },
+        {
+          "path": "packages/client/file-upload/tests/file-upload.client.spec.ts",
+          "sha256": "889e50e5cdad9116614389de66184b2583e7db385a77dca0dc94a3137e65f781"
+        },
+        {
+          "path": "packages/client/file-upload/tsconfig.client.json",
+          "sha256": "c9ddd579e40e643c5f37fdd6fea79fccd5b4abbacf25128dd8c4c1610892af58"
+        },
+        {
+          "path": "packages/client/file-upload/tsconfig.host.json",
+          "sha256": "0414a83e5d231953682b4936b4b016cdb14d3f2f8d2d1b00e8a0c6a86a121bd7"
+        },
+        {
+          "path": "packages/client/file-upload/tsconfig.json",
+          "sha256": "9ae2773ce422b78211f4ed8c2d4f6adb6737a9d0f33c4c392b1ea01a41bec759"
+        },
+        {
+          "path": "packages/client/file-upload/tsdown.config.ts",
+          "sha256": "c91c9bf731f1ab5e640dd8c40df1b6eeada805eef7f713bc1d09f832f6be395a"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/client/file-upload/package.json",
+          "sha256": "17bd861530a1bd17d4fa37d3c891e558f917faa824cc025bbdb7fb804b80b310",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/client/file-upload/tsconfig.json",
+          "sha256": "ad1b25d36ea100440140e543e2a2af188178934da74eadce1b27ef14e91b335e",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/client/file-upload/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/util/native-command",
+      "name": "@deepseek-ai/dsh-native-command",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/util/native-command/README.i18n.yaml",
+          "sha256": "d2d48d440495e3962629b595ffcb236ea24ad4801d7adff6edef3d76e0d153c2"
+        },
+        {
+          "path": "packages/util/native-command/README.md",
+          "sha256": "b729444f925b6759216e8b975918b7a90aa2bce1e6444a797a5df059abe1952d"
+        },
+        {
+          "path": "packages/util/native-command/README.zh.md",
+          "sha256": "507ee6d99014af881fa0b092e27840a6643b15d42bfc46ecb01bed70abe8fee6"
+        },
+        {
+          "path": "packages/util/native-command/package.json",
+          "sha256": "ac59de2dd082fa1f8d2edccc925d82af02dd9d8273799124791190f345dbcd7f"
+        },
+        {
+          "path": "packages/util/native-command/src/desktop-entry.ts",
+          "sha256": "9ede7edfa26d66fb937656a5d05279a0252dee86ded59f62fa968a11a774c150"
+        },
+        {
+          "path": "packages/util/native-command/src/file-applications-linux.ts",
+          "sha256": "3453ad796daf512db810e2010afa542ba376da4e486cfc191ac57ac3e8e1cb81"
+        },
+        {
+          "path": "packages/util/native-command/src/file-applications-windows.ts",
+          "sha256": "b6323edbaa130b3532597c1c46ca806d9e161b50f6420e38692e6b809a80620d"
+        },
+        {
+          "path": "packages/util/native-command/src/file-applications.ts",
+          "sha256": "164d250ef3a949abe652cfad26385ae3dec5124c4c70375469fd921894051227"
+        },
+        {
+          "path": "packages/util/native-command/src/index.ts",
+          "sha256": "0d6c4c35af35d1c8881833dd2d633823f19928a409f8abe127a2cb4466eb71ae"
+        },
+        {
+          "path": "packages/util/native-command/src/path-opener.ts",
+          "sha256": "12a62ed33240568c874d9e589a0d2ab64fa14bfd840c571909e72a439a3452fb"
+        },
+        {
+          "path": "packages/util/native-command/src/runner.ts",
+          "sha256": "5395718ed7f3f8a8de2d5a780bb162fbb147cb34a257c5de5b1c480bb967b718"
+        },
+        {
+          "path": "packages/util/native-command/src/types.ts",
+          "sha256": "54d8b9ce4a69353ee43b85a4d47504628fbc94688eb3983b6cf3273afc1d9097"
+        },
+        {
+          "path": "packages/util/native-command/tests/file-applications-linux-native.spec.ts",
+          "sha256": "1993ce2141839ea09e09c68f43c96b9f06c03637f84ce699d2fba840110380db"
+        },
+        {
+          "path": "packages/util/native-command/tests/file-applications-linux.spec.ts",
+          "sha256": "b0dd5d8b997c78fdd16f00a42fdaf9a7b70bdd833768444eb01aa9ab6d87cd4f"
+        },
+        {
+          "path": "packages/util/native-command/tests/file-applications-windows.spec.ts",
+          "sha256": "73ffab276e63e7198888c5309a7df5be589253ca290c43b14c5fc4f83a277921"
+        },
+        {
+          "path": "packages/util/native-command/tests/file-applications.spec.ts",
+          "sha256": "dc7c6284e47e4afc69ca06c88b6730b67a4260e82683313295ff0c03ab5bcd8d"
+        },
+        {
+          "path": "packages/util/native-command/tests/native-command.spec.ts",
+          "sha256": "e3ee46d710d7c6fc985df3290b6b76ad524ae20d73c69f3bb11eba47d86a9f40"
+        },
+        {
+          "path": "packages/util/native-command/tests/path-opener.spec.ts",
+          "sha256": "eeb71e5348651c66e35e3e4843e99ff343c6769c16f078d62ac471b579c9408d"
+        },
+        {
+          "path": "packages/util/native-command/tsconfig.json",
+          "sha256": "cd37553e80b9913dec33adf4aa0fff20071647b3952bf74118e4bf8193b5cc58"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/util/native-command/tsconfig.json",
+          "sha256": "7e86a9ae63aca473186b138ad589d9da22e4df8cfe64f2b74995d2726014d721",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/util/native-command/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/session/session-projection-cache",
+      "name": "@deepseek-ai/dsh-session-projection-cache",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/session/session-projection-cache/README.i18n.yaml",
+          "sha256": "acc0c7f2cfd4e9a8e828903ca9e792e138abb6d648e2f9d701adedb1f194c5b0"
+        },
+        {
+          "path": "packages/session/session-projection-cache/README.md",
+          "sha256": "574b6f795ddaa1eddb9b08df390df3e80eec5e0439bd9d98583ade517b400545"
+        },
+        {
+          "path": "packages/session/session-projection-cache/README.zh.md",
+          "sha256": "1f2aa547d09bbb91b9f5d745fcf4f20758db2b2700ed52441e2150edbcb95ecc"
+        },
+        {
+          "path": "packages/session/session-projection-cache/locale/de.json",
+          "sha256": "3671435cd49d74678eec8fa1be12390450e182f545b216e4c7f80111c7e100eb"
+        },
+        {
+          "path": "packages/session/session-projection-cache/locale/en.json",
+          "sha256": "80cf67ef9bc0ee7e41314ff72dcbf90e0ed6595a1cfb33f9387886ea19800b57"
+        },
+        {
+          "path": "packages/session/session-projection-cache/locale/es.json",
+          "sha256": "4c860a69c4433c95d95746cd31128c6ee4e50d534db9e17ec0cbef4d22166875"
+        },
+        {
+          "path": "packages/session/session-projection-cache/locale/fr.json",
+          "sha256": "3afd7b735bf927ad1cec5d2c6a4c9e1d466b15d6a2beb597f1efae7ac68e0845"
+        },
+        {
+          "path": "packages/session/session-projection-cache/locale/ja.json",
+          "sha256": "71b6a2538b0e8539c607c54c2c32f6ed200b6d9cea188afa244676fd1b67dffe"
+        },
+        {
+          "path": "packages/session/session-projection-cache/locale/pt.json",
+          "sha256": "a5f514d2ea8175f787145591456b834bdce390be3463ec88cba9ff4cbfb2bf4f"
+        },
+        {
+          "path": "packages/session/session-projection-cache/locale/ru.json",
+          "sha256": "d8f12b672d980e19e8be6eb939cee7b5d4a2179cf5c93a3319f4c3c18dc2d5e6"
+        },
+        {
+          "path": "packages/session/session-projection-cache/locale/zh.json",
+          "sha256": "ec17f39ff8a9a4eb67e57db5780a12154bfe3ec0c3c7cd7b15250b3fa203e786"
+        },
+        {
+          "path": "packages/session/session-projection-cache/package.json",
+          "sha256": "1cfbaadcce757c5f4529a485215d0d950f58c898f27e8e280ee38ec2fb61d320"
+        },
+        {
+          "path": "packages/session/session-projection-cache/src/index.ts",
+          "sha256": "6bab0fe1ea4b21722720c120f0fe1e3e40a4a85389430835ecdf8f52c9f3c17d"
+        },
+        {
+          "path": "packages/session/session-projection-cache/src/spec.ts",
+          "sha256": "dae305f925fb5cade890c35452f6f2c1e6b669f6f392c323c211a5d438216a60"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tests/cache.spec.ts",
+          "sha256": "41853a252acf5bdcaa37f4ed67baf549fa4b8bf910beff2a0aa29593650e5c04"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tests/fixtures.spec.ts",
+          "sha256": "1604f90415156c9888c6d6d7f8666456276b2ad7f7878943ac7d2c5a8010569c"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tests/fixtures/v3-single-unit.json",
+          "sha256": "93281054b73a59e5abb746506bbe0d61b51ba2091c94c7e34b5fe5e2fb15368a"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tests/fixtures/v4-session-doc.json",
+          "sha256": "59a2ecd0b8750059cfab98884d724793af29364c285cf2027e862f9090ea5b11"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tests/fixtures/v5-lineageless-doc.json",
+          "sha256": "166c094009ba7ae9e25b6b921837d2eb24dee69f146fa16bd530f31fb170f113"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tests/fixtures/v5-session-doc.json",
+          "sha256": "2e6b1fb2f68975594ec5de4b95be69bb2244a0d13d80977b85654b731a531b50"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tests/fixtures/v7-opaque-session-doc.json",
+          "sha256": "87e43497dc08d83c9b0434527fa99d65819702629832a58983f9e14a184b4e2f"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tsconfig.json",
+          "sha256": "958c01454efa7eb504afcf4682f0c56c6164c9c919ba2b6b510dc753baa5d6da"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/session/session-projection-cache/package.json",
+          "sha256": "a10021dd00e318e7f2530bd6d2a2444e6e9b57ca1c29d9835df1405b965f6277",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        },
+        {
+          "path": "packages/session/session-projection-cache/tsconfig.json",
+          "sha256": "f5b750a3383d710c76d217125b1e3979289a1267314aacdb9a54106731637cd8",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/session/session-projection-cache/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/session-query/session-query",
+      "name": "@deepseek-ai/dsh-session-query",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/session-query/session-query/README.i18n.yaml",
+          "sha256": "9f80f62fc6b1244c0bfbe742633a6caaf4f759ed7367ab0318a2db07ed81adc3"
+        },
+        {
+          "path": "packages/session-query/session-query/README.md",
+          "sha256": "7b386f60bbc56584c774926715d097fe5adf02db20c21b7c35078cd359c100d6"
+        },
+        {
+          "path": "packages/session-query/session-query/README.zh.md",
+          "sha256": "8337cb6d9d3c12e2436793b65124a8d6f012ba001d25c9790025b929ee2814d6"
+        },
+        {
+          "path": "packages/session-query/session-query/package.json",
+          "sha256": "5f009a63f78d8cf9e187e09e78b1240c5fb6cf818c6bce6715d8237140d00f9c"
+        },
+        {
+          "path": "packages/session-query/session-query/src/cold-read.ts",
+          "sha256": "e2bbc3e2e59c7a4843e9d957e99c37f323d59d224502366a1fcc17f29e196317"
+        },
+        {
+          "path": "packages/session-query/session-query/src/config.ts",
+          "sha256": "5850ab0dd78a26843d6ff899f5bb85af4cc8745f163ff71a17586bcda5da570f"
+        },
+        {
+          "path": "packages/session-query/session-query/src/corpus.ts",
+          "sha256": "632b1178f54b88a607c61f4929551e8f766f15a8fac57fb22697df8e6cdbab60"
+        },
+        {
+          "path": "packages/session-query/session-query/src/cursor.ts",
+          "sha256": "78eb05f7db53414fd742572f91fa7f575622a4759d32ce5ba2999aa1ed4825f6"
+        },
+        {
+          "path": "packages/session-query/session-query/src/documents.ts",
+          "sha256": "07f4a5af51d1a4bee5aede654e6cf9198d97c176d8b4ea39666bf6c3fdd95acd"
+        },
+        {
+          "path": "packages/session-query/session-query/src/extraction.ts",
+          "sha256": "7ee4fbae1b5101613fd1174289678c97faf77ecbee57649b9970998822277479"
+        },
+        {
+          "path": "packages/session-query/session-query/src/filters.ts",
+          "sha256": "574759cf15980ad2e0b69791d26c596c6a573bae52d613294e12770ac583ecdc"
+        },
+        {
+          "path": "packages/session-query/session-query/src/index.ts",
+          "sha256": "549f7f90c90efec63a5c7d69dbc65938c0f9578f85dcfc8ee25a49a43a8e83e3"
+        },
+        {
+          "path": "packages/session-query/session-query/src/observation.ts",
+          "sha256": "04a470ad5245aac1e70e0bf899515a931e52e7dba94ffcc0bfe9a978932e1347"
+        },
+        {
+          "path": "packages/session-query/session-query/src/sources.ts",
+          "sha256": "57bf2721a598b86f796aac4946ace26d59529cb15f2eec587c068b1cdd88feb7"
+        },
+        {
+          "path": "packages/session-query/session-query/src/tracing.ts",
+          "sha256": "f63d528f4e31bbf7bb79c9add03095885e87f1ecf71c6aeaee01d509639ea60a"
+        },
+        {
+          "path": "packages/session-query/session-query/src/types.ts",
+          "sha256": "0d61d7fbeb325f93cc6a99ec362b825f264a1764e8bbf48d4136dc1634a026b6"
+        },
+        {
+          "path": "packages/session-query/session-query/tests/observation.spec.ts",
+          "sha256": "c81ce9f4daed39d2120bce4214a44876564f83e71dded19a9846de73d0dafc07"
+        },
+        {
+          "path": "packages/session-query/session-query/tests/search-helpers.spec.ts",
+          "sha256": "3ba9b52f4b2ed9693075aceaea7647e2e0cfc05174f881771094dc1c84522ba8"
+        },
+        {
+          "path": "packages/session-query/session-query/tests/session-query.spec.ts",
+          "sha256": "a4f9749ead00fcaaff7adf689213c14bb945a41de9256caa684de55180d3b1c6"
+        },
+        {
+          "path": "packages/session-query/session-query/tests/test-service.ts",
+          "sha256": "db0f395a230844d23991198e4077714b16c7f4e8c8a264df3e2ba9170ee5dcee"
+        },
+        {
+          "path": "packages/session-query/session-query/tests/tracing.spec.ts",
+          "sha256": "539c570f2e3e4fe2849919195125e3892740996c2e397bfcba8c08687b35a744"
+        },
+        {
+          "path": "packages/session-query/session-query/tsconfig.json",
+          "sha256": "b36481107e0a6d99c2cd27f20a5a0b8dbe1bcee88f8474b0b61a61a11dded9b9"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/session-query/session-query/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/session/session-title",
+      "name": "@deepseek-ai/dsh-session-title",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/session/session-title/README.i18n.yaml",
+          "sha256": "8ea419094f427628ea4b5f7f2ad125d10267a0a1e16405661180007659c8ae11"
+        },
+        {
+          "path": "packages/session/session-title/README.md",
+          "sha256": "7c2d5a08434ed26e8f51e0301c4f5aa78839c405807a3b26361f263064c7271a"
+        },
+        {
+          "path": "packages/session/session-title/README.zh.md",
+          "sha256": "ff29b542f0a4733d840f8807ba23e93a0aaa8fbc80aa1cbee98eec1b43d7aa12"
+        },
+        {
+          "path": "packages/session/session-title/locale/de.json",
+          "sha256": "220f171adf2fa7efbc209930169c89382b0bd7979b83ede4a6f21117979ab512"
+        },
+        {
+          "path": "packages/session/session-title/locale/en.json",
+          "sha256": "486874212387dc2a46baafde20099b6434973f18bd186d61227443fabab17b60"
+        },
+        {
+          "path": "packages/session/session-title/locale/es.json",
+          "sha256": "3a75c6032fbfaee9756c162548b346ab078f1b908c7129947b391e5dbe771ae5"
+        },
+        {
+          "path": "packages/session/session-title/locale/fr.json",
+          "sha256": "cfe8d3137abfe14f38f0869d38f4ec511fe15bfad016f18d8aa98e299ef60daf"
+        },
+        {
+          "path": "packages/session/session-title/locale/ja.json",
+          "sha256": "8b49c1e146d90445eedb7b19f2f0f50a8e883c4971e8d0b422b55c9713969f7d"
+        },
+        {
+          "path": "packages/session/session-title/locale/pt.json",
+          "sha256": "c9272dd81f463616a8b35e9158a00f0d82519874ae07a85e90dfb2c1bf8c1cc3"
+        },
+        {
+          "path": "packages/session/session-title/locale/ru.json",
+          "sha256": "87c776db74929598ed10287e2dc61b87b8211093c332c342af6a28520934f166"
+        },
+        {
+          "path": "packages/session/session-title/locale/zh.json",
+          "sha256": "c53254d6c4b7ee1abb4c2c1c16e1c8f07381e683c6ef80b0c7fc090a3d5b82ec"
+        },
+        {
+          "path": "packages/session/session-title/package.json",
+          "sha256": "df3ff403f7f8f4ce1dd40cc404f1238b7ae01570ac8df5a5e25a7630638d0784"
+        },
+        {
+          "path": "packages/session/session-title/src/client.ts",
+          "sha256": "8a43fe3451196bc6137ee3c2cf703ba55989733a4685e5ebca31b8feec1d5479"
+        },
+        {
+          "path": "packages/session/session-title/src/index.ts",
+          "sha256": "e03b37afc85c68d993a9496ff063c06f64ceaab56c791a7c006897b8469e8bf5"
+        },
+        {
+          "path": "packages/session/session-title/src/normalize.ts",
+          "sha256": "97ed4df405f793a9b7155d723b2ccaa77b57884a27965dc6376efb6cde25e080"
+        },
+        {
+          "path": "packages/session/session-title/src/types.ts",
+          "sha256": "2a100655774b76fc91239afb4186a1b83fcb0081f4cd038db82c193b3b1e7554"
+        },
+        {
+          "path": "packages/session/session-title/tests/initialization.spec.ts",
+          "sha256": "74a4cca28386dc207945d2d44cbcc88a46782eac748fe61c0e610b3a9f47c987"
+        },
+        {
+          "path": "packages/session/session-title/tests/persistence.spec.ts",
+          "sha256": "a5b6c27ff37f85f518898655ab9713b5e77d867079df991275309599e4db58bd"
+        },
+        {
+          "path": "packages/session/session-title/tests/projection.spec.ts",
+          "sha256": "c41316f780c8247eeea9cc644be1594b44d7fac8e11650179d38f58fd9755be6"
+        },
+        {
+          "path": "packages/session/session-title/tests/provider.spec.ts",
+          "sha256": "367db50de753a9ecd6c4aecc188d812ad121ca10a1b185ac5dd630fcf6deafbd"
+        },
+        {
+          "path": "packages/session/session-title/tests/rename.spec.ts",
+          "sha256": "f97c10c540ae0a22013db9ec0535263e24d5fb66867e19721a711b6c48ae540a"
+        },
+        {
+          "path": "packages/session/session-title/tests/service-contracts.spec.ts",
+          "sha256": "d4e771a4cbd7c8705b357ef007af0e7000b14ca7424e3a5856fa8aa7a17a790a"
+        },
+        {
+          "path": "packages/session/session-title/tests/session-title.spec.ts",
+          "sha256": "943bec1dbfe3ca1bd55f9533140b0e9bccbc5efcda174d23ad6cfe3391b04047"
+        },
+        {
+          "path": "packages/session/session-title/tsconfig.json",
+          "sha256": "16d0a0fb42c777335295a18b957ac27d66da1e1150697fcbdfc1198f65a7d2d0"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/session/session-title/tsconfig.json",
+          "sha256": "5d0cbcb9f03c3bc920d4724745a18da0193df5453d75c1476e09805b451b6a04",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/session/session-title/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/todo/tool-todo",
+      "name": "@deepseek-ai/dsh-tool-todo",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/todo/tool-todo/README.i18n.yaml",
+          "sha256": "6ab7aa14f76ada27391fe6503899f8d60d3b82e94b570ae6eece2b75670080b2"
+        },
+        {
+          "path": "packages/todo/tool-todo/README.md",
+          "sha256": "22307348c3641288bc70c0032b4b0409f802bf004f8686e59f9f886ee957f90d"
+        },
+        {
+          "path": "packages/todo/tool-todo/README.zh.md",
+          "sha256": "7c7d9b617a96a8395bf6466b766614a7ffbb1dbda17243a8f140e4223959f8e5"
+        },
+        {
+          "path": "packages/todo/tool-todo/locale/de.json",
+          "sha256": "ff4fe7f7ba5dcd33e6d79c76237085f7c5e256a695039fe5e04d57678ba5f38d"
+        },
+        {
+          "path": "packages/todo/tool-todo/locale/en.json",
+          "sha256": "ac0815831baaedf642c86f1e525f811bbebcea90bb1ca12e178e81b337c4e15d"
+        },
+        {
+          "path": "packages/todo/tool-todo/locale/es.json",
+          "sha256": "d50b88a9b7591e1ce221b9cc848fcc726263f0c8639f0fabb12953458b056a50"
+        },
+        {
+          "path": "packages/todo/tool-todo/locale/fr.json",
+          "sha256": "e592e7f81c25ce63ee7656c11af951b388a87461dcc0a8e530cc18f88efbf9da"
+        },
+        {
+          "path": "packages/todo/tool-todo/locale/ja.json",
+          "sha256": "c6b6c724f56790cd427dafb03e8fd48f224779f39ebf5177a5112b83fc69babd"
+        },
+        {
+          "path": "packages/todo/tool-todo/locale/pt.json",
+          "sha256": "281111b4ea45d4488b9bb4a99f40224de238604db00a4108f34405b6f125b3fb"
+        },
+        {
+          "path": "packages/todo/tool-todo/locale/ru.json",
+          "sha256": "6ff2f0c153f53110fd5bb9b180a884cfd7aa68e95a0ed55561fcdc8795fd9649"
+        },
+        {
+          "path": "packages/todo/tool-todo/locale/zh.json",
+          "sha256": "9365f61b1c81a1b3bcf6487d156a481f86a1894372fcccf50691e225905c5e5a"
+        },
+        {
+          "path": "packages/todo/tool-todo/package.json",
+          "sha256": "319f0fb99d922e3180d357ec72be41f66524d1d814bf373a63ef9d582d4cce1b"
+        },
+        {
+          "path": "packages/todo/tool-todo/src/client.ts",
+          "sha256": "803e092ec67d96b6fceb351f1d1fec5713c40adaffd6528813e70cc4cd498822"
+        },
+        {
+          "path": "packages/todo/tool-todo/src/index.ts",
+          "sha256": "80559ed95b7fc9c1dc083312f187885254bf2c1498d0f7a079dad21427d24def"
+        },
+        {
+          "path": "packages/todo/tool-todo/src/types.ts",
+          "sha256": "33868cc6852c37d188c79329e0a48c9206adc3c82521f2e52e492c25e0381bbe"
+        },
+        {
+          "path": "packages/todo/tool-todo/tests/integration.spec.ts",
+          "sha256": "7e18b3b1fe8a463edeb0160b6ebd42ad5ef2dd22f8dddf3c1fd5d3ab07acc778"
+        },
+        {
+          "path": "packages/todo/tool-todo/tests/loader-composition.spec.ts",
+          "sha256": "f1f6cee02f2d4717b6c62abf198e54c35235a3e452c015af6763166accb69cc4"
+        },
+        {
+          "path": "packages/todo/tool-todo/tests/projection.spec.ts",
+          "sha256": "ec6ec13b556a54c9ed58f489760dbadf05d8653b0a1d37ad9ba988efe6ce5f08"
+        },
+        {
+          "path": "packages/todo/tool-todo/tests/tool-todo.spec.ts",
+          "sha256": "66fa16feac8ade9bb285fb004922a29943cd2a3a54e68a096692f629c7fbb281"
+        },
+        {
+          "path": "packages/todo/tool-todo/tsconfig.json",
+          "sha256": "db4abbde8d963460a7ab8969f7147ae93d056c0777bf0ac5731c55e34487cdb9"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/todo/tool-todo/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/subagent/subagent",
+      "name": "@deepseek-ai/dsh-subagent",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/subagent/subagent/README.i18n.yaml",
+          "sha256": "b35d6643675793fbd13f83a973a1238f5ad270dbcd754b4dd62c171294c45fbb"
+        },
+        {
+          "path": "packages/subagent/subagent/README.md",
+          "sha256": "8e670e40d4b7e9c1cb1bb603a6a43750e61bbf2a0a000bd8ed92adb0b95eb8ab"
+        },
+        {
+          "path": "packages/subagent/subagent/README.zh.md",
+          "sha256": "5a741c66664346517924cccf0b73357d776d1213f6c6899f2b6d3ddd182cb598"
+        },
+        {
+          "path": "packages/subagent/subagent/locale/de.json",
+          "sha256": "8bf8c3bc0269b551bd622a8e09a8572e635d74a0cc999d273eff35f096a2c90f"
+        },
+        {
+          "path": "packages/subagent/subagent/locale/en.json",
+          "sha256": "cd42d9a0320ce64bd9ec20713cc758a0e82acf4dbbc5655c625170b7bb8cac30"
+        },
+        {
+          "path": "packages/subagent/subagent/locale/es.json",
+          "sha256": "a36ed723a3f5a191914cd6cc903410ab6c55bcbf6e7a9ae39f26b8dc2a56a101"
+        },
+        {
+          "path": "packages/subagent/subagent/locale/fr.json",
+          "sha256": "d61150e56a26456e9dcfcfe33bc7a81d6f383d7b2f11c7dbe85dbb33381aa264"
+        },
+        {
+          "path": "packages/subagent/subagent/locale/ja.json",
+          "sha256": "c6cc012d007238ef4f0affa805a21b7f3fedf6bb751cf38aa47dc0bc8b6d536d"
+        },
+        {
+          "path": "packages/subagent/subagent/locale/pt.json",
+          "sha256": "0c1251e22bd28dd8ee68f316f49ea295d180184c7af8703b13a94399f78428f8"
+        },
+        {
+          "path": "packages/subagent/subagent/locale/ru.json",
+          "sha256": "efc81b1d3a26b2a75402a252a727e6e78fcdcd358a394fcbd624d39a02fe4043"
+        },
+        {
+          "path": "packages/subagent/subagent/locale/zh.json",
+          "sha256": "70e28d769987f6c3cdfdd6f26bc93cd038134158a31dfe733a8ea070c2d18668"
+        },
+        {
+          "path": "packages/subagent/subagent/package.json",
+          "sha256": "872438439d45877dab607028e713b405dda5801f9b730c444d0fca3b9cfe50c1"
+        },
+        {
+          "path": "packages/subagent/subagent/src/activation.ts",
+          "sha256": "5f5222ab69ac3def6d4b4d7bcc7a0658d1a45f32f306d63f3a5a668977f8bac1"
+        },
+        {
+          "path": "packages/subagent/subagent/src/archive-admission.ts",
+          "sha256": "afdcdbe074aab668f06e9ca8bf9b1c9d8835355d16c6a94a9a1beeacdf02e070"
+        },
+        {
+          "path": "packages/subagent/subagent/src/assistant-output.ts",
+          "sha256": "a789b82fe2238d4850be729205fb6512a526d7789a1083294178958ed09ea6e4"
+        },
+        {
+          "path": "packages/subagent/subagent/src/catalog.ts",
+          "sha256": "1e6344acbe543f494a5adc4f8e8af9be50333ea1fa18be391e43f8fc4005f776"
+        },
+        {
+          "path": "packages/subagent/subagent/src/child-agent.ts",
+          "sha256": "054ebe5750efccb3bf74c72770a54fc33548bd041bb9230586d212943162148f"
+        },
+        {
+          "path": "packages/subagent/subagent/src/client.ts",
+          "sha256": "f2858ddb71b639a6b53b11e627fbab40afc92bdd60fb8f7ac34a341e1e8d2c26"
+        },
+        {
+          "path": "packages/subagent/subagent/src/continuation-messages.ts",
+          "sha256": "0c21aa2bece7c57440fcbfab480e61d6049d9f9a9b8cce6575290a2d1945e6fa"
+        },
+        {
+          "path": "packages/subagent/subagent/src/control-types.ts",
+          "sha256": "773a75974315d14ceb15a24753a48af9fdb43167db34ec3d74997546c7dbb3df"
+        },
+        {
+          "path": "packages/subagent/subagent/src/control.ts",
+          "sha256": "8a020fc4724159de7fb58d58e59e3f54250d2cff0b5695016ebf8d9ffc2c5aa1"
+        },
+        {
+          "path": "packages/subagent/subagent/src/depth.ts",
+          "sha256": "52fe8c33e3becc3c5925ce4c63cfa097dc67158207e50db4622c7b9c15bc9b6f"
+        },
+        {
+          "path": "packages/subagent/subagent/src/descriptor.ts",
+          "sha256": "d8a11dbf4300b7b8e166ae232cb0b6fb8d764d19d745f0ffa0a36b910cac888f"
+        },
+        {
+          "path": "packages/subagent/subagent/src/error.ts",
+          "sha256": "efdb67c6c6342c53775d817eebeb495c959892f95b2e00a1eda5a71d711fa4ce"
+        },
+        {
+          "path": "packages/subagent/subagent/src/index.ts",
+          "sha256": "a64059b63fb2ec6867ab22aba6a54dfad0ade6a1ed0e3c7c4af01cc0fe88b50d"
+        },
+        {
+          "path": "packages/subagent/subagent/src/internal.ts",
+          "sha256": "38b9421219f705408495666f13ae4238a23214a0117da45ead434840df16b7a1"
+        },
+        {
+          "path": "packages/subagent/subagent/src/lifecycle.ts",
+          "sha256": "3f892ad12033aaf30a8c81b404eefaadb0974bd54d993631970a3c6509a13b92"
+        },
+        {
+          "path": "packages/subagent/subagent/src/list-children.ts",
+          "sha256": "655b13693a3b6de9e1ba469dad22cb4e424a49b2eda81029794b10a994db90e6"
+        },
+        {
+          "path": "packages/subagent/subagent/src/manager.ts",
+          "sha256": "1e1844c145d6f985d594d348ed5f89a6d8e3283bab519ef88263f3d2d2a9fe07"
+        },
+        {
+          "path": "packages/subagent/subagent/src/out-of-process.ts",
+          "sha256": "50f2e93ac57f9de52f17f3a4c2d41dc664be501780cc71acce1c97e810ba9f33"
+        },
+        {
+          "path": "packages/subagent/subagent/src/projection-types.ts",
+          "sha256": "c21d276ce6f22257d295704ad27dbb963971ff066ffe748bade1ea84a4fdc695"
+        },
+        {
+          "path": "packages/subagent/subagent/src/projection.ts",
+          "sha256": "5e0ce67118efcf490f3f84c92d76a91cb8a1db2b84f7d878ddd1e05cb56e5a60"
+        },
+        {
+          "path": "packages/subagent/subagent/src/structured.ts",
+          "sha256": "04ed062bd322c39207f564fc092dcc157500d2fa5c08f5cecab2d3b7053bb4b2"
+        },
+        {
+          "path": "packages/subagent/subagent/src/types.ts",
+          "sha256": "9150cb7c1c7059843d932be465bd4ddf869b5df08cdfa099e01023f681865920"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/activation-policy.spec.ts",
+          "sha256": "f2dfa2a5c72124411741d511a652672ea04e585af36cd89b4fd27d73cceb534d"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/activation-presets.spec.ts",
+          "sha256": "4995bfa463c5209e91fbc514896f41a902b6c0d5b91004d82cf7b5a654d2d57c"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/archive-admission.spec.ts",
+          "sha256": "4a48747ab30e79e65c43144d5afa05effd919caa640cff3a6b932b5d4bfbdde3"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/assistant-output.spec.ts",
+          "sha256": "7c3ea03105d5273bc6ccd669e51ff5266f6733080d88b8f50f0673ea4e0acd8b"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/catalog.spec.ts",
+          "sha256": "e7579c94ed43b1492a4f4904b36f52ebee0547242bbf4b491223f78c4b525ac8"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/child-agent.spec.ts",
+          "sha256": "9fa875782d0a4b5ef6d4c9496f03432a29ab869b6b2a7f99e64e80b800469a14"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/continuation-inheritance.spec.ts",
+          "sha256": "fdacdf3f9be1f58c0f8f99db4be51661533193f0160828fcb321cd691417f0f2"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/continuation-messages-adapter.spec.ts",
+          "sha256": "31d78e329ae4022bf094e25040ea13fca698870b2c2c386053f69f40b1a1a014"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/continuation-messages.spec.ts",
+          "sha256": "e91cb650e4d80339d2aa31c1d63172760f675b0f2226d46a64f202fad7b88f17"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/continuation-presets.spec.ts",
+          "sha256": "0827be9b606733f15e0b120e4156f2d986428a4aa5537ac86a9cb31ab34d1dbb"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/continuation.spec.ts",
+          "sha256": "927fad57c9b0aec8845d379c55ef73152823bb07f925aa1a5189ba6aa730cd4b"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/control.spec.ts",
+          "sha256": "0202028e4050abefa551bfe8dafce13dbb3531fdcdf8f8246937815e43eaec3b"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/external-activation-helpers.ts",
+          "sha256": "daa9e29405d77f629787de65af3d598df9de9d01349d690b8186b56aa5c45db4"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/external-activation.spec.ts",
+          "sha256": "ded471232a9e7fdb73aab2aa6f4bd72c9e7226c62be48a1466da771585e7678d"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/external-lifecycle.spec.ts",
+          "sha256": "a6717b33ca9cdecb6dbefbab58efc4156a55dbf18136fc7dfee9b60b28643c07"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/fixtures/activation-presets/plugins/preset-tool.js",
+          "sha256": "d21366a91f5c1778156a97867e5083b94690738b98722729e4076e3421492e81"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/fixtures/activation-presets/presets/coding/agent.cordis.yml",
+          "sha256": "1462200442826876f7834091ada75228e1ced0a33858f8dfe66a1c5c9a0f5bf5"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/fixtures/activation-presets/presets/reviewing/agent.cordis.yml",
+          "sha256": "26f70e49f05c7b2f76757130d17a76f5750d0526b2a90acf8a1b41f030ac3681"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/list-children.spec.ts",
+          "sha256": "caeb6502a4dd08859b8c59aa3288e34b8664292ea17c6f6e34cff77b283c57b8"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/local-activation.ts",
+          "sha256": "0a15dd64acc0339c51f910bc4e4665718b5477b9d161a5dce49c7eed4754806c"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/manager-internals.ts",
+          "sha256": "2b504ff6f99594c5540ef7c6508fd98dd56dcfa4965bbe403b5901293bfc3310"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/out-of-process.spec.ts",
+          "sha256": "a8819788deca3f39868ef0b47640ecafc67ec3f4e5620cd0bb51e620c515c31e"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/parent-result.spec.ts",
+          "sha256": "5216c37d785f3654e16eaf9d15b0594f23d25db0d883b45e3a7995abbc4f7eab"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/parked-wait.spec.ts",
+          "sha256": "46ee3b58e1a7a598996dcd9295abfa0d68de503506313cb69ca3f5838b953ae1"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/persistence-helpers.ts",
+          "sha256": "5d261ab5b1938418e7e1a7161412dd2ab50dd7067f346a16120a5783f5be60d1"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/run-settlement.spec.ts",
+          "sha256": "a2bd27af1d2cf1fb693bdbc91833370f7518ce2512512e280ea4dbeb2685b229"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/schedule-tools.spec.ts",
+          "sha256": "fd509de58f9cbe23f02da638345085bb2b8a8de06bd9bc023fec2f058021a2cd"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/service.spec.ts",
+          "sha256": "6c71ec7b87f763b33575383df75bf485d8ba913041d24f0d0c16b9b95aec8742"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/structured.spec.ts",
+          "sha256": "60ca42cffaf2e73f5e68be3ee5779b059285a21c9b9398f5d8f8904d0802f7de"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/test-session-query.ts",
+          "sha256": "cec111aef7fa47448b78a83f50a796650268937c272df10d36ebd76e811ac82c"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/timing-projection.spec.ts",
+          "sha256": "08a2de7941367a40da8e7a1515ee52338f8745f273cc1e7d823b974ac374f346"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/working-directory-fixture.ts",
+          "sha256": "02fe4f3ec516139686ff30c6b6e87ecafc1b802602c7ec333b509afbfc49acc6"
+        },
+        {
+          "path": "packages/subagent/subagent/tests/working-directory.spec.ts",
+          "sha256": "b6569de0f53f6074ffaa39cc3ba92571db0b0250d6d26919e43dc951263c40f5"
+        },
+        {
+          "path": "packages/subagent/subagent/tsconfig.json",
+          "sha256": "6b4d0cb96eea3b5f9a624595e2bb8229d8430396d4459e8671ec1b734c10ae4c"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/subagent/subagent/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/util/chunked-list",
+      "name": "@deepseek-ai/dsh-chunked-list",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/util/chunked-list/README.i18n.yaml",
+          "sha256": "8e9708fd7ab763e21dec6aa8dfe0490c1109b3bab4d9ac301ee8b14c99b506df"
+        },
+        {
+          "path": "packages/util/chunked-list/README.md",
+          "sha256": "78314926aac0fdf37c7f86d7f2bb4e52876f288a0c9f1f65624be442c646f956"
+        },
+        {
+          "path": "packages/util/chunked-list/README.zh.md",
+          "sha256": "958e72c0755dac71d33c0c733e71a7c85835c32063f91627d6f5e1659e0ce83d"
+        },
+        {
+          "path": "packages/util/chunked-list/package.json",
+          "sha256": "e23eb09455d056bf292585db578b317291e90addc6142d87e61212b08ad618a4"
+        },
+        {
+          "path": "packages/util/chunked-list/src/index.ts",
+          "sha256": "85488aa09c370e983f08b1fb97ba82640d063b32ffa96a61563a9b6e2be4fc36"
+        },
+        {
+          "path": "packages/util/chunked-list/tests/chunked-list.spec.ts",
+          "sha256": "af001aacf7dbfc66ba9aa515b7f0bda9acae1bbc17248ffaa4c82e543b8dcc65"
+        },
+        {
+          "path": "packages/util/chunked-list/tsconfig.json",
+          "sha256": "7e86a9ae63aca473186b138ad589d9da22e4df8cfe64f2b74995d2726014d721"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/util/chunked-list/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/util/workspace-path",
+      "name": "@deepseek-ai/dsh-util-workspace-path",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项实际运行或类型依赖",
+      "upstreamFiles": [
+        {
+          "path": "packages/util/workspace-path/README.i18n.yaml",
+          "sha256": "c868e381518626665273b13343f0318ab160e3b6dfc1ad4e3b366eb1b9520ba2"
+        },
+        {
+          "path": "packages/util/workspace-path/README.md",
+          "sha256": "8fde4ac9bcc76892fce4d518ed92e19a317840381fdc430bdd14d31a42f97ff9"
+        },
+        {
+          "path": "packages/util/workspace-path/README.zh.md",
+          "sha256": "523e8899397e64659aa5e4c3a62b6e0f002de42dd5da66ef853f1b27ef8ee34b"
+        },
+        {
+          "path": "packages/util/workspace-path/package.json",
+          "sha256": "11d33fd893d8a68c825f989d6801cc502b0a2c2f1700f9fbfbab286690a1493a"
+        },
+        {
+          "path": "packages/util/workspace-path/src/file-address.ts",
+          "sha256": "e54979d7970c09a777d9917a098ab0de8768c60dd198a97167480ffde9bc8f7c"
+        },
+        {
+          "path": "packages/util/workspace-path/src/index.ts",
+          "sha256": "4969445e5b05d51644a85f7ae0a76d86432fd8ba43906085484cfd154ac341d4"
+        },
+        {
+          "path": "packages/util/workspace-path/tests/file-address.spec.ts",
+          "sha256": "ed9db10bba6635fcc9894b217fd6cc45463eb95d143c43eaecd3680d6626878c"
+        },
+        {
+          "path": "packages/util/workspace-path/tests/file-media-url.spec.ts",
+          "sha256": "62c1c8fe75d81b277883434fed6db9fbdcf18cf74b83696ff42ea48153f91edd"
+        },
+        {
+          "path": "packages/util/workspace-path/tests/index.spec.ts",
+          "sha256": "a2c86940effc539f966f9ac071ab73aaf845f0472a0b18fbb51c0f14dbf7d89f"
+        },
+        {
+          "path": "packages/util/workspace-path/tsconfig.json",
+          "sha256": "cd37553e80b9913dec33adf4aa0fff20071647b3952bf74118e4bf8193b5cc58"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/util/workspace-path/tsconfig.json",
+          "sha256": "7e86a9ae63aca473186b138ad589d9da22e4df8cfe64f2b74995d2726014d721",
+          "reason": "按实际闭包收敛依赖和 TS references；保持源码行为"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/util/workspace-path/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/api/remotes",
+      "name": "@deepseek-ai/dsh-api-remotes",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-015",
+      "status": "verified-in-p2-closure",
+      "reason": "P2 Remote 事件和生成接口组合；按产品能力裁剪",
+      "upstreamFiles": [
+        {
+          "path": "packages/api/remotes/package.json",
+          "sha256": "1262af18217d647ae8f26e892d3984f86855588b65f205fe90fb960ec3e690e3"
+        },
+        {
+          "path": "packages/api/remotes/tsconfig.json",
+          "sha256": "ad1b25d36ea100440140e543e2a2af188178934da74eadce1b27ef14e91b335e"
+        },
+        {
+          "path": "packages/api/remotes/tsconfig.host.json",
+          "sha256": "0102177ee894ba464eddd72e3ed7d24ea291f4231da6bb25790486d897814c6c"
+        },
+        {
+          "path": "packages/api/remotes/tsconfig.client.json",
+          "sha256": "3d88f122929ef2316b76ec2a0756ac4aea80caf52ccca16d3fe2a1ec454b2f35"
+        },
+        {
+          "path": "packages/api/remotes/src/index.ts",
+          "sha256": "30509f1e39ab105c31b615a099d634921b4632b464f7d8c4fcaedd59b23e6e65"
+        },
+        {
+          "path": "packages/api/remotes/src/types.ts",
+          "sha256": "abd069368430b21cb1e2d249af751a155ea529aa4a69ce2cd51c0ff5bcac1dbb"
+        },
+        {
+          "path": "packages/api/remotes/src/remote-events.ts",
+          "sha256": "7afe6eda55fecf06696bde26ea8b393cb48a880ef8dbbf39feb71f29eff3efb9"
+        },
+        {
+          "path": "packages/api/remotes/src/client/index.ts",
+          "sha256": "74791ed33929a7b296d44cd7963320055ba01f382891f605bc57e4e03849472d"
+        }
+      ],
+      "localPatches": [
+        {
+          "path": "packages/api/remotes/package.json",
+          "sha256": "53cf6713d25cf35450704d6eb960234ccc671d1eef40d809677d8aa25875ee0d",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        },
+        {
+          "path": "packages/api/remotes/tsconfig.host.json",
+          "sha256": "4f4c618674fd21012ce293598059135a5988c7985ade5ef69c94cbbe1967a93b",
+          "reason": "P2 双端类型闭包，不依赖未迁入模块"
+        },
+        {
+          "path": "packages/api/remotes/tsconfig.client.json",
+          "sha256": "90bb5461a65d686505e3ba5765947addfa1c7968b91497ea140ddc71f56d60d6",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        },
+        {
+          "path": "packages/api/remotes/src/index.ts",
+          "sha256": "0783a3d40520ed6b11ff17f5384b6ea2bc654d45a49d97bf57f2f030a55fbfcd",
+          "reason": "保留原转发队列和请求生命周期，仅组合 P2 已启用的 Session/问题/审批/上传/模型契约；移除账户、遥测及 P3+ 业务事件"
+        },
+        {
+          "path": "packages/api/remotes/src/remote-events.ts",
+          "sha256": "6e99632f13d2cf420fb111ead03ae71a116386bfe7624ea0101111612237fdc2",
+          "reason": "保留原转发队列和请求生命周期，仅组合 P2 已启用的 Session/问题/审批/上传/模型契约；移除账户、遥测及 P3+ 业务事件"
+        },
+        {
+          "path": "packages/api/remotes/src/client/index.ts",
+          "sha256": "8724f8755e7ec676a9e364324bce7b165f025b5a994e3ab6fa5cf78afb2977f0",
+          "reason": "TZ-063：原对话入口薄适配、公开 Remote 类型及实际依赖闭包；不另写投影或 Agent Loop"
+        }
+      ],
+      "additionalFiles": [
+        {
+          "path": "packages/api/remotes/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "MIT 来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/session-query/session-query-sqlite",
+      "name": "@deepseek-ai/dsh-session-query-sqlite",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/session-query/session-query-sqlite/README.i18n.yaml",
+          "sha256": "35e6d4b6790a18f485e3285c9faba2b3fd304957533a1651f9241ebf0e049ba0"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/README.md",
+          "sha256": "b3b878a8a475476c659a46976433dddefbb0ecbfede3b53da580e57034ab5bbb"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/README.zh.md",
+          "sha256": "8f375bbd2b06897da3f2d4c66b4859d8606267fe9c96d7b286c41bfdfa14bd1c"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/locale/de.json",
+          "sha256": "0d70cb172b94e50fdda15093728f7ebe1abb3fddc03c4053e8dca9f1e1e3fc63"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/locale/en.json",
+          "sha256": "27366220053a8fef7dd86622162e405ee0375f8b29348c778fd6bfb7e28c0376"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/locale/es.json",
+          "sha256": "98cf225e15377f4a40a05dec02e421464caf6fcdbdd091a78716b3e518bc0b06"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/locale/fr.json",
+          "sha256": "4842b962f9f6665c8c184e03cebb2dbb41679451ca57aed6a1f5198fc1e8b664"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/locale/ja.json",
+          "sha256": "99272750fda313c26136f635355313723f09ed589e217cad635f94091a8371fe"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/locale/pt.json",
+          "sha256": "8a41a343dd888db574672f0ef2ce5b92b8b35aa9bf4a656509592450f685271f"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/locale/ru.json",
+          "sha256": "c05102557a3bfe609c288842dbc2c8bc53df712b063d616a62f0cc31e37007a4"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/locale/zh.json",
+          "sha256": "b26afc1daacb77e8286fcaf30710c742ca60d51dea60c95f46c038417535a50e"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/package.json",
+          "sha256": "c964723ae79d623708a491d37be8ca0440b78655ebacc3946171ce6df7822785"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/src/index.ts",
+          "sha256": "72868e4ae967fee94967df5939ee092a582249ff7b37afc4fe0cf7660d48b8d3"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/src/query.ts",
+          "sha256": "b29363581b715a1eb50509d7c5ff039d7d4004926160cd88ffcbadaa44ca1c48"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/src/schema.ts",
+          "sha256": "2cc4c7c8e50409847599a048922d55ef4ffbd1ac2309502f3a5a06420bc1a28f"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/tests/load-path.e2e.ts",
+          "sha256": "c2afc6275ccfad764e42953902ac28133c3d86520222f67c64123fc82c163805"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/tests/query.spec.ts",
+          "sha256": "6e181e90f4cdba647a368a7bf3ee84c4d5b5a9921a3a5e2981b3f869ea09f2c6"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/tests/sqlite.spec.ts",
+          "sha256": "62329fff08add8afb45a7c87b7c97bca3af9bc6de9d54155084c264b2fb4e418"
+        },
+        {
+          "path": "packages/session-query/session-query-sqlite/tsconfig.json",
+          "sha256": "e8e9d1681bf678bbb090f37dcca8b8e87cebf9562a89899c566f2fe7acf8d6a2"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/session-query/session-query-sqlite/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/storage/storage-json",
+      "name": "@deepseek-ai/dsh-storage-json",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/storage/storage-json/README.i18n.yaml",
+          "sha256": "2ce4bc14145ee18a6e5b350289d0a229869518ada61818b884c0f451846bacf8"
+        },
+        {
+          "path": "packages/storage/storage-json/README.md",
+          "sha256": "965728a1fcb420eee2d79a63e4ce323cae44b3bbec28e8d74023cc335eacff0d"
+        },
+        {
+          "path": "packages/storage/storage-json/README.zh.md",
+          "sha256": "6b75c3846c078a0a38950018f208851ad46a8912b0d901de8c4efda2bd25b321"
+        },
+        {
+          "path": "packages/storage/storage-json/locale/de.json",
+          "sha256": "14ca4677e29cd81f5adf52c026e252a280dc352eb15f6b769dfb4ebfb41a79e4"
+        },
+        {
+          "path": "packages/storage/storage-json/locale/en.json",
+          "sha256": "b01f04ed1a6f5f7761b8a008f8a3b31445e40ccf26662b7dbe3dc5f4c9cd817a"
+        },
+        {
+          "path": "packages/storage/storage-json/locale/es.json",
+          "sha256": "dffdb3a61600985a6d25e5552f62d11eb94053719f89c79f0765dfee478a6e2d"
+        },
+        {
+          "path": "packages/storage/storage-json/locale/fr.json",
+          "sha256": "c46e53c85dc84d8fa6b29a0238d2c3d371293402f29f105fdd3675f3faefdb41"
+        },
+        {
+          "path": "packages/storage/storage-json/locale/ja.json",
+          "sha256": "c705469b2db62a3e02f23687082693d1509e04ba074a551ad028141cb56705e6"
+        },
+        {
+          "path": "packages/storage/storage-json/locale/pt.json",
+          "sha256": "9d53b1887252018d7a20bfb98b2708082f0df82cd17941e83e2aa01ce76c4f3d"
+        },
+        {
+          "path": "packages/storage/storage-json/locale/ru.json",
+          "sha256": "9f38d3cd0c681f8995fb7034f52ccf125a37fe2a5c6bb92e5db8939db9faa8e3"
+        },
+        {
+          "path": "packages/storage/storage-json/locale/zh.json",
+          "sha256": "d72eda90573c73a617252cef689325aae2158722a69bf849889c7fbbd80fe7ec"
+        },
+        {
+          "path": "packages/storage/storage-json/package.json",
+          "sha256": "b3def7fc9b6571b402c5dfb2446edcdcf3cc7e8dcd9fcacee2839176972c9b94"
+        },
+        {
+          "path": "packages/storage/storage-json/src/atomic.ts",
+          "sha256": "ccb2372d1b78fb7c5b00f688435519ea7a44a700e2a206c4df3fb58c1ac54d72"
+        },
+        {
+          "path": "packages/storage/storage-json/src/format.ts",
+          "sha256": "398c5edbc96ccad21bd6ba788ed3b41d1799e6b77dd6c602affd29c8ccc83f89"
+        },
+        {
+          "path": "packages/storage/storage-json/src/index.ts",
+          "sha256": "bae1a1c29859dea20d21c2730bbf3c5a30e31ed6cd7d872b8e1c726e65a33a63"
+        },
+        {
+          "path": "packages/storage/storage-json/src/per-record-unit.ts",
+          "sha256": "5b8aab660e8d0d749b58f4273753360a2219ae029e1d69ed047e8caa155a3fa0"
+        },
+        {
+          "path": "packages/storage/storage-json/src/single-unit.ts",
+          "sha256": "ff01b15fde8601ed60c5cfd6c66dc3504befc88dd8ce3f177806df89ccb96927"
+        },
+        {
+          "path": "packages/storage/storage-json/tests/json-backend.spec.ts",
+          "sha256": "2114531c4220f36ce6c64929df1de649d6b698568dbecbe4ead5323914264c32"
+        },
+        {
+          "path": "packages/storage/storage-json/tests/per-record-batch.spec.ts",
+          "sha256": "02daa87b9398b385c2b0d9fd057284954c5db64d1bbe4bc82f402d0f1b5f7a36"
+        },
+        {
+          "path": "packages/storage/storage-json/tsconfig.json",
+          "sha256": "16f826c3e4ca4f3c620917290900f0a32daa4f633ed824675a8a3c9b03bd158a"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/storage/storage-json/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/session/session-stats",
+      "name": "@deepseek-ai/dsh-session-stats",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/session/session-stats/README.i18n.yaml",
+          "sha256": "058dda83f3f0ca36ded018fd3a6af1cd81bd063a58d16ee85381893393d2c0ee"
+        },
+        {
+          "path": "packages/session/session-stats/README.md",
+          "sha256": "ed15627bc35b1d5a6d2f33aea9e2e8e286765a20e5ded3101cd2e52bf0b53de8"
+        },
+        {
+          "path": "packages/session/session-stats/README.zh.md",
+          "sha256": "f135d35dba3b3f4bff357ed69b16a864e921789c67fedb150d163f7421fa553e"
+        },
+        {
+          "path": "packages/session/session-stats/locale/de.json",
+          "sha256": "41b2a70c34562893d7d572c8de5b7668599bd80e27bb544cfffbe05e9c9cb3cf"
+        },
+        {
+          "path": "packages/session/session-stats/locale/en.json",
+          "sha256": "1d8b06371208413d8793cae8703a8ac122614e9e818d0abaad034b1588629213"
+        },
+        {
+          "path": "packages/session/session-stats/locale/es.json",
+          "sha256": "4da6bc69db0e58e5a66479a5e52fd02bd654ee157f3126fa5e038bf3ca88de08"
+        },
+        {
+          "path": "packages/session/session-stats/locale/fr.json",
+          "sha256": "65576134a5e827722a1a1d6f24da3ee3880626c3855c74f9a5b9ef51ac826fc2"
+        },
+        {
+          "path": "packages/session/session-stats/locale/ja.json",
+          "sha256": "13315b569c7a316314bcf05ae86f8ff804a3d15c24688078ed8ed58ffc1259be"
+        },
+        {
+          "path": "packages/session/session-stats/locale/pt.json",
+          "sha256": "e527f62ab89caeff07ba6775c95c6f91573b32a003003d68520d3a9c721b2eef"
+        },
+        {
+          "path": "packages/session/session-stats/locale/ru.json",
+          "sha256": "07c27e73d786d9c06711f365dfa284c007cc07ae30fb994c3d88074209e4d5c7"
+        },
+        {
+          "path": "packages/session/session-stats/locale/zh.json",
+          "sha256": "d3cfa6fa0dd25a4ace3c3022896a959642d00808d39d042543d6e843693cac2c"
+        },
+        {
+          "path": "packages/session/session-stats/package.json",
+          "sha256": "19632df7db66616fe3b0d694e108a74e8ca82b78171d0dc5534a067bb1c740f1"
+        },
+        {
+          "path": "packages/session/session-stats/src/client.ts",
+          "sha256": "25d4391d85a8113396c7d093e12b39bdc6a0004287b6d378a29be6e539af048f"
+        },
+        {
+          "path": "packages/session/session-stats/src/index.ts",
+          "sha256": "dd339d9219839b614e213c0211f76b382883b614c807ca3d2de57e19fd1390a6"
+        },
+        {
+          "path": "packages/session/session-stats/src/projection.ts",
+          "sha256": "3293dff6eee0c983cd4c473b024935ff7f4466ec9a86ab08dd6c666116ba490f"
+        },
+        {
+          "path": "packages/session/session-stats/src/types.ts",
+          "sha256": "02f52132619b419fbdb15108157a0ca14b5008f7142344c0761e68b7521372c0"
+        },
+        {
+          "path": "packages/session/session-stats/tests/loader-composition.spec.ts",
+          "sha256": "c291c74228525eafa5430c974a454cb95cfb5ba8df40b94a1817777b3e7820aa"
+        },
+        {
+          "path": "packages/session/session-stats/tests/projection.spec.ts",
+          "sha256": "7f819ba06b399e2641efd2aa6f8d2131e293c2e84408a063f57015c2b0da3623"
+        },
+        {
+          "path": "packages/session/session-stats/tsconfig.json",
+          "sha256": "f253a514d6d1c82255093376547ad54bf66b855348f0dde848c3f938a883bddf"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/session/session-stats/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    },
+    {
+      "path": "packages/session/session-turn-outline",
+      "name": "@deepseek-ai/dsh-session-turn-outline",
+      "version": "0.2.1-rc.3",
+      "license": "MIT",
+      "task": "TZ-016",
+      "status": "verified-in-p2-closure",
+      "reason": "本项选定能力",
+      "upstreamFiles": [
+        {
+          "path": "packages/session/session-turn-outline/README.i18n.yaml",
+          "sha256": "94ed8549ddca5bdc4a52bfa6368fa4556f858efe1e0d96d7d1875ef611c5cfd8"
+        },
+        {
+          "path": "packages/session/session-turn-outline/README.md",
+          "sha256": "f1b2b88ebcfce3c8c5e0db820bf6bfe5fb8f4e0f6a8062307540bd3e859607c3"
+        },
+        {
+          "path": "packages/session/session-turn-outline/README.zh.md",
+          "sha256": "b0bcc462d5dfb5709f1e2510c6c5af9451d158bf878cf0a54be67e683758a446"
+        },
+        {
+          "path": "packages/session/session-turn-outline/locale/de.json",
+          "sha256": "e88fd432a26fc78cc1ad443867a113db4aa9c764e8c3ae773b638ecc33c8d7dd"
+        },
+        {
+          "path": "packages/session/session-turn-outline/locale/en.json",
+          "sha256": "ec391f8e5273de648b459b61162f366643d881ec5a1e34d41aafbb5c5f378570"
+        },
+        {
+          "path": "packages/session/session-turn-outline/locale/es.json",
+          "sha256": "3b4be4e45653dc0f075b734db81c3f3f370d235d9b43ded1c4d592aaf764bc1b"
+        },
+        {
+          "path": "packages/session/session-turn-outline/locale/fr.json",
+          "sha256": "360167ad3f18a6793767234e70de36038595562aa8c60fdc1ef28f7a3b8d57b7"
+        },
+        {
+          "path": "packages/session/session-turn-outline/locale/ja.json",
+          "sha256": "3426cf062f9f62df7e9f273d4bfac03c457a002d3a843f442fbac1a924297915"
+        },
+        {
+          "path": "packages/session/session-turn-outline/locale/pt.json",
+          "sha256": "eaf222964bdc2f102a894116e36f587e8a47bf01ce8efd4a30263413b3dbe129"
+        },
+        {
+          "path": "packages/session/session-turn-outline/locale/ru.json",
+          "sha256": "dc2835da9baf6b24a0c31f3562db8d549861470c0aab4cce470fad0654db3579"
+        },
+        {
+          "path": "packages/session/session-turn-outline/locale/zh.json",
+          "sha256": "ae796f5aa165c4fdbb96ee10a207008417b0f92eb10fae29ac9f8412663526e3"
+        },
+        {
+          "path": "packages/session/session-turn-outline/package.json",
+          "sha256": "8389deb91396ce280895c7210fa1ff7621b28a6ff6d89e48022d6649ece68f2f"
+        },
+        {
+          "path": "packages/session/session-turn-outline/src/client.ts",
+          "sha256": "f5cb0aea4b0158e5b63dceaebafc4036dabc6a3b95384986687008aea297aec5"
+        },
+        {
+          "path": "packages/session/session-turn-outline/src/index.ts",
+          "sha256": "988b96ba944a66e298709cb5dd8b71a0f9f5e598d0c7691e5e16168cbc264287"
+        },
+        {
+          "path": "packages/session/session-turn-outline/src/projection.ts",
+          "sha256": "8645d96d7ffde00e6b12e09703fb8ccccb7c29105e9697a0de71a43def5ac824"
+        },
+        {
+          "path": "packages/session/session-turn-outline/src/types.ts",
+          "sha256": "f635487fa640cb2e5036fd850a767604722b247efe82d96cc7cea28c89bed091"
+        },
+        {
+          "path": "packages/session/session-turn-outline/tests/loader-composition.spec.ts",
+          "sha256": "e1ed470b5870e5479886a0f1b6292c289f1302590fe6de041ac94a5263df7247"
+        },
+        {
+          "path": "packages/session/session-turn-outline/tests/projection.spec.ts",
+          "sha256": "52b7d3642fe146ecbe9ee525417da381b21930ab55611ad50c44e21859db6c2f"
+        },
+        {
+          "path": "packages/session/session-turn-outline/tsconfig.json",
+          "sha256": "f253a514d6d1c82255093376547ad54bf66b855348f0dde848c3f938a883bddf"
+        }
+      ],
+      "localPatches": [],
+      "additionalFiles": [
+        {
+          "path": "packages/session/session-turn-outline/LICENSE",
+          "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+          "reason": "保留来源许可"
+        }
+      ],
+      "acceptance": "来源摘要、依赖/类型/构建闭包已核验；仅产品明确注册能力启用，测试支持不用于正常模型输出"
+    }
+  ],
+  "checks": [
+    {
+      "command": "npx --yes pnpm@11.28.5 run check",
+      "result": "passed",
+      "scope": "P0/P1/P2 6169 项；类型/生成协议/构建/来源/许可/单份身份"
+    },
+    {
+      "command": "npx --yes pnpm@11.28.5 run verify:clean",
+      "result": "passed",
+      "scope": "独立中文空格目录、空 npm/pnpm 缓存、307 下载/0 复用、Native/Worker/Web 闭包"
+    },
+    {
+      "command": "npx --yes pnpm@11.28.5 run test:ui",
+      "result": "passed",
+      "scope": "21 项实际 UI→Host 浏览器场景；外部模型为隔离受控 Provider"
+    }
+  ],
+  "support": [
+    {
+      "path": "scripts/types/client-build-environment/index.d.ts",
+      "sourcePath": "scripts/types/client-build-environment/index.d.ts",
+      "sha256": "840ee80b5a2fcdba8a1fcb281c6e1d09ac4882bece77321a8348fabddc30e361",
+      "reason": "迁入锁定基线的浏览器编译环境声明，不引入运行时"
+    },
+    {
+      "path": "provenance/dsh-p4-session-snapshot.patch",
+      "sha256": "a8d7b13665c115a5752a03fa48687c48d8a65f2f41fa37f3836d49966846886d",
+      "source": "local",
+      "reason": "P4 Session 快照稳定性补丁；保留原 DSH Session、Loop 和界面交互"
+    }
+  ],
+  "localSourcePatch": {
+    "path": "provenance/dsh-p2-local.patch",
+    "sha256": "8b7ef07421dffb91ca8170267528c33d3e6bbaf095443fa9dcafdd51fa76a05b",
+    "reason": "仅 P2 Remote 组合裁剪；依赖/TS 配置适配另在各包 localPatches 登记"
+  },
+  "acceptanceScope": "P2 选定能力本机出口；不是全部来源包的所有能力。真实外部模型、真实 Electron 壳、安装与后续阶段未验证。",
+  "snapshots": [
+    {
+      "path": "provenance/dsh-chat-simplification-local.patch",
+      "sha256": "9ceb336c968defbb9999624477d9fa973c8c9c9af3c26b14117af7ecb563e20b",
+      "reason": "TZ-076 相对已提交 HeroUI 基线的增量补丁；旧来源快照与补丁保留"
+    }
+  ]
+}

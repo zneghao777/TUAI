@@ -1,0 +1,5 @@
+provenance/*.patch -whitespace
+provenance/*.tar.gz binary
+vendor/*/README.md -whitespace
+# Preserve third-party license text verbatim, including upstream line endings/spaces.
+apps/web/public/document-preview-NOTICES.txt -whitespace

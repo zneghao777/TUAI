@@ -1,0 +1,127 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2024", "DOM", "DOM.Iterable", "ESNext.Disposable"],
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../packages/api/workspace-controller/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/api/workspace-files/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/client/resources"
+    },
+    {
+      "path": "../../packages/client/ui-approval"
+    },
+    {
+      "path": "../../packages/client/ui-attachment"
+    },
+    {
+      "path": "../../packages/client/ui-chat/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/client/ui-commands"
+    },
+    {
+      "path": "../../packages/client/ui-conversation/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/client/ui-file-drag"
+    },
+    {
+      "path": "../../packages/client/ui-goal"
+    },
+    {
+      "path": "../../packages/client/ui-input-trigger"
+    },
+    {
+      "path": "../../packages/client/ui-layout"
+    },
+    {
+      "path": "../../packages/client/ui-message-feedback"
+    },
+    {
+      "path": "../../packages/client/ui-model-selection"
+    },
+    {
+      "path": "../../packages/client/ui-permission-presets"
+    },
+    {
+      "path": "../../packages/client/ui-reference"
+    },
+    {
+      "path": "../../packages/client/ui-settings/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/client/ui-sidebar"
+    },
+    {
+      "path": "../../packages/client/ui-sidebar-documentpreview/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/client/ui-sidebar-files"
+    },
+    {
+      "path": "../../packages/client/ui-sidebar-right"
+    },
+    {
+      "path": "../../packages/client/ui-theme/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/client/ui-tool"
+    },
+    {
+      "path": "../../packages/client/ui-user-questions"
+    },
+    {
+      "path": "../../packages/client/ui-workspace"
+    },
+    {
+      "path": "../../packages/client/ui-workspace/tsconfig.json"
+    },
+    {
+      "path": "../../packages/context/file-reference-local"
+    },
+    {
+      "path": "../../packages/context/session-reference"
+    },
+    {
+      "path": "../../packages/feedback/command-feedback"
+    },
+    {
+      "path": "../../packages/feedback/message-feedback"
+    },
+    {
+      "path": "../../packages/goal/goal"
+    },
+    {
+      "path": "../../packages/session-query/session-log-export/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/util/workspace-path"
+    },
+    {
+      "path": "../../packages/session/message-quotes"
+    },
+    {
+      "path": "../../packages/product/browser-service"
+    },
+    {
+      "path": "../../packages/product/ego-connector"
+    }
+  ]
+}

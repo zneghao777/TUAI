@@ -1,0 +1,17 @@
+node_modules/
+**/lib/
+**/*.tsbuildinfo
+dist/
+coverage/
+.DS_Store
+.env
+.env.*
+!.env.example
+.runtime/
+.cache/
+reports/
+provenance/planning-before-p0.tar.gz
+native/system/packages/*/bin/
+native/system/.release/
+.playwright-cli/
+.playwright-mcp/

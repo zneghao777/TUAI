@@ -1,0 +1,3976 @@
+diff --git a/packages/client/locale/package.json b/packages/client/locale/package.json
+index 4ccabfd..698f189 100644
+--- a/packages/client/locale/package.json
++++ b/packages/client/locale/package.json
+@@ -51,7 +51,7 @@
+     "@deepseek-ai/dsh-client-ui-settings": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-package-manifest": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-connection": "workspace:*",
+     "@deepseek-ai/dsh-settings": "workspace:*"
+   },
+@@ -63,7 +63,7 @@
+     "@deepseek-ai/dsh-client-ui-settings": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*"
+   },
+   "files": [
+diff --git a/packages/client/shortcuts/src/client/dom.ts b/packages/client/shortcuts/src/client/dom.ts
+index 7bbe820..2b86d34 100644
+--- a/packages/client/shortcuts/src/client/dom.ts
++++ b/packages/client/shortcuts/src/client/dom.ts
+@@ -44,12 +44,12 @@ export function installKeyboard(window: Window, shortcuts: Pick<ShortcutRegistry
+   const changedModals = (records: MutationRecord[]): void => {
+     if (records.length > 0) dialogs = undefined
+     if (records.some(record => record.type === 'attributes'
+-      ? record.oldValue === 'dialog' || record.oldValue === 'true' || containsModal(record.target)
++      ? record.attributeName === 'data-shortcut-modal' || record.oldValue === 'dialog' || record.oldValue === 'true' || containsModal(record.target)
+       : [...record.addedNodes, ...record.removedNodes].some(containsModal))) reset()
+   }
+   const observer = new MutationObserver(changedModals)
+   observer.observe(document.documentElement, { childList: true, subtree: true,
+-    attributes: true, attributeFilter: ['role', 'aria-modal'], attributeOldValue: true })
++    attributes: true, attributeFilter: ['role', 'aria-modal', 'data-shortcut-modal'], attributeOldValue: true })
+   const capture = (): void => {
+     if (pending) reset()
+     window.clearTimeout(pendingTimer)
+diff --git a/packages/client/shortcuts/tests/dom.client.spec.ts b/packages/client/shortcuts/tests/dom.client.spec.ts
+index ee0f5ac..ad342bb 100644
+--- a/packages/client/shortcuts/tests/dom.client.spec.ts
++++ b/packages/client/shortcuts/tests/dom.client.spec.ts
+@@ -184,6 +184,11 @@ it('blocks background commands during dialogs and gives terminal input ownership
+   document.body.append(dialog)
+   expect(press(input).defaultPrevented).toBe(true)
+   expect(run).not.toHaveBeenCalled()
++  // React Aria dialogs own inert outside content instead of aria-modal.
++  dialog.dataset.shortcutModal = 'settings'
++  dialog.removeAttribute('aria-modal')
++  expect(press(input).defaultPrevented).toBe(true)
++  expect(run).not.toHaveBeenCalled()
+   dialog.dataset.shortcutModal = 'shortcuts'
+   expect(press(input).defaultPrevented).toBe(true)
+   expect(run).toHaveBeenCalledOnce()
+diff --git a/packages/client/ui-approval/package.json b/packages/client/ui-approval/package.json
+index 9eea06e..c656a0a 100644
+--- a/packages/client/ui-approval/package.json
++++ b/packages/client/ui-approval/package.json
+@@ -60,7 +60,7 @@
+     "@deepseek-ai/dsh-llm": "workspace:*",
+     "@deepseek-ai/dsh-session": "workspace:*",
+     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*"
+   },
+   "files": [
+@@ -78,7 +78,7 @@
+     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
+     "@deepseek-ai/dsh-client-locale": "workspace:*",
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-llm": "workspace:*",
+diff --git a/packages/client/ui-attachment/package.json b/packages/client/ui-attachment/package.json
+index cf2382a..007f9c5 100644
+--- a/packages/client/ui-attachment/package.json
++++ b/packages/client/ui-attachment/package.json
+@@ -53,8 +53,8 @@
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-attachment": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-tool": "workspace:*",
+     "clsx": "^2.0.0",
+@@ -71,10 +71,10 @@
+     "@deepseek-ai/cordis": "workspace:~"
+   },
+   "dependencies": {
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+-    "react-dom": "^18.2.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-attachment": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-conversation": "workspace:*",
+     "@deepseek-ai/dsh-util-file-drag": "workspace:*",
+diff --git a/packages/client/ui-attachment/src/AttachmentRail.tsx b/packages/client/ui-attachment/src/AttachmentRail.tsx
+index 4768d35..7af8c01 100644
+--- a/packages/client/ui-attachment/src/AttachmentRail.tsx
++++ b/packages/client/ui-attachment/src/AttachmentRail.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Draft-attachment rail: scrollbar-less horizontal overflow paged by edge arrows. */
+ 
+ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+@@ -136,14 +137,14 @@ export function AttachmentRail<T extends AttachmentRailItem>({ items, labels, re
+   return (
+     <div className={css.root}>
+       {edges.left && (
+-        <button
++        <ActionButton
+           type="button"
+           className={clsx(css.arrow, css.arrowLeft)}
+           aria-label={labels.scrollLeft}
+           onClick={() => { page(-1) }}
+         >
+           <IconChevronLeftOutlineRegular />
+-        </button>
++        </ActionButton>
+       )}
+       <div
+         ref={railRef}
+@@ -157,14 +158,14 @@ export function AttachmentRail<T extends AttachmentRailItem>({ items, labels, re
+         ))}
+       </div>
+       {edges.right && (
+-        <button
++        <ActionButton
+           type="button"
+           className={clsx(css.arrow, css.arrowRight)}
+           aria-label={labels.scrollRight}
+           onClick={() => { page(1) }}
+         >
+           <IconChevronRightOutlineRegular />
+-        </button>
++        </ActionButton>
+       )}
+     </div>
+   )
+diff --git a/packages/client/ui-attachment/src/FileCard.tsx b/packages/client/ui-attachment/src/FileCard.tsx
+index db8d4b6..2b81cca 100644
+--- a/packages/client/ui-attachment/src/FileCard.tsx
++++ b/packages/client/ui-attachment/src/FileCard.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton, ProgressBar, Spinner } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { fileExtension, FileTypeIcon, fileSizeText, IconCloseFillRegular } from '@deepseek-ai/dsh-client-ui-primitives'
+ import css from './FileCard.module.css'
+ 
+@@ -45,15 +46,15 @@ export function FileCard({
+     >
+       <span className={css.icon} aria-hidden>
+         {state === 'uploading'
+-          ? <span className={css.spinner} />
++          ? <Spinner size="sm" />
+           : <FileTypeIcon path={name} />}
+       </span>
+       {retryable
+         ? (
+-          <button type="button" className={`${css.body} ${css.retry}`} aria-label={labels.retry} onClick={onRetry}>
++          <ActionButton type="button" className={`${css.body} ${css.retry}`} aria-label={labels.retry} onClick={onRetry}>
+             <span className={css.name}>{name}</span>
+             <span className={`${css.meta} ${css.metaFailed}`}>{meta}</span>
+-          </button>
++          </ActionButton>
+         )
+         : (
+           <span className={css.body} aria-label={labels.label}>
+@@ -61,21 +62,19 @@ export function FileCard({
+             <span className={css.meta}>{meta}</span>
+           </span>
+         )}
+-      <button
++      <ActionButton
+         type="button"
+         className={retryable ? `${css.remove} ${css.removeFailed}` : css.remove}
+         aria-label={labels.remove}
+         onClick={onRemove}
+       >
+         <IconCloseFillRegular size={12} />
+-      </button>
++      </ActionButton>
+       {state === 'uploading' && (
+-        <span className={css.progressTrack} aria-hidden>
+-          <span
+-            className={css.progressBar}
+-            style={progress === undefined ? undefined : { width: `${String(Math.min(1, Math.max(0, progress)) * 100)}%` }}
+-          />
+-        </span>
++        <ProgressBar aria-label={labels.uploading} className={css.progressTrack ?? ''} isIndeterminate={progress === undefined}
++          value={Math.min(1, Math.max(0, progress ?? 0)) * 100}>
++          <ProgressBar.Track className="tz-upload-track"><ProgressBar.Fill className="tz-upload-fill" /></ProgressBar.Track>
++        </ProgressBar>
+       )}
+     </div>
+   )
+diff --git a/packages/client/ui-attachment/src/MessageImage.tsx b/packages/client/ui-attachment/src/MessageImage.tsx
+index 4cce54b..6b727b7 100644
+--- a/packages/client/ui-attachment/src/MessageImage.tsx
++++ b/packages/client/ui-attachment/src/MessageImage.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { useCallback, useEffect, useMemo, useState } from 'react'
+ import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
+ import { IconLoadingOutlineRegular, IconRefreshOutlineRegular, DraggableImage, ImageLightbox, type FileDragActions } from '@deepseek-ai/dsh-client-ui-primitives'
+@@ -112,7 +113,7 @@ export function MessageImage({ image, load, variant, labels, fileDrag }: {
+     ?? preview?.name ?? attachment?.name ?? labels.image
+   const loadingThumbnail = variant === 'thumbnail' && src === null
+   if (error) return (
+-    <button
++    <ActionButton
+       type="button"
+       className={css.error}
+       data-variant={variant}
+@@ -123,11 +124,11 @@ export function MessageImage({ image, load, variant, labels, fileDrag }: {
+       {variant === 'thumbnail'
+         ? <span aria-hidden="true"><IconRefreshOutlineRegular /></span>
+         : labels.loadFailed}
+-    </button>
++    </ActionButton>
+   )
+   return (
+     <>
+-      <button
++      <ActionButton
+         type="button"
+         className={css.frame}
+         data-variant={variant}
+@@ -145,7 +146,7 @@ export function MessageImage({ image, load, variant, labels, fileDrag }: {
+           )
+           : <DraggableImage fileDrag={fileDrag} src={src} alt={label} name={preview?.name ?? attachment?.name ?? 'image'}
+             style={fit === undefined ? undefined : { objectPosition: fit.objectPosition }} />}
+-      </button>
++      </ActionButton>
+       {open && src !== null && <ImageLightbox src={src} alt={label} labels={labels.lightbox} onClose={close} />}
+     </>
+   )
+diff --git a/packages/client/ui-attachment/src/client/ComposerAttachments.tsx b/packages/client/ui-attachment/src/client/ComposerAttachments.tsx
+index dc5bc60..23a77b3 100644
+--- a/packages/client/ui-attachment/src/client/ComposerAttachments.tsx
++++ b/packages/client/ui-attachment/src/client/ComposerAttachments.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton, ProgressBar } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+ import type {
+   ComposerAttachment, ComposerAttachmentsProps, ComposerImageAttachment,
+@@ -97,20 +98,20 @@ export function ComposerAttachments({
+                   {refusal !== undefined
+                     ? (
+                       <Tooltip label={refusal} side="top" delayMs={300} portal openOnClick>
+-                        <button
++                        <ActionButton
+                           type="button"
+                           className={`${css.thumbnail} ${css.thumbnailFailed} ${css.thumbnailRefused}`}
+                           aria-label={refusal}
+                         >
+                           <img src={attachment.previewUrl} alt="" />
+                           <span className={css.failureGlyph} aria-hidden><IconWarningOutlineRegular size={16} /></span>
+-                        </button>
++                        </ActionButton>
+                       </Tooltip>
+                     )
+                     : upload?.status === 'error'
+                       ? (
+                         <Tooltip label={t('file.uploadFailed')} side="top" delayMs={300} portal>
+-                          <button
++                          <ActionButton
+                             type="button"
+                             className={`${css.thumbnail} ${css.thumbnailFailed}`}
+                             aria-label={t('file.retry', { name })}
+@@ -118,11 +119,11 @@ export function ComposerAttachments({
+                           >
+                             <img src={attachment.previewUrl} alt="" />
+                             <span className={css.failureGlyph} aria-hidden><IconRefreshOutlineRegular size={16} /></span>
+-                          </button>
++                          </ActionButton>
+                         </Tooltip>
+                       )
+                       : (
+-                        <button
++                        <ActionButton
+                           type="button"
+                           className={css.thumbnail}
+                           title={t('image.openOriginal')}
+@@ -130,26 +131,22 @@ export function ComposerAttachments({
+                           onClick={() => { setPreview(attachment) }}
+                         >
+                           <img src={attachment.previewUrl} alt={name} />
+-                        </button>
++                        </ActionButton>
+                       )}
+                   {upload?.status === 'uploading' && (
+-                    <span className={css.progressTrack} aria-hidden>
+-                      <span
+-                        className={css.progressBar}
+-                        style={upload.total === undefined || upload.total <= 0
+-                          ? undefined
+-                          : { width: `${String(Math.min(1, upload.loaded / upload.total) * 100)}%` }}
+-                      />
+-                    </span>
++                    <ProgressBar aria-label={name} className={css.progressTrack ?? ''} isIndeterminate={upload.total === undefined || upload.total <= 0}
++                      value={upload.total && upload.total > 0 ? Math.min(1, upload.loaded / upload.total) * 100 : 0}>
++                      <ProgressBar.Track className="tz-upload-track"><ProgressBar.Fill className="tz-upload-fill" /></ProgressBar.Track>
++                    </ProgressBar>
+                   )}
+-                  <button
++                  <ActionButton
+                     type="button"
+                     className={css.remove}
+                     aria-label={t('image.remove', { name })}
+                     onClick={() => { onRemoveAttachment(attachment.id) }}
+                   >
+                     <IconCloseFillRegular size={12} />
+-                  </button>
++                  </ActionButton>
+                 </div>
+               )
+             }}
+diff --git a/packages/client/ui-chat/package.json b/packages/client/ui-chat/package.json
+index 496e6ac..da048cb 100644
+--- a/packages/client/ui-chat/package.json
++++ b/packages/client/ui-chat/package.json
+@@ -93,8 +93,8 @@
+     "@deepseek-ai/dsh-tool-executor-ptc": "workspace:*",
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+     "@tanstack/react-virtual": "3.14.10",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-settings": "workspace:*",
+     "@deepseek-ai/dsh-client-product-analytics": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-file-drag": "workspace:*"
+@@ -124,7 +124,7 @@
+     "@deepseek-ai/dsh-client-connection": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-agent": "workspace:*",
+     "@deepseek-ai/dsh-tool-executor-ptc": "workspace:*",
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+@@ -136,7 +136,7 @@
+     "@deepseek-ai/dsh-token-meter": "workspace:*",
+     "@deepseek-ai/dsh-session-turn-outline": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-approval": "workspace:*",
+-    "react-dom": "^18.2.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-session-stats": "workspace:*",
+     "@tanstack/react-virtual": "3.14.10"
+   },
+diff --git a/packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx b/packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx
+index f219a5a..82ead95 100644
+--- a/packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx
++++ b/packages/client/ui-chat/src/client/chat/ChatGroupSeat.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Stable process container; display policy changes visibility, never member parents. */
+ import { memo, useCallback, useEffect, useId, useRef, useState, type ComponentProps, type ReactNode } from 'react'
+ import {
+@@ -113,7 +114,7 @@ const ProcessGroupHeader = memo(function ProcessGroupHeader({ groupKey, useChatG
+   const title = detail === '' ? label : `${label}${t('message.turnProcess.separator')}${detail}`
+   const activity = data.closed ? data.summary.counts[0]?.kind ?? 'thinking' : live.activity
+   return (
+-    <button type="button" className={css.title} aria-expanded={open} aria-controls={bodyId}
++    <ActionButton type="button" className={css.title} aria-expanded={open} aria-controls={bodyId}
+       data-process-activity={activity} onClick={(event) => { event.currentTarget.focus(); toggle() }}>
+       <span className={css.leading} aria-hidden="true">
+         <span className={css.activityIcon} data-step-process-icon>{PROCESS_ICONS[activity]}</span>
+@@ -124,7 +125,7 @@ const ProcessGroupHeader = memo(function ProcessGroupHeader({ groupKey, useChatG
+       <TextShimmer active={!data.closed}>
+         <TextShimmer className={css.label}>{title}</TextShimmer>
+       </TextShimmer>
+-    </button>
++    </ActionButton>
+   )
+ })
+ 
+diff --git a/packages/client/ui-chat/src/client/chat/ChatView.tsx b/packages/client/ui-chat/src/client/chat/ChatView.tsx
+index f1a0556..c879814 100644
+--- a/packages/client/ui-chat/src/client/chat/ChatView.tsx
++++ b/packages/client/ui-chat/src/client/chat/ChatView.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ // An enclosing `[data-conversation-scroll]` owns scrolling when present;
+ // otherwise this view owns it. Each row subscribes to one stable node key.
+ 
+@@ -224,9 +225,9 @@ export function ChatView({
+             )}
+             {hasMore && (
+               <div className={css.older}>
+-                <button type="button" disabled={loadingOlder} onClick={scroll.loadEarlier}>
++                <ActionButton type="button" disabled={loadingOlder} onClick={scroll.loadEarlier}>
+                   {loadingOlder ? t('loading') : t('chat.loadOlder')}
+-                </button>
++                </ActionButton>
+               </div>
+             )}
+             <MarkdownDelegateProvider openFile={requestOpenFile} openExternalLink={openExternalLink} fileImages={fileImages}>
+@@ -252,14 +253,14 @@ export function ChatView({
+       </div>
+       {!scroll.followingTail && (
+         <div className={css.toBottomSlot}>
+-          <button
++          <ActionButton
+             type="button"
+             className={css.toBottom}
+             aria-label={t('chat.toBottom')}
+             onClick={scroll.returnToBottom}
+           >
+             <IconChevronDownOutlineRegular />
+-          </button>
++          </ActionButton>
+         </div>
+       )}
+       {fileOpenError !== null && (
+diff --git a/packages/client/ui-chat/src/client/chat/CompactionItem.tsx b/packages/client/ui-chat/src/client/chat/CompactionItem.tsx
+index 006b570..48a9a01 100644
+--- a/packages/client/ui-chat/src/client/chat/CompactionItem.tsx
++++ b/packages/client/ui-chat/src/client/chat/CompactionItem.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ // A compaction marker does not replace shadowed transcript rows. It is
+ // expandable only when the current window includes its cited summary.
+ 
+@@ -47,7 +48,7 @@ export const CompactionItem = memo(function CompactionItem({
+       ?? (expandable ? t('message.compaction.expand') : t('message.compaction.unavailable'))
+   return (
+     <div className={css.compactionRow}>
+-      <button
++      <ActionButton
+         type="button"
+         className={css.compactionButton}
+         disabled={!expandable}
+@@ -68,7 +69,7 @@ export const CompactionItem = memo(function CompactionItem({
+         <span className={css.compactionTitle}>{title ?? t('message.compaction')}</span>
+         <span className={css.compactionSep} aria-hidden />
+         <span className={css.compactionSummary}>{summary}</span>
+-      </button>
++      </ActionButton>
+       {open && node.summary !== null
+         && <div className={css.compactionBody}><MarkdownText text={node.summary} labels={labels} /></div>}
+     </div>
+diff --git a/packages/client/ui-chat/src/client/chat/MessageIconActions.tsx b/packages/client/ui-chat/src/client/chat/MessageIconActions.tsx
+index c6300d3..7f9ea94 100644
+--- a/packages/client/ui-chat/src/client/chat/MessageIconActions.tsx
++++ b/packages/client/ui-chat/src/client/chat/MessageIconActions.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ // Shared IconActions chrome for user and assistant messages: copy
+ // live, optional branch wiring, and an optional date-aware clock.
+ 
+@@ -58,15 +59,15 @@ export function MessageIconActions({
+     <div className={className === undefined ? css.actions : `${css.actions} ${className}`} data-clock={clock}>
+       {clock === 'start' ? clockEl : null}
+       <Tooltip label={copied ? t('copied') : t('copy')} side="bottom">
+-        <button type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
++        <ActionButton type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
+           {copied ? <IconCheckOutlineRegular /> : <IconCopyOutlineRegular />}
+-        </button>
++        </ActionButton>
+       </Tooltip>
+       {extraActions}
+       {onBranch !== undefined && (
+         <Tooltip label={branchUnavailable ? t('message.branchUnavailable') : t('message.branch')} side="bottom" openOnClick={branchUnavailable}>
+           {/* Native disabled buttons do not deliver the hover/focus events Tooltip needs. */}
+-          <button
++          <ActionButton
+             type="button"
+             className={css.action}
+             aria-label={t('message.branch')}
+@@ -76,7 +77,7 @@ export function MessageIconActions({
+             onClick={branchUnavailable ? undefined : onBranch}
+           >
+             <IconBranchOutlineRegular />
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       )}
+       {onBranch !== undefined && branchUnavailable && (
+diff --git a/packages/client/ui-chat/src/client/chat/TurnNavigator.tsx b/packages/client/ui-chat/src/client/chat/TurnNavigator.tsx
+index 51dfab8..8266b3e 100644
+--- a/packages/client/ui-chat/src/client/chat/TurnNavigator.tsx
++++ b/packages/client/ui-chat/src/client/chat/TurnNavigator.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Fixed-pitch virtual turn rail with independent activation and scroll controls. */
+ import {
+   forwardRef, memo, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState,
+@@ -58,7 +59,7 @@ const TurnMark = memo(function TurnMark({
+   else if (previewId !== undefined) classes.push(css.markPreview)
+   if (busy) classes.push(css.markBusy)
+   return (
+-    <button
++    <ActionButton
+       ref={registerElement}
+       data-index={index}
+       type="button"
+diff --git a/packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx b/packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx
+index 9dedb81..9dfa51f 100644
+--- a/packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx
++++ b/packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { memo } from 'react'
+ import { IconChevronDownOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
+ import type { ChatNodeViewProps } from '../contract/slots.ts'
+@@ -34,7 +35,7 @@ export const TurnProcessNodeView = memo(function TurnProcessNodeView({
+   return (
+     <>
+       <span className={a11yCss.visuallyHidden} role="status" aria-live="polite" aria-atomic="true">{announcement}</span>
+-      <button
++      <ActionButton
+         type="button"
+         className={css.root}
+         data-open={open || undefined}
+@@ -56,7 +57,7 @@ export const TurnProcessNodeView = memo(function TurnProcessNodeView({
+           ))}
+         </span>
+         {canCollapse && <IconChevronDownOutlineRegular className={css.chevron} />}
+-      </button>
++      </ActionButton>
+     </>
+   )
+ })
+diff --git a/packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx b/packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx
+index afa2106..427c359 100644
+--- a/packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx
++++ b/packages/client/ui-chat/src/client/chat/TurnTriggerNodeView.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** An independent, expandable notice explaining a non-human Turn trigger. */
+ import { useId, useState, type ComponentType } from 'react'
+ import {
+@@ -35,12 +36,12 @@ export function TurnTriggerNodeView({ node, t }: Pick<ChatNodeViewProps<'turn-tr
+   const time = formatMessageClock(node.data.time, t)
+   return (
+     <section className={css.root} data-turn-trigger>
+-      <button className={css.header} type="button" aria-expanded={open} aria-controls={bodyId} onClick={() => { setOpen(!open) }}>
++      <ActionButton className={css.header} type="button" aria-expanded={open} aria-controls={bodyId} onClick={() => { setOpen(!open) }}>
+         <span className={css.icon} aria-hidden><TriggerIcon size={14} /></span>
+         <span className={css.title}>{t(details.title)}</span>
+         <time className={css.time} dateTime={date.toISOString()}>{time}</time>
+         <IconChevronDownOutlineRegular size={12} className={open ? css.openChevron : css.chevron} />
+-      </button>
++      </ActionButton>
+       {open && <div id={bodyId} className={css.body}>
+         <p className={css.explanation}>{t('message.trigger.explanation')}</p>
+         <div className={css.content}><NoticeBody content={node.data.content} source={node.data.source} t={t} /></div>
+diff --git a/packages/client/ui-chat/src/client/chat/flow-motion.ts b/packages/client/ui-chat/src/client/chat/flow-motion.ts
+index ea5bd22..4d58c41 100644
+--- a/packages/client/ui-chat/src/client/chat/flow-motion.ts
++++ b/packages/client/ui-chat/src/client/chat/flow-motion.ts
+@@ -514,7 +514,7 @@ function useFlowTransition(motion: FlowMotionRows | undefined, grow: boolean): H
+  * @param motion - owning viewport's row callbacks; undefined applies visibility synchronously.
+  * @returns the stable subtree ref.
+  */
+-export function useFlowHidden(hidden: boolean, reveal: () => void, motion: FlowMotionRows | undefined): RefObject<HTMLDivElement> {
++export function useFlowHidden(hidden: boolean, reveal: () => void, motion: FlowMotionRows | undefined): RefObject<HTMLDivElement | null> {
+   return useSearchableHidden(hidden, reveal, useFlowTransition(motion, false))
+ }
+ 
+diff --git a/packages/client/ui-chat/src/client/chat/searchable-hidden.ts b/packages/client/ui-chat/src/client/chat/searchable-hidden.ts
+index 5b52c93..38a7a4a 100644
+--- a/packages/client/ui-chat/src/client/chat/searchable-hidden.ts
++++ b/packages/client/ui-chat/src/client/chat/searchable-hidden.ts
+@@ -19,7 +19,7 @@ export function useSearchableHidden(
+   hidden: boolean,
+   reveal: () => void,
+   transition?: HiddenTransition,
+-): RefObject<HTMLDivElement> {
++): RefObject<HTMLDivElement | null> {
+   const ref = useRef<HTMLDivElement>(null)
+   useLayoutEffect(() => {
+     const element = ref.current
+diff --git a/packages/client/ui-chat/src/client/chat/text-interaction.ts b/packages/client/ui-chat/src/client/chat/text-interaction.ts
+index f497b66..20fb8f7 100644
+--- a/packages/client/ui-chat/src/client/chat/text-interaction.ts
++++ b/packages/client/ui-chat/src/client/chat/text-interaction.ts
+@@ -87,7 +87,7 @@ function visibleBounds(root: HTMLElement, source: HTMLElement, view: Window): Bo
+  * @returns current owner and area-local selection actions.
+  */
+ export function useTextInteraction(
+-  rootRef: RefObject<HTMLElement>, surfaceRef: RefObject<HTMLElement>,
++  rootRef: RefObject<HTMLElement | null>, surfaceRef: RefObject<HTMLElement | null>,
+   dispatchInteraction: (gesture: TextInteractionGesture) => string | null,
+   registeredIds: readonly string[],
+ ): TextInteractionBinding {
+diff --git a/packages/client/ui-chat/src/client/chat/use-chat-scroll.ts b/packages/client/ui-chat/src/client/chat/use-chat-scroll.ts
+index 0fd2008..df719ea 100644
+--- a/packages/client/ui-chat/src/client/chat/use-chat-scroll.ts
++++ b/packages/client/ui-chat/src/client/chat/use-chat-scroll.ts
+@@ -26,8 +26,8 @@ export interface ChatScrollInput extends ChatNavigationInput {
+ }
+ 
+ interface ChatScrollState extends ChatReadingState {
+-  readonly listRef: RefObject<HTMLDivElement>
+-  readonly columnRef: RefObject<HTMLDivElement>
++  readonly listRef: RefObject<HTMLDivElement | null>
++  readonly columnRef: RefObject<HTMLDivElement | null>
+   readonly busyTurn: number | null
+   readonly navigateToTurn: ChatNavigation['navigateToTurn']
+   readonly loadEarlier: ChatNavigation['loadEarlier']
+diff --git a/packages/client/ui-chat/src/client/chat/use-chat-viewport.ts b/packages/client/ui-chat/src/client/chat/use-chat-viewport.ts
+index dd0e9f5..a775d2f 100644
+--- a/packages/client/ui-chat/src/client/chat/use-chat-viewport.ts
++++ b/packages/client/ui-chat/src/client/chat/use-chat-viewport.ts
+@@ -833,8 +833,8 @@ export class ChatViewport {
+  */
+ export function useChatViewport(): {
+   viewport: ChatViewport
+-  listRef: RefObject<HTMLDivElement>
+-  columnRef: RefObject<HTMLDivElement>
++  listRef: RefObject<HTMLDivElement | null>
++  columnRef: RefObject<HTMLDivElement | null>
+ } {
+   const listRef = useRef<HTMLDivElement | null>(null)
+   const columnRef = useRef<HTMLDivElement | null>(null)
+diff --git a/packages/client/ui-chat/src/client/chat/use-process-scroll.ts b/packages/client/ui-chat/src/client/chat/use-process-scroll.ts
+index 07fc32f..088e624 100644
+--- a/packages/client/ui-chat/src/client/chat/use-process-scroll.ts
++++ b/packages/client/ui-chat/src/client/chat/use-process-scroll.ts
+@@ -17,7 +17,7 @@ const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home
+  * @returns edge fades, DOM event bindings, and one-shot positioning for manual opening.
+  */
+ export function useProcessScroll(
+-  bodyRef: RefObject<HTMLDivElement>, contentRef: RefObject<HTMLDivElement>, open: boolean, grouped: boolean,
++  bodyRef: RefObject<HTMLDivElement | null>, contentRef: RefObject<HTMLDivElement | null>, open: boolean, grouped: boolean,
+ ): {
+   edges: ScrollEdges
+   events: Pick<DOMAttributes<HTMLDivElement>, 'onScroll' | 'onWheel' | 'onTouchStart' | 'onPointerDown' | 'onKeyDown'>
+diff --git a/packages/client/ui-chat/src/client/contract/slots.ts b/packages/client/ui-chat/src/client/contract/slots.ts
+index 948a546..3f62fa0 100644
+--- a/packages/client/ui-chat/src/client/contract/slots.ts
++++ b/packages/client/ui-chat/src/client/contract/slots.ts
+@@ -171,7 +171,7 @@ export type UseDisclosure = () => {
+  * @param reveal - browser-find and focus-protection callback.
+  * @returns the stable process-container ref.
+  */
+-export type UseGroupAction = (hidden: boolean, reveal: () => void) => RefObject<HTMLDivElement>
++export type UseGroupAction = (hidden: boolean, reveal: () => void) => RefObject<HTMLDivElement | null>
+ 
+ /**
+  * Plain header visibility bound to the flow's viewport, including growth on reveal.
+diff --git a/packages/client/ui-chat/src/client/settings/PreferenceRow.tsx b/packages/client/ui-chat/src/client/settings/PreferenceRow.tsx
+index bfad7b5..af3734d 100644
+--- a/packages/client/ui-chat/src/client/settings/PreferenceRow.tsx
++++ b/packages/client/ui-chat/src/client/settings/PreferenceRow.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Localized two-column selector shared by Chat preference rows. */
+ import { useRef, useState } from 'react'
+ import { IconChevronDownOutlineRegular, Menu } from '@deepseek-ai/dsh-client-ui-primitives'
+@@ -25,7 +26,7 @@ export function PreferenceRow({ title, description, value, selectedLabel, option
+     onSelect(id)
+   }
+   const selector = (
+-    <button
++    <ActionButton
+       ref={selectorRef}
+       type="button"
+       className={css.selector}
+@@ -35,7 +36,7 @@ export function PreferenceRow({ title, description, value, selectedLabel, option
+     >
+       {selectedLabel}
+       <IconChevronDownOutlineRegular className={css.chevron} />
+-    </button>
++    </ActionButton>
+   )
+ 
+   return (
+diff --git a/packages/client/ui-commands/package.json b/packages/client/ui-commands/package.json
+index 07ed38b..cdae73a 100644
+--- a/packages/client/ui-commands/package.json
++++ b/packages/client/ui-commands/package.json
+@@ -55,7 +55,7 @@
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-commands": "workspace:*",
+     "@deepseek-ai/cordis": "workspace:~",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-api-session-controller": "workspace:*",
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+     "@deepseek-ai/dsh-session": "workspace:*",
+@@ -71,7 +71,7 @@
+     "lib/types/**/*.d.ts"
+   ],
+   "dependencies": {
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-input-trigger": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-commands": "workspace:*",
+diff --git a/packages/client/ui-commands/src/client/PopupSelectView.tsx b/packages/client/ui-commands/src/client/PopupSelectView.tsx
+index 911a8f5..b77df6e 100644
+--- a/packages/client/ui-commands/src/client/PopupSelectView.tsx
++++ b/packages/client/ui-commands/src/client/PopupSelectView.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * Official popupSelect shell: renders one session's PopupSelectController
+  * store into the conversation.input.overlay anchor. Unlike the slash menu
+@@ -176,7 +177,7 @@ export function PopupSelectView({ popup, t }: PopupSelectViewProps) {
+             <div className={css.error} role="alert">
+               <span className={css.errorText}>{state.error}</span>
+               {state.status === 'failed' && (
+-                <button type="button" className={css.retry} onClick={() => { popup.retry() }}>{t('retry')}</button>
++                <ActionButton type="button" className={css.retry} onClick={() => { popup.retry() }}>{t('retry')}</ActionButton>
+               )}
+             </div>
+           )}
+diff --git a/packages/client/ui-conversation/package.json b/packages/client/ui-conversation/package.json
+index 652b115..d13e1f1 100644
+--- a/packages/client/ui-conversation/package.json
++++ b/packages/client/ui-conversation/package.json
+@@ -68,8 +68,8 @@
+     "@deepseek-ai/dsh-util-crypto": "workspace:*",
+     "@deepseek-ai/dsh-client-file-upload": "workspace:*",
+     "@deepseek-ai/dsh-llm": "workspace:*",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-workspace": "workspace:*",
+     "@deepseek-ai/dsh-api-workspace-controller": "workspace:*",
+@@ -121,9 +121,9 @@
+     "@deepseek-ai/dsh-workspace": "workspace:*",
+     "@deepseek-ai/dsh-file-reference": "workspace:*",
+     "@deepseek-ai/dsh-util-workspace-path": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@lexical/headless": "^0.49.0",
+-    "react-dom": "^18.2.0",
++    "react-dom": "^19.0.0",
+     "zod": "4.4.3",
+     "lexical": "^0.49.0",
+     "clsx": "^2.0.0",
+diff --git a/packages/client/ui-conversation/src/client/contract/slots.ts b/packages/client/ui-conversation/src/client/contract/slots.ts
+index b0917eb..a9957a4 100644
+--- a/packages/client/ui-conversation/src/client/contract/slots.ts
++++ b/packages/client/ui-conversation/src/client/contract/slots.ts
+@@ -657,7 +657,7 @@ export type ComposerAttachmentsProps =
+ /** Owner share common to blank-session Workspace pickers. */
+ export interface EmptyWorkspaceOwnerProps {
+   open: boolean
+-  anchorRef?: RefObject<HTMLElement>
++  anchorRef?: RefObject<HTMLElement | null>
+   /** Currently selected Workspace, when available. */
+   selectedId?: WorkspaceId | undefined
+   onPick: (workspaceId: WorkspaceId) => void
+diff --git a/packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx b/packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx
+index a51ef34..9c324ff 100644
+--- a/packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx
++++ b/packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx
+@@ -11,7 +11,7 @@ import { DecoratorPortals } from './DecoratorPortals.tsx'
+ export interface DraftEditorProps {
+   readonly classNames: Readonly<Record<string, string>>
+   readonly editor: LexicalEditor | null
+-  readonly scrollRef: RefObject<HTMLDivElement>
++  readonly scrollRef: RefObject<HTMLDivElement | null>
+   readonly editable: boolean
+   readonly editorDisabled: boolean
+   readonly phase: InputState['phase'] | 'inert'
+diff --git a/packages/client/ui-conversation/src/client/input/editor/view-binding.ts b/packages/client/ui-conversation/src/client/input/editor/view-binding.ts
+index 9018592..16ab33d 100644
+--- a/packages/client/ui-conversation/src/client/input/editor/view-binding.ts
++++ b/packages/client/ui-conversation/src/client/input/editor/view-binding.ts
+@@ -16,7 +16,7 @@ import { DRAFT_SUBMITTED_TAG } from './runtime.ts'
+  * @param destination - stable, focusable non-text element that retains the composer's keyboard position.
+  * @returns the update-listener cleanup.
+  */
+-export function installDraftKeyboardDismissal(editor: LexicalEditor, destination: RefObject<HTMLElement>): () => void {
++export function installDraftKeyboardDismissal(editor: LexicalEditor, destination: RefObject<HTMLElement | null>): () => void {
+   return editor.registerUpdateListener(({ editorState, tags }) => {
+     if (!tags.has(DRAFT_SUBMITTED_TAG) || !isMobileDevice()) return
+     const input = editor.getRootElement()
+@@ -46,7 +46,7 @@ interface DraftViewGate {
+  * Reveal the DOM selection within the draft's own scrollport.
+  * @param scrollRef - the InputBar-owned scrollport reference.
+  */
+-export function revealDraftSelection(scrollRef: RefObject<HTMLDivElement>): void {
++export function revealDraftSelection(scrollRef: RefObject<HTMLDivElement | null>): void {
+   const scrollEl = scrollRef.current
+   if (scrollEl === null || scrollEl.scrollHeight <= scrollEl.clientHeight) return
+   const selection = window.getSelection()
+@@ -83,7 +83,7 @@ export function focusDraftEditor(editor: LexicalEditor, revealSelection: () => v
+  * @param scrollRef - the InputBar-owned scrollport reference.
+  * @returns the listener cleanup, or undefined when the element is absent.
+  */
+-export function installDraftWheel(scrollRef: RefObject<HTMLDivElement>): (() => void) | undefined {
++export function installDraftWheel(scrollRef: RefObject<HTMLDivElement | null>): (() => void) | undefined {
+   const el = scrollRef.current
+   if (el === null) return
+   const onWheel = (e: WheelEvent): void => {
+@@ -109,7 +109,7 @@ export function installDraftWheel(scrollRef: RefObject<HTMLDivElement>): (() =>
+ export function installDraftFilePicker(
+   keyboard: ComposerKeyboard,
+   gate: MutableRefObject<Pick<DraftViewGate, 'canAcceptDrop'>>,
+-  fileInputRef: RefObject<HTMLInputElement>,
++  fileInputRef: RefObject<HTMLInputElement | null>,
+ ): () => void {
+   return keyboard.bindFilePicker({
+     available: () => gate.current.canAcceptDrop && fileInputRef.current !== null && !fileInputRef.current.disabled,
+diff --git a/packages/client/ui-conversation/src/client/queue/QueueDock.tsx b/packages/client/ui-conversation/src/client/queue/QueueDock.tsx
+index 0af01f8..3f153e3 100644
+--- a/packages/client/ui-conversation/src/client/queue/QueueDock.tsx
++++ b/packages/client/ui-conversation/src/client/queue/QueueDock.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ import type { Context } from '@deepseek-ai/cordis'
+ import { useEffect, useId, useMemo, useState } from 'react'
+ import type { FileAttachmentRef, ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
+@@ -169,7 +170,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+     <div className={css.dock} data-queue-dock="">
+       <div className={css.panel}>
+         {rowCount > 1 && (
+-          <button
++          <ActionButton
+             type="button"
+             className={css.header}
+             aria-controls={listId}
+@@ -185,7 +186,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+             <span className={css.chevron} aria-hidden>
+               {expanded ? <IconChevronDownOutlineRegular /> : <IconChevronUpOutlineRegular />}
+             </span>
+-          </button>
++          </ActionButton>
+         )}
+         <ul id={listId} className={css.list} hidden={!listVisible}>
+           {listVisible && queue.map((row) => {
+@@ -239,7 +240,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                     ? (
+                       <>
+                         <Tooltip portal label={t('queue.save')} side="bottom" delayMs={500}>
+-                          <button
++                          <ActionButton
+                             type="button"
+                             className={css.action}
+                             aria-label={t('queue.save')}
+@@ -247,10 +248,10 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                             onClick={() => { void saveEdit() }}
+                           >
+                             <IconCheckOutlineRegular size={14} />
+-                          </button>
++                          </ActionButton>
+                         </Tooltip>
+                         <Tooltip portal label={t('queue.cancelEdit')} side="bottom" delayMs={500}>
+-                          <button
++                          <ActionButton
+                             type="button"
+                             className={css.action}
+                             aria-label={t('queue.cancelEdit')}
+@@ -258,14 +259,14 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                             onClick={() => { setEditing(null) }}
+                           >
+                             <IconCloseOutlineRegular size={14} />
+-                          </button>
++                          </ActionButton>
+                         </Tooltip>
+                       </>
+                     )
+                     : (
+                       <>
+                         <Tooltip portal label={t('queue.edit')} side="bottom" delayMs={500} disabled={text === null}>
+-                          <button
++                          <ActionButton
+                             type="button"
+                             className={css.action}
+                             aria-label={t('queue.edit')}
+@@ -278,10 +279,10 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                             }}
+                           >
+                             <IconEditOutlineRegular size={14} />
+-                          </button>
++                          </ActionButton>
+                         </Tooltip>
+                         <Tooltip portal label={t('queue.remove')} side="bottom" delayMs={500}>
+-                          <button
++                          <ActionButton
+                             type="button"
+                             className={css.action}
+                             aria-label={t('queue.remove')}
+@@ -295,10 +296,10 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                             }}
+                           >
+                             <IconTrashOutlineRegular size={14} />
+-                          </button>
++                          </ActionButton>
+                         </Tooltip>
+                         <Tooltip portal label={t('queue.steer')} side="bottom" delayMs={500} disabled={!running}>
+-                          <button
++                          <ActionButton
+                             type="button"
+                             className={css.action}
+                             aria-label={t('queue.steer')}
+@@ -313,7 +314,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                             }}
+                           >
+                             <IconSendOutlineRegular />
+-                          </button>
++                          </ActionButton>
+                         </Tooltip>
+                       </>
+                     )}
+@@ -352,7 +353,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                 })}</span>
+                 <span className={css.status} role="status">{t('queue.sending')}</span>
+                 {queueMutable && <div className={css.actions}>
+-                  <button
++                  <ActionButton
+                     type="button"
+                     className={css.action}
+                     aria-label={t('queue.edit')}
+@@ -360,8 +361,8 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                     disabled
+                   >
+                     <IconEditOutlineRegular size={14} />
+-                  </button>
+-                  <button
++                  </ActionButton>
++                  <ActionButton
+                     type="button"
+                     className={css.action}
+                     aria-label={t('queue.remove')}
+@@ -369,8 +370,8 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                     disabled
+                   >
+                     <IconTrashOutlineRegular size={14} />
+-                  </button>
+-                  <button
++                  </ActionButton>
++                  <ActionButton
+                     type="button"
+                     className={css.action}
+                     aria-label={t('queue.steer')}
+@@ -378,7 +379,7 @@ export function QueueDock({ useSession, useProjection, updateQueue, notify, load
+                     disabled
+                   >
+                     <IconSendOutlineRegular />
+-                  </button>
++                  </ActionButton>
+                 </div>}
+               </li>
+             )
+diff --git a/packages/client/ui-conversation/src/client/settings/EnterBehaviorRow.tsx b/packages/client/ui-conversation/src/client/settings/EnterBehaviorRow.tsx
+index cf85880..13c8ab8 100644
+--- a/packages/client/ui-conversation/src/client/settings/EnterBehaviorRow.tsx
++++ b/packages/client/ui-conversation/src/client/settings/EnterBehaviorRow.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** General Settings row for the Composer's busy-state Enter preference. */
+ import { useState } from 'react'
+ import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
+@@ -59,7 +60,7 @@ export function EnterBehaviorRow({ useBusyEnter, setBusyEnter, t }: EnterBehavio
+         align="end"
+         portal
+         anchor={(
+-          <button
++          <ActionButton
+             type="button"
+             className={css.selector}
+             aria-haspopup="menu"
+@@ -68,7 +69,7 @@ export function EnterBehaviorRow({ useBusyEnter, setBusyEnter, t }: EnterBehavio
+           >
+             {t(selectedLabel)}
+             <IconChevronDownOutlineRegular className={css.chevron} />
+-          </button>
++          </ActionButton>
+         )}
+       />
+     </div>
+diff --git a/packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx b/packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx
+index 4af5274..69c3d18 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/ContextMeter.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton, Meter } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Composer context-occupancy meter: a ring and percentage below the card fed by the
+  * `contextPressure` projection, with a click-open panel of the heuristic
+  * `contextBreakdown` composition (system prompt, tools, conversation).
+@@ -108,7 +109,7 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
+   return (
+     <span ref={rootRef} className={css.root}>
+       <Tooltip label={t('context.aria', { percent: reading })} side="top" delayMs={200} disabled={open}>
+-        <button
++        <ActionButton
+           type="button"
+           className={css.trigger}
+           aria-label={t('context.aria', { percent: reading })}
+@@ -128,7 +129,7 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
+             />
+           </svg>
+           <span>{reading}</span>
+-        </button>
++        </ActionButton>
+       </Tooltip>
+       {open && createPortal(
+         <div
+@@ -150,7 +151,8 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
+               {`~${formatTokens(context.usedTokens, t)} / ${formatTokens(context.contextWindow, t)}`}
+             </span>
+           </div>
+-          <div className={css.bar}>
++          <Meter aria-label={t('context.used')} value={percent} minValue={0} maxValue={100}>
++          <Meter.Track className={css.bar ?? ''}>
+             {segments.map(segment => (
+               <div
+                 key={segment.key}
+@@ -158,7 +160,8 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
+                 style={{ width: `${segment.width}%` }}
+               />
+             ))}
+-          </div>
++          </Meter.Track>
++          </Meter>
+           {breakdown !== undefined && (
+             <dl className={css.rows}>
+               {ROWS.map(row => (
+diff --git a/packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx b/packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx
+index 3089b08..31c40ad 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Strict per-session header/body content inserted into the resident conversation layout. */
+ 
+ import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+@@ -138,13 +139,13 @@ export function ConversationSessionHeader({
+                       </span>
+                     )
+                     : (
+-                      <button
++                      <ActionButton
+                         type="button"
+                         className={clsx(css.crumb, summary.subagent && css.crumbSubagent)}
+                         onClick={() => { open(summary.id) }}
+                       >
+                         {summary.displayTitle}
+-                      </button>
++                      </ActionButton>
+                     )
+                   const lineage = last || summary.subagent
+                   const lineageOwner = {
+@@ -197,7 +198,7 @@ export function ConversationSessionHeader({
+         <div ref={tabRow} className={css.tabs}>
+           <div className={css.viewTabs} role="tablist" data-conversation-tabs="">
+             {visibleTabs.map(viewTab => (
+-              <button
++              <ActionButton
+                 key={viewTab.id}
+                 type="button"
+                 role="tab"
+@@ -206,7 +207,7 @@ export function ConversationSessionHeader({
+                 onClick={() => { selectView(viewTab.id) }}
+               >
+                 <Tooltip label={viewTab.label} portal><span className={css.tabLabel}>{viewTab.label}</span></Tooltip>
+-              </button>
++              </ActionButton>
+             ))}
+           </div>
+           {hasEntryActions && (
+diff --git a/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx b/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx
+index b46db92..d308f42 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ // The composer remains in ConversationRoot so switching out of the blank-draft
+ // phase does not remount its textarea.
+ 
+@@ -36,14 +37,14 @@ export function workspaceLabel(cwd: string): string {
+  * @returns the chip button element.
+  */
+ export function WorkspaceChip({ buttonRef, label, menuOpen = false, onClick, t }: {
+-  buttonRef?: RefObject<HTMLButtonElement>
++  buttonRef?: RefObject<HTMLButtonElement | null>
+   label?: string | undefined
+   menuOpen?: boolean
+   onClick?: () => void
+   t: HeroTranslate
+ }) {
+   return (
+-    <button
++    <ActionButton
+       ref={buttonRef}
+       type="button"
+       className={css.workspace}
+@@ -57,7 +58,7 @@ export function WorkspaceChip({ buttonRef, label, menuOpen = false, onClick, t }
+         : <IconFolderOpenRegular className={css.folder} size={16} />}
+       <span className={css.workspaceLabel}>{label ?? t('hero.chooseWorkspace')}</span>
+       <IconChevronDownOutlineRegular className={css.chevron} size={12} />
+-    </button>
++    </ActionButton>
+   )
+ }
+ 
+diff --git a/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx b/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
+index fd0d919..034cb43 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** The default composer body: the 'conversation.composer.bar' slot entry.
+  * Machine state arrives through the standard provide channel
+  * (useInput + inputActions); the keyboard/DOM command face and stop arrive
+@@ -459,7 +460,7 @@ export const InputBar = memo(function InputBar({
+         <div ref={rowRef} className={css.row}>
+           <div className={css.tools} hidden={activity}>
+             <Tooltip label={t('input.commands')} side="top" delayMs={500}>
+-              <button
++              <ActionButton
+                 type="button"
+                 className={css.add}
+                 aria-label={t('input.commands')}
+@@ -470,7 +471,7 @@ export const InputBar = memo(function InputBar({
+                 onClick={onToggleCommandMenu}
+               >
+                 <IconPlusOutlineMedium size={14} />
+-              </button>
++              </ActionButton>
+             </Tooltip>
+             <input
+               ref={fileInputRef}
+@@ -500,7 +501,7 @@ export const InputBar = memo(function InputBar({
+             </div>}
+             {interruptible && !cancelDenied && (
+               <Tooltip label={t('input.stop')} shortcutKeys={stopKeys} side="top" delayMs={500} disabled={stopAction === undefined}>
+-                <button
++                <ActionButton
+                   type="button"
+                   className={css.primary}
+                   aria-label={t('input.stop')}
+@@ -511,12 +512,12 @@ export const InputBar = memo(function InputBar({
+                   <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden>
+                     <rect x="3" y="3" width="10" height="10" rx="3" fill="currentColor" />
+                   </svg>
+-                </button>
++                </ActionButton>
+               </Tooltip>
+             )}
+             {(primaryStops ? cancelDenied : promptDenied) ? null : (
+               <Tooltip label={primaryStops ? t('input.stop') : primaryLabel} shortcutKeys={primaryStops ? stopKeys : undefined} side="top" delayMs={500} disabled={primaryDisabled}>
+-                <button
++                <ActionButton
+                   type="button"
+                   className={css.primary}
+                   aria-label={primaryLabel}
+@@ -533,7 +534,7 @@ export const InputBar = memo(function InputBar({
+                       <path d="M8.3125 0.980183C8.66767 1.0531 8.97902 1.20418 9.2627 1.43233C9.48724 1.61297 9.73029 1.85793 9.97949 2.10714L14.707 6.83468L13.293 8.24874L9 3.95577V15.0417H7V3.95577L2.70703 8.24874L1.29297 6.83468L6.02051 2.10714C6.26971 1.85793 6.51277 1.61297 6.7373 1.43233C6.97662 1.23986 7.28445 1.04402 7.6875 0.980183C7.8973 0.947006 8.1031 0.95516 8.3125 0.980183Z" fill="currentColor" />
+                     </svg>
+                   )}
+-                </button>
++                </ActionButton>
+               </Tooltip>
+             )}
+           </div>
+diff --git a/packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx b/packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx
+index bf59a54..458aa07 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/TodoPanel.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { useState } from 'react'
+ import type { Context } from '@deepseek-ai/cordis'
+ import type { PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
+@@ -69,7 +70,7 @@ export function TodoPanel({ todos, t }: TodoPanelProps) {
+   return (
+     <section className={css.root} data-testid="todo-panel" aria-label={t('todo.title')}>
+       <div className={css.body}>
+-        <button
++        <ActionButton
+           type="button"
+           className={css.header}
+           aria-expanded={!collapsed}
+@@ -81,7 +82,7 @@ export function TodoPanel({ todos, t }: TodoPanelProps) {
+           <span className={css.chevron} aria-hidden>
+             {collapsed ? <IconChevronUpOutlineRegular /> : <IconChevronDownOutlineRegular />}
+           </span>
+-        </button>
++        </ActionButton>
+         {!collapsed && (
+           <ul className={css.list}>
+             {todos.map(item => (
+diff --git a/packages/client/ui-dockkit/package.json b/packages/client/ui-dockkit/package.json
+index 9f40eb2..2adea86 100644
+--- a/packages/client/ui-dockkit/package.json
++++ b/packages/client/ui-dockkit/package.json
+@@ -27,8 +27,8 @@
+     "@deepseek-ai/dsh-brand": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@testing-library/react": "^16.3.3",
+-    "react-dom": "^18.2.0",
+-    "react": "^18.2.0",
++    "react-dom": "^19.0.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0"
+   },
+   "files": [
+@@ -40,10 +40,10 @@
+     "@deepseek-ai/cordis": "workspace:~"
+   },
+   "dependencies": {
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-brand": "workspace:*",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+-    "react-dom": "^18.2.0"
++    "react-dom": "^19.0.0"
+   }
+ }
+diff --git a/packages/client/ui-dockkit/src/components/FloatLayer.tsx b/packages/client/ui-dockkit/src/components/FloatLayer.tsx
+index dfe0289..5b4d7a7 100644
+--- a/packages/client/ui-dockkit/src/components/FloatLayer.tsx
++++ b/packages/client/ui-dockkit/src/components/FloatLayer.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The floating layer: one overlay panel per floating pane, bottom-to-top in the
+  * model's z order. A floating pane hosts exactly one tab; its header is the
+@@ -130,19 +131,19 @@ export function FloatHeader({ paneId, tab, labels, intents, renderTabTitle, canC
+       </div>
+       <div className={css.stripFill} />
+       <Tooltip label={labels.dockFloat} side="bottom" delayMs={500}>
+-        <button type="button" className={css.iconButton} aria-label={labels.dockFloat}
++        <ActionButton type="button" className={css.iconButton} aria-label={labels.dockFloat}
+           data-dockkit-float-dock={paneId} onPointerDown={(event) => { event.stopPropagation() }}
+           onClick={() => { intents.unfloatPane(paneId) }}>
+           <IconPanelLeftOutlineRegular className={css.dockGlyph} />
+-        </button>
++        </ActionButton>
+       </Tooltip>
+       {(canCloseTab?.(tab.id) ?? true) && (
+         <Tooltip label={labels.closeTab} shortcutKeys={labels.closeTabKeys} side="bottom" delayMs={500}>
+-          <button type="button" className={css.iconButton} aria-label={labels.closeTab}
++          <ActionButton type="button" className={css.iconButton} aria-label={labels.closeTab}
+             data-dockkit-float-close={paneId} onPointerDown={(event) => { event.stopPropagation() }}
+             onClick={() => { intents.closeTab(tab.id) }}>
+             <IconCloseOutlineRegular />
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       )}
+     </header>
+diff --git a/packages/client/ui-dockkit/src/components/TabLayout.tsx b/packages/client/ui-dockkit/src/components/TabLayout.tsx
+index f709744..8abb61d 100644
+--- a/packages/client/ui-dockkit/src/components/TabLayout.tsx
++++ b/packages/client/ui-dockkit/src/components/TabLayout.tsx
+@@ -119,7 +119,7 @@ function TabHost({ state, callbacks, intents, tab, pane, column, floats, focusRe
+  */
+ export function TabLayout(props: LayoutProps): ReactNode {
+   const { state, callbacks, preview } = props
+-  const focusRequest = useRef<{ readonly tabId: TabId; readonly origin: Element | null }>()
++  const focusRequest = useRef<{ readonly tabId: TabId; readonly origin: Element | null } | undefined>(undefined)
+   // Each pane's strip remounts under the newly selected tab's host.
+   const [offsets] = useState(() => new Map<PaneId, number>())
+   const tabCallbacks: PaneCallbacks = {
+diff --git a/packages/client/ui-dockkit/src/components/TabMenu.tsx b/packages/client/ui-dockkit/src/components/TabMenu.tsx
+index beb7c92..a2f44ca 100644
+--- a/packages/client/ui-dockkit/src/components/TabMenu.tsx
++++ b/packages/client/ui-dockkit/src/components/TabMenu.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The per-tab context menu, opened by a secondary press on the chip. It carries
+  * the close gesture and whatever the embedder appends; the copy and float
+@@ -112,9 +113,9 @@ export function TabMenu({ labels, anchor, onClose, onDismiss, extras }: TabMenuP
+       onAuxClick={(event) => { event.stopPropagation() }}
+     >
+       {onClose !== undefined && (
+-        <button type="button" role="menuitem" className={css.menuItem} data-dockkit-menu-close onClick={onClose}>
++        <ActionButton type="button" role="menuitem" className={css.menuItem} data-dockkit-menu-close onClick={onClose}>
+           {labels.closeTab}
+-        </button>
++        </ActionButton>
+       )}
+       {/* Embedder items last: the kit's own item is the same in every menu, so
+           a reader looks for it in the same place every time. */}
+diff --git a/packages/client/ui-dockkit/src/components/TabPanel.tsx b/packages/client/ui-dockkit/src/components/TabPanel.tsx
+index c0e3bcd..d416d74 100644
+--- a/packages/client/ui-dockkit/src/components/TabPanel.tsx
++++ b/packages/client/ui-dockkit/src/components/TabPanel.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * One pane: its tab strip (drag source, drop target, split control) and the
+  * active tab's body with the dock preview overlay. Presentational; every gesture
+@@ -373,7 +374,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
+                 <TabTitle>{callbacks.renderTabTitle?.(tab) ?? tab.title}</TabTitle>
+                 {closable && (
+                   <Tooltip disabled={menu !== undefined} label={callbacks.labels.closeTab} shortcutKeys={callbacks.labels.closeTabKeys} side="bottom" delayMs={500}>
+-                    <button
++                    <ActionButton
+                       type="button"
+                       className={css.tabClose}
+                       aria-label={callbacks.labels.closeTab}
+@@ -388,7 +389,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
+                       }}
+                     >
+                       <IconCloseFillRegular size={14} />
+-                    </button>
++                    </ActionButton>
+                   </Tooltip>
+                 )}
+                 {menu?.tabId === tabId && (
+@@ -408,7 +409,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
+       </div>
+       {callbacks.canAddTab(pane.id) && (
+         <Tooltip label={callbacks.labels.addTab} side="bottom" delayMs={500}>
+-          <button
++          <ActionButton
+             type="button"
+             className={css.addTab}
+             aria-label={callbacks.labels.addTab}
+@@ -419,7 +420,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
+             }}
+           >
+             <IconPlusOutlineRegular size={14} />
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       )}
+       <div className={css.stripFill} data-dockkit-strip-fill />
+@@ -430,7 +431,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
+             aria-label={block === undefined ? undefined : splitBlockedTitle(callbacks.labels, block)}
+             onClick={(event) => { if (block !== undefined) event.stopPropagation() }}
+           >
+-            <button
++            <ActionButton
+               type="button"
+               className={css.iconButton}
+               aria-label={callbacks.labels.splitPane}
+@@ -444,7 +445,7 @@ export function TabStrip({ state, pane, callbacks, offsets }: TabStripProps): Re
+               }}
+             >
+               <SplitGlyph />
+-            </button>
++            </ActionButton>
+           </span>
+         </Tooltip>
+       )}
+diff --git a/packages/client/ui-file-drag/package.json b/packages/client/ui-file-drag/package.json
+index e264ca3..d4f58c2 100644
+--- a/packages/client/ui-file-drag/package.json
++++ b/packages/client/ui-file-drag/package.json
+@@ -49,7 +49,7 @@
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-layout": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-util-file-drag": "workspace:*",
+     "@deepseek-ai/dsh-util-crypto": "workspace:*",
+     "@deepseek-ai/dsh-client-locale": "workspace:*"
+diff --git a/packages/client/ui-goal/package.json b/packages/client/ui-goal/package.json
+index 711bb2e..4952866 100644
+--- a/packages/client/ui-goal/package.json
++++ b/packages/client/ui-goal/package.json
+@@ -62,8 +62,8 @@
+     "@deepseek-ai/dsh-goal": "workspace:*",
+     "@testing-library/react": "^16.3.3",
+     "@deepseek-ai/cordis": "workspace:~",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-session": "workspace:*",
+     "@deepseek-ai/dsh-typert-protocol": "workspace:*"
+   },
+@@ -85,7 +85,7 @@
+     "@deepseek-ai/dsh-client-locale": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*"
+   }
+ }
+diff --git a/packages/client/ui-goal/src/client/GoalBar.tsx b/packages/client/ui-goal/src/client/GoalBar.tsx
+index a5358f3..4fb27ff 100644
+--- a/packages/client/ui-goal/src/client/GoalBar.tsx
++++ b/packages/client/ui-goal/src/client/GoalBar.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * GoalBar: the goal indicator docked above the message composer (input dock
+  * strip). A present goal shows a goal glyph, a phase label, the truncated
+@@ -99,7 +100,7 @@ export function GoalBar({ goal, activation, onEdit, onPause, onResume, onClear,
+           {actionError !== null && <span className={css.error} role="alert">{actionError}</span>}
+           <div className={css.actions}>
+             <Tooltip portal label={t('action.save')} side="bottom" delayMs={500}>
+-              <button
++              <ActionButton
+                 type="button"
+                 className={css.iconBtn}
+                 onClick={() => { void handleEdit() }}
+@@ -107,10 +108,10 @@ export function GoalBar({ goal, activation, onEdit, onPause, onResume, onClear,
+                 aria-label={t('action.save')}
+               >
+                 <IconCheckOutlineRegular size={14} />
+-              </button>
++              </ActionButton>
+             </Tooltip>
+             <Tooltip portal label={t('action.cancel')} side="bottom" delayMs={500}>
+-              <button
++              <ActionButton
+                 type="button"
+                 className={css.iconBtn}
+                 onClick={() => { setEditing(false) }}
+@@ -118,7 +119,7 @@ export function GoalBar({ goal, activation, onEdit, onPause, onResume, onClear,
+                 aria-label={t('action.cancel')}
+               >
+                 <IconCloseOutlineRegular size={14} />
+-              </button>
++              </ActionButton>
+             </Tooltip>
+           </div>
+         </div>
+@@ -140,20 +141,20 @@ export function GoalBar({ goal, activation, onEdit, onPause, onResume, onClear,
+         <div className={css.actions}>
+           {goal.phase === 'active' && activation === 'armed' && (
+             <Tooltip portal label={t('action.pause')} side="bottom" delayMs={500}>
+-              <button type="button" className={css.iconBtn} disabled={pending} onClick={() => { void runAction(onPause) }} aria-label={t('action.pause')}>
++              <ActionButton type="button" className={css.iconBtn} disabled={pending} onClick={() => { void runAction(onPause) }} aria-label={t('action.pause')}>
+                 <IconPauseOutlineRegular size={14} />
+-              </button>
++              </ActionButton>
+             </Tooltip>
+           )}
+           {showResume && (
+             <Tooltip portal label={t('action.resume')} side="bottom" delayMs={500}>
+-              <button type="button" className={css.iconBtn} disabled={pending} onClick={() => { void runAction(onResume) }} aria-label={t('action.resume')}>
++              <ActionButton type="button" className={css.iconBtn} disabled={pending} onClick={() => { void runAction(onResume) }} aria-label={t('action.resume')}>
+                 <IconPlayOutlineRegular size={14} />
+-              </button>
++              </ActionButton>
+             </Tooltip>
+           )}
+           <Tooltip portal label={t('action.edit')} side="bottom" delayMs={500}>
+-            <button
++            <ActionButton
+               type="button"
+               className={css.iconBtn}
+               disabled={pending}
+@@ -161,12 +162,12 @@ export function GoalBar({ goal, activation, onEdit, onPause, onResume, onClear,
+               aria-label={t('action.edit')}
+             >
+               <IconEditOutlineRegular size={14} />
+-            </button>
++            </ActionButton>
+           </Tooltip>
+           <Tooltip portal label={t('action.clear')} side="bottom" delayMs={500}>
+-            <button type="button" className={css.iconBtn} disabled={pending} onClick={() => { void handleClear(goal.id) }} aria-label={t('action.clear')}>
++            <ActionButton type="button" className={css.iconBtn} disabled={pending} onClick={() => { void handleClear(goal.id) }} aria-label={t('action.clear')}>
+               <IconTrashOutlineRegular size={14} />
+-            </button>
++            </ActionButton>
+           </Tooltip>
+         </div>
+       </div>
+diff --git a/packages/client/ui-input-trigger/package.json b/packages/client/ui-input-trigger/package.json
+index 79f2ecc..58c0f33 100644
+--- a/packages/client/ui-input-trigger/package.json
++++ b/packages/client/ui-input-trigger/package.json
+@@ -52,7 +52,7 @@
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/cordis": "workspace:~",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-file-reference": "workspace:*",
+     "@deepseek-ai/dsh-api-session-controller": "workspace:*",
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+@@ -68,7 +68,7 @@
+     "lib/types/**/*.d.ts"
+   ],
+   "dependencies": {
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-conversation": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-session": "workspace:*",
+diff --git a/packages/client/ui-input-trigger/src/client/MenuView.tsx b/packages/client/ui-input-trigger/src/client/MenuView.tsx
+index da6dccd..695a2d1 100644
+--- a/packages/client/ui-input-trigger/src/client/MenuView.tsx
++++ b/packages/client/ui-input-trigger/src/client/MenuView.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * Trigger candidate menu: renders the InputTriggerService menu store into the
+  * conversation.input.overlay anchor. Closed state renders null (the overlay
+@@ -108,7 +109,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
+             {trail.map((crumb, index) => (
+               <Fragment key={`${String(index)}-${crumb.value}`}>
+                 {index > 0 && <span className={css.crumbSeparator} aria-hidden><IconChevronRightOutlineRegular /></span>}
+-                <button
++                <ActionButton
+                   type="button"
+                   className={clsx(css.crumb, crumb.current === true && css.crumbCurrent)}
+                   aria-current={crumb.current === true ? 'location' : undefined}
+@@ -120,7 +121,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
+                   }}
+                 >
+                   {crumb.label}
+-                </button>
++                </ActionButton>
+               </Fragment>
+             ))}
+           </nav>
+@@ -158,7 +159,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
+                       {item.section !== undefined && item.section !== group.items[index - 1]?.section
+                         ? <div className={css.sectionTitle} role="presentation">{item.section}</div>
+                         : null}
+-                      <button
++                      <ActionButton
+                         id={optionId(group.source, index)}
+                         type="button"
+                         role="option"
+@@ -210,7 +211,7 @@ export function MenuView({ menu, headers, onPick, onCrumb, onHover, onDismiss, t
+                             </span>
+                           </span>
+                         )}
+-                      </button>
++                      </ActionButton>
+                     </Fragment>
+                   )
+                 })}
+diff --git a/packages/client/ui-layout/package.json b/packages/client/ui-layout/package.json
+index a357096..871985d 100644
+--- a/packages/client/ui-layout/package.json
++++ b/packages/client/ui-layout/package.json
+@@ -55,7 +55,7 @@
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-theme": "workspace:*",
+     "@deepseek-ai/cordis": "workspace:~",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*"
+   },
+   "files": [
+@@ -73,6 +73,6 @@
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*",
+     "@deepseek-ai/dsh-brand": "workspace:*",
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+-    "react": "^18.2.0"
++    "react": "^19.0.0"
+   }
+ }
+diff --git a/packages/client/ui-message-feedback/package.json b/packages/client/ui-message-feedback/package.json
+index 0e787eb..c6d7617 100644
+--- a/packages/client/ui-message-feedback/package.json
++++ b/packages/client/ui-message-feedback/package.json
+@@ -60,8 +60,8 @@
+     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
+     "@deepseek-ai/cordis": "workspace:~",
+     "@testing-library/react": "^16.3.3",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-chat": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-commands": "workspace:*",
+@@ -87,7 +87,7 @@
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-chat": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*"
+   }
+ }
+diff --git a/packages/client/ui-message-feedback/src/client/FeedbackDialog.tsx b/packages/client/ui-message-feedback/src/client/FeedbackDialog.tsx
+index 785c5e2..73b7d25 100644
+--- a/packages/client/ui-message-feedback/src/client/FeedbackDialog.tsx
++++ b/packages/client/ui-message-feedback/src/client/FeedbackDialog.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The feedback dialog and its acknowledgement and failure toasts, rendered as one entry
+  * of `conversation.input.overlay` so each Session owns exactly one of each.
+@@ -102,7 +103,7 @@ export function FeedbackDialog({
+       >
+         <div className={css.categories} role="group" aria-label={t('dialog.categories')}>
+           {CATEGORIES.map(category => (
+-            <button
++            <ActionButton
+               key={category}
+               type="button"
+               className={state.category === category ? `${css.chip} ${css.chipActive}` : css.chip}
+@@ -111,7 +112,7 @@ export function FeedbackDialog({
+               onClick={() => { edit({ category: state.category === category ? null : category }) }}
+             >
+               {t(`category.${category}`)}
+-            </button>
++            </ActionButton>
+           ))}
+         </div>
+         <textarea
+diff --git a/packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx b/packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx
+index c95a28d..1fe1fd9 100644
+--- a/packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx
++++ b/packages/client/ui-message-feedback/src/client/MessageFeedbackActions.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * Per-message feedback controls: the Like/Dislike pair inside the assistant
+  * message's IconActions row, between copy and branch. Either rating opens the
+@@ -82,7 +83,7 @@ function FeedbackRatingButtons({
+   return (
+     <>
+       <Tooltip label={likeLabel} side="bottom">
+-        <button
++        <ActionButton
+           type="button"
+           className={css.action}
+           aria-label={likeLabel}
+@@ -94,10 +95,10 @@ function FeedbackRatingButtons({
+           onClick={onLike}
+         >
+           {rating === 'positive' ? <IconLikeFillRegular /> : <IconLikeOutlineRegular />}
+-        </button>
++        </ActionButton>
+       </Tooltip>
+       <Tooltip label={dislikeLabel} side="bottom">
+-        <button
++        <ActionButton
+           type="button"
+           className={css.action}
+           aria-label={dislikeLabel}
+@@ -109,7 +110,7 @@ function FeedbackRatingButtons({
+           onClick={onDislike}
+         >
+           {rating === 'negative' ? <IconDislikeFillRegular /> : <IconDislikeOutlineRegular />}
+-        </button>
++        </ActionButton>
+       </Tooltip>
+       {failure === null && loadFailed && (
+         <span className={css.failure} role="status">{t('error.load')}</span>
+diff --git a/packages/client/ui-model-selection/package.json b/packages/client/ui-model-selection/package.json
+index 11fa870..c33fe18 100644
+--- a/packages/client/ui-model-selection/package.json
++++ b/packages/client/ui-model-selection/package.json
+@@ -57,8 +57,8 @@
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
+     "@deepseek-ai/cordis": "workspace:~",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+     "@deepseek-ai/dsh-session": "workspace:*",
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+@@ -89,8 +89,8 @@
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-session": "workspace:*",
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "clsx": "^2.1.1"
+   }
+ }
+diff --git a/packages/client/ui-model-selection/src/client/catalog.ts b/packages/client/ui-model-selection/src/client/catalog.ts
+index cbc9264..9b9ea29 100644
+--- a/packages/client/ui-model-selection/src/client/catalog.ts
++++ b/packages/client/ui-model-selection/src/client/catalog.ts
+@@ -46,7 +46,9 @@ export class ModelCatalogDirectory {
+    */
+   load(): Promise<ModelCatalog> {
+     const state = this.store.getSnapshot()
+-    if (state.status === 'ready' && state.value !== null) return Promise.resolve(state.value)
++    // A successful RPC can still contain failed providers. An explicit retry must
++    // ask the Host again while keeping the usable groups visible during loading.
++    if (state.status === 'ready' && state.value !== null && state.value.failures.length === 0) return Promise.resolve(state.value)
+     if (this.inflight !== undefined) return this.inflight
+     const generation = this.generation
+     this.store.update((draft) => {
+diff --git a/packages/client/ui-model-selection/tests/catalog.client.spec.ts b/packages/client/ui-model-selection/tests/catalog.client.spec.ts
+index f800266..83bb836 100644
+--- a/packages/client/ui-model-selection/tests/catalog.client.spec.ts
++++ b/packages/client/ui-model-selection/tests/catalog.client.spec.ts
+@@ -16,6 +16,21 @@ function directory(models: () => Promise<unknown>): ModelCatalogDirectory {
+ }
+ 
+ describe('ModelCatalogDirectory', () => {
++  it('retries provider-local failures and then caches the recovered catalog', async () => {
++    const partial: ModelCatalog = { ...catalog('usable'), failures: [{ id: 'offline', name: 'Offline', message: 'Unavailable' }] }
++    const models = vi.fn()
++      .mockResolvedValueOnce({ ok: true, value: partial })
++      .mockResolvedValueOnce({ ok: true, value: catalog('recovered') })
++    const subject = directory(models)
++    await subject.load()
++    const retry = subject.load()
++    expect(subject.load()).toBe(retry)
++    expect(subject.store.getSnapshot().value).toEqual(partial)
++    await expect(retry).resolves.toEqual(catalog('recovered'))
++    await subject.load()
++    expect(models).toHaveBeenCalledTimes(2)
++  })
++
+   it('shares one failing request, exposes the RPC error, and permits a retry', async () => {
+     const models = vi.fn()
+       .mockResolvedValueOnce({
+diff --git a/packages/client/ui-permission-presets/package.json b/packages/client/ui-permission-presets/package.json
+index 6644786..2b9dd5c 100644
+--- a/packages/client/ui-permission-presets/package.json
++++ b/packages/client/ui-permission-presets/package.json
+@@ -64,7 +64,7 @@
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-permission-presets": "workspace:*",
+     "clsx": "^2.0.0",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*"
+   },
+@@ -88,7 +88,7 @@
+     "@deepseek-ai/dsh-client-ui-commands": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-input-trigger": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "clsx": "^2.0.0"
+   }
+diff --git a/packages/client/ui-permission-presets/src/client/PermissionRow.tsx b/packages/client/ui-permission-presets/src/client/PermissionRow.tsx
+index 8d72e03..2ca501e 100644
+--- a/packages/client/ui-permission-presets/src/client/PermissionRow.tsx
++++ b/packages/client/ui-permission-presets/src/client/PermissionRow.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * Permission preference row: the default preset for subsequently created
+  * sessions. Current-session switches remain on the composer `/permission`
+@@ -88,7 +89,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
+           align="end"
+           portal
+           anchor={(
+-            <button
++            <ActionButton
+               type="button"
+               className={css.selector}
+               aria-haspopup="menu"
+@@ -98,7 +99,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
+             >
+               {label}
+               <IconChevronDownOutlineRegular className={css.chevron} />
+-            </button>
++            </ActionButton>
+           )}
+         />
+       </div>
+diff --git a/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx b/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
+index 7d439c4..75cfb07 100644
+--- a/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
++++ b/packages/client/ui-permission-presets/src/client/PermissionSelect.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { useEffect, useState } from 'react'
+ import type { ReactNode } from 'react'
+ import clsx from 'clsx'
+@@ -174,7 +175,7 @@ export function PermissionSelect({
+         side="top"
+         portal
+         anchor={
+-          <button
++          <ActionButton
+             type="button"
+             className={css.trigger}
+             aria-label={t('mode', { name: currentLabel })}
+@@ -189,7 +190,7 @@ export function PermissionSelect({
+             <span className={clsx(css.chevron, open && css.chevronOpen)} aria-hidden>
+               <IconChevronDownOutlineRegular />
+             </span>
+-          </button>
++          </ActionButton>
+         }
+       />
+       {confirmation !== null && (
+diff --git a/packages/client/ui-primitives/package.json b/packages/client/ui-primitives/package.json
+index 2490431..0e76828 100644
+--- a/packages/client/ui-primitives/package.json
++++ b/packages/client/ui-primitives/package.json
+@@ -42,10 +42,10 @@
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+     "@deepseek-ai/cordis": "workspace:~",
+     "@deepseek-ai/dsh-util-code-language": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0",
+     "diff": "^9.0.0",
+-    "react-dom": "^18.2.0",
++    "react-dom": "^19.0.0",
+     "anser": "^2.3.5",
+     "katex": "^0.18.7",
+     "micromark-core-commonmark": "^2.0.3",
+@@ -79,12 +79,12 @@
+   },
+   "dependencies": {
+     "anser": "^2.3.5",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-util-code-language": "workspace:*",
+     "@deepseek-ai/dsh-util-file-drag": "workspace:*",
+     "clsx": "^2.0.0",
+     "diff": "^9.0.0",
+-    "react-dom": "^18.2.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-util-workspace-path": "workspace:*",
+     "simple-icons": "16.31.0",
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+@@ -102,6 +102,7 @@
+     "mdast-util-math": "^3.0.0",
+     "micromark-extension-gfm": "^3.0.0",
+     "katex": "^0.18.7",
+-    "micromark-util-sanitize-uri": "^2.0.1"
++    "micromark-util-sanitize-uri": "^2.0.1",
++    "@heroui/react": "3.2.6"
+   }
+ }
+diff --git a/packages/client/ui-primitives/src/Button.tsx b/packages/client/ui-primitives/src/Button.tsx
+index 26467dd..9c25836 100644
+--- a/packages/client/ui-primitives/src/Button.tsx
++++ b/packages/client/ui-primitives/src/Button.tsx
+@@ -1,36 +1,47 @@
+-// Button: token-styled button atom. Variants map to the --dsw-alias-button-*
+-// fill families; no framework imports, all behavior via props.
+-
+ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
++import { Button as HeroButton } from '@heroui/react'
+ import clsx from 'clsx'
+ import css from './Button.module.css'
+ 
+-/** Visual variant, each backed by its --dsw-alias-button-* token family. */
+ export type ButtonVariant = 'primary' | 'ghost' | 'outline' | 'toolbar'
++type NativeProps = ButtonHTMLAttributes<HTMLButtonElement>
++type ButtonProps = NativeProps & { variant?: ButtonVariant; size?: 'md' | 'sm'; icon?: ReactNode }
+ 
+-type ButtonProps = {
+-  variant?: ButtonVariant
+-  size?: 'md' | 'sm'
+-  icon?: ReactNode
+-  className?: string | undefined
+-  children?: ReactNode
+-} & ButtonHTMLAttributes<HTMLButtonElement>
+-
+-/**
+- * Render a button.
+- * @param props.variant - visual family (default 'ghost'); outlined buttons use a DPR-aware inset stroke.
+- * @param props.size - 'md' 36px control with 12px corners or 'sm' 28px control with 8px corners.
+- * @param props.icon - optional leading 16px icon node.
+- * @param ref - native button for focus management and overlay anchors.
+- * @returns the button element; native button attributes pass through.
+- */
+-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({
+-  variant = 'ghost', size = 'md', icon, className, children, ...rest
++/** Compose the native handlers on the actual button, preserving the owner event contract. */
++function chain<E>(first: ((event: E) => void) | undefined, second: ((event: E) => void) | undefined) {
++  return (event: E) => { first?.(event); second?.(event) }
++}
++const NativeButton = forwardRef<HTMLButtonElement, NativeProps & { heroVariant?: 'primary' | 'ghost' | 'outline' | 'secondary'; size?: 'md' | 'sm' }>(function NativeButton({
++  disabled, children, className, heroVariant = 'ghost', size = 'md', ...props
+ }, ref) {
+-  return (
+-    <button ref={ref} type="button" className={clsx(css.button, css[variant], css[size], className)} {...rest}>
+-      {icon != null && <span className={css.icon}>{icon}</span>}
+-      {children}
+-    </button>
+-  )
++  return <HeroButton ref={ref} type="button" variant={heroVariant} size={size} isDisabled={disabled ?? false} className={className ?? ''}
++    render={domProps => <button {...domProps} {...props} className={domProps.className}
++      onClick={props.onClick}
++      onFocus={chain(domProps.onFocus, props.onFocus)}
++      onBlur={chain(domProps.onBlur, props.onBlur)}
++      onKeyDown={props.onKeyDown}
++      onKeyUp={props.onKeyUp}
++      onPointerDown={chain(props.onPointerDown, domProps.onPointerDown)}
++      onPointerUp={chain(props.onPointerUp, domProps.onPointerUp)}
++      onMouseDown={chain(props.onMouseDown, domProps.onMouseDown)}
++      onMouseUp={chain(props.onMouseUp, domProps.onMouseUp)}
++      onPointerEnter={chain(props.onPointerEnter, domProps.onPointerEnter)}
++      onPointerLeave={chain(props.onPointerLeave, domProps.onPointerLeave)}
++      onMouseEnter={chain(props.onMouseEnter, domProps.onMouseEnter)}
++      onMouseLeave={chain(props.onMouseLeave, domProps.onMouseLeave)}
++      onDragStart={chain(props.onDragStart, domProps.onDragStart)} />}
++  >{children}</HeroButton>
++})
++
++/** Shared visual button contract for all migrated owners. */
++export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({ variant = 'ghost', size = 'md', icon, className, children, ...rest }, ref) {
++  return <NativeButton ref={ref} heroVariant={variant === 'toolbar' ? 'secondary' : variant} size={size}
++    className={clsx(css.button, css[variant], css[size], className)} {...rest}>
++    {icon != null && <span className={css.icon}>{icon}</span>}{children}
++  </NativeButton>
++})
++
++/** HeroUI interaction with caller-owned geometry for tree, editor and tool actions. */
++export const ActionButton = forwardRef<HTMLButtonElement, NativeProps>(function ActionButton({ className, ...props }, ref) {
++  return <NativeButton ref={ref} className={clsx('tz-action', className)} {...props} />
+ })
+diff --git a/packages/client/ui-primitives/src/Checkbox.tsx b/packages/client/ui-primitives/src/Checkbox.tsx
+index bf1cbf9..9d6b46f 100644
+--- a/packages/client/ui-primitives/src/Checkbox.tsx
++++ b/packages/client/ui-primitives/src/Checkbox.tsx
+@@ -1,7 +1,6 @@
+ /** Controlled native checkbox with a caller-owned visible and accessible label. */
+ 
+-import clsx from 'clsx'
+-import css from './Checkbox.module.css'
++import { Checkbox as HeroCheckbox, Label } from '@heroui/react'
+ 
+ /**
+  * Render a labeled checkbox with native keyboard and form semantics.
+@@ -22,10 +21,8 @@ export function Checkbox({ checked, onChange, label, disabled = false, title, cl
+   className?: string | undefined
+ }) {
+   return (
+-    <label className={clsx(css.checkbox, className)} title={title}>
+-      <input type="checkbox" checked={checked} disabled={disabled}
+-        onChange={(event) => { onChange(event.target.checked) }} />
+-      <span>{label}</span>
+-    </label>
++    <HeroCheckbox isSelected={checked} onChange={(next) => { if (!disabled) onChange(next) }} isDisabled={disabled} render={(props) => <div {...props} title={title} />} className={className ?? ''}>
++      <HeroCheckbox.Content><HeroCheckbox.Control><HeroCheckbox.Indicator /></HeroCheckbox.Control><Label>{label}</Label></HeroCheckbox.Content>
++    </HeroCheckbox>
+   )
+ }
+diff --git a/packages/client/ui-primitives/src/CodeToolbar.tsx b/packages/client/ui-primitives/src/CodeToolbar.tsx
+index 897d4cd..6e70814 100644
+--- a/packages/client/ui-primitives/src/CodeToolbar.tsx
++++ b/packages/client/ui-primitives/src/CodeToolbar.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from './Button.tsx'
+ /** Shared language, wrapping, and clipboard controls for code cards. */
+ import {
+   IconCheckOutlineRegular, IconCopyOutlineRegular, IconNowrapFillRegular, IconWrapFillRegular,
+@@ -47,14 +48,14 @@ export function CodeToolbar({ lang, title, status, labels, copyLabel, copiedLabe
+       <div className={css.actions}>
+         {status !== undefined && <span className={css.status}>{status}</span>}
+         {onWrap !== undefined && <Tooltip label={wrapLabel} side="top" portal>
+-          <button type="button" className={css.action} aria-label={labels.wrapLabel} aria-pressed={wrapped} onClick={onWrap}>
++          <ActionButton type="button" className={css.action} aria-label={labels.wrapLabel} aria-pressed={wrapped} onClick={onWrap}>
+             {wrapped ? <IconNowrapFillRegular size={14} /> : <IconWrapFillRegular size={14} />}
+-          </button>
++          </ActionButton>
+         </Tooltip>}
+         {onCopy !== undefined && <Tooltip label={clipboardLabel} side="top" portal>
+-          <button type="button" className={css.action} aria-label={clipboardLabel} onClick={onCopy}>
++          <ActionButton type="button" className={css.action} aria-label={clipboardLabel} onClick={onCopy}>
+             {copied ? <IconCheckOutlineRegular size={14} /> : <IconCopyOutlineRegular size={14} />}
+-          </button>
++          </ActionButton>
+         </Tooltip>}
+       </div>
+     </div>
+diff --git a/packages/client/ui-primitives/src/ConnectionIndicator.tsx b/packages/client/ui-primitives/src/ConnectionIndicator.tsx
+index 0a12404..b4ad685 100644
+--- a/packages/client/ui-primitives/src/ConnectionIndicator.tsx
++++ b/packages/client/ui-primitives/src/ConnectionIndicator.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from './Button.tsx'
+ import { useEffect, useState } from 'react'
+ import { IconCheckOutlineRegular, IconRefreshOutlineRegular } from './icons/index.tsx'
+ import { StateDot } from './StateDot.tsx'
+@@ -72,7 +73,7 @@ export function ConnectionIndicator({
+ 
+   const connecting = rendered === 'connecting'
+   return (
+-    <button
++    <ActionButton
+       type="button"
+       className={`${css.indicator} ${css.warning}${leavingClass}`}
+       data-phase={rendered}
+@@ -98,6 +99,6 @@ export function ConnectionIndicator({
+           )
+           : disconnectedLabel}
+       </span>
+-    </button>
++    </ActionButton>
+   )
+ }
+diff --git a/packages/client/ui-primitives/src/DisclosureRow.tsx b/packages/client/ui-primitives/src/DisclosureRow.tsx
+index 024c877..1a0152f 100644
+--- a/packages/client/ui-primitives/src/DisclosureRow.tsx
++++ b/packages/client/ui-primitives/src/DisclosureRow.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from './Button.tsx'
+ import { memo, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
+ import clsx from 'clsx'
+ import { IconChevronDownOutlineRegular, IconChevronUpOutlineRegular } from './icons/index.tsx'
+@@ -97,7 +98,7 @@ export const DisclosureRow = memo(function DisclosureRow({
+           onKeyDown={rowExpands ? toggleFromKeyboard : undefined}
+         >
+           {expandable && !rowExpands ? (
+-            <button
++            <ActionButton
+               type="button"
+               className={clsx(css.leading, leadingClassName)}
+               aria-label={title}
+@@ -105,7 +106,7 @@ export const DisclosureRow = memo(function DisclosureRow({
+               onClick={toggleFromLeading}
+             >
+               {leading}
+-            </button>
++            </ActionButton>
+           ) : (
+             <span className={clsx(css.leading, leadingClassName)}>
+               {leading}
+diff --git a/packages/client/ui-primitives/src/Input.tsx b/packages/client/ui-primitives/src/Input.tsx
+index 42d8feb..96203f2 100644
+--- a/packages/client/ui-primitives/src/Input.tsx
++++ b/packages/client/ui-primitives/src/Input.tsx
+@@ -1,8 +1,10 @@
++import { definedProps } from './defined-props.ts'
+ // Input: single-line text input atom (search boxes, inline forms). Multi-line
+ // inline edits use InlineEditor; the composer is owned by the conversation package.
+ 
+ import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react'
+ import clsx from 'clsx'
++import { Input as HeroInput } from '@heroui/react'
+ import css from './Input.module.css'
+ 
+ /**
+@@ -18,7 +20,7 @@ export const Input = forwardRef<HTMLInputElement, {
+   return (
+     <span className={clsx(css.wrap, className)}>
+       {icon != null && <span className={css.icon}>{icon}</span>}
+-      <input ref={ref} className={css.input} {...rest} />
++      <HeroInput ref={ref} className={css.input ?? ''} {...definedProps(rest)} />
+     </span>
+   )
+ })
+diff --git a/packages/client/ui-primitives/src/JsonTree.tsx b/packages/client/ui-primitives/src/JsonTree.tsx
+index c97008c..d8ee8d1 100644
+--- a/packages/client/ui-primitives/src/JsonTree.tsx
++++ b/packages/client/ui-primitives/src/JsonTree.tsx
+@@ -704,8 +704,8 @@ export function JsonTree({
+       ? null
+       : pathId([Array.isArray(data) ? firstExpandableIndex : firstExpandableEntry[0]])
+     : isExpandableValue(data) && rootEntries.length > 0 ? pathId([]) : null
+-  const activeRowRef = useRef<HTMLElement>()
+-  const resetTimer = useRef<ReturnType<typeof setTimeout>>()
++  const activeRowRef = useRef<HTMLElement | undefined>(undefined)
++  const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+   const copySequence = useRef(0)
+   const [copyStore] = useState(createCopyStore)
+   const [tabStopId, setTabStopId] = useState<string | null>(initialTabStopId)
+diff --git a/packages/client/ui-primitives/src/Menu.tsx b/packages/client/ui-primitives/src/Menu.tsx
+index 68b3a57..2f5c8d1 100644
+--- a/packages/client/ui-primitives/src/Menu.tsx
++++ b/packages/client/ui-primitives/src/Menu.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from './Button.tsx'
+ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+ import type { CSSProperties, ReactNode, SyntheticEvent } from 'react'
+ import { createPortal } from 'react-dom'
+@@ -90,7 +91,7 @@ export function MenuItemButton({
+   return (
+     <div className={css.itemWrap}>
+       {separatorBefore && <div className={css.separator} role="separator" />}
+-      <button
++      <ActionButton
+         type="button"
+         role="menuitem"
+         className={clsx(css.item, danger && css.danger)}
+@@ -102,7 +103,7 @@ export function MenuItemButton({
+         {icon !== undefined && <span className={css.itemIcon}>{icon}</span>}
+         <span className={css.itemLabel}>{children}</span>
+         {shortcut !== undefined && <span aria-hidden="true" className={css.shortcut}><ShortcutKeys keys={shortcut.keys} className={css.shortcutKeys} /></span>}
+-      </button>
++      </ActionButton>
+     </div>
+   )
+ }
+@@ -464,7 +465,7 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
+         onMouseEnter={hasSub ? () => { setOpenSubmenuId(entry.id) } : undefined}
+         onMouseLeave={() => { setOpenSubmenuId(null) }}
+       >
+-        <button
++        <ActionButton
+           type="button"
+           role="menuitem"
+           className={clsx(css.item, selected && (selection === 'fill' ? css.selectedFill : css.selected), entry.danger === true && css.danger)}
+@@ -486,11 +487,11 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
+           {entry.shortcut !== undefined && <span aria-hidden="true" className={css.shortcut}><ShortcutKeys keys={entry.shortcut.keys} className={css.shortcutKeys} /></span>}
+           {/* Selection marker is a trailing check (figma .Menu_cell) unless the fill mode carries it. */}
+           {selected && selection === 'check' && <IconCheckOutlineRegular className={css.check} />}
+-        </button>
++        </ActionButton>
+         {subOpen && entry.submenu !== undefined && (
+           <MenuSurface compact={compact} className={clsx(css.submenu, compact && css.compactList)} role="menu">
+             {entry.submenu.map(sub => (
+-              <button
++              <ActionButton
+                 key={sub.id}
+                 type="button"
+                 role="menuitem"
+@@ -502,7 +503,7 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
+                 {sub.icon !== undefined && <span className={css.itemIcon}>{sub.icon}</span>}
+                 <span className={css.itemLabel}>{sub.label}</span>
+                 {sub.shortcut !== undefined && <span aria-hidden="true" className={css.shortcut}><ShortcutKeys keys={sub.shortcut.keys} className={css.shortcutKeys} /></span>}
+-              </button>
++              </ActionButton>
+             ))}
+           </MenuSurface>
+         )}
+@@ -525,6 +526,8 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
+   // this pre-render in the same commit, so the first painted frame is
+   // already at the final position (with getAnchorRect returning null the
+   // list simply stays hidden).
++  // Keep a portaled menu inside its dialog focus/inert boundary. Fixed placement
++  // still uses the viewport, and ordinary menus continue to portal to the body.
+   const list = open && (
+     <MenuSurface compact={compact}
+       ref={listRef}
+@@ -569,7 +572,7 @@ export function Menu({ open, anchor, items = [], children, selectedId, selectedI
+       onPointerLeave={closeOnPointerLeave ? () => { if (open) armClose() } : undefined}
+     >
+       {anchor}
+-      {portal ? (list !== false && createPortal(list, document.body)) : list}
++      {portal ? (list !== false && createPortal(list, rootRef.current?.closest('[role="dialog"], [role="alertdialog"]') ?? document.body)) : list}
+     </span>
+   )
+ }
+diff --git a/packages/client/ui-primitives/src/MenuSurface.tsx b/packages/client/ui-primitives/src/MenuSurface.tsx
+index 1bdefd0..2126e8f 100644
+--- a/packages/client/ui-primitives/src/MenuSurface.tsx
++++ b/packages/client/ui-primitives/src/MenuSurface.tsx
+@@ -2,6 +2,7 @@
+ import { forwardRef, useId, useLayoutEffect, useRef, type ComponentPropsWithoutRef, type CSSProperties } from 'react'
+ import { createPortal } from 'react-dom'
+ import clsx from 'clsx'
++import { Surface } from '@heroui/react'
+ import css from './MenuSurface.module.css'
+ 
+ /** Menu containers preserve native div props and refs. */
+@@ -32,11 +33,11 @@ export const MenuSurface = forwardRef<HTMLDivElement, MenuSurfaceProps>(function
+     '--dsh-menu-anchor': `--dsh-menu-${id.replaceAll(':', '')}`,
+   }
+   return <>
+-    <div {...props} ref={ref} data-menu-material="translucent"
++    <Surface {...props} ref={ref} data-menu-material="translucent"
+       className={clsx(css.surface, compact && css.compact, className)} style={{ ...style, ...anchorStyle }}>
+       <div aria-hidden="true" className={css.material} />
+       {children}
+-    </div>
++    </Surface>
+     {createPortal(
+       <div ref={backingRef} aria-hidden="true" data-menu-backing="" className={clsx(css.backing, compact && css.compact)}
+         style={{ ...anchorStyle, visibility: style?.visibility }} />,
+diff --git a/packages/client/ui-primitives/src/Modal.tsx b/packages/client/ui-primitives/src/Modal.tsx
+index e7fa7fa..539631e 100644
+--- a/packages/client/ui-primitives/src/Modal.tsx
++++ b/packages/client/ui-primitives/src/Modal.tsx
+@@ -1,3 +1,5 @@
++import { Surface } from '@heroui/react'
++import { ActionButton } from './Button.tsx'
+ import { useRef } from 'react'
+ import type { KeyboardEventHandler, ReactNode } from 'react'
+ import { createPortal } from 'react-dom'
+@@ -57,7 +59,7 @@ export function Modal({
+   return createPortal((
+     <div className={css.root} role="presentation" onKeyDownCapture={onKeyDownCapture}>
+       <div className={css.mask} style={backdropBlur ? undefined : { backdropFilter: 'none' }} aria-hidden="true" onClick={onClose} />
+-      <div
++      <Surface
+         ref={dialog}
+         tabIndex={-1}
+         data-shortcut-modal={shortcutModal}
+@@ -73,9 +75,9 @@ export function Modal({
+               <div className={clsx(css.content, contentClassName)}>
+                 <div className={css.header}>
+                   <h2 className={css.title}>{title}</h2>
+-                  <button type="button" className={css.close} aria-label={closeLabel} onClick={onClose}>
++                  <ActionButton type="button" className={css.close} aria-label={closeLabel} onClick={onClose}>
+                     <IconCloseOutlineRegular size={14} />
+-                  </button>
++                  </ActionButton>
+                 </div>
+                 {description !== undefined && description !== '' && (
+                   <p className={css.description}>{description}</p>
+@@ -85,7 +87,7 @@ export function Modal({
+               {footer !== undefined && <div className={css.footer}>{footer}</div>}
+             </>
+           )}
+-      </div>
++      </Surface>
+     </div>
+   ), document.body)
+ }
+diff --git a/packages/client/ui-primitives/src/SegmentedControl.tsx b/packages/client/ui-primitives/src/SegmentedControl.tsx
+index ffbe2a8..4024dd4 100644
+--- a/packages/client/ui-primitives/src/SegmentedControl.tsx
++++ b/packages/client/ui-primitives/src/SegmentedControl.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from './Button.tsx'
+ // SegmentedControl: a tablist of two or more equal-width segments with one
+ // sliding indicator, for switching a card or panel between a few modes. The
+ // owner holds the selection; `label` is required so the tablist never ships
+@@ -117,7 +118,7 @@ export function SegmentedControl<Value extends string>({
+       {options.map((option) => {
+         const active = option.value === value
+         return (
+-          <button
++          <ActionButton
+             key={option.value}
+             id={`${id}-${option.value}`}
+             type="button"
+@@ -132,7 +133,7 @@ export function SegmentedControl<Value extends string>({
+             onKeyDown={onKeyDown}
+           >
+             {option.label}
+-          </button>
++          </ActionButton>
+         )
+       })}
+     </div>
+diff --git a/packages/client/ui-primitives/src/Switch.tsx b/packages/client/ui-primitives/src/Switch.tsx
+index 980a08f..da494b1 100644
+--- a/packages/client/ui-primitives/src/Switch.tsx
++++ b/packages/client/ui-primitives/src/Switch.tsx
+@@ -1,8 +1,7 @@
+ // Switch: two-state toggle. `label` is required and has no default, so a render
+ // site cannot ship the control without an accessible name.
+ 
+-import clsx from 'clsx'
+-import css from './Switch.module.css'
++import { Switch as HeroSwitch } from '@heroui/react'
+ 
+ /**
+  * Render a toggle switch.
+@@ -26,17 +25,8 @@ export function Switch({ checked, onChange, label, disabled = false, title, clas
+   className?: string | undefined
+ }) {
+   return (
+-    <button
+-      type="button"
+-      role="switch"
+-      aria-checked={checked}
+-      aria-label={label}
+-      title={title}
+-      disabled={disabled}
+-      className={clsx(css.switch, className)}
+-      onClick={() => { onChange(!checked) }}
+-    >
+-      <span className={css.thumb} />
+-    </button>
++    <HeroSwitch isSelected={checked} onChange={(next) => { if (!disabled) onChange(next) }} isDisabled={disabled} aria-label={label} render={(props) => <div {...props} title={title} />} size="sm" className={className ?? ''}>
++      <HeroSwitch.Content><HeroSwitch.Control><HeroSwitch.Thumb /></HeroSwitch.Control></HeroSwitch.Content>
++    </HeroSwitch>
+   )
+ }
+diff --git a/packages/client/ui-primitives/src/TextShimmer.tsx b/packages/client/ui-primitives/src/TextShimmer.tsx
+index 020073a..debc391 100644
+--- a/packages/client/ui-primitives/src/TextShimmer.tsx
++++ b/packages/client/ui-primitives/src/TextShimmer.tsx
+@@ -44,8 +44,8 @@ export const TextShimmer = memo(function TextShimmer({ children, active = false,
+         <span className={clsx(css.content, contentClassName)}>{content}</span>
+       </DecorativeCopy.Provider>
+       {active && (
+-        // React 18 forwards inert as an empty string; a boolean is dropped.
+-        <span className={css.decoration} aria-hidden="true" {...{ inert: '' }}>
++        // React 19 supports the boolean inert attribute.
++        <span className={css.decoration} aria-hidden="true" inert={true}>
+           <span className={css.sweep}>
+             <DecorativeCopy.Provider value>
+               <span className={clsx(css.content, css.highlight, contentClassName)}>{content}</span>
+diff --git a/packages/client/ui-primitives/src/image-drag.ts b/packages/client/ui-primitives/src/image-drag.ts
+index dc95954..8270e5e 100644
+--- a/packages/client/ui-primitives/src/image-drag.ts
++++ b/packages/client/ui-primitives/src/image-drag.ts
+@@ -22,7 +22,7 @@ export function useImageDrag(
+   const source = useMemo<FileDragSource>(() => original === undefined
+     ? { kind: 'url', url: src, name, mediaType: '', resourceAddress }
+     : { kind: 'blob', blob: original, name, mediaType: original.type, resourceAddress }, [src, name, original, resourceAddress])
+-  const state = useRef<Preparation>()
++  const state = useRef<Preparation | undefined>(undefined)
+   const dragged = useRef(false)
+   const release = useCallback((): void => {
+     const previous = state.current
+diff --git a/packages/client/ui-primitives/src/index.ts b/packages/client/ui-primitives/src/index.ts
+index 67b77dd..ca7941d 100644
+--- a/packages/client/ui-primitives/src/index.ts
++++ b/packages/client/ui-primitives/src/index.ts
+@@ -14,7 +14,7 @@ export type { AnimatedRowsProps } from './AnimatedRows.tsx'
+ export { useRowDragPreview } from './useRowDragPreview.ts'
+ export { TextShimmer } from './TextShimmer.tsx'
+ export type { TextShimmerProps } from './TextShimmer.tsx'
+-export { Button } from './Button.tsx'
++export { Button, ActionButton } from './Button.tsx'
+ export type { ButtonVariant } from './Button.tsx'
+ export { ZoomControls } from './ZoomControls.tsx'
+ export type { ZoomControlsHandle } from './ZoomControls.tsx'
+@@ -137,3 +137,6 @@ export type { ImageLightboxLabels } from './ImageLightbox.tsx'
+ export { QuotePreview } from './QuotePreview.tsx'
+ export type { QuotePreviewProps, QuotePreviewRemoval } from './QuotePreview.tsx'
+ export { formatQuoteText } from './markdown/quote-text.ts'
++
++// Shared HeroUI indicators; domain values remain in the calling projection.
++export { Meter, ProgressBar, Spinner } from '@heroui/react'
+diff --git a/packages/client/ui-primitives/src/markdown/useViewportHighlighting.ts b/packages/client/ui-primitives/src/markdown/useViewportHighlighting.ts
+index 2f4114c..2fe14cc 100644
+--- a/packages/client/ui-primitives/src/markdown/useViewportHighlighting.ts
++++ b/packages/client/ui-primitives/src/markdown/useViewportHighlighting.ts
+@@ -53,7 +53,7 @@ const highlightViewport = new HighlightViewport()
+  * @returns Whether this component may build highlighted output.
+  */
+ export function useViewportHighlighting(
+-  target: RefObject<Element>,
++  target: RefObject<Element | null>,
+   lang: string | undefined,
+ ): boolean {
+   const supported = supportsHighlighting(lang)
+diff --git a/packages/client/ui-primitives/src/useAnchoredMaxHeight.ts b/packages/client/ui-primitives/src/useAnchoredMaxHeight.ts
+index 27e3b30..ff42394 100644
+--- a/packages/client/ui-primitives/src/useAnchoredMaxHeight.ts
++++ b/packages/client/ui-primitives/src/useAnchoredMaxHeight.ts
+@@ -25,7 +25,7 @@ const MARGIN = 12
+  *   raise it past their chrome's height.
+  * @returns the max-height to apply inline, in px.
+  */
+-export function useAnchoredMaxHeight(ref: RefObject<HTMLElement>, cap: number, signal: unknown, margin: number = MARGIN): number {
++export function useAnchoredMaxHeight(ref: RefObject<HTMLElement | null>, cap: number, signal: unknown, margin: number = MARGIN): number {
+   const [maxHeight, setMaxHeight] = useState(cap)
+   useLayoutEffect(() => {
+     const el = ref.current
+diff --git a/packages/client/ui-primitives/src/useModalLayer.ts b/packages/client/ui-primitives/src/useModalLayer.ts
+index dff4a22..c231735 100644
+--- a/packages/client/ui-primitives/src/useModalLayer.ts
++++ b/packages/client/ui-primitives/src/useModalLayer.ts
+@@ -5,7 +5,9 @@ import { observeComposition } from './keyboard-composition.ts'
+ import { focusWithoutRing } from './focus.ts'
+ 
+ /** Dialog and menu elements whose document order determines foreground shortcut ownership. */
+-export const modalSelector = '[role="dialog"][aria-modal="true"], [role="menu"]'
++// React Aria uses inert outside its dialogs and omits aria-modal. Explicit
++// shortcut scopes bridge that focus owner without installing a second trap.
++export const modalSelector = '[role="dialog"][aria-modal="true"], [role="menu"], [role="dialog"][data-shortcut-modal], [role="alertdialog"][data-shortcut-modal]'
+ 
+ const layers = new WeakMap<Document, { element: HTMLElement; close: () => void }[]>()
+ 
+diff --git a/packages/client/ui-primitives/tests/checkbox.client.spec.tsx b/packages/client/ui-primitives/tests/checkbox.client.spec.tsx
+index 838a589..7bc74cb 100644
+--- a/packages/client/ui-primitives/tests/checkbox.client.spec.tsx
++++ b/packages/client/ui-primitives/tests/checkbox.client.spec.tsx
+@@ -6,10 +6,16 @@ import { Checkbox } from '../src/Checkbox.tsx'
+ 
+ afterEach(cleanup)
+ 
++function clickLabel(label: HTMLElement): void {
++  fireEvent.pointerDown(label, { pointerId: 1, pointerType: 'mouse', button: 0 })
++  fireEvent.pointerUp(label, { pointerId: 1, pointerType: 'mouse', button: 0 })
++  fireEvent.click(label)
++}
++
+ it('requests a checked state through its visible label and follows the owner', () => {
+   const onChange = vi.fn()
+   const { rerender } = render(<Checkbox label="Images" checked={false} onChange={onChange} />)
+-  fireEvent.click(screen.getByText('Images'))
++  clickLabel(screen.getByText('Images'))
+   expect(onChange).toHaveBeenLastCalledWith(true)
+   expect(screen.getByRole<HTMLInputElement>('checkbox', { name: 'Images' }).checked).toBe(false)
+   rerender(<Checkbox label="Images" checked onChange={onChange} />)
+@@ -20,7 +26,7 @@ it('requests a checked state through its visible label and follows the owner', (
+ it('refuses label activation while disabled', () => {
+   const onChange = vi.fn()
+   render(<Checkbox label="Images" checked disabled onChange={onChange} />)
+-  fireEvent.click(screen.getByText('Images'))
++  clickLabel(screen.getByText('Images'))
+   expect(onChange).not.toHaveBeenCalled()
+   expect(screen.getByRole<HTMLInputElement>('checkbox').checked).toBe(true)
+ })
+@@ -30,7 +36,7 @@ it('preserves caller hover text', () => {
+   render(<Checkbox label="Office" checked={false} onChange={onChange} title="Office tools" />)
+   expect(screen.getByText('Office')).toBeTruthy()
+   const input = screen.getByRole('checkbox', { name: 'Office' })
+-  expect(input.closest('label')?.title).toBe('Office tools')
++  expect(input.closest<HTMLElement>('[data-slot=checkbox]')?.title).toBe('Office tools')
+   fireEvent.click(input)
+   expect(onChange).toHaveBeenLastCalledWith(true)
+ })
+diff --git a/packages/client/ui-primitives/tests/code-block.client.spec.tsx b/packages/client/ui-primitives/tests/code-block.client.spec.tsx
+index 7218eee..31bdbb1 100644
+--- a/packages/client/ui-primitives/tests/code-block.client.spec.tsx
++++ b/packages/client/ui-primitives/tests/code-block.client.spec.tsx
+@@ -101,7 +101,7 @@ describe('CodeBlock', () => {
+     view.rerender(<CodeBlock code="updated text" contentRef={contentRef} />)
+     expect(view.container.querySelector('[data-code-block-content]')).toBe(content)
+     view.unmount()
+-    expect(contentRef).toHaveBeenLastCalledWith(null)
++    expect(contentRef.mock.lastCall?.[0]).toBeNull()
+   })
+ 
+   it('renders the highlighted tree for TypeScript', () => {
+@@ -186,7 +186,7 @@ describe('CodeBlock', () => {
+     // While the ok label is showing, further clicks are no-ops.
+     fireEvent.click(screen.getByRole('button', { name: '复制成功' }))
+     expect(writeText).toHaveBeenCalledTimes(1)
+-    await vi.advanceTimersByTimeAsync(1000)
++    await act(async () => { await vi.advanceTimersByTimeAsync(1000) })
+     expect(screen.getByRole('button', { name: '复制' })).toBeTruthy()
+   })
+ 
+diff --git a/packages/client/ui-primitives/tests/read-block.client.spec.tsx b/packages/client/ui-primitives/tests/read-block.client.spec.tsx
+index 1e3c7f9..8982913 100644
+--- a/packages/client/ui-primitives/tests/read-block.client.spec.tsx
++++ b/packages/client/ui-primitives/tests/read-block.client.spec.tsx
+@@ -195,7 +195,7 @@ describe('ReadBlock copy', () => {
+     // While the ok label is showing, further clicks are no-ops.
+     fireEvent.click(screen.getByRole('button', { name: '复制成功' }))
+     expect(writeText).toHaveBeenCalledTimes(1)
+-    await vi.advanceTimersByTimeAsync(1000)
++    await act(async () => { await vi.advanceTimersByTimeAsync(1000) })
+     expect(screen.getByRole('button', { name: '复制' })).toBeTruthy()
+   })
+ 
+diff --git a/packages/client/ui-primitives/tests/search-block.client.spec.tsx b/packages/client/ui-primitives/tests/search-block.client.spec.tsx
+index 462c334..40f6e46 100644
+--- a/packages/client/ui-primitives/tests/search-block.client.spec.tsx
++++ b/packages/client/ui-primitives/tests/search-block.client.spec.tsx
+@@ -195,7 +195,7 @@ describe('SearchBlock copy', () => {
+     // A second click while the ok label shows is a no-op.
+     fireEvent.click(screen.getByRole('button', { name: '复制成功' }))
+     expect(writeText).toHaveBeenCalledTimes(1)
+-    await vi.advanceTimersByTimeAsync(1000)
++    await act(async () => { await vi.advanceTimersByTimeAsync(1000) })
+     expect(screen.getByRole('button', { name: '复制' })).toBeTruthy()
+   })
+ 
+diff --git a/packages/client/ui-primitives/tests/switch.client.spec.tsx b/packages/client/ui-primitives/tests/switch.client.spec.tsx
+index a80eae4..8908e27 100644
+--- a/packages/client/ui-primitives/tests/switch.client.spec.tsx
++++ b/packages/client/ui-primitives/tests/switch.client.spec.tsx
+@@ -9,7 +9,7 @@ describe('Switch', () => {
+   it('exposes its state and its caller-owned name to assistive technology', () => {
+     render(<Switch checked label="Subagent model selection" onChange={() => {}} />)
+     const control = screen.getByRole('switch', { name: 'Subagent model selection' })
+-    expect(control.getAttribute('aria-checked')).toBe('true')
++    expect((control as HTMLInputElement).checked).toBe(true)
+   })
+ 
+   it('reports the state the click asks for, not the state it has', () => {
+@@ -28,14 +28,14 @@ describe('Switch', () => {
+     const onChange = vi.fn()
+     render(<Switch checked={false} disabled label="Toggle" onChange={onChange} />)
+     const control = screen.getByRole('switch')
+-    expect((control as HTMLButtonElement).disabled).toBe(true)
++    expect((control as HTMLInputElement).disabled).toBe(true)
+     fireEvent.click(control)
+     expect(onChange).not.toHaveBeenCalled()
+   })
+ 
+   it('carries a lock reason as the hover title when the owner names one', () => {
+     render(<Switch checked={false} disabled label="Toggle" title="Managed by policy" onChange={() => {}} />)
+-    expect(screen.getByRole('switch').getAttribute('title')).toBe('Managed by policy')
++    expect(screen.getByRole('switch').closest('[data-slot=switch]')?.getAttribute('title')).toBe('Managed by policy')
+   })
+ 
+   it('never submits a surrounding form', () => {
+@@ -48,7 +48,7 @@ describe('Switch', () => {
+   it('keeps a caller class alongside its own so a render site can place it', () => {
+     render(<Switch checked={false} className="placed" label="Toggle" onChange={() => {}} />)
+     const control = screen.getByRole('switch')
+-    expect(control.classList.contains('placed')).toBe(true)
+-    expect(control.classList.length).toBeGreaterThan(1)
++    expect(control.closest('[data-slot=switch]')?.classList.contains('placed')).toBe(true)
++    expect(control.closest('[data-slot=switch]')?.classList.length).toBeGreaterThan(1)
+   })
+ })
+diff --git a/packages/client/ui-primitives/tests/terminal-block.client.spec.tsx b/packages/client/ui-primitives/tests/terminal-block.client.spec.tsx
+index b801dd6..0929f55 100644
+--- a/packages/client/ui-primitives/tests/terminal-block.client.spec.tsx
++++ b/packages/client/ui-primitives/tests/terminal-block.client.spec.tsx
+@@ -411,7 +411,7 @@ describe('TerminalBlock copy', () => {
+     // While the ok label is showing, further clicks are no-ops.
+     fireEvent.click(screen.getByRole('button', { name: '复制成功' }))
+     expect(writeText).toHaveBeenCalledTimes(1)
+-    await vi.advanceTimersByTimeAsync(1000)
++    await act(async () => { await vi.advanceTimersByTimeAsync(1000) })
+     expect(screen.getByRole('button', { name: '复制' })).toBeTruthy()
+   })
+ 
+diff --git a/packages/client/ui-reference/package.json b/packages/client/ui-reference/package.json
+index 707edaf..05b5940 100644
+--- a/packages/client/ui-reference/package.json
++++ b/packages/client/ui-reference/package.json
+@@ -55,7 +55,7 @@
+     "@deepseek-ai/dsh-client-connection": "workspace:*",
+     "@deepseek-ai/dsh-client-locale": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-conversation": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-input-trigger": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+@@ -86,6 +86,6 @@
+     "@deepseek-ai/dsh-session-reference": "workspace:*",
+     "@deepseek-ai/dsh-util-workspace-path": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+-    "react": "^18.2.0"
++    "react": "^19.0.0"
+   }
+ }
+diff --git a/packages/client/ui-renderer/package.json b/packages/client/ui-renderer/package.json
+index fca42ca..f2d67d7 100644
+--- a/packages/client/ui-renderer/package.json
++++ b/packages/client/ui-renderer/package.json
+@@ -44,8 +44,8 @@
+     "@deepseek-ai/cordis": "workspace:~",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@types/use-sync-external-store": "^1.5.0",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "use-sync-external-store": "1.6.0"
+   },
+   "files": [
+@@ -57,7 +57,7 @@
+   "dependencies": {
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "use-sync-external-store": "1.6.0",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0"
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0"
+   }
+ }
+diff --git a/packages/client/ui-session/package.json b/packages/client/ui-session/package.json
+index f1184ad..dbdfc16 100644
+--- a/packages/client/ui-session/package.json
++++ b/packages/client/ui-session/package.json
+@@ -56,7 +56,7 @@
+     "@deepseek-ai/dsh-remote-mock": "workspace:*",
+     "@deepseek-ai/dsh-session": "workspace:*",
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+-    "react": "^18.2.0"
++    "react": "^19.0.0"
+   },
+   "files": [
+     "locale/*.json",
+@@ -75,6 +75,6 @@
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+-    "react": "^18.2.0"
++    "react": "^19.0.0"
+   }
+ }
+diff --git a/packages/client/ui-settings/package.json b/packages/client/ui-settings/package.json
+index 2e0eed3..5eb4507 100644
+--- a/packages/client/ui-settings/package.json
++++ b/packages/client/ui-settings/package.json
+@@ -48,7 +48,7 @@
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-settings": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+     "@deepseek-ai/dsh-api-settings-controller": "workspace:*",
+     "@deepseek-ai/dsh-api-gateway": "workspace:*",
+diff --git a/packages/client/ui-sidebar-browser/package.json b/packages/client/ui-sidebar-browser/package.json
+index 986af79..133d6b6 100644
+--- a/packages/client/ui-sidebar-browser/package.json
++++ b/packages/client/ui-sidebar-browser/package.json
+@@ -61,8 +61,8 @@
+     "@deepseek-ai/dsh-client-ui-sidebar-right": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@testing-library/react": "^16.3.3",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0"
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0"
+   },
+   "files": [
+     "locale/*.json",
+@@ -79,7 +79,7 @@
+     "@deepseek-ai/dsh-client-ui-sidebar-right": "workspace:*",
+     "@deepseek-ai/dsh-api-workspace-controller": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-dockkit": "workspace:*"
+diff --git a/packages/client/ui-sidebar-documentpreview/package.json b/packages/client/ui-sidebar-documentpreview/package.json
+index c09cb8f..39cd3a0 100644
+--- a/packages/client/ui-sidebar-documentpreview/package.json
++++ b/packages/client/ui-sidebar-documentpreview/package.json
+@@ -81,8 +81,8 @@
+     "fflate": "^0.8.3",
+     "papaparse": "5.7.0",
+     "pdfjs-dist": "6.3.289",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+     "yaml": "^2.9.0",
+     "@deepseek-ai/dsh-client-ui-file-drag": "workspace:*"
+@@ -109,13 +109,13 @@
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+     "@deepseek-ai/dsh-api-gateway": "workspace:*",
+     "@deepseek-ai/dsh-api-workspace-files": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "pdfjs-dist": "6.3.289",
+     "@deepseek-ai/dsh-office-to-pdf": "workspace:*",
+-    "react-dom": "^18.2.0",
++    "react-dom": "^19.0.0",
+     "yaml": "^2.9.0",
+     "@deepseek-ai/dsh-client-ui-file-drag": "workspace:*",
+     "dompurify": "^3.4.16",
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx b/packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx
+index a3e4d63..9561970 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx
++++ b/packages/client/ui-sidebar-documentpreview/src/client/TextPreview.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The text preview's body: a file's content, or the reason it is not showing.
+  *
+@@ -240,27 +241,27 @@ export function TextPreview({
+           // bar would only repeat the same line.
+           <p className={css.changed} data-textpreview-meta-failed={meta.failure.code}>
+             <span>{failureLine(t, meta.failure)}</span>
+-            <button
++            <ActionButton
+               type="button"
+               className={css.action}
+               data-textpreview-reload-now
+               onClick={reload}
+             >
+               {t('reloadNow')}
+-            </button>
++            </ActionButton>
+           </p>
+         )
+         : changed && (
+           <p className={css.changed} data-textpreview-changed>
+             <span>{t('changed')}</span>
+-            <button
++            <ActionButton
+               type="button"
+               className={css.action}
+               data-textpreview-reload-now
+               onClick={reload}
+             >
+               {t('reloadNow')}
+-            </button>
++            </ActionButton>
+           </p>
+         )}
+       <div className={css.header}>
+@@ -270,9 +271,9 @@ export function TextPreview({
+             <Menu
+               open={menuOpen}
+               anchor={(
+-                <button type="button" className={clsx(css.tool, css.viewerTool)} aria-label={t('openWith')} title={selected.title()} data-document-viewer-menu onClick={() => { setMenuOpen(value => !value) }}>
++                <ActionButton type="button" className={clsx(css.tool, css.viewerTool)} aria-label={t('openWith')} title={selected.title()} data-document-viewer-menu onClick={() => { setMenuOpen(value => !value) }}>
+                   {selected.title()}
+-                </button>
++                </ActionButton>
+               )}
+               items={candidates.map(candidate => ({ id: candidate.id, label: candidate.title() }))}
+               selectedId={selected.id}
+@@ -287,7 +288,7 @@ export function TextPreview({
+           // The tooltip names the action while the stable aria name and
+           // `aria-pressed` expose the control and its current state.
+           <Tooltip label={t(state.wrap ? 'wrap.disable' : 'wrap.enable')} side="bottom" delayMs={500}>
+-            <button
++            <ActionButton
+               type="button"
+               className={css.tool}
+               aria-pressed={state.wrap}
+@@ -302,23 +303,23 @@ export function TextPreview({
+               }}
+             >
+               {state.wrap ? <IconNowrapFillRegular /> : <IconWrapFillRegular />}
+-            </button>
++            </ActionButton>
+           </Tooltip>
+         )}
+         {content !== undefined && renderSlot('sidebar.right.tab.document.action', { content }, { entryKey: selected.id, hookContext: useTabInfo })}
+         <span hidden>
+           <Tooltip label={t(state.autoRefresh ? 'autoRefresh.disable' : 'autoRefresh.enable')} side="bottom" delayMs={500}>
+-            <button type="button" className={css.tool} aria-label={t('autoRefresh')}
++            <ActionButton type="button" className={css.tool} aria-label={t('autoRefresh')}
+               aria-pressed={state.autoRefresh} data-textpreview-tool="auto-refresh"
+               onClick={() => { actions.toggledAutoRefresh(tab.id) }}>
+               {state.autoRefresh ? <IconPauseOutlineRegular /> : <IconPlayOutlineRegular />}
+-            </button>
++            </ActionButton>
+           </Tooltip>
+         </span>
+         {/* Preview and file-tree refresh controls own different reload lifecycles and locale namespaces. */}
+         {/* jscpd:ignore-start */}
+         <Tooltip label={t('reload')} shortcutKeys={tab.refreshShortcut?.keys} side="bottom" delayMs={500}>
+-          <button
++          <ActionButton
+             type="button"
+             className={css.tool}
+             aria-label={t('reload')}
+@@ -327,7 +328,7 @@ export function TextPreview({
+             onClick={reload}
+           >
+             <IconRefreshOutlineRegular />
+-          </button>
++          </ActionButton>
+         </Tooltip>
+         {/* jscpd:ignore-end */}
+         {fileOwner !== undefined && renderSlot('sidebar.right.tab.document.actions', fileOwner)}
+@@ -361,14 +362,14 @@ export function TextPreview({
+           ? (
+             <p className={css.statusLine} data-textpreview-failed={current.failure.code}>
+               <span>{failureLine(t, current.failure)}</span>
+-              <button
++              <ActionButton
+                 type="button"
+                 className={css.action}
+                 data-textpreview-retry
+                 onClick={loadNext}
+               >
+                 {t('retry')}
+-              </button>
++              </ActionButton>
+             </p>
+           )
+           : (
+@@ -383,7 +384,7 @@ export function TextPreview({
+               {emptyFailureRecourse(current.failure) === 'open' && fileOwner !== undefined
+                 && renderSlot('sidebar.right.tab.document.unpreviewable', fileOwner)}
+               {emptyFailureRecourse(current.failure) === 'retry' && (
+-                <button
++                <ActionButton
+                   type="button"
+                   className={css.retry}
+                   data-textpreview-retry
+@@ -391,12 +392,12 @@ export function TextPreview({
+                 >
+                   <IconRefreshOutlineRegular size={14} />
+                   {t('retry')}
+-                </button>
++                </ActionButton>
+               )}
+             </div>
+           ))}
+         {mode === 'text-pages' && current !== undefined && loaded.length > 0 && !current.eof && current.failure === undefined && (
+-          <button
++          <ActionButton
+             type="button"
+             className={css.more}
+             disabled={current.loading}
+@@ -404,7 +405,7 @@ export function TextPreview({
+             onClick={loadNext}
+           >
+             {current.loading ? <LoadingIndicator inline label={t('loading')} /> : t('loadMore')}
+-          </button>
++          </ActionButton>
+         )}
+       </div>
+     </div>
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/excel/excel.tsx b/packages/client/ui-sidebar-documentpreview/src/client/excel/excel.tsx
+index 7b551a4..8ca9165 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/excel/excel.tsx
++++ b/packages/client/ui-sidebar-documentpreview/src/client/excel/excel.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Read-only spreadsheet surface backed by browser-parsed workbook data. */
+ import { useEffect, useRef, useState, type ReactNode } from 'react'
+ import { Workbook } from '@fortune-sheet/react'
+@@ -56,9 +57,9 @@ export function ExcelBody({ content, format, limits, t, loading }: LoadedExcelBo
+     </div>}
+     <div ref={workbookRef} className={`${css.workbook} ${hasFormulas ? css.withFormulaWarning : ''}`}>
+       {hasFormulas && <Tooltip portal openOnClick label={t('formulaWarning')} side="bottom" delayMs={500}>
+-        <button type="button" className={css.formulaWarning} aria-label={t('formulaWarning')} data-excel-formula-warning>
++        <ActionButton type="button" className={css.formulaWarning} aria-label={t('formulaWarning')} data-excel-formula-warning>
+           <IconWarningTriangleOutlineRegular size={14} />
+-        </button>
++        </ActionButton>
+       </Tooltip>}
+       <Workbook key={`${attempt}:${t('language')}`} data={state.value.sheets} lang={t('language')}
+         allowEdit={false} showToolbar={false} showFormulaBar showSheetTabs forceCalculation={false}
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/image/ImageBody.tsx b/packages/client/ui-sidebar-documentpreview/src/client/image/ImageBody.tsx
+index 08c2ec3..3fbaad3 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/image/ImageBody.tsx
++++ b/packages/client/ui-sidebar-documentpreview/src/client/image/ImageBody.tsx
+@@ -132,7 +132,7 @@ function LoadedImage({ url, name, file, resourceAddress, preference, onPreferenc
+   readonly scrollportRef: ImageBodyProps['scrollportRef']
+   readonly t: ImageBodyProps['t']
+ }): ReactNode {
+-  const releasePan = useRef<() => void>()
++  const releasePan = useRef<() => void | undefined>(undefined)
+   const attachImage = useCallback((image: HTMLImageElement | null): void => {
+     releasePan.current?.()
+     releasePan.current = image === null ? undefined : bindImagePan(image)
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx b/packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx
+index 061d639..bd7b08a 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx
++++ b/packages/client/ui-sidebar-documentpreview/src/client/office/FontNotice.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Toolbar warning and non-modal details for the current preview’s missing fonts. */
+ import { useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+ import { createPortal } from 'react-dom'
+@@ -39,11 +40,11 @@ export function FontNotice({ fonts, t }: FontNoticeProps): ReactNode {
+   return <>
+     <Tooltip label={label} side="bottom" delayMs={500} disabled={open}>
+       <span ref={anchor} className={css.anchor} data-office-font-warning>
+-        <button type="button" className={clsx(common.tool, css.warning)} aria-label={label}
++        <ActionButton type="button" className={clsx(common.tool, css.warning)} aria-label={label}
+           aria-expanded={open} aria-controls={open ? id : undefined} aria-haspopup="dialog"
+           onClick={() => { setExpanded(value => !value) }}>
+           <IconWarningTriangleOutlineRegular />
+-        </button>
++        </ActionButton>
+       </span>
+     </Tooltip>
+     {open && createPortal(<div ref={panel} id={id} role="dialog" aria-labelledby={`${id}-title`}
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/pdf/pdf.tsx b/packages/client/ui-sidebar-documentpreview/src/client/pdf/pdf.tsx
+index bafa88f..cb41f54 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/pdf/pdf.tsx
++++ b/packages/client/ui-sidebar-documentpreview/src/client/pdf/pdf.tsx
+@@ -118,9 +118,9 @@ function PdfPage({ document, page, requested: initiallyRequested, onVisible, sig
+   const [width, setWidth] = useState<number>()
+   const [requested, setRequested] = useState(initiallyRequested)
+   const [visible, setVisible] = useState(initiallyRequested)
+-  const renderedZoom = useRef<number>()
++  const renderedZoom = useRef<number | undefined>(undefined)
+   const pendingRender = useRef(Promise.resolve())
+-  const textTask = useRef<ReturnType<ReturnType<typeof pdfTextRenderer>>>()
++  const textTask = useRef<ReturnType<ReturnType<typeof pdfTextRenderer>> | undefined>(undefined)
+   const [state, setState] = useState<'loading' | 'ready'>('loading')
+   const [failure, setFailure] = useState<{ readonly error: unknown }>()
+   const [attempt, setAttempt] = useState(0)
+diff --git a/packages/client/ui-sidebar-documentpreview/src/client/zoom/ZoomViewport.tsx b/packages/client/ui-sidebar-documentpreview/src/client/zoom/ZoomViewport.tsx
+index 0630620..fd22bf8 100644
+--- a/packages/client/ui-sidebar-documentpreview/src/client/zoom/ZoomViewport.tsx
++++ b/packages/client/ui-sidebar-documentpreview/src/client/zoom/ZoomViewport.tsx
+@@ -62,8 +62,8 @@ export function ZoomViewport(props: ZoomViewportProps): ReactNode {
+   const frame = useRef<HTMLElement | null>(null)
+   const scrollport = useRef<HTMLDivElement | null>(null)
+   const controls = useRef<ZoomControlsHandle>(null)
+-  const pinchTimer = useRef<ReturnType<typeof setTimeout>>()
+-  const controlsHideTimer = useRef<ReturnType<typeof setTimeout>>()
++  const pinchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
++  const controlsHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+   const pointerInRevealZone = useRef(false)
+   const controlsActive = useRef(false)
+   const clearControlsHide = useCallback((): void => {
+diff --git a/packages/client/ui-sidebar-documentpreview/tests/text-preview.client.spec.tsx b/packages/client/ui-sidebar-documentpreview/tests/text-preview.client.spec.tsx
+index 1975816..ad86eb1 100644
+--- a/packages/client/ui-sidebar-documentpreview/tests/text-preview.client.spec.tsx
++++ b/packages/client/ui-sidebar-documentpreview/tests/text-preview.client.spec.tsx
+@@ -270,7 +270,7 @@ describe('TextPreview — pages', () => {
+     const view = render(<TextPreview {...h.props()} />)
+     await settle()
+     expect(view.container.querySelector('[data-textpreview-failed]')).not.toBeNull()
+-    expect(view.container.querySelector('[data-slot]')).toBeNull()
++    expect(view.container.querySelector('[data-slot^="sidebar.right.tab.document."]')).toBeNull()
+     h.script(1, page(1, ['reloaded'], true))
+     click(view.container, '[data-textpreview-tool="reload"]')
+     await settle()
+diff --git a/packages/client/ui-sidebar-files/package.json b/packages/client/ui-sidebar-files/package.json
+index c5a4082..dd547b5 100644
+--- a/packages/client/ui-sidebar-files/package.json
++++ b/packages/client/ui-sidebar-files/package.json
+@@ -62,9 +62,9 @@
+     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
+     "@deepseek-ai/dsh-util-workspace-path": "workspace:*",
+     "@testing-library/react": "^16.3.3",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0",
+-    "react-dom": "^18.2.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*"
+   },
+   "files": [
+@@ -85,7 +85,7 @@
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-sidebar-right": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-util-workspace-path": "workspace:*",
+diff --git a/packages/client/ui-sidebar-files/src/client/FilesBody.tsx b/packages/client/ui-sidebar-files/src/client/FilesBody.tsx
+index 5bea566..eb056c3 100644
+--- a/packages/client/ui-sidebar-files/src/client/FilesBody.tsx
++++ b/packages/client/ui-sidebar-files/src/client/FilesBody.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The file tree's body: the session's workspace root, listed one level at a time.
+  *
+@@ -84,10 +85,10 @@ function Entry({ parent, entry, tree }: { parent: string; entry: WorkspaceDirect
+     const expanded = tree.state.expanded.includes(path)
+     return (
+       <li className={css.item} data-files-entry="directory" data-files-path={path}>
+-        <button type="button" className={css.row} aria-expanded={expanded} onClick={() => { tree.onToggle(parent, path) }}>
++        <ActionButton type="button" className={css.row} aria-expanded={expanded} onClick={() => { tree.onToggle(parent, path) }}>
+           {expanded ? <IconFolderOpenRegular className={css.icon} /> : <IconFolderCloseRegular className={css.icon} />}
+           <span className={css.name}>{entry.name}</span>
+-        </button>
++        </ActionButton>
+         {expanded && <ul className={css.level}><Level path={path} tree={tree} /></ul>}
+       </li>
+     )
+@@ -95,10 +96,10 @@ function Entry({ parent, entry, tree }: { parent: string; entry: WorkspaceDirect
+   if (entry.type === 'file') {
+     return (
+       <li className={css.item} data-files-entry="file" data-files-path={path}>
+-        <button type="button" className={css.row} onClick={() => { tree.onOpen(path) }}>
++        <ActionButton type="button" className={css.row} onClick={() => { tree.onOpen(path) }}>
+           <FileTypeIcon kind={classifyFileType(entry.name)} size={16} className={css.fileIcon} />
+           <span className={css.name}>{entry.name}</span>
+-        </button>
++        </ActionButton>
+       </li>
+     )
+   }
+@@ -195,15 +196,15 @@ export function FilesBody({
+       <div className={css.header}>
+         {/[/\\]data[/\\]workspaces[/\\][A-Za-z0-9._-]+$/.test(state.root) ? null : <PathLabel path={state.root} className={css.path} data-files-path />}
+         <span hidden>
+-          <button type="button" className={css.tool} aria-label={t('autoRefresh')}
++          <ActionButton type="button" className={css.tool} aria-label={t('autoRefresh')}
+             aria-pressed={state.autoRefresh} data-files-auto-refresh
+             title={t(state.autoRefresh ? 'autoRefresh.disable' : 'autoRefresh.enable')}
+             onClick={() => { setAutoRefresh(tab.id, !state.autoRefresh) }}>
+             {state.autoRefresh ? <IconPauseOutlineRegular /> : <IconPlayOutlineRegular />}
+-          </button>
++          </ActionButton>
+         </span>
+         <Tooltip label={t('reload')} shortcutKeys={tab.refreshShortcut?.keys} side="bottom" delayMs={500}>
+-          <button
++          <ActionButton
+             type="button"
+             className={css.tool}
+             aria-label={t('reload')}
+@@ -212,7 +213,7 @@ export function FilesBody({
+             onClick={reload}
+           >
+             <IconRefreshOutlineRegular />
+-          </button>
++          </ActionButton>
+         </Tooltip>
+         {renderSlot('sidebar.right.tab.files.actions', {
+           absolutePath: state.root,
+diff --git a/packages/client/ui-sidebar-right/package.json b/packages/client/ui-sidebar-right/package.json
+index 2f9c10e..26bd1b5 100644
+--- a/packages/client/ui-sidebar-right/package.json
++++ b/packages/client/ui-sidebar-right/package.json
+@@ -63,8 +63,8 @@
+     "@deepseek-ai/dsh-session": "workspace:*",
+     "@testing-library/react": "^16.3.3",
+     "@types/picomatch": "^4.0.3",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "picomatch": "^4.0.7",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-util-crypto": "workspace:*",
+@@ -95,8 +95,8 @@
+     "@deepseek-ai/dsh-api-session-controller": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-brand": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "picomatch": "^4.0.7",
+-    "react-dom": "^18.2.0"
++    "react-dom": "^19.0.0"
+   }
+ }
+diff --git a/packages/client/ui-sidebar-right/src/client/shell/SidebarRight.tsx b/packages/client/ui-sidebar-right/src/client/shell/SidebarRight.tsx
+index 0f39af5..eab7f26 100644
+--- a/packages/client/ui-sidebar-right/src/client/shell/SidebarRight.tsx
++++ b/packages/client/ui-sidebar-right/src/client/shell/SidebarRight.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The Sidebar's seat in the frame, and the panel it draws.
+  *
+@@ -270,7 +271,7 @@ function PanelChrome({ sessionId, fullscreen, actions, t, shortcuts, toggleFulls
+   return (
+     <>
+       <Tooltip label={modeLabel} shortcutKeys={mode?.keys} side="bottom" delayMs={500}>
+-        <button
++        <ActionButton
+           type="button"
+           className={css.iconButton}
+           aria-label={modeLabel}
+@@ -279,10 +280,10 @@ function PanelChrome({ sessionId, fullscreen, actions, t, shortcuts, toggleFulls
+           onClick={toggleFullscreen}
+         >
+           {fullscreen ? <ExitFullscreenGlyph /> : <FullscreenGlyph />}
+-        </button>
++        </ActionButton>
+       </Tooltip>
+       <Tooltip label={t('chrome.collapse')} shortcutKeys={toggle?.keys} side="bottom" delayMs={500}>
+-        <button
++        <ActionButton
+           type="button"
+           className={css.iconButton}
+           aria-label={t('chrome.collapseAria')}
+@@ -291,7 +292,7 @@ function PanelChrome({ sessionId, fullscreen, actions, t, shortcuts, toggleFulls
+           onClick={() => { actions.toggleExpanded(sessionId) }}
+         >
+           <IconPanelLeftOutlineRegular className={css.collapseGlyph} />
+-        </button>
++        </ActionButton>
+       </Tooltip>
+     </>
+   )
+@@ -301,7 +302,7 @@ function PanelChrome({ sessionId, fullscreen, actions, t, shortcuts, toggleFulls
+  * The panel: the docked surface with the two controls in its top-right strip,
+  * anchored to the frame's right edge and slid off it while collapsed.
+  */
+-function SidebarPanel(panel: PanelProps & { width: number; panelRef: RefObject<HTMLDivElement> }): ReactNode {
++function SidebarPanel(panel: PanelProps & { width: number; panelRef: RefObject<HTMLDivElement | null> }): ReactNode {
+   const { sessionId, surface, actions, t, renderSlot, openTab, width, reportRoom, fullscreen, panelRef } = panel
+   const { expanded } = surface.layout
+   const types = panel.useTabTypes(value => value)
+diff --git a/packages/client/ui-sidebar-right/src/client/tabs/guide/GuideBody.tsx b/packages/client/ui-sidebar-right/src/client/tabs/guide/GuideBody.tsx
+index febe9f1..f00f789 100644
+--- a/packages/client/ui-sidebar-right/src/client/tabs/guide/GuideBody.tsx
++++ b/packages/client/ui-sidebar-right/src/client/tabs/guide/GuideBody.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The guide tab's body: a chain host, and the guide it falls back to.
+  *
+@@ -71,7 +72,7 @@ function EntryBox({ entry, described, onPick, shortcut }: {
+   const Icon = entry.icon ?? CubeGlyph
+   const description = described ? entry.description?.() : undefined
+   return (
+-    <button
++    <ActionButton
+       type="button"
+       className={css.entry}
+       data-sidebar-right-guide-entry={entry.kind}
+@@ -87,7 +88,7 @@ function EntryBox({ entry, described, onPick, shortcut }: {
+         {description !== undefined && <span className={css.entryDescription}>{description}</span>}
+       </span>
+       {shortcut !== undefined && shortcut.keys.length > 0 && <ShortcutKeys keys={shortcut.keys} />}
+-    </button>
++    </ActionButton>
+   )
+ }
+ 
+@@ -104,11 +105,11 @@ function GuideMoreMenu({ label, entries, onOpen, onPinnedChange, renderSlot }: G
+     <Menu open={open} onClose={onDismiss} portal autoFocus minWidthFromAnchor align="end"
+       className={css.moreAnchor} listClassName={css.moreMenu}
+       anchor={(
+-        <button type="button" className={css.entry} aria-label={label} aria-haspopup="menu" aria-expanded={open}
++        <ActionButton type="button" className={css.entry} aria-label={label} aria-haspopup="menu" aria-expanded={open}
+           onClick={() => { setOpen(value => !value) }}>
+           <span className={css.entryIcon}><GuideMoreIcon /></span>
+           <span className={css.entryText}><span className={css.entryTitle}>{label}</span></span>
+-        </button>
++        </ActionButton>
+       )}>
+       {renderSlot('sidebar.right.tab.guide.actions', { entries, onOpen, onPinnedChange, onDismiss })}
+     </Menu>
+diff --git a/packages/client/ui-sidebar/package.json b/packages/client/ui-sidebar/package.json
+index 40bfc45..cc3dc16 100644
+--- a/packages/client/ui-sidebar/package.json
++++ b/packages/client/ui-sidebar/package.json
+@@ -59,7 +59,7 @@
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-workspace": "workspace:*",
+     "@deepseek-ai/cordis": "workspace:~",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*",
+     "@deepseek-ai/dsh-client-product-analytics": "workspace:*"
+@@ -79,7 +79,7 @@
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-api-workspace-controller": "workspace:*",
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*",
+diff --git a/packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx b/packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx
+index 618bdd2..0396b5a 100644
+--- a/packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx
++++ b/packages/client/ui-sidebar/src/client/HeaderLeadingControls.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Window-chrome controls for the fully hidden sidebar (frame shell.leading seat). */
+ import {
+   IconNewChatOutlineRegular, IconPanelLeftOutlineRegular, Tooltip,
+@@ -33,7 +34,7 @@ export function HeaderLeadingControls({
+   return (
+     <div className={css.controls}>
+       <Tooltip label={t('toggle.open')} shortcutKeys={shortcut?.keys} delayMs={500}>
+-        <button
++        <ActionButton
+           type="button"
+           className={css.iconButton}
+           aria-label={t('toggle.open')}
+@@ -41,11 +42,11 @@ export function HeaderLeadingControls({
+           onClick={() => { toggleSidebar() }}
+         >
+           <IconPanelLeftOutlineRegular size={16} />
+-        </button>
++        </ActionButton>
+       </Tooltip>
+       {canStartSession && (
+         <Tooltip label={t('session.new.label')} shortcutKeys={newShortcut?.keys} delayMs={500}>
+-          <button
++          <ActionButton
+             type="button"
+             className={css.iconButton}
+             aria-label={t('session.new.label')}
+@@ -56,7 +57,7 @@ export function HeaderLeadingControls({
+             }}
+           >
+             <IconNewChatOutlineRegular size={16} />
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       )}
+     </div>
+diff --git a/packages/client/ui-sidebar/src/client/SidebarRoot.tsx b/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
+index c4083d2..90f1314 100644
+--- a/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
++++ b/packages/client/ui-sidebar/src/client/SidebarRoot.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * Sidebar shell: column geometry and global panel navigation.
+  * Collapse is a slide plus crossfade:
+@@ -68,7 +69,7 @@ function PanelRow({ id, label, wide, usePanelInfo, selectPanel, trackEntryClick,
+   const active = usePanelInfo(info => info.activePanelId === id)
+   return (
+     <Tooltip label={label} delayMs={500} disabled={wide}>
+-      <button
++      <ActionButton
+         type="button"
+         className={clsx(css.panelRow, active && css.panelActive)}
+         aria-label={label}
+@@ -87,7 +88,7 @@ function PanelRow({ id, label, wide, usePanelInfo, selectPanel, trackEntryClick,
+             {label}
+           </span>
+         )}
+-      </button>
++      </ActionButton>
+     </Tooltip>
+   )
+ }
+@@ -107,14 +108,14 @@ function PanelMoreMenu({ wide, label, entries, onOpen, onPinnedChange, trackEntr
+     <Menu open={open} onClose={onDismiss} portal autoFocus className={css.moreAnchor} listClassName={css.moreMenu}
+       anchor={(
+         <Tooltip label={label} delayMs={500} disabled={wide}>
+-          <button type="button" className={css.panelRow} aria-label={label} aria-haspopup="menu" aria-expanded={open}
++          <ActionButton type="button" className={css.panelRow} aria-label={label} aria-haspopup="menu" aria-expanded={open}
+             onClick={() => {
+               trackEntryClick({ menu_name: 'more', position: 'sidebar' })
+               setOpen(value => !value)
+             }}>
+             <span className={css.panelGlyph} aria-hidden="true"><IconAppsAddOutlineRegular size={wide ? 16 : 18} /></span>
+             {wide && <span className={clsx(css.panelTitle, css.wide)}>{label}</span>}
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       )}>
+       {renderSlot('sidebar.panellist.actions', { entries, onOpen, onPinnedChange, onDismiss })}
+@@ -244,7 +245,7 @@ export function SidebarRoot({
+   // panel icon.
+   const toggle = (
+     <Tooltip label={toggleLabel} shortcutKeys={shortcut?.keys} delayMs={500} side={captionTooltipSide}>
+-      <button
++      <ActionButton
+         type="button"
+         className={clsx(css.iconButton, css.toggle)}
+         aria-label={toggleLabel}
+@@ -259,7 +260,7 @@ export function SidebarRoot({
+         {/* Rail icons render at 18 (figma rail spec); expanded keeps the glyph-native sizes. */}
+         <IconPanelLeftOutlineRegular className={css.panelIcon} size={wide || windowsTitlebar ? 16 : 18} />
+         {!wide && renderSlot('sidebar.toggle.badge', {})}
+-      </button>
++      </ActionButton>
+     </Tooltip>
+   )
+ 
+@@ -314,7 +315,7 @@ export function SidebarRoot({
+           return darwinDesktop || !canStartSession
+             ? <span className={clsx(css.brand, css.wide)}>{identity}</span>
+             : (
+-              <button
++              <ActionButton
+                 type="button"
+                 className={clsx(css.brand, css.wide)}
+                 aria-label={t('session.new.label')}
+@@ -325,7 +326,7 @@ export function SidebarRoot({
+                 }}
+               >
+                 {identity}
+-              </button>
++              </ActionButton>
+             )
+         })()}
+         {!darwinDesktop && toggle}
+@@ -334,7 +335,7 @@ export function SidebarRoot({
+       {/* The label fades before the hover/focus shortcut, including on translucent backgrounds. */}
+       {canStartSession && (
+         <Tooltip label={t('session.new.label')} shortcutKeys={newShortcut?.keys} delayMs={500} side={captionTooltipSide} disabled={wide}>
+-          <button
++          <ActionButton
+             type="button"
+             className={css.newSession}
+             aria-label={t('session.new.label')}
+@@ -350,7 +351,7 @@ export function SidebarRoot({
+             {wide && newShortcut !== undefined && newShortcut.keys.length > 0 && <span className={css.newSessionShortcut} aria-hidden="true">
+               <ShortcutKeys keys={newShortcut.keys} />
+             </span>}
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       )}
+ 
+diff --git a/packages/client/ui-slots/package.json b/packages/client/ui-slots/package.json
+index 1ee2317..ae53e96 100644
+--- a/packages/client/ui-slots/package.json
++++ b/packages/client/ui-slots/package.json
+@@ -24,7 +24,7 @@
+   "license": "MIT",
+   "devDependencies": {
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/cordis": "workspace:~"
+   },
+   "files": [
+diff --git a/packages/client/ui-theme/package.json b/packages/client/ui-theme/package.json
+index 62f3083..bc04e7f 100644
+--- a/packages/client/ui-theme/package.json
++++ b/packages/client/ui-theme/package.json
+@@ -57,7 +57,7 @@
+     "@deepseek-ai/dsh-client-ui-settings": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-host-webserver": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "clsx": "^2.0.0",
+     "@deepseek-ai/dsh-settings": "workspace:*"
+   },
+@@ -84,6 +84,6 @@
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-store": "workspace:*",
+     "clsx": "^2.0.0",
+-    "react": "^18.2.0"
++    "react": "^19.0.0"
+   }
+ }
+diff --git a/packages/client/ui-theme/src/client/AppearanceRow.tsx b/packages/client/ui-theme/src/client/AppearanceRow.tsx
+index d234bd8..59426bf 100644
+--- a/packages/client/ui-theme/src/client/AppearanceRow.tsx
++++ b/packages/client/ui-theme/src/client/AppearanceRow.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * Appearance preference row registered into the General section item slot
+  * (figma 501:30012 'Frame 2117131228'): title + three preference cubes.
+@@ -46,7 +47,7 @@ export function AppearanceRow({ t, setTheme, useStore }: AppearanceRowComponentP
+       <div className={css.title}>{t('appearance.title')}</div>
+       <div className={css.cubeRow}>
+         {CUBES.map(({ id, labelKey, Icon }) => (
+-          <button
++          <ActionButton
+             key={id}
+             type="button"
+             className={clsx(css.themeCube, preference === id && css.selected)}
+@@ -55,7 +56,7 @@ export function AppearanceRow({ t, setTheme, useStore }: AppearanceRowComponentP
+           >
+             <Icon />
+             {t(labelKey)}
+-          </button>
++          </ActionButton>
+         ))}
+       </div>
+     </div>
+diff --git a/packages/client/ui-theme/src/client/FontSizeRow.tsx b/packages/client/ui-theme/src/client/FontSizeRow.tsx
+index 93cb009..7166250 100644
+--- a/packages/client/ui-theme/src/client/FontSizeRow.tsx
++++ b/packages/client/ui-theme/src/client/FontSizeRow.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * Font-size preference row: title + role description + stepper pill (centered value; hover
+  * reveals the up/down arrow column anchored to the pill's right edge) + a px
+@@ -59,7 +60,7 @@ export function FontSizeRow({ t, role, setFontSize, useStore, expander }: FontSi
+         <div className={css.stepper}>
+           <span className={css.value}>{fontSize}</span>
+           <span className={css.arrows}>
+-            <button
++            <ActionButton
+               type="button"
+               className={css.arrow}
+               aria-label={t(`fontSize.${role}.increase`)}
+@@ -67,8 +68,8 @@ export function FontSizeRow({ t, role, setFontSize, useStore, expander }: FontSi
+               onClick={() => { setFontSize(fontSize + 1) }}
+             >
+               <IconChevronUpOutlineRegular size={9} />
+-            </button>
+-            <button
++            </ActionButton>
++            <ActionButton
+               type="button"
+               className={css.arrow}
+               aria-label={t(`fontSize.${role}.decrease`)}
+@@ -76,12 +77,12 @@ export function FontSizeRow({ t, role, setFontSize, useStore, expander }: FontSi
+               onClick={() => { setFontSize(fontSize - 1) }}
+             >
+               <IconChevronDownOutlineRegular size={9} />
+-            </button>
++            </ActionButton>
+           </span>
+         </div>
+         <span className={css.unit}>{t('fontSize.unit')}</span>
+         {expander !== undefined && (
+-          <button
++          <ActionButton
+             type="button"
+             className={css.expander}
+             aria-label={t('fontSize.more')}
+@@ -91,7 +92,7 @@ export function FontSizeRow({ t, role, setFontSize, useStore, expander }: FontSi
+             onClick={expander.onToggle}
+           >
+             <IconChevronDownOutlineRegular size={12} />
+-          </button>
++          </ActionButton>
+         )}
+       </div>
+     </div>
+diff --git a/packages/client/ui-tool/package.json b/packages/client/ui-tool/package.json
+index dbd7c67..036c311 100644
+--- a/packages/client/ui-tool/package.json
++++ b/packages/client/ui-tool/package.json
+@@ -64,8 +64,8 @@
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@testing-library/react": "^16.3.3",
+-    "react": "^18.2.0",
+-    "react-dom": "^18.2.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
+     "@deepseek-ai/dsh-api-workspace-controller": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-chat": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+@@ -90,7 +90,7 @@
+     "@deepseek-ai/dsh-client-ui-conversation": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-chat": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "@deepseek-ai/dsh-agent": "workspace:*",
+diff --git a/packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx b/packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx
+index 2ce2782..3307183 100644
+--- a/packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx
++++ b/packages/client/ui-tool/src/client/tool/components/QuestionToolRow.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Question-owned summary action and transcript disclosure. */
+ import { DisclosureRow, IconInspectOutlineRegular, IconQuestionOutlineRegular, TextShimmer } from '@deepseek-ai/dsh-client-ui-primitives'
+ import type { ToolRowProps } from './ToolRow.tsx'
+@@ -36,11 +37,11 @@ export function QuestionToolRow({
+             <span className={css.sep} aria-hidden />
+             <span className={css.summary}><TextShimmer active={state === 'running'}>{summary}</TextShimmer></span>
+           </>}
+-          <button type="button" className={questionCss.panelButton}
++          <ActionButton type="button" className={questionCss.panelButton}
+             onClick={(event) => { event.stopPropagation(); if (!openPanel()) toggle() }}
+             onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') event.stopPropagation() }}>
+             <IconQuestionOutlineRegular />{panelLabel}
+-          </button>
++          </ActionButton>
+         </>}
+       >
+         {open && <div className={css.bodyWrap}>
+@@ -54,9 +55,9 @@ export function QuestionToolRow({
+               <span className={css.ioLabel}>{t('row.output')}</span><span className={css.ioText}>{output}</span>
+             </div>}
+           </div>}
+-          {inspect !== undefined && <button type="button" className={css.inspectButton} onClick={inspect}>
++          {inspect !== undefined && <ActionButton type="button" className={css.inspectButton} onClick={inspect}>
+             <IconInspectOutlineRegular />{t('row.inspect')}
+-          </button>}
++          </ActionButton>}
+         </div>}
+       </DisclosureRow>
+     </div>
+diff --git a/packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx b/packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx
+index 618d998..48134a5 100644
+--- a/packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx
++++ b/packages/client/ui-tool/src/client/tool/components/ToolDetails.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Compact, read-only fields and lists for recorded Tool results. */
+ import {
+   CodeBlock, MarkdownText, IconCheckOutlineRegular, IconChevronRightOutlineRegular, IconPlayOutlineRegular,
+@@ -56,10 +57,10 @@ function DetailItem({ item, t, onOpenFile }: { item: ToolDetailItem } & DetailCo
+             </span>
+           )}
+           {item.location !== undefined && onOpenFile !== undefined ? (
+-            <button className={css.path} type="button" onClick={() => {
++            <ActionButton className={css.path} type="button" onClick={() => {
+               const location = item.location
+               if (location !== undefined) onOpenFile(location.path, location.line === undefined ? undefined : { line: location.line })
+-            }}>{item.title}</button>
++            }}>{item.title}</ActionButton>
+           ) : <span className={css.text}>{item.title}</span>}
+           {item.badge !== undefined && <span className={css.badge} data-tone={item.badge.tone}>{item.badge.label}</span>}
+           {status !== undefined && (
+diff --git a/packages/client/ui-tool/src/client/tool/components/ToolRow.tsx b/packages/client/ui-tool/src/client/tool/components/ToolRow.tsx
+index 694ce16..418536a 100644
+--- a/packages/client/ui-tool/src/client/tool/components/ToolRow.tsx
++++ b/packages/client/ui-tool/src/client/tool/components/ToolRow.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { memo, useCallback, useMemo, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
+ import clsx from 'clsx'
+ import {
+@@ -214,14 +215,14 @@ export const ToolRow = memo(function ToolRow({
+     <>
+       <span className={css.sep} data-shimmer-decoration aria-hidden />
+       {exitLabel === null && openFile !== undefined ? (
+-        <button
++        <ActionButton
+           type="button"
+           className={css.fileLink}
+           onClick={openFile}
+           onKeyDown={summaryLinkKeyDown}
+         >
+           <TextShimmer>{summaryText}</TextShimmer>
+-        </button>
++        </ActionButton>
+       ) : exitLabel === null && linkHref !== undefined ? (
+         <a
+           className={css.fileLink}
+@@ -355,14 +356,14 @@ export const ToolRow = memo(function ToolRow({
+                         </>
+                       )}
+       {inspect !== undefined && (
+-        <button
++        <ActionButton
+           type="button"
+           className={css.inspectButton}
+           onClick={inspect}
+         >
+           <IconInspectOutlineRegular />
+           {t('row.inspect')}
+-        </button>
++        </ActionButton>
+       )}
+     </div>
+   ) : undefined, [
+diff --git a/packages/client/ui-user-questions/package.json b/packages/client/ui-user-questions/package.json
+index 2e8f0a3..a3cd851 100644
+--- a/packages/client/ui-user-questions/package.json
++++ b/packages/client/ui-user-questions/package.json
+@@ -65,7 +65,7 @@
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-conversation": "workspace:*",
+     "@deepseek-ai/dsh-client-connection": "workspace:*",
+     "@deepseek-ai/dsh-session": "workspace:*",
+@@ -98,7 +98,7 @@
+     "@deepseek-ai/dsh-brand": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-tool-executor-ptc": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+     "clsx": "^2.0.0"
+   }
+diff --git a/packages/client/ui-user-questions/src/client/QuestionComposer.tsx b/packages/client/ui-user-questions/src/client/QuestionComposer.tsx
+index 0baf6e5..96cdd21 100644
+--- a/packages/client/ui-user-questions/src/client/QuestionComposer.tsx
++++ b/packages/client/ui-user-questions/src/client/QuestionComposer.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ import {
+   useEffect, useId, useMemo, useRef, useState,
+   type ChangeEvent, type FocusEvent, type KeyboardEvent,
+@@ -494,7 +495,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
+               <span className={css.waitStatus}>{t('wait.held')}</span>
+             )}
+             {review !== undefined && <span className={css.waitStatus}>{t('review.status')}</span>}
+-            <button
++            <ActionButton
+               type="button" className={css.iconButton}
+               aria-label={t(minimized ? 'nav.maximize' : 'nav.minimize')}
+               title={t(minimized ? 'nav.maximize' : 'nav.minimize')}
+@@ -503,15 +504,15 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
+               onClick={() => { setMinimized(current => !current) }}
+             >
+               {minimized ? <IconChevronUpOutlineRegular /> : <IconChevronDownOutlineRegular />}
+-            </button>
+-            <button
++            </ActionButton>
++            <ActionButton
+               type="button" className={css.iconButton}
+               aria-label={t(pending.dismissal === 'hide' ? 'nav.close' : 'nav.cancel')}
+               title={t(pending.dismissal === 'hide' ? 'nav.close' : 'nav.cancel')}
+               disabled={busy !== null} onClick={dismissFlow}
+             >
+               <IconCloseOutlineRegular />
+-            </button>
++            </ActionButton>
+           </div>
+         </header>
+ 
+@@ -532,7 +533,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
+                   {question.question}
+                 </h2>
+                 <Tooltip label={questionToggleLabel} side="top" portal>
+-                  <button
++                  <ActionButton
+                     type="button"
+                     className={clsx(css.iconButton, css.copyToggle, css.questionToggle)}
+                     aria-label={questionToggleLabel}
+@@ -542,7 +543,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
+                     onClick={() => { toggleCopy('question') }}
+                   >
+                     {expanded.has('question') ? <IconChevronUpOutlineRegular /> : <IconChevronDownOutlineRegular />}
+-                  </button>
++                  </ActionButton>
+                 </Tooltip>
+               </div>
+               {question.detail !== undefined && (
+@@ -567,7 +568,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
+                       data-option-row
+                       data-expanded={descriptionExpanded || undefined}
+                     >
+-                      <button
++                      <ActionButton
+                         type="button"
+                         className={css.option}
+                         role={question.multiSelect === true ? 'checkbox' : 'radio'}
+@@ -602,10 +603,10 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
+                             </span>
+                           )}
+                         </span>
+-                      </button>
++                      </ActionButton>
+                       {hasDescription && (
+                         <Tooltip label={descriptionToggleLabel} side="top" portal>
+-                          <button
++                          <ActionButton
+                             type="button"
+                             className={clsx(css.iconButton, css.copyToggle, css.descriptionToggle)}
+                             aria-label={descriptionToggleLabel}
+@@ -615,7 +616,7 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
+                             onClick={() => { toggleCopy(optionIndex) }}
+                           >
+                             {descriptionExpanded ? <IconChevronUpOutlineRegular /> : <IconChevronDownOutlineRegular />}
+-                          </button>
++                          </ActionButton>
+                         </Tooltip>
+                       )}
+                     </div>
+@@ -681,21 +682,21 @@ function QuestionFlow({ pending, t, useStore, useQuestionCard, actions }: Questi
+ 
+             <footer className={css.footer}>
+               <div className={css.pager}>
+-                <button
++                <ActionButton
+                   type="button" className={css.iconButton} aria-label={t('nav.prev')}
+                   disabled={index === 0 || busy !== null}
+                   onClick={() => { replaceProgress(index - 1, drafts); setError(null) }}
+                 >
+                   <IconChevronLeftOutlineRegular />
+-                </button>
++                </ActionButton>
+                 <span className={css.progress}>{index + 1} / {questions.length}</span>
+-                <button
++                <ActionButton
+                   type="button" className={css.iconButton} aria-label={t('nav.next')}
+                   disabled={index === questions.length - 1 || busy !== null}
+                   onClick={() => { replaceProgress(index + 1, drafts); setError(null) }}
+                 >
+                   <IconChevronRightOutlineRegular />
+-                </button>
++                </ActionButton>
+               </div>
+               <div className={css.feedback} role="status">
+                 {error === null ? null : 'key' in error ? t(error.key) : error.text}
+diff --git a/packages/client/ui-user-questions/src/client/QuestionReplyView.tsx b/packages/client/ui-user-questions/src/client/QuestionReplyView.tsx
+index 9c1680c..c689dd5 100644
+--- a/packages/client/ui-user-questions/src/client/QuestionReplyView.tsx
++++ b/packages/client/ui-user-questions/src/client/QuestionReplyView.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /** Settled question batches rendered with the shared user-message surface. */
+ import { memo } from 'react'
+ import type {} from '@deepseek-ai/dsh-client-ui-chat/client'
+@@ -52,9 +53,9 @@ export function QuestionReplyBubble({ data, t }: { data: QuestionReplyData; t: P
+           {new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hour12: false }).format(data.time)}
+         </span>
+         <Tooltip label={copied ? t('copied') : t('copy')} side="bottom">
+-          <button type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
++          <ActionButton type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
+             {copied ? <IconCheckOutlineRegular /> : <IconCopyOutlineRegular />}
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       </div>
+     </div>
+diff --git a/packages/client/ui-workspace/package.json b/packages/client/ui-workspace/package.json
+index efe7dfa..7997da4 100644
+--- a/packages/client/ui-workspace/package.json
++++ b/packages/client/ui-workspace/package.json
+@@ -79,7 +79,7 @@
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+     "@deepseek-ai/dsh-util-workspace-path": "workspace:*",
+     "clsx": "^2.0.0",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*",
+     "@deepseek-ai/dsh-client-product-analytics": "workspace:*"
+   },
+@@ -109,7 +109,7 @@
+     "@deepseek-ai/dsh-client-shortcuts": "workspace:*",
+     "@deepseek-ai/dsh-util-values": "workspace:*",
+     "@deepseek-ai/dsh-util-workspace-path": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-agent": "workspace:*",
+     "@deepseek-ai/dsh-jobs": "workspace:*",
+     "@deepseek-ai/dsh-schedule": "workspace:*",
+diff --git a/packages/client/ui-workspace/src/client/rows/Rows.tsx b/packages/client/ui-workspace/src/client/rows/Rows.tsx
+index 1e513cf..a549450 100644
+--- a/packages/client/ui-workspace/src/client/rows/Rows.tsx
++++ b/packages/client/ui-workspace/src/client/rows/Rows.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { createContext, useContext } from 'react'
+ export const WorkspacePathsVisible = createContext(true)
+ /**
+@@ -332,20 +333,20 @@ function ProjectRow({
+             portal
+             closeOnPointerLeave
+             anchor={(
+-              <button
++              <ActionButton
+                 type="button"
+                 className={css.iconButton}
+                 aria-label={t('actions.workspace.aria', { name: label })}
+                 onClick={(e) => { e.stopPropagation(); setMenuOpen(v => !v) }}
+               >
+                 <IconEllipsisOutlineRegular />
+-              </button>
++              </ActionButton>
+             )}
+           />
+         )}
+         {access.create && (
+           <Tooltip label={t('actions.newSession')} shortcutKeys={newShortcut?.keys} side="bottom" align="end" delayMs={500} portal>
+-            <button
++            <ActionButton
+               type="button"
+               className={css.iconButton}
+               aria-keyshortcuts={newShortcut?.aria}
+@@ -353,7 +354,7 @@ function ProjectRow({
+               onClick={(e) => { e.stopPropagation(); onCreate() }}
+             >
+               <IconNewChatOutlineRegular />
+-            </button>
++            </ActionButton>
+           </Tooltip>
+         )}
+       </span>
+@@ -559,14 +560,14 @@ export function SearchResultItem({
+         {result.archived && canUnarchive && (
+           <span className={css.rowActions}>
+             <Tooltip label={t('actions.unarchive')} side="bottom" align="end" delayMs={500} portal>
+-              <button
++              <ActionButton
+                 type="button"
+                 className={css.iconButton}
+                 aria-label={t('menu.unarchiveSession')}
+                 onClick={(e) => { e.stopPropagation(); onUnarchive(result.id) }}
+               >
+                 <IconUnarchiveOutlineRegular size={14} />
+-              </button>
++              </ActionButton>
+             </Tooltip>
+           </span>
+         )}
+@@ -769,14 +770,14 @@ export function SessionNodeItem({
+             portal
+             closeOnPointerLeave
+             anchor={(
+-              <button
++              <ActionButton
+                 type="button"
+                 className={css.iconButton}
+                 aria-label={t('actions.session.aria', { name: title })}
+                 onClick={() => { setMenuOpen(v => !v) }}
+               >
+                 <IconEllipsisOutlineRegular />
+-              </button>
++              </ActionButton>
+             )}
+           >
+             {renderSlot(
+diff --git a/packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx b/packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx
+index 67fa16a..9b68bff 100644
+--- a/packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx
++++ b/packages/client/ui-workspace/src/client/rows/WorkspaceBrowser.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The workspace/session browsing region filling the sidebar shell's
+  * `sidebar.workspaces` hole: section header (title + view options + add
+@@ -188,14 +189,14 @@ function ViewOptionsMenu({ groupBy, orderBy, archivedFilter, onGroupPick, onOrde
+       portal
+       anchor={(
+         <Tooltip label={t('viewOptions.label')} side="bottom" delayMs={500}>
+-          <button
++          <ActionButton
+             type="button"
+             className={clsx(css.iconButton, css.wide)}
+             aria-label={t('viewOptions.label')}
+             onClick={() => { setOpen(v => !v) }}
+           >
+             <IconSlidersTwoOutlineRegular />
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       )}
+     />
+@@ -306,9 +307,9 @@ function EmptySessions({ rowState, onLeaveArchivedOnly, t }: Pick<SessionTreePro
+       {archivedOnly ? <IconArchiveOutlineRegular size={24} /> : <IconQueueOutlineRegular size={24} />}
+       <div>{archivedOnly ? t('empty.noneArchived') : t('empty.none')}</div>
+       {archivedOnly && (
+-        <button type="button" className={css.emptyAction} onClick={onLeaveArchivedOnly}>
++        <ActionButton type="button" className={css.emptyAction} onClick={onLeaveArchivedOnly}>
+           {t('empty.viewOthers')}
+-        </button>
++        </ActionButton>
+       )}
+     </div>
+   )
+@@ -643,7 +644,7 @@ function SessionTree({
+           )
+         })}
+         {collapsed.hiddenCount > 0 && (
+-          <button
++          <ActionButton
+             type="button"
+             className={css.sessionOverflowButton}
+             data-row-key={`overflow:${group.key}`}
+@@ -663,7 +664,7 @@ function SessionTree({
+             {sessionsExpanded
+               ? t('sessions.collapse')
+               : t('sessions.expand', { n: visible.hiddenCount })}
+-          </button>
++          </ActionButton>
+         )}
+       </div>
+     )
+@@ -1300,7 +1301,7 @@ export function WorkspaceBrowser({
+               }}
+             >
+               <Tooltip label={t('search')} shortcutKeys={searchShortcut?.keys} side="bottom" delayMs={500} disabled={searchExpanded}>
+-                <button
++                <ActionButton
+                   type="button"
+                   className={css.searchButton}
+                   aria-label={t('search.sessions.aria')}
+@@ -1311,7 +1312,7 @@ export function WorkspaceBrowser({
+                   }}
+                 >
+                   <IconSearchOutlineRegular size={searchExpanded ? 11 : 14} />
+-                </button>
++                </ActionButton>
+               </Tooltip>
+               <input
+                 ref={searchInput}
+@@ -1329,7 +1330,7 @@ export function WorkspaceBrowser({
+                 }}
+               />
+               {searchExpanded && (
+-                <button
++                <ActionButton
+                   type="button"
+                   className={css.clearButton}
+                   aria-label={t('search.clear')}
+@@ -1340,7 +1341,7 @@ export function WorkspaceBrowser({
+                   }}
+                 >
+                   <IconCloseFillRegular />
+-                </button>
++                </ActionButton>
+               )}
+             </div>
+           </div>
+@@ -1362,7 +1363,7 @@ export function WorkspaceBrowser({
+               button rather than leaving a dead one in the header. */}
+           {directoryFlowAvailable && (
+             <Tooltip label={t('workspace.add')} shortcutKeys={addShortcut?.keys} side="bottom" delayMs={500}>
+-              <button
++              <ActionButton
+                 ref={wsPlusRef}
+                 type="button"
+                 className={css.iconButton}
+@@ -1373,7 +1374,7 @@ export function WorkspaceBrowser({
+                 }}
+               >
+                 <IconProjectAddOutlineRegular size={wide ? 16 : 18} />
+-              </button>
++              </ActionButton>
+             </Tooltip>
+           )}
+         </div>
+@@ -1400,7 +1401,7 @@ export function WorkspaceBrowser({
+       {/* The collapsed rail keeps search as its own 36px control. */}
+       {!wide && <div className={css.search}>
+         <Tooltip label={t('search')} shortcutKeys={searchShortcut?.keys}>
+-          <button
++          <ActionButton
+             type="button"
+             className={css.searchButton}
+             aria-label={t('search.sessions.aria')}
+@@ -1410,7 +1411,7 @@ export function WorkspaceBrowser({
+             }}
+           >
+             <IconSearchOutlineRegular size={18} />
+-          </button>
++          </ActionButton>
+         </Tooltip>
+       </div>}
+ 
+diff --git a/packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx b/packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx
+index 977a6b3..ee6e037 100644
+--- a/packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx
++++ b/packages/client/ui-workspace/src/client/session-actions/ArchiveSession.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The archive action: a `sidebar.workspaces.session.menu.item` row and a
+  * `sidebar.workspaces.session.row.action` button over one injected behavior,
+@@ -65,14 +66,14 @@ export function ArchiveSessionRowButton({
+   if (!allowed) return null
+   return (
+     <Tooltip label={t(archived ? 'actions.unarchive' : 'actions.archive')} side="bottom" align="end" delayMs={500} portal>
+-      <button
++      <ActionButton
+         type="button"
+         className={css.iconButton}
+         aria-label={t(archived ? 'menu.unarchiveSession' : 'menu.archiveSession')}
+         onClick={() => { (archived ? unarchiveSession : archiveSession)(sessionId) }}
+       >
+         {archived ? <IconUnarchiveOutlineRegular size={14} /> : <IconArchiveOutlineRegular size={14} />}
+-      </button>
++      </ActionButton>
+     </Tooltip>
+   )
+ }
+diff --git a/packages/client/ui-workspace/src/client/session-actions/PinSession.tsx b/packages/client/ui-workspace/src/client/session-actions/PinSession.tsx
+index df28cb9..cd830fb 100644
+--- a/packages/client/ui-workspace/src/client/session-actions/PinSession.tsx
++++ b/packages/client/ui-workspace/src/client/session-actions/PinSession.tsx
+@@ -1,3 +1,4 @@
++import { ActionButton } from '@deepseek-ai/dsh-client-ui-primitives'
+ /**
+  * The pin action: a `sidebar.workspaces.session.menu.item` row and a
+  * `sidebar.workspaces.session.row.action` button over one injected behavior.
+@@ -60,14 +61,14 @@ export function PinSessionRowButton(props: SessionRowActionProps<PinSessionInjec
+   if (archived || !allowed) return null
+   return (
+     <Tooltip label={t(pinned ? 'actions.unpin' : 'actions.pin')} side="bottom" align="end" delayMs={500} portal>
+-      <button
++      <ActionButton
+         type="button"
+         className={css.iconButton}
+         aria-label={t(pinned ? 'menu.unpinSession' : 'menu.pinSession')}
+         onClick={() => { (pinned ? unpinSession : pinSession)(sessionId) }}
+       >
+         {pinned ? <IconPinFillRegular size={14} /> : <IconPinOutlineRegular size={14} />}
+-      </button>
++      </ActionButton>
+     </Tooltip>
+   )
+ }
+diff --git a/packages/session-query/session-log-export/package.json b/packages/session-query/session-log-export/package.json
+index 6183591..8f8855d 100644
+--- a/packages/session-query/session-log-export/package.json
++++ b/packages/session-query/session-log-export/package.json
+@@ -54,7 +54,7 @@
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-session": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-message-feedback": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-layout": "workspace:*"
+   },
+@@ -84,7 +84,7 @@
+     "@deepseek-ai/dsh-session-persistence": "workspace:*",
+     "@deepseek-ai/dsh-session-query": "workspace:*",
+     "@deepseek-ai/dsh-session-title": "workspace:*",
+-    "react": "^18.2.0"
++    "react": "^19.0.0"
+   },
+   "dsh": {
+     "client": {
+diff --git a/packages/session/message-quotes/package.json b/packages/session/message-quotes/package.json
+index d5b228c..d3b1af4 100644
+--- a/packages/session/message-quotes/package.json
++++ b/packages/session/message-quotes/package.json
+@@ -45,7 +45,7 @@
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-session": "workspace:*"
+   },
+   "dsh": {
+@@ -70,7 +70,7 @@
+     "@deepseek-ai/dsh-client-ui-chat": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-conversation": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-renderer": "workspace:*",
+-    "react": "^18.2.0",
++    "react": "^19.0.0",
+     "@deepseek-ai/dsh-client-ui-slots": "workspace:*",
+     "@deepseek-ai/dsh-client-ui-primitives": "workspace:*"
+   }
+diff --git a/packages/client/ui-primitives/src/defined-props.ts b/packages/client/ui-primitives/src/defined-props.ts
+new file mode 100644
+index 0000000..4fbeccb
+--- /dev/null
++++ b/packages/client/ui-primitives/src/defined-props.ts
+@@ -0,0 +1,9 @@
++/** React's native attributes allow explicit undefined; React Aria expects omission. */
++export function definedProps<T extends object>(props: T): { [K in keyof T]: Exclude<T[K], undefined> } {
++  const result = { ...props }
++  for (const key of Object.keys(result) as (keyof T)[]) {
++    if (result[key] === undefined) delete result[key]
++  }
++  // The runtime loop above enforces the mapped type; no DOM values are coerced.
++  return result as { [K in keyof T]: Exclude<T[K], undefined> }
++}
