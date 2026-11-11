@@ -76,7 +76,11 @@ export function parsePackage(value: SkillImport): ParsedSkill {
   const body = match[2]!.trim()
   if (!body) throw new Error('SKILL.md 正文不能为空')
   let requiredTools: string[] = []
-  const manifest = files.find((f) => f.path === 'tianzhiai.manifest.json')
+  const manifests = files.filter(
+    (f) => f.path === 'tuai.manifest.json' || f.path === 'tianzhiai.manifest.json',
+  )
+  if (manifests.length > 1) throw new Error('技能包不能同时包含新旧清单')
+  const manifest = manifests[0]
   if (manifest) {
     try {
       const data = z
@@ -84,7 +88,7 @@ export function parsePackage(value: SkillImport): ParsedSkill {
         .parse(JSON.parse(decodeText(manifest.data) ?? ''))
       requiredTools = [...new Set(data.requiredTools)]
     } catch {
-      throw new Error('tianzhiai.manifest.json 的 requiredTools 必须为工具名数组')
+      throw new Error(`${manifest.path} 的 requiredTools 必须为工具名数组`)
     }
   }
   files.sort((a, b) => a.path.localeCompare(b.path, 'en'))

@@ -2,7 +2,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import type { ConfigForm } from '@deepseek-ai/dsh-client-ui-settings/client'
 import type { ThemePreference } from '@deepseek-ai/dsh-client-ui-theme/client'
-import type { ProductAppearanceSettings, ThemePalette } from '@tianzhiai/web-host/types'
+import type { ProductAppearanceSettings, ThemePalette } from '@tuai/web-host/types'
 
 interface AppearanceState {
   palette: ThemePalette

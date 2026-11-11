@@ -16,7 +16,7 @@ describe('TZ-007 产品核心组合', () => {
       await ctx.plugin(SessionStore)
       await ctx.plugin(SessionProjection)
       await ctx.plugin(SystemPrompt, {
-        personaPrefix: '你是天质个人助理。',
+        personaPrefix: '你是TUAI 个人助理。',
         includeHarnessIdentity: false,
         includeRuntimeContext: false,
       })

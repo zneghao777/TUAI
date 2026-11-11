@@ -24,6 +24,15 @@ describe('Host error presentation', () => {
     expect(localizeHostError('TIANZHIAI_HOME 必须是 Host 的绝对路径', 'it')).toBe(
       'TIANZHIAI_HOME deve essere un percorso assoluto sull’Host',
     )
+    expect(localizeHostError('TUAI_HOME 必须是 Host 的绝对路径', 'en')).toBe(
+      'TUAI_HOME must be an absolute path on the Host',
+    )
+    expect(
+      localizeHostError('tuai.manifest.json 的 requiredTools 必须为工具名数组', 'it'),
+    ).toContain('tuai.manifest.json')
+    expect(localizeHostError('技能包不能同时包含新旧清单', 'en')).toContain(
+      'cannot contain both old and new manifests',
+    )
     expect(localizeHostError('晨曦主题目前仅支持浅色', 'it')).toBe(
       'Il tema Alba supporta attualmente solo la modalità chiara',
     )

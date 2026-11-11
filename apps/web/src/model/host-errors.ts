@@ -307,6 +307,14 @@ const messages: Record<string, readonly [string, string]> = {
     'requiredTools in tianzhiai.manifest.json must be an array of tool names',
     'requiredTools in tianzhiai.manifest.json deve essere un elenco di nomi di strumenti',
   ],
+  'tuai.manifest.json 的 requiredTools 必须为工具名数组': [
+    'requiredTools in tuai.manifest.json must be an array of tool names',
+    'requiredTools in tuai.manifest.json deve essere un elenco di nomi di strumenti',
+  ],
+  技能包不能同时包含新旧清单: [
+    'A skill package cannot contain both old and new manifests',
+    'Un pacchetto di competenze non può contenere sia il manifest precedente sia quello nuovo',
+  ],
   '技能数据库版本较新，请使用兼容程序': [
     'The skill database was created by a newer version. Use a compatible version.',
     'Il database delle competenze è stato creato da una versione più recente. Usa una versione compatibile.',
@@ -377,7 +385,7 @@ export function localizeHostError(message: string, language: ProductLanguage): s
   const direct = messages[message]?.[index]
   if (direct) return direct
   const hostPath =
-    /^(Home|TIANZHIAI_HOME|APPDATA|XDG_CONFIG_HOME|XDG_DATA_HOME|XDG_STATE_HOME|XDG_CACHE_HOME) 必须是 Host 的绝对路径$/.exec(
+    /^(Home|TUAI_HOME|TIANZHIAI_HOME|APPDATA|XDG_CONFIG_HOME|XDG_DATA_HOME|XDG_STATE_HOME|XDG_CACHE_HOME) 必须是 Host 的绝对路径$/.exec(
       message,
     )
   if (hostPath)

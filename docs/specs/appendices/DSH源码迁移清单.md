@@ -59,7 +59,7 @@ rollbackRevision: null
 | 库构建 | `tsdown.config.ts`、包内 `tsdown.config.ts`、`scripts/build.ts`、`scripts/compile-referenced-projects.ts` | 先读其调用链；迁入实际使用的辅助脚本及生成依赖 |
 | 协议生成 | `packages/typert/generator`、`loader`、`registry`、`protocol` | 保留生成器与运行协议匹配；客户端不能手写另一版序列化 |
 | 启动器 | `apps/cli`、`packages/boot/app-boot`、`cmdline` | 延续 Profile 解析和 Loader 生命周期；产品入口最终独立命名 |
-| 组合配置 | `packages/bundle/base/cordis.patch.yml`、`sdk-minimal/cordis.patch.yml`、`web-app/cordis.patch.yml` | 提取能力组合，重新写 TIanZhiAi Profile，不继承上游全部产品默认项 |
+| 组合配置 | `packages/bundle/base/cordis.patch.yml`、`sdk-minimal/cordis.patch.yml`、`web-app/cordis.patch.yml` | 提取能力组合，重新写 TUAI Profile，不继承上游全部产品默认项 |
 | 底层依赖 | `vendor/*` | Cordis、Loader、Schema 及工具保持单份身份；保留其许可 |
 | 本地能力 | `native/system`、`native/system/packages/*` | 审计编译、平台选择、可执行权限和发布资源；按真实 Provider 纳入 |
 | 测试框架 | 根目录 Vitest 配置、`scripts/vitest-*` 及 `packages/test-support/*` | 只迁本批测试实际依赖的支撑；保留回放素材与解释 |
@@ -72,7 +72,7 @@ Workspace 内有用途。裁剪根脚本时，必须同步裁剪其依赖，不�
 
 ### 2.1 启动配置的三个陷阱
 
-上游 Profile 体现了可组合思路，但不是 TIanZhiAi 的最终默认产品配置。
+上游 Profile 体现了可组合思路，但不是 TUAI 的最终默认产品配置。
 
 1. `sdk-minimal` 中包含文件、终端、子进程、MCP 等提供者，不能把名称中的
    “minimal” 理解成纯聊天内核。
@@ -84,7 +84,7 @@ Workspace 内有用途。裁剪根脚本时，必须同步裁剪其依赖，不�
 ## 3. 分批迁入内容
 
 下列 M 编号是源码批次，P 编号是主规范的产品阶段；二者不要求一一对应。
-每批都先完成原行为核验，再实现 TIanZhiAi 修改。
+每批都先完成原行为核验，再实现 TUAI 修改。
 
 ### M0：来源、工作区和可构建底座
 
@@ -139,7 +139,7 @@ Workspace 内有用途。裁剪根脚本时，必须同步裁剪其依赖，不�
 
 ### M3：类型化 API 与自主前端的数据层
 
-这一批对应 P2，迁入前后端交互及 DSH 原工作区结构；天质仅在不改变行为的前提下适配品牌与主题。
+这一批对应 P2，迁入前后端交互及 DSH 原工作区结构；TUAI 仅在不改变行为的前提下适配品牌与主题。
 
 - 迁入 `packages/typert/*`、`api/gateway`、`api/remotes`、`api/session-controller`。
 - 根据工作区、文件和终端页面的实际范围加入相应 Controller。
@@ -173,10 +173,24 @@ Workspace 内有用途。裁剪根脚本时，必须同步裁剪其依赖，不�
 ACP、Codex、Claude Code、DSH SDK 等其他执行器可以延期。
 首版不能为了“多智能体”同时引入多个独立 Loop，再尝试用前端拼接成同一产品。
 
-### M5：OpenMuse 浏览器能力迁入
+### M5：Ego 接入与浏览器能力参考
 
-这一批对应 P4，采用“Worker → 服务 → 工具 → UI → 真实接管”的纵向方式。
-详细事务约束以主规范第 9 节为准。
+这一批对应 P4。2026-11-03 用户确认首版连接本机 Ego，采用
+“Ego 连接器 → 产品服务 → DSH 工具 → 按需右侧栏 → 真实接管”的纵向方式。
+详细边界见[主规范 §9](../项目开发规范.md#9-浏览器能力迁移与接管)与
+[P4 接入附录](P4-Ego浏览器接入与右侧栏需求.md)。
+本节更新接入范围，不把原型或来源登记计为已迁入运行能力。
+
+首版必须接入以下部分。
+
+| 来源／模块 | 产品目标 | 必须核对 |
+| --- | --- | --- |
+| Ego 本地受支持 SDK | 独立连接器、TaskSpace／页面映射、观察、受检动作与原生控制同步 | 实际安装版本、能力、分发／许可、取消与生命周期；不能硬编码原型空间 |
+| 已迁入 DSH 核心及产品 Host | BrowserService、工具、Reviewer、鉴权、事务与审计 | 保留单一 Loop；所有 CLI／Skill／MCP 动作服从同一网关 |
+| 已迁入右侧栏与原型 v2 | 按需页面栏、二进制 PNG、浮动接管栏和直接输入 | 复用现有控件；补正式认证、背压、IME、故障与原任务恢复 |
+
+下表保留 OpenMuse 的源码参考映射，按需要选择性复用，不再要求逐项迁入其 Worker。
+未采用部分标为参考；实际复制源码时登记基线、工作区差异、许可、闭包和补丁。
 
 | 原项目文件 | 迁入目标 | 必须改造的边界 |
 | --- | --- | --- |
@@ -195,8 +209,8 @@ ACP、Codex、Claude Code、DSH SDK 等其他执行器可以延期。
 还要追踪上述文件引用的 downloads、config、日志、文件落盘和 lifecycle 辅助代码。
 表格只标出主要入口，不表示复制这十余个文件即可完成抽取。
 
-迁移前后分别运行受控站点案例。现有 OpenMuse 的测试通过只能证明原项目组合，
-不能代替在 TIanZhiAi 身份、控制权和任务模型下的回归。
+选择性复用前后分别运行受控站点案例。OpenMuse 测试或 Ego 独立原型通过，
+都不能代替 TUAI 正式身份、控制权、右侧栏和任务模型下的回归。
 
 ### M6：计划与主动消息
 
@@ -216,7 +230,7 @@ ACP、Codex、Claude Code、DSH SDK 等其他执行器可以延期。
 - 追踪 `apps/desktop/scripts` 的运行时准备、包资源、签名和安装构建依赖。
 - 按实际使用范围迁入 `scripts/primary-runtime`、Native 和第三方运行时。
 - 更换产品 appId、名称、协议注册、数据目录、签名身份、更新地址与诊断字段。
-- 为浏览器 Worker 和 Chromium 建立本机安装资源策略，不能依赖开发机缓存。
+- 为自有 Ego 连接器建立安装资源策略，探测用户已安装 Ego 的版本与能力；未来其他 provider 的浏览器资源单独声明，不能依赖开发机缓存。
 
 DSH 当前存在 macOS arm64／x64、Windows x64 相关桌面构建脚本。
 Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打包与真实系统验收。
@@ -412,7 +426,7 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 
 | 源码目录与包 | 阶段 | 策略 | 说明 |
 | --- | --- | --- | --- |
-| [`packages/browser-use/browser-use`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/browser-use/browser-use/package.json)<br>`@deepseek-ai/dsh-browser-use` | P4 | `reference_only` | 了解抽象；首版采用 OpenMuse 执行能力 |
+| [`packages/browser-use/browser-use`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/browser-use/browser-use/package.json)<br>`@deepseek-ai/dsh-browser-use` | P4 | `reference_only` | 了解抽象；首版通过产品连接器接入本机 Ego |
 
 ### bundle
 
@@ -443,12 +457,12 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/client/shortcuts`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/shortcuts/package.json)<br>`@deepseek-ai/dsh-client-shortcuts` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/store`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/store/package.json)<br>`@deepseek-ai/dsh-client-store` | P2 | `planned` | 优先迁入连接、状态、启动或渲染契约，视觉可替换 |
 | [`packages/client/ui-agent-preset`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-agent-preset/package.json)<br>`@deepseek-ai/dsh-client-ui-agent-preset` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-approval`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-approval/package.json)<br>`@deepseek-ai/dsh-client-ui-approval` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-attachment`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-attachment/package.json)<br>`@deepseek-ai/dsh-client-ui-attachment` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-approval`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-approval/package.json)<br>`@deepseek-ai/dsh-client-ui-approval` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-attachment`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-attachment/package.json)<br>`@deepseek-ai/dsh-client-ui-attachment` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-brand-official`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-brand-official/package.json)<br>`@deepseek-ai/dsh-client-ui-brand-official` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-chat`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-chat/package.json)<br>`@deepseek-ai/dsh-client-ui-chat` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-commands`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-commands/package.json)<br>`@deepseek-ai/dsh-client-ui-commands` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-conversation`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-conversation/package.json)<br>`@deepseek-ai/dsh-client-ui-conversation` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-chat`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-chat/package.json)<br>`@deepseek-ai/dsh-client-ui-chat` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-commands`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-commands/package.json)<br>`@deepseek-ai/dsh-client-ui-commands` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-conversation`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-conversation/package.json)<br>`@deepseek-ai/dsh-client-ui-conversation` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-deepseek-model-label-1017`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-deepseek-model-label-1017/package.json)<br>`@deepseek-ai/dsh-client-ui-deepseek-model-label-1017` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-deliverables`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-deliverables/package.json)<br>`@deepseek-ai/dsh-client-ui-deliverables` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-directory-picker-browse`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-directory-picker-browse/package.json)<br>`@deepseek-ai/dsh-client-ui-directory-picker-browse` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
@@ -456,23 +470,23 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/client/ui-dockkit`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-dockkit/package.json)<br>`@deepseek-ai/dsh-client-ui-dockkit` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-entry-customization`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-entry-customization/package.json)<br>`@deepseek-ai/dsh-client-ui-entry-customization` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-file-drag`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-file-drag/package.json)<br>`@deepseek-ai/dsh-client-ui-file-drag` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-goal/package.json)<br>`@deepseek-ai/dsh-client-ui-goal` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-input-trigger`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-input-trigger/package.json)<br>`@deepseek-ai/dsh-client-ui-input-trigger` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-goal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-goal/package.json)<br>`@deepseek-ai/dsh-client-ui-goal` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-input-trigger`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-input-trigger/package.json)<br>`@deepseek-ai/dsh-client-ui-input-trigger` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-jobs`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-jobs/package.json)<br>`@deepseek-ai/dsh-client-ui-jobs` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-layout`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-layout/package.json)<br>`@deepseek-ai/dsh-client-ui-layout` | P2 | `planned` | 迁原三栏骨架、宽度／折叠与 Slot 协调；TZ-063/068 |
 | [`packages/client/ui-message-feedback`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-message-feedback/package.json)<br>`@deepseek-ai/dsh-client-ui-message-feedback` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-model-selection`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-model-selection/package.json)<br>`@deepseek-ai/dsh-client-ui-model-selection` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-model-selection`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-model-selection/package.json)<br>`@deepseek-ai/dsh-client-ui-model-selection` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-open-in-app`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-open-in-app/package.json)<br>`@deepseek-ai/dsh-client-ui-open-in-app` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-permission-presets`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-permission-presets/package.json)<br>`@deepseek-ai/dsh-client-ui-permission-presets` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-plan`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-plan/package.json)<br>`@deepseek-ai/dsh-client-ui-plan` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-permission-presets`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-permission-presets/package.json)<br>`@deepseek-ai/dsh-client-ui-permission-presets` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-plan`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-plan/package.json)<br>`@deepseek-ai/dsh-client-ui-plan` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-plugin-manager`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-plugin-manager/package.json)<br>`@deepseek-ai/dsh-client-ui-plugin-manager` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-plugin-market`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-plugin-market/package.json)<br>`@deepseek-ai/dsh-client-ui-plugin-market` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-primitives`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-primitives/package.json)<br>`@deepseek-ai/dsh-client-ui-primitives` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-reference`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-reference/package.json)<br>`@deepseek-ai/dsh-client-ui-reference` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-primitives`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-primitives/package.json)<br>`@deepseek-ai/dsh-client-ui-primitives` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-reference`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-reference/package.json)<br>`@deepseek-ai/dsh-client-ui-reference` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-renderer`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-renderer/package.json)<br>`@deepseek-ai/dsh-client-ui-renderer` | P2 | `planned` | 优先迁入连接、状态、启动或渲染契约，视觉可替换 |
 | [`packages/client/ui-schedule`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-schedule/package.json)<br>`@deepseek-ai/dsh-client-ui-schedule` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-secret-mask`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-secret-mask/package.json)<br>`@deepseek-ai/dsh-client-ui-secret-mask` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-session`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-session/package.json)<br>`@deepseek-ai/dsh-client-ui-session` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-session`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-session/package.json)<br>`@deepseek-ai/dsh-client-ui-session` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-settings`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings/package.json)<br>`@deepseek-ai/dsh-client-ui-settings` | P2 | `planned` | 来源／契约已迁不等于运行时启用；接显示、输入与权限所需 settings 闭包；TZ-063/065/066 |
 | [`packages/client/ui-settings-account`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-account/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-account` | P2 | `reference_only` | 审计契约并替换产品账户或观测集成 |
 | [`packages/client/ui-settings-agent-loop`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-settings-agent-loop/package.json)<br>`@deepseek-ai/dsh-client-ui-settings-agent-loop` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
@@ -487,19 +501,19 @@ Linux Host 与 Linux 桌面安装是两项工作；后者需要自行补齐打�
 | [`packages/client/ui-shortcuts`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-shortcuts/package.json)<br>`@deepseek-ai/dsh-client-ui-shortcuts` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-sidebar`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar` | P2 | `planned` | 迁原工作区侧栏容器与操作结构；TZ-068 |
 | [`packages/client/ui-sidebar-browser`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-browser/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-browser` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-sidebar-documentpreview`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-documentpreview/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-documentpreview` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-sidebar-files`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-files/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-files` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-sidebar-right`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-right/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-right` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
-| [`packages/client/ui-sidebar-terminal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-terminal/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-terminal` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-sidebar-documentpreview`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-documentpreview/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-documentpreview` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-sidebar-files`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-files/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-files` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-sidebar-right`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-right/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-right` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
+| [`packages/client/ui-sidebar-terminal`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-sidebar-terminal/package.json)<br>`@deepseek-ai/dsh-client-ui-sidebar-terminal` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-skill`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-skill/package.json)<br>`@deepseek-ai/dsh-client-ui-skill` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-slots`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-slots/package.json)<br>`@deepseek-ai/dsh-client-ui-slots` | P2 | `planned` | 优先迁入连接、状态、启动或渲染契约，视觉可替换 |
 | [`packages/client/ui-subagent`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-subagent/package.json)<br>`@deepseek-ai/dsh-client-ui-subagent` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
 | [`packages/client/ui-theme`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-theme/package.json)<br>`@deepseek-ai/dsh-client-ui-theme` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-tool`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-tool/package.json)<br>`@deepseek-ai/dsh-client-ui-tool` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-tool`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-tool/package.json)<br>`@deepseek-ai/dsh-client-ui-tool` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-trajectory`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-trajectory/package.json)<br>`@deepseek-ai/dsh-client-ui-trajectory` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-user-questions`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-user-questions/package.json)<br>`@deepseek-ai/dsh-client-ui-user-questions` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-user-questions`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-user-questions/package.json)<br>`@deepseek-ai/dsh-client-ui-user-questions` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/ui-workflow-run`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-workflow-run/package.json)<br>`@deepseek-ai/dsh-client-ui-workflow-run` | P2 | `reference_only` | 数据与连接优先迁入；视觉由产品独立设计 |
-| [`packages/client/ui-workspace`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-workspace/package.json)<br>`@deepseek-ai/dsh-client-ui-workspace` | P2 | `planned` | 迁入所需行为与闭包，替换天质主题；按 ADR-015 验证 |
+| [`packages/client/ui-workspace`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/ui-workspace/package.json)<br>`@deepseek-ai/dsh-client-ui-workspace` | P2 | `planned` | 迁入所需行为与闭包，替换 TUAI 主题；按 ADR-015 验证 |
 | [`packages/client/web`](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/client/web/package.json)<br>`@deepseek-ai/dsh-client-web` | P2 | `planned` | 优先迁入连接、状态、启动或渲染契约，视觉可替换 |
 
 ### compaction

@@ -23,6 +23,7 @@ import { mountHostTools } from './host-tools.ts'
 import { mountContext } from './context.ts'
 import { mountPermissions } from './permissions.ts'
 import { mountSkills } from './skills.ts'
+import { mountBrowserTools } from './browser-tools.ts'
 
 export const name = 'tianzhiai-agent-runtime'
 export const inject = ['tianzhiaiHost']
@@ -33,7 +34,7 @@ export async function apply(ctx: Context) {
   await ctx.plugin(SessionStore)
   await ctx.plugin(SessionProjection)
   await ctx.plugin(SystemPrompt, {
-    personaPrefix: '你是天质个人助理。',
+    personaPrefix: '你是 TUAI 个人助理。',
     includeHarnessIdentity: false,
     includeRuntimeContext: false,
   })
@@ -60,6 +61,7 @@ export async function apply(ctx: Context) {
   await ctx.plugin(Goal, { defaultMaxGoalRounds: 32 })
   await ctx.plugin(GoalDriver)
   await ctx.plugin(GoalTools)
+  await mountBrowserTools(ctx)
   await ctx.plugin(Plan, {
     section:
       '你处于计划模式。先分析需求和读取必要信息，提出可执行计划。在实施前调用 exit_plan_mode 向用户提交计划，批准后再实施。计划模式不扩大工具权限，仍遵守当前沙箱与审批策略。',

@@ -166,17 +166,17 @@ html[data-preview='chat'] #root {
 }
 .chat-logo {
   display: block;
-  width: 42px;
-  height: 16px;
+  width: 32px;
+  height: 18px;
   overflow: hidden;
   position: relative;
 }
 .chat-logo img {
   position: absolute;
-  top: -15px;
-  left: 0;
+  top: -5px;
+  left: -5px;
   width: 42px;
-  height: 42px;
+  height: 28px;
   max-width: none;
 }
 .chat-icon-button {

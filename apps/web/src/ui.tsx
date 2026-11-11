@@ -1,3 +1,4 @@
+import { mountBrowserPane } from './components/BrowserPane'
 import {
   MarkdownDelegateProvider,
   IconSettingsOutlineRegular,
@@ -30,7 +31,7 @@ import { useProductLanguage } from './model/product-language'
 import { localizeHostError } from './model/host-errors'
 import type { AppClient } from './model/client'
 import { mountArtifactPane } from './components/ArtifactPane'
-import brandLogo from './assets/tianzhi-logo.png'
+import brandLogo from './assets/tuai-logo.png'
 
 function ProductProviders({ client, children }: { client: AppClient; children: ReactNode }) {
   const language = useProductLanguage(client)
@@ -112,6 +113,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
     )
   }
   mountArtifactPane(client)
+  mountBrowserPane(client)
   const colors: Record<string, [string, string]> = Object.fromEntries(
     Object.entries({
       '--dsw-alias-bg-base': 'var(--canvas)',
@@ -288,7 +290,7 @@ export function mountProductUi(client: AppClient, container: HTMLElement) {
       )),
     ),
     ctx.slots.inject('sidebar.brand.name', () =>
-      ctx.slots.register({ name: 'sidebar.brand.name' }, () => <strong>天质 AI</strong>),
+      ctx.slots.register({ name: 'sidebar.brand.name' }, () => <strong>TUAI</strong>),
     ),
     ctx.slots.inject('sidebar.settings', () =>
       ctx.slots.register({ name: 'sidebar.settings' }, ({ wide }) => {

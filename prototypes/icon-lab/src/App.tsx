@@ -150,7 +150,7 @@ export default function App() {
                 <Glyph id="apps-add-outline" size={22} />
               </span>
               <span>
-                天质 AI<span className="brand-divider">/</span>图标实验室
+                TUAI<span className="brand-divider">/</span>图标实验室
               </span>
             </a>
             <div className="top-actions">
@@ -565,7 +565,7 @@ export default function App() {
               </aside>
             </div>
             <footer>
-              <span>天质 AI · Icon studies</span>
+              <span>TUAI · Icon studies</span>
               <span>悬停、聚焦或点击图标播放</span>
               <span>SVG + Framer Motion</span>
             </footer>

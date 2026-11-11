@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { startWebHost } from '../../apps/cli/lib/web.js'
 const home = await mkdtemp(join(tmpdir(), 'tianzhiai-p2-'))
-process.env.TIANZHIAI_HOME = home
+process.env.TUAI_HOME = home
 let runtime
 try {
   runtime = await startWebHost({ port: 0 })

@@ -1,5 +1,5 @@
 {
-  "name": "@tianzhiai/host-config",
+  "name": "@tuai/host-config",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "zod": "4.4.3",
-    "@tianzhiai/platform": "workspace:*",
-    "@deepseek-ai/dsh-atomic-write": "workspace:*"
+    "@tuai/platform": "workspace:*",
+    "@deepseek-ai/dsh-atomic-write": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:*"
   }
 }

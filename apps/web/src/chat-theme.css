@@ -1,4 +1,4 @@
-/* DSH controls keep their geometry and interaction; this layer supplies Tianzhi's palette. */
+/* DSH controls keep their geometry and interaction; this layer supplies the TUAI palette. */
 body {
   color: var(--ink);
   background: var(--canvas);
@@ -675,22 +675,22 @@ body[data-ds-dark-theme] [aria-label='发送消息'] {
   line-height: 1.4;
 }
 
-/* The supplied square image has transparent space above and below the wordmark. */
+/* Center the selected transparent mark within the compact navigation. */
 .tz-brand-logo {
   position: relative;
   display: inline-block;
-  width: 42px;
-  height: 16px;
+  width: 32px;
+  height: 18px;
   overflow: hidden;
   flex: none;
 }
 .tz-brand-logo img {
   position: absolute;
-  top: -15px;
-  left: 0;
+  top: -5px;
+  left: -5px;
   width: 42px;
   max-width: none;
-  height: 42px;
+  height: 28px;
 }
 .tz-staged-permission {
   display: inline-flex;
@@ -718,12 +718,13 @@ body[data-ds-dark-theme] [aria-label='发送消息'] {
 }
 [aria-label='打开侧边栏'] .tz-brand-logo {
   width: 27px;
-  height: 11px;
+  height: 16px;
 }
 [aria-label='打开侧边栏'] .tz-brand-logo img {
-  top: -9.6px;
-  width: 27px;
-  height: 27px;
+  top: -4px;
+  left: -4.5px;
+  width: 36px;
+  height: 24px;
 }
 
 .tz-chat-navigation {

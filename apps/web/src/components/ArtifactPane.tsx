@@ -7,7 +7,7 @@ import {
   IconRefreshOutlineRegular,
   Modal,
 } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { ArtifactInfo } from '@tianzhiai/web-host/types'
+import type { ArtifactInfo } from '@tuai/web-host/types'
 import type { AppClient } from '../model/client'
 import { describe, unwrap } from '../model/client'
 import { useProductLanguage } from '../model/product-language'

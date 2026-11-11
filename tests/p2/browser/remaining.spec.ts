@@ -176,7 +176,9 @@ test('TZ-069 original files, safe HTML and text preview through authenticated Wo
     )
     await page.getByRole('button', { name: '打开右侧边栏' }).click()
     await page.getByRole('button', { name: /工作区文件/ }).click()
-    const filesTabTitle = page.getByRole('tab', { name: '工作区文件 关闭', exact: true }).locator('[data-dockkit-tab-title]')
+    const filesTabTitle = page
+      .getByRole('tab', { name: '工作区文件 关闭', exact: true })
+      .locator('[data-dockkit-tab-title]')
     await expect(filesTabTitle).not.toHaveAttribute('data-dockkit-tab-clipped', '')
     await expect(page.getByRole('button', { name: '会话产物' })).toHaveCount(0)
     const folder = page.getByRole('button', { name: 'nested', exact: true })
@@ -200,7 +202,10 @@ test('TZ-069 original files, safe HTML and text preview through authenticated Wo
     await page.getByRole('tab', { name: '通用', exact: true }).click()
     await page.getByRole('button', { name: '青绿', exact: true }).click()
     await page.getByRole('button', { name: '深色', exact: true }).click()
-    await page.getByRole('dialog', { name: '设置' }).getByRole('button', { name: '关闭', exact: true }).click()
+    await page
+      .getByRole('dialog', { name: '设置' })
+      .getByRole('button', { name: '关闭', exact: true })
+      .click()
     await expect(page.locator('body')).toHaveAttribute('data-ds-dark-theme', '')
     await expect(child).toBeVisible()
     await page.screenshot({ path: 'reports/p2/tz084-tree-dark.png' })

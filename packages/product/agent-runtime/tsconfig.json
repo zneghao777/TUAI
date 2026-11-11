@@ -200,6 +200,12 @@
     },
     {
       "path": "../../skill/tool-skill"
+    },
+    {
+      "path": "../browser-service"
+    },
+    {
+      "path": "../task-runtime"
     }
   ]
 }

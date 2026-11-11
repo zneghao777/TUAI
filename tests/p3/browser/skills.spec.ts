@@ -31,7 +31,7 @@ test('skill import, activation, new conversation, versions, rollback and retaine
     await expect(page.getByRole('button', { name: '停用', exact: true })).toBeVisible()
     const card = page.locator('.tz-skills-card').filter({ hasText: 'document-review' })
     const cardBounds = await card.boundingBox()
-    const descriptionBounds = await card.locator('p').boundingBox()
+    const descriptionBounds = await card.locator('.tz-skills-card-description').boundingBox()
     expect(descriptionBounds!.x + descriptionBounds!.width).toBeLessThanOrEqual(
       cardBounds!.x + cardBounds!.width,
     )
@@ -119,6 +119,16 @@ test('skills inherit existing themes, narrow layout and modal keyboard focus', a
       await expect(page.getByRole('heading', { name: 'document-review' })).toBeVisible()
       await page.screenshot({ path: `reports/p3/skills-${key}.png` })
     }
+    await page.getByRole('button', { name: '设置', exact: true }).click()
+    await page.getByRole('tab', { name: '通用', exact: true }).click()
+    await page.getByRole('button', { name: '青绿', exact: true }).click()
+    await page.getByRole('button', { name: '深色', exact: true }).click()
+    await page.getByRole('button', { name: '关闭', exact: true }).click()
+    await page.getByRole('button', { name: '技能', exact: true }).click()
+    await page.locator('.tz-skills-card').filter({ hasText: 'document-review' }).click()
+    await expect(page.getByRole('heading', { name: 'document-review' })).toBeVisible()
+    await expect(page.locator('body')).toHaveAttribute('data-ds-dark-theme', /.+|^$/)
+    await page.screenshot({ path: 'reports/p3/skills-dark.png' })
     await page.setViewportSize({ width: 390, height: 844 })
     await expect(page.getByRole('button', { name: '返回列表' })).toBeVisible()
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
@@ -133,6 +143,43 @@ test('skills inherit existing themes, narrow layout and modal keyboard focus', a
   } catch (error) {
     console.error(error)
     throw error
+  } finally {
+    await page.close()
+    await host.dispose()
+  }
+})
+
+test('long descriptions keep cards and detail header compact while overview stays readable', async ({
+  page,
+}) => {
+  const host = await fixtureHost()
+  try {
+    const longDescription = '核对文档结构与内容。'.repeat(28)
+    const longContent = `---\nname: long-description\ndescription: ${longDescription}\n---\n# 文档检查\n\n先阅读文档。`
+    host.runtime.ctx.skillLibrary.store.import({
+      source: '本地验收',
+      files: [{ path: 'SKILL.md', data: Buffer.from(longContent).toString('base64') }],
+    })
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto(host.login)
+    await page.getByRole('button', { name: '技能', exact: true }).click()
+    const card = page.locator('.tz-skills-card').filter({ hasText: 'long-description' })
+    await card.click()
+    const cardBox = await card.boundingBox()
+    expect(cardBox!.width).toBeLessThanOrEqual(360)
+    const description = page.locator('.tz-skills-description')
+    await expect(description).toHaveText(longDescription)
+    const dimensions = await description.locator('span').evaluate((el) => ({
+      height: el.clientHeight,
+      scrollHeight: el.scrollHeight,
+    }))
+    expect(dimensions.scrollHeight).toBeGreaterThan(dimensions.height)
+    await expect(page.locator('.tz-skills-overview').getByText(longDescription)).toBeVisible()
+    await expect(page.getByRole('button', { name: '编辑新版本' })).toBeVisible()
+    await page.screenshot({
+      path: 'reports/p3/skills-long-description.png',
+      animations: 'disabled',
+    })
   } finally {
     await page.close()
     await host.dispose()

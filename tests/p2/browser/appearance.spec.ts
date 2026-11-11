@@ -13,7 +13,7 @@ async function openAppearance(page) {
 
 test('TZ-077 dawn and forest share durable settings, keyboard selection and readable surfaces', async ({
   page,
-}) => {
+}, testInfo) => {
   const host = await fixtureHost({ composerControls: true })
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
@@ -29,6 +29,10 @@ test('TZ-077 dawn and forest share durable settings, keyboard selection and read
     )
     await page.getByRole('button', { name: '深色', exact: true }).click()
     await expect(page.locator('body')).toHaveAttribute('data-ds-dark-theme', '')
+    await page.getByRole('button', { name: '关闭', exact: true }).click()
+    await expect(page.locator('.tz-brand-logo img').first()).toBeVisible()
+    await page.screenshot({ path: testInfo.outputPath('tuai-dark-brand.png') })
+    await openAppearance(page)
     const dawn = page.getByRole('button', { name: '晨曦', exact: true })
     await dawn.focus()
     await page.keyboard.press('Space')
@@ -60,7 +64,7 @@ test('TZ-077 dawn and forest share durable settings, keyboard selection and read
       /linear-gradient/,
     )
     await page.mouse.move(-1, -1)
-    await page.screenshot({ path: 'reports/p2/077-dawn-settings.png' })
+    await page.screenshot({ path: testInfo.outputPath('077-dawn-settings.png') })
     await page.getByRole('button', { name: '关闭', exact: true }).click()
     await expect(editor(page)).toHaveText('主题切换后保留的草稿')
     await page.getByRole('button', { name: '发送消息', exact: true }).click()
@@ -68,7 +72,7 @@ test('TZ-077 dawn and forest share durable settings, keyboard selection and read
       page.getByText('已通过真实 Host 接收：主题切换后保留的草稿。', { exact: true }),
     ).toBeVisible()
     await page.mouse.move(-1, -1)
-    await page.screenshot({ path: 'reports/p2/077-dawn-chat.png' })
+    await page.screenshot({ path: testInfo.outputPath('077-dawn-chat.png') })
     await page.reload()
     await expect(editor(page)).toBeVisible()
     await expect(page.locator('body')).toHaveAttribute('data-tz-palette', 'dawn')
@@ -90,7 +94,7 @@ test('TZ-077 dawn and forest share durable settings, keyboard selection and read
     await expect(dawn).toBeEnabled()
     await page.mouse.move(-1, -1)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-    await page.screenshot({ path: 'reports/p2/077-dawn-narrow.png' })
+    await page.screenshot({ path: testInfo.outputPath('077-dawn-narrow.png') })
     await page.getByRole('button', { name: '关闭', exact: true }).click()
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await expect(page.locator('.tz-cursor-glow')).toHaveCSS('display', 'none')

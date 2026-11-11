@@ -1,7 +1,8 @@
+import type { BrowserSnapshot } from '@tuai/browser-service/types'
 import { migrateUiState } from './migrate-ui-state'
 import * as Workspaces from '@deepseek-ai/dsh-api-workspace-controller/client'
 import workspaceRemote from '@deepseek-ai/dsh-api-workspace-controller/remote'
-import { createRemotePlatform, parseClientConfig, type PlatformAdapter } from '@tianzhiai/platform'
+import { createRemotePlatform, parseClientConfig, type PlatformAdapter } from '@tuai/platform'
 import type {} from '@deepseek-ai/dsh-api-session-controller/remote'
 import type {} from '@deepseek-ai/dsh-permission-presets/remote'
 import { Context } from '@deepseek-ai/cordis'
@@ -14,8 +15,8 @@ import * as Gateway from '@deepseek-ai/dsh-api-gateway/client'
 import * as Remotes from '@deepseek-ai/dsh-api-remotes/client'
 import * as Uploads from '@deepseek-ai/dsh-client-file-upload/client'
 import * as Sessions from '@deepseek-ai/dsh-api-session-controller/client'
-import platform from '@tianzhiai/web-host/remote'
-import type { HostStatus } from '@tianzhiai/web-host/types'
+import platform from '@tuai/web-host/remote'
+import type { HostStatus } from '@tuai/web-host/types'
 import type { ModelCatalog } from '@deepseek-ai/dsh-api-session-controller/types'
 import type { PermissionCatalog } from '@deepseek-ai/dsh-permission-presets/types'
 import type { ApprovalOutcome } from '@deepseek-ai/dsh-user-approval/types'
@@ -46,6 +47,8 @@ export class AppClient {
     permissions?: PermissionCatalog
     error?: string
   }>({})
+  readonly browserState = createSnapshotStore<readonly BrowserSnapshot[]>([])
+  readonly browserConnectionError = createSnapshotStore(false)
   readonly interactions = createSnapshotStore<readonly Interaction[]>([])
   connection!: ConnectionHandle
   platform?: PlatformAdapter

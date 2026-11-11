@@ -7,8 +7,8 @@ import { startWebHost } from '../../apps/cli/lib/web.js'
 
 test('TZ-077 appearance validates atomic settings and restores after a Host restart', async () => {
   const home = await mkdtemp(join(tmpdir(), 'tianzhiai-appearance-'))
-  const previous = process.env.TIANZHIAI_HOME
-  process.env.TIANZHIAI_HOME = home
+  const previous = process.env.TUAI_HOME
+  process.env.TUAI_HOME = home
   let runtime
   try {
     runtime = await startWebHost({ port: 0 })
@@ -103,16 +103,16 @@ test('TZ-077 appearance validates atomic settings and restores after a Host rest
     assert.equal(restoredWhite.value.preference, 'light')
   } finally {
     await runtime?.dispose()
-    if (previous === undefined) delete process.env.TIANZHIAI_HOME
-    else process.env.TIANZHIAI_HOME = previous
+    if (previous === undefined) delete process.env.TUAI_HOME
+    else process.env.TUAI_HOME = previous
     await rm(home, { recursive: true, force: true })
   }
 })
 
 test('TZ-082 legacy and explicit choices load without rewriting; new font-only saves retain white', async () => {
   const home = await mkdtemp(join(tmpdir(), 'tianzhiai-appearance-legacy-'))
-  const previous = process.env.TIANZHIAI_HOME
-  process.env.TIANZHIAI_HOME = home
+  const previous = process.env.TUAI_HOME
+  process.env.TUAI_HOME = home
   let runtime
   try {
     runtime = await startWebHost({ port: 0 })
@@ -172,8 +172,8 @@ test('TZ-082 legacy and explicit choices load without rewriting; new font-only s
     runtime = undefined
   } finally {
     await runtime?.dispose()
-    if (previous === undefined) delete process.env.TIANZHIAI_HOME
-    else process.env.TIANZHIAI_HOME = previous
+    if (previous === undefined) delete process.env.TUAI_HOME
+    else process.env.TUAI_HOME = previous
     await rm(home, { recursive: true, force: true })
   }
 })

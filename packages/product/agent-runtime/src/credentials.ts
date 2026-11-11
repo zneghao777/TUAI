@@ -4,18 +4,7 @@ import { join } from 'node:path'
 import { withFileLock, writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
 import type { CredentialKey, CredentialRecord } from '@deepseek-ai/dsh-credentials'
 import CredentialProvider, { type CredentialRef } from '@deepseek-ai/dsh-credentials'
-import {
-  type EnvironmentCredentials,
-  type HostPaths,
-  type HostSettings,
-  SecretStore,
-} from '@tianzhiai/host-config'
-
-declare module '@deepseek-ai/cordis' {
-  interface Context {
-    tianzhiaiHost: { paths: HostPaths; settings: HostSettings; credentials: EnvironmentCredentials }
-  }
-}
+import { SecretStore } from '@tuai/host-config'
 
 /** Managed model secrets precede explicitly allowed environment references. */
 export class HostCredentials extends CredentialProvider {

@@ -125,6 +125,18 @@
     },
     {
       "path": "../../core/tools"
+    },
+    {
+      "path": "../browser-service"
+    },
+    {
+      "path": "../task-runtime"
+    },
+    {
+      "path": "../../goal/goal"
+    },
+    {
+      "path": "../host-config"
     }
   ]
 }

@@ -18,7 +18,7 @@
 | 文件       | 激活原 write／edit，新增 glob／grep；按当前 Session cwd 与权限解析路径，文件 API 拒绝其他会话私有目录及软链接越界                          |
 | Shell／Job | 原 Bash 启用后台任务与超时转后台；接原 Job 查询、等待、终止及有界唤醒，不把已启动显示成已完成                                              |
 | 持久终端   | 原 terminal、terminal-bash、tool-terminal；支持创建、发送、读取和关闭，保留 Session 归属、取消及资源释放                                   |
-| Web        | 原 web、tool-web、HTTP Fetch 与 DeepSeek Search；搜索读取天质自己的显式凭据，没有密钥时报告不可用                                          |
+| Web        | 原 web、tool-web、HTTP Fetch 与 DeepSeek Search；搜索读取 TUAI 自己的显式凭据，没有密钥时报告不可用                                        |
 | 会话       | 原 Workspace Registry／Controller 与客户端对象；原置顶、重命名、分叉、归档、恢复、复制 ID 菜单及原确认弹窗接入生产侧栏                     |
 
 `web-search-exa` 和 `tool-session-query` 只补原测试依赖闭包，未挂生产；
@@ -79,7 +79,7 @@ Spill 完整产物、审批竞争、过期、断线恢复、四种显示偏好�
 真实网络样本：`https://example.com/` 返回 200，正文 577 字符，包含 Example Domain；
 DeepSeek 搜索返回 3 个 TypeScript 官方文档来源。真实 DeepSeek 模型在生产主界面依次调用
 `web_search` 和 `web_fetch`，2 次工具结果均成功，页面 JavaScript 错误为 0。
-测试仅临时复制天质自己的加密配置，结束后清理；报告不记录凭据、认证 URL 或请求头。
+测试仅临时复制 TUAI 自己的加密配置，结束后清理；报告不记录凭据、认证 URL 或请求头。
 
 本地证据在未跟踪的 `reports/p2/`：`064-real-web.json/png`、`064-session-menu.png`、
 `064-settings-menu.png`、`064-tool-views.png`、浏览器结果及独立目录报告。

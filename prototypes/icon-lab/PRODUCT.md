@@ -1,4 +1,4 @@
-# 天质 AI 图标实验室
+# TUAI 图标实验室
 
 <!-- impeccable:product-schema 1 -->
 

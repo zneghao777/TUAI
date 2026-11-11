@@ -1,7 +1,7 @@
 import { once } from 'node:events'
 import { loadHostSettings, resolveHostPaths } from '../../packages/product/host-config/lib/index.js'
 
-const paths = resolveHostPaths({ env: { TIANZHIAI_HOME: process.argv[2] } })
+const paths = resolveHostPaths({ env: { TUAI_HOME: process.argv[2] } })
 const start = once(process, 'message')
 process.send({ ready: true })
 await start

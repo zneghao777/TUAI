@@ -16,7 +16,7 @@
 | 思考与工具     | 原 `ReasoningRow`、原工具插件及专用行；工具状态和错误从真实事件派生，思考保留流式及持久正文                                                            |
 | 时间           | 原 `RunningStatus` 和 `TurnProcessNodeView`；运行时间从 `turn/start` 计，完成时间由持久的开始／结束事件计算，不累计各步骤时间                          |
 | 显示偏好       | 原 `TranscriptViewRow`、`TranscriptViewPolicy`、`ConfigForms`、`SettingsController` 与生成 codec；标准／简洁／详细／完全展开、折叠时机和回复保留可保存 |
-| 主题与图像     | 原图标、基础样式、附件图库；产品只覆盖主题颜色与内容宽度，保留天质品牌                                                                                 |
+| 主题与图像     | 原图标、基础样式、附件图库；产品只覆盖主题颜色与内容宽度，保留 TUAI 品牌                                                                               |
 | 外部框架       | 主会话 Slot 已承载原聊天；当前侧栏、Composer 和审批入口继续由后续 TZ-065／066／067／068 迁移                                                           |
 
 `ui-layout`、workspace、sidebar、plan、goal、schedule、office-to-pdf 等依赖已复制，
@@ -31,7 +31,7 @@ Vite 门禁核对原会话组件确实进入产物，同时禁止上述无关运
 3. 产品 Host 没有上游 Loader 的配置文档所有权，因此给原 `SettingsController` 注入窄 `SettingsProvider`。只开放 `ui-chat` 偏好，原 schema、Remote 错误和 codec 不变；原子写入 `config/chat-preferences.json`，保留修订号并拒绝旧版本覆盖。没有挂凭据控制器或扩大权限。
 4. 补足 API facade 的公开类型导出和真实依赖声明。双面 TS 项目引用指向 Host／Client 叶配置；迁移脚本同步处理，避免依靠已有构建输出通过类型检查。
 5. 附件插件保留原图库，移除尚未接入的轨迹 Slot 注册。显示设置使用原 DSH Modal，与原菜单配合，避免浏览器原生 dialog 令 body portal 菜单失去交互。
-6. 原 Markdown 增加可继承的外部图片开关，默认仍保留上游行为；产品根显式关闭外部图片自动加载，沿用天质既有边界。已上传附件仍通过鉴权图库加载，安全回归同时检查 DOM 与实际请求。
+6. 原 Markdown 增加可继承的外部图片开关，默认仍保留上游行为；产品根显式关闭外部图片自动加载，沿用 TUAI 既有边界。已上传附件仍通过鉴权图库加载，安全回归同时检查 DOM 与实际请求。
 
 原始源码归档和本地补丁分别为
 [`dsh-tz063-conversation.tar.gz`](../../provenance/dsh-tz063-conversation.tar.gz)与
@@ -64,13 +64,13 @@ Vite 门禁核对原会话组件确实进入产物，同时禁止上述无关运
 长过程内部滚动、四种显示模式、偏好持久化和刷新后耗时不变。
 原审批、附件、排队、插话、断线恢复、历史分页及代理路径回归继续保留。
 
-DSH 的历史实现保留已加载节点以支持轮次导航和浏览器查找，未照搬旧天质的
+DSH 的历史实现保留已加载节点以支持轮次导航和浏览器查找，未照搬旧 TUAI 的
 “DOM 少于 40 条”指标；主动发送会跟随新输入，远端增长时保持读者位置。
 这是本轮依照 DSH 交互基线调整的验证口径，不能继续宣称旧虚拟列表实现仍在运行。
 
 本次 M5 Pro／macOS arm64／Chrome、1440×1000 实测：初始可见 174 ms，
 50 页全部加载后约 132,003 个 DOM 节点，新输入至显示约 15,646 ms。
-这较旧天质约 297 ms 的记录明显退化，不能以功能通过掩盖。已加入 TZ-067 和
+这较旧 TUAI 约 297 ms 的记录明显退化，不能以功能通过掩盖。已加入 TZ-067 和
 TZ-022 的渲染与性能复核；本项不宣布 P2 性能验收通过。
 
 独立目录复验命令为 `node /tmp/tianzhiai-063-independent.mjs`，报告

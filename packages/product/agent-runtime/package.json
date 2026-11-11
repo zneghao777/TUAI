@@ -1,5 +1,5 @@
 {
-  "name": "@tianzhiai/agent-runtime",
+  "name": "@tuai/agent-runtime",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -26,7 +26,7 @@
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",
     "@deepseek-ai/dsh-credentials": "workspace:*",
-    "@tianzhiai/host-config": "workspace:*",
+    "@tuai/host-config": "workspace:*",
     "@deepseek-ai/dsh-llm": "workspace:*",
     "@deepseek-ai/dsh-session": "workspace:*",
     "@deepseek-ai/dsh-session-projection": "workspace:*",
@@ -91,7 +91,9 @@
     "@deepseek-ai/dsh-session-reference": "workspace:*",
     "@deepseek-ai/dsh-skill": "workspace:*",
     "@deepseek-ai/dsh-tool-skill": "workspace:*",
-    "js-yaml": "4.3.2"
+    "js-yaml": "4.3.2",
+    "@tuai/browser-service": "workspace:*",
+    "@tuai/task-runtime": "workspace:*"
   },
   "devDependencies": {
     "@types/js-yaml": "4.0.9"

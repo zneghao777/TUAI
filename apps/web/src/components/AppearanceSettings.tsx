@@ -4,7 +4,7 @@ import type { AppearanceRuntime } from '../model/appearance'
 import type { AppClient } from '../model/client'
 import { useProductLanguage } from '../model/product-language'
 import type { ThemePreference } from '@deepseek-ai/dsh-client-ui-theme/client'
-import type { ThemePalette } from '@tianzhiai/web-host/types'
+import type { ThemePalette } from '@tuai/web-host/types'
 
 const palettes: readonly ThemePalette[] = ['white', 'forest', 'dawn']
 const modes: readonly ThemePreference[] = ['light', 'dark', 'system']

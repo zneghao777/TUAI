@@ -81,7 +81,7 @@ test('CLI check reports cleanup failure with nonzero exit and redacts diagnostic
     execute(process.execPath, ['--expose-internals', cli, '--profile', manifest, '--check'], {
       env: {
         ...process.env,
-        TIANZHIAI_HOME: join(directory, 'host'),
+        TUAI_HOME: join(directory, 'host'),
         TIANZHIAI_SECRET_REVIEW: 'synthetic-review-secret',
       },
       timeout: 4000,
@@ -116,7 +116,7 @@ test(
     )
     await assert.rejects(
       execute(process.execPath, ['--expose-internals', cli, '--profile', manifest, '--check'], {
-        env: { ...process.env, TIANZHIAI_HOME: join(directory, 'host') },
+        env: { ...process.env, TUAI_HOME: join(directory, 'host') },
         timeout: 13000,
         killSignal: 'SIGKILL',
       }),
@@ -161,7 +161,7 @@ test('startup timeout cancels prepare and prevents loading entries after it resu
 test('concurrent first starts publish a complete configuration with one persistent identity', async (t) => {
   const { directory } = await fixture(t)
   for (let round = 0; round < 30; round++) {
-    const paths = resolveHostPaths({ env: { TIANZHIAI_HOME: join(directory, String(round)) } })
+    const paths = resolveHostPaths({ env: { TUAI_HOME: join(directory, String(round)) } })
     const results = await Promise.allSettled(
       Array.from({ length: 32 }, () => loadHostSettings(paths)),
     )

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { randomUUID } from 'node:crypto'
-import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import {
@@ -20,13 +20,13 @@ import {
 
 test('data domains use Host OS paths and reject relative overrides', () => {
   const mac = resolveHostPaths({ platform: 'darwin', home: '/Users/中文 用户', env: {} })
-  assert.equal(mac.sessions, '/Users/中文 用户/Library/Application Support/TIanZhiAi/data/sessions')
+  assert.equal(mac.sessions, '/Users/中文 用户/Library/Application Support/TUAI/data/sessions')
   const windows = resolveHostPaths({
     platform: 'win32',
     home: 'C:\\Users\\中文 用户',
     env: { APPDATA: 'D:\\应用 数据' },
   })
-  assert.equal(windows.config, 'D:\\应用 数据\\TIanZhiAi\\config')
+  assert.equal(windows.config, 'D:\\应用 数据\\TUAI\\config')
   const linux = resolveHostPaths({
     platform: 'linux',
     home: '/home/user',
@@ -37,10 +37,10 @@ test('data domains use Host OS paths and reject relative overrides', () => {
       XDG_CACHE_HOME: '/cache',
     },
   })
-  assert.equal(linux.config, '/config/TIanZhiAi')
-  assert.equal(linux.sessions, '/data/TIanZhiAi/sessions')
-  assert.equal(linux.logs, '/state/TIanZhiAi/logs')
-  assert.equal(linux.temporary, '/cache/TIanZhiAi/tmp')
+  assert.equal(linux.config, '/config/TUAI')
+  assert.equal(linux.sessions, '/data/TUAI/sessions')
+  assert.equal(linux.logs, '/state/TUAI/logs')
+  assert.equal(linux.temporary, '/cache/TUAI/tmp')
   const override = resolveHostPaths({
     platform: 'linux',
     home: '/home/user',
@@ -49,6 +49,13 @@ test('data domains use Host OS paths and reject relative overrides', () => {
   assert.equal(override.downloads, '/中文 独立目录/data/downloads')
   assert.notEqual(override.sessions, override.browserProfiles)
   assert.throws(() => resolveHostPaths({ env: { TIANZHIAI_HOME: './relative' } }), /绝对路径/)
+  assert.throws(() => resolveHostPaths({ env: { TUAI_HOME: './relative' } }), /TUAI_HOME/)
+  const preferred = resolveHostPaths({
+    platform: 'linux',
+    home: '/home/user',
+    env: { TUAI_HOME: '/new', TIANZHIAI_HOME: '/old' },
+  })
+  assert.equal(preferred.data, '/new/data')
   assert.throws(
     () =>
       resolveHostPaths({
@@ -58,6 +65,54 @@ test('data domains use Host OS paths and reject relative overrides', () => {
       }),
     /绝对路径/,
   )
+})
+
+test('existing legacy directories and database remain in use without moving data', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'tuai-legacy-paths-'))
+  t.after(() => rm(root, { recursive: true, force: true }))
+  const env = {
+    XDG_CONFIG_HOME: join(root, 'config'),
+    XDG_DATA_HOME: join(root, 'data'),
+    XDG_STATE_HOME: join(root, 'state'),
+    XDG_CACHE_HOME: join(root, 'cache'),
+  }
+  const legacyConfig = join(env.XDG_CONFIG_HOME, 'TIanZhiAi')
+  const legacyData = join(env.XDG_DATA_HOME, 'TIanZhiAi')
+  await mkdir(legacyConfig, { recursive: true })
+  await mkdir(join(legacyData, 'business'), { recursive: true })
+  const legacyDatabase = join(legacyData, 'business', 'tianzhiai.sqlite3')
+  await writeFile(legacyDatabase, 'existing database')
+  const paths = resolveHostPaths({ platform: 'linux', home: root, env })
+  assert.equal(paths.config, legacyConfig)
+  assert.equal(paths.data, legacyData)
+  assert.equal(paths.database, legacyDatabase)
+  assert.equal(paths.state, join(env.XDG_STATE_HOME, 'TIanZhiAi'))
+  assert.equal(await readFile(paths.database, 'utf8'), 'existing database')
+  await mkdir(join(env.XDG_DATA_HOME, 'TUAI'), { recursive: true })
+  const stillLegacy = resolveHostPaths({ platform: 'linux', home: root, env })
+  assert.equal(stillLegacy.config, legacyConfig)
+  assert.equal(stillLegacy.data, legacyData)
+  await mkdir(join(env.XDG_CONFIG_HOME, 'TUAI'), { recursive: true })
+  const preferred = resolveHostPaths({ platform: 'linux', home: root, env })
+  assert.equal(preferred.data, join(env.XDG_DATA_HOME, 'TUAI'))
+  assert.equal(preferred.database, join(preferred.data, 'business', 'tuai.sqlite3'))
+  assert.equal(await readFile(legacyDatabase, 'utf8'), 'existing database')
+})
+
+test('macOS keeps an existing legacy product directory when no TUAI directory exists', async (t) => {
+  const home = await mkdtemp(join(tmpdir(), 'tuai-legacy-mac-'))
+  t.after(() => rm(home, { recursive: true, force: true }))
+  const applicationSupport = join(home, 'Library', 'Application Support')
+  const legacy = join(applicationSupport, 'TIanZhiAi')
+  await mkdir(join(legacy, 'data', 'sessions'), { recursive: true })
+  await writeFile(join(legacy, 'data', 'sessions', 'existing'), 'session data')
+  const paths = resolveHostPaths({ platform: 'darwin', home, env: {} })
+  assert.equal(paths.sessions, join(legacy, 'data', 'sessions'))
+  assert.equal(await readFile(join(paths.sessions, 'existing'), 'utf8'), 'session data')
+  await mkdir(join(applicationSupport, 'TUAI'), { recursive: true })
+  const current = resolveHostPaths({ platform: 'darwin', home, env: {} })
+  assert.equal(current.sessions, join(applicationSupport, 'TUAI', 'data', 'sessions'))
+  assert.equal(await readFile(join(legacy, 'data', 'sessions', 'existing'), 'utf8'), 'session data')
 })
 
 test('Chinese directories, persistent identity and credential-only Host projection', async (t) => {
@@ -85,6 +140,23 @@ test('Chinese directories, persistent identity and credential-only Host projecti
   )
   assert.equal(JSON.stringify(store), '{}')
   assert.equal(redactDiagnostic(`message ${secret}`, settings, environment), 'message [REDACTED]')
+  const newSecret = randomUUID()
+  const newRef = { source: 'environment', name: 'TUAI_SECRET_MODEL' }
+  const newSettings = parseHostSettings({ ...first, credentialReferences: { model: newRef } })
+  const newEnvironment = { TUAI_SECRET_MODEL: newSecret }
+  assert.deepEqual(
+    await new EnvironmentCredentials(newEnvironment).resolve(
+      newSettings.credentialReferences.model,
+    ),
+    {
+      available: true,
+      value: newSecret,
+    },
+  )
+  assert.equal(
+    redactDiagnostic(`message ${newSecret}`, undefined, newEnvironment),
+    'message [REDACTED]',
+  )
   const client = publicHostIdentity(settings, paths.platform, 'remote')
   assert.deepEqual(Object.keys(client).sort(), ['executionLocation', 'id', 'os'])
   assert.equal(JSON.stringify(client).includes(secret), false)

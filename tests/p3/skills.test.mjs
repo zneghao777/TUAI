@@ -29,6 +29,39 @@ const ok = (result) => {
   assert.equal(result.ok, true, JSON.stringify(result))
   return result.value
 }
+
+test('new and legacy skill manifests preserve tool requirements', () => {
+  const manifest = (path, requiredTools = ['browser']) => ({
+    path,
+    data: Buffer.from(JSON.stringify({ requiredTools })).toString('base64'),
+  })
+  for (const path of ['tuai.manifest.json', 'tianzhiai.manifest.json']) {
+    const store = new SkillStore(':memory:')
+    try {
+      assert.deepEqual(
+        store.import(skillPackage('body', [manifest(path)])).versions[0].requiredTools,
+        ['browser'],
+      )
+    } finally {
+      store.close()
+    }
+  }
+  const store = new SkillStore(':memory:')
+  try {
+    assert.throws(
+      () =>
+        store.preview(
+          skillPackage('body', [
+            manifest('tuai.manifest.json'),
+            manifest('tianzhiai.manifest.json'),
+          ]),
+        ),
+      /不能同时包含新旧清单/,
+    )
+  } finally {
+    store.close()
+  }
+})
 const send = async (agent, text) => {
   agent.followup(createUserMessage({ source: { kind: 'user' }, content: [{ type: 'text', text }] }))
   await agent.whenIdle()

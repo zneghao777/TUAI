@@ -9,7 +9,7 @@ import { resolveHostPaths } from '../packages/product/host-config/lib/index.js'
 assert.equal(process.argv[2], '--run', 'Explicit live-model opt-in required: --run')
 const original = resolveHostPaths()
 const home = await mkdtemp(join(tmpdir(), 'tianzhiai-real-conversation-'))
-const previous = process.env.TIANZHIAI_HOME
+const previous = process.env.TUAI_HOME
 let runtime, browser
 try {
   await mkdir(join(home, 'config'), { mode: 0o700 })
@@ -18,7 +18,7 @@ try {
     await copyFile(join(original.config, name), path)
     await chmod(path, 0o600)
   }
-  process.env.TIANZHIAI_HOME = home
+  process.env.TUAI_HOME = home
   runtime = await startWebHost({ port: 0, provider: 'deepseek-official', model: 'deepseek-flash' })
   browser = await chromium.launch({ channel: 'chrome' })
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
@@ -113,6 +113,6 @@ try {
   await browser?.close()
   await runtime?.dispose()
   await rm(home, { recursive: true, force: true })
-  if (previous === undefined) delete process.env.TIANZHIAI_HOME
-  else process.env.TIANZHIAI_HOME = previous
+  if (previous === undefined) delete process.env.TUAI_HOME
+  else process.env.TUAI_HOME = previous
 }

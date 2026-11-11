@@ -1,3 +1,7 @@
+import '@tuai/host-config'
+import { BrowserRemote } from './browsers.ts'
+import { mountBrowserMedia } from './browser-media.ts'
+import { mountBrowserEngine } from './browser-engine.ts'
 import * as Compact from '@deepseek-ai/dsh-command-compact'
 import * as GoalCommand from '@deepseek-ai/dsh-command-goal'
 import * as Export from '@deepseek-ai/dsh-session-log-export'
@@ -27,7 +31,7 @@ import { TYPERT as contribution5 } from '@deepseek-ai/dsh-user-questions/typert'
 import { TYPERT as contribution6 } from '@deepseek-ai/dsh-llm/typert'
 import { TYPERT as contribution7 } from '@deepseek-ai/dsh-agent-preset-registry/typert'
 import { TYPERT as contribution8 } from '@deepseek-ai/dsh-subagent/typert'
-import { TYPERT as contribution9 } from '@tianzhiai/web-host/typert'
+import { TYPERT as contribution9 } from '@tuai/web-host/typert'
 import { Context } from '@deepseek-ai/cordis'
 import { join } from 'node:path'
 import { Remote, RemoteError, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
@@ -48,7 +52,7 @@ import ProjectionCache from '@deepseek-ai/dsh-session-projection-cache'
 import DefaultModel from '@deepseek-ai/dsh-agent-default-model'
 import Commands from '@deepseek-ai/dsh-commands'
 import Uploads from '@deepseek-ai/dsh-client-file-upload'
-import type {} from '@tianzhiai/agent-runtime'
+import type {} from '@tuai/agent-runtime'
 
 import { entries, download } from './artifacts.ts'
 import { deleteVerifiedFile, verifiedFileCandidates } from './file-candidates.ts'
@@ -234,7 +238,7 @@ export const REMOTE_PACKAGES = [
   '@deepseek-ai/dsh-llm',
   '@deepseek-ai/dsh-agent-preset-registry',
   '@deepseek-ai/dsh-subagent',
-  '@tianzhiai/web-host',
+  '@tuai/web-host',
   '@deepseek-ai/dsh-api-settings-controller',
   '@deepseek-ai/dsh-api-workspace-controller',
   '@deepseek-ai/dsh-api-workspace-files',
@@ -294,6 +298,8 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
   })
   await ctx.plugin(ManagedWorkspaceController)
   await ctx.plugin(ManagedSessionController)
+  await ctx.plugin(BrowserRemote)
+  mountBrowserEngine(ctx)
   await ctx.plugin(SkillLibraryRemote)
   await ctx.plugin(PlatformService)
   await mountChatSettings(ctx)
@@ -330,5 +336,6 @@ export async function mountWebHost(ctx: Context, options: WebHostOptions) {
   await ctx.plugin(Remotes)
   await ctx.plugin(WebServer, { host: options.host ?? '127.0.0.1', port: options.port })
   await ctx.plugin(Static, { distIndex: options.distIndex })
+  mountBrowserMedia(ctx)
   return ctx.webServer
 }

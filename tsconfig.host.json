@@ -613,6 +613,15 @@
     },
     {
       "path": "packages/skill/tool-skill"
+    },
+    {
+      "path": "packages/product/task-runtime"
+    },
+    {
+      "path": "packages/product/ego-connector"
+    },
+    {
+      "path": "packages/product/browser-service"
     }
   ]
 }

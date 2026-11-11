@@ -543,6 +543,7 @@
   "openMuse": {
     "commit": "4d275e6b2c4b7dadd5ad14d0399313423d5cae33",
     "adoption": "reference_only；P4 重新评审，不在 P0 迁入",
+    "license": "MIT；版权和许可见 provenance/OPENMUSE-LICENSE",
     "workingTreeDiff": "provenance/openmuse-working-tree.patch",
     "changedFiles": [
       "apps/worker/src/browser.ts",
@@ -562,10 +563,13 @@
     {
       "path": "provenance/openmuse-working-tree.patch",
       "sha256": "21b98dbfd5b4f695cfd5bafc2cfa67f1ecb8ff00cf4a8120b126c2486a7af606"
-    },
+    }
+  ],
+  "localOnlySnapshots": [
     {
       "path": "provenance/planning-before-p0.tar.gz",
-      "sha256": "a5b18b558eab1586107d3df7307edf6ada3b56244c20657ff421e660a552cb5a"
+      "sha256": "a5b18b558eab1586107d3df7307edf6ada3b56244c20657ff421e660a552cb5a",
+      "reason": "原始规划归档包含本机路径和系统元数据；仅本地保留，公开仓库不分发。"
     }
   ],
   "upstreamTree": "98266a99ba0e9bf6bac8ea39434f48605e40b368",

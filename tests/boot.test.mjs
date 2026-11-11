@@ -20,14 +20,14 @@ const production = fileURLToPath(new URL('../profiles/production.json', import.m
 test('product profiles boot repeatedly, inject immutable arguments and dispose', async (t) => {
   const directory = await mkdtemp(join(tmpdir(), '天质 Profile 生命周期 '))
   t.after(() => rm(directory, { recursive: true, force: true }))
-  const paths = resolveHostPaths({ env: { TIANZHIAI_HOME: directory } })
+  const paths = resolveHostPaths({ env: { TUAI_HOME: directory } })
   const settings = await loadHostSettings(paths)
   const prepare = (ctx) =>
     ctx.provide('tianzhiaiHost', { paths, settings, credentials: new EnvironmentCredentials({}) })
   for (let round = 0; round < 3; round++) {
     const runtime = await bootProfile(development, { args: ['中文', '--dry-run'], prepare })
     const probe = runtime.ctx.get('tianzhiaiProbe')
-    assert.equal(probe.label, 'TIanZhiAi P0')
+    assert.equal(probe.label, 'TUAI P0')
     assert.deepEqual(probe.args, ['中文', '--dry-run'])
     assert.ok(Object.isFrozen(probe.args))
     runtime.ctx.emit('tianzhiai/probe/ping')
@@ -98,7 +98,7 @@ test(
   async (t) => {
     const directory = await mkdtemp(join(tmpdir(), '天质 CLI '))
     t.after(() => rm(directory, { recursive: true, force: true }))
-    const env = { ...process.env, TIANZHIAI_HOME: directory }
+    const env = { ...process.env, TUAI_HOME: directory }
     const checked = spawnSync(
       process.execPath,
       ['--expose-internals', cli, '--profile', 'development', '--check'],
@@ -106,6 +106,14 @@ test(
     )
     assert.equal(checked.status, 0, checked.stderr)
     assert.equal(JSON.parse(checked.stdout).profile, 'development')
+    const preferredProfile = spawnSync(process.execPath, ['--expose-internals', cli, '--check'], {
+      env: { ...env, TUAI_PROFILE: 'development', TIANZHIAI_PROFILE: 'production' },
+      encoding: 'utf8',
+      timeout: 5000,
+    })
+    assert.equal(preferredProfile.status, 0, preferredProfile.stderr)
+    assert.equal(JSON.parse(preferredProfile.stdout).profile, 'development')
+    assert.equal(JSON.parse(preferredProfile.stdout).product, 'TUAI')
     const invalid = spawnSync(process.execPath, [cli, '--not-an-option'], {
       encoding: 'utf8',
       timeout: 5000,

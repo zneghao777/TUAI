@@ -1,12 +1,15 @@
-# TIanZhiAi
+# TUAI
 
-通用个人助理 Harness。P1 已接通原 DSH 模型／工具循环、DeepSeek Provider、
+<img src="apps/web/src/assets/tuai-logo.png" alt="TUAI 标志" width="100">
+
+TUAI（同途）是通用个人助理 Harness。P1 已接通原 DSH 模型／工具循环、DeepSeek Provider、
 JSONL 会话恢复、只读文件与沙箱 Shell、上下文压缩和审批。P2 新增真实 Host 驱动的
-React Web 工作区、类型化协议、上传、审批、队列和恢复；持久 TaskRuntime 仍属 P3。
+React Web 工作区、类型化协议、上传、审批、队列和恢复；P4 仅补充浏览器所需的
+持久任务子集，P3 长期任务能力尚未完成。
 当前阶段验收状态见[总开发计划](总开发计划与进度记录.md)。
 2026-10-27，P2 按用户要求扩展为[DSH 换壳对话工作区](docs/specs/appendices/P2-DSH换壳对齐需求.md)，
 2026-10-28，TZ-062～069 与 TZ-022 已完成：原 DSH 对话、思考／紧凑过程／整轮计时、
-Composer 指令与引用、四项权限、问题审批、完整工作区管理及文件预览接入生产，保留天质主题。
+Composer 指令与引用、四项权限、问题审批、完整工作区管理及文件预览接入正式工作区，保留 TUAI 主题。
 真实文件／沙箱／Web 工具和后台独立工作区可用；用量统计暂时隐藏。
 新范围验证、万条历史优化与剩余平台边界见[P2 收口核验](docs/verification/P2-DSH换壳收口验收.md)。
 2026-10-29，用户将 [HeroUI 界面改造](docs/specs/appendices/P2-HeroUI组件改造需求.md)
@@ -36,16 +39,22 @@ node --expose-internals apps/cli/lib/index.js --demo --session demo-001 --resume
 `--check` 加载并核验插件树后退出。
 
 首次启动创建独立产品目录与无密钥配置 `config/host.json`。
-可以通过 `TIANZHIAI_HOME` 指定隔离目录，例如：
+可以通过 `TUAI_HOME` 指定隔离目录，例如：
 
 ```sh
-TIANZHIAI_HOME="$PWD/.runtime" node --expose-internals apps/cli/lib/index.js --demo
+TUAI_HOME="$PWD/.runtime" node --expose-internals apps/cli/lib/index.js --demo
 ```
 
 在该产品目录的 `config/host.json` 中设置
-`credentialReferences.deepseek = { "source": "environment", "name": "TIANZHIAI_SECRET_MODEL" }`，
+`credentialReferences.deepseek = { "source": "environment", "name": "TUAI_SECRET_MODEL" }`，
 然后在启动环境中提供对应密钥；配置格式见 [示例](config/host.example.json)。
 密钥不放入 Profile、源码或命令参数。没有显式引用时不会自动发现其他环境凭据或 `.env`。
+
+新安装默认使用 TUAI 数据目录。新目录不存在而旧目录存在时，继续使用旧目录和已有数据库，
+不会自动移动或覆盖文件。`TIANZHIAI_HOME`、`TIANZHIAI_PROFILE`、
+`TIANZHIAI_SECRET_*` 和旧 Skill 清单仍可使用；`TUAI_HOME`／`TUAI_PROFILE`
+分别优先于旧环境变量，凭据仍按配置中的名称显式读取。
+Skill 包可使用 `tuai.manifest.json` 或旧名称，但不能同时包含两份清单。
 
 ```sh
 node --expose-internals apps/cli/lib/index.js --prompt '你好' --session chat-001
@@ -113,7 +122,7 @@ Electron 已确认；当前只验证受控桥的调用方、Host、代次和资�
 - macOS Shell、后台 Job 与持久终端复用 DSH 沙箱。现有 Profile 默认仍为只读且 Shell 逐次审批；执行层支持工作区内修改和完全权限，四项权限 UI 在 TZ-066 接入。
   Shell 沙箱约束写入，不是跨会话读取隔离；完全权限解除其文件修改限制，不自动应用于旧会话。
   CLI 没有交互审批界面，没有回答端时拒绝执行；Web 可批准、拒绝或取消真实请求。
-- Web 使用原 HTTP Fetch 和 DeepSeek 搜索 Provider，搜索读取天质自己的凭据；没有密钥时不假装可用，不以 Shell 代替被拒绝的请求。
+- Web 使用原 HTTP Fetch 和 DeepSeek 搜索 Provider，搜索读取 TUAI 自己的凭据；没有密钥时不假装可用，不以 Shell 代替被拒绝的请求。
 - 上下文启用 DSH 指令、文件引用、时间、压缩、图片卸载、结果裁剪、Spill 和重复提醒；
   单回合达到 32 步会记录失败并停止。跨会话查询、子 Agent、PTC 执行与 MCP 未启用。
 - Profile 与 Patch 是用户维护的可信本机代码配置。未接入上游账户、匿名身份收集、遥测或更新服务。
@@ -149,8 +158,15 @@ node scripts/verify-replay.mjs <锁定的上游目录>
 [M1/M2 迁移登记](docs/migration/M1-迁移登记.json)、
 [M3 迁移登记](docs/migration/M3-迁移登记.json) 和
 [P0 来源登记](docs/migration/M0-迁移登记.json)。
-GitLab CI 已维护，尚未推送或远程执行。
+仓库保留 GitLab CI 配置；该配置尚未远程验证。
 
 当前 P2 的原 DSH Composer、指令、权限、会话树和文件面板组合见
 [P2 收口核验](docs/verification/P2-DSH换壳收口验收.md)。新会话目录由 Host 自动管理，
 显示偏好与模型配置统一在左下角设置；Token 用量入口暂隐藏，上下文信息和执行时间保留。
+
+## 许可证
+
+TUAI 原创部分使用 [MIT License](LICENSE)。项目包含来源于 DeepSeek Harness、
+OpenMuse 和其他上游项目的代码或参考材料，各自的版权和许可证保留在对应目录及
+`provenance/` 中。浏览器连接器使用独立安装的 Ego，不包含或分发其程序。
+原始规划归档包含本机信息，仅在原工作区保存；公开仓库保留其摘要及说明。

@@ -5,7 +5,7 @@
   "purpose": "Read-only upstream evidence for a proposed development specification. No source migration has been performed.",
   "sources": {
     "deepseekHarness": {
-      "localReferencePath": "/Users/zenghao/杭州天智项目/deepseek-harness",
+      "localReferencePath": "../deepseek-harness",
       "commit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
       "worktreeStatus": [],
       "selectedFileHashes": [
@@ -52,7 +52,7 @@
       ]
     },
     "openMuse": {
-      "localReferencePath": "/Users/zenghao/杭州天智项目/OpenMuse",
+      "localReferencePath": "../OpenMuse",
       "commit": "4d275e6b2c4b7dadd5ad14d0399313423d5cae33",
       "worktreeStatus": [
         " M apps/worker/src/browser.ts",

@@ -90,8 +90,8 @@ export async function mountUiFoundation(ctx: Context) {
       syncLanguage()
       scope.effect(() =>
         locale.register(COMMON_NS, {
-          zh: { ...zh, 'brand.localBuild': '天质 AI' },
-          en: { ...en, 'brand.localBuild': '天质 AI' },
+          zh: { ...zh, 'brand.localBuild': 'TUAI' },
+          en: { ...en, 'brand.localBuild': 'TUAI' },
           it: italianCommon,
         }),
       )

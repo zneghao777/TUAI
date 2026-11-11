@@ -18,7 +18,7 @@ export type {
   RemoveModelProvider,
   ModelConnectionTest,
   ModelConnectionResult,
-} from '@tianzhiai/agent-runtime/types'
+} from '@tuai/agent-runtime/types'
 
 export interface HostStatus {
   /** Stable Host identity. */
@@ -69,4 +69,4 @@ export type {
   SkillDetail,
   SkillFileRead,
   SkillFileValue,
-} from '@tianzhiai/agent-runtime/skills'
+} from '@tuai/agent-runtime/skills'

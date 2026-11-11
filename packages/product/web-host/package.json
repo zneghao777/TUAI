@@ -1,5 +1,5 @@
 {
-  "name": "@tianzhiai/web-host",
+  "name": "@tuai/web-host",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -49,7 +49,7 @@
     "@deepseek-ai/dsh-typert-protocol": "workspace:*",
     "@deepseek-ai/dsh-typert-registry": "workspace:*",
     "@deepseek-ai/dsh-workspace": "workspace:*",
-    "@tianzhiai/agent-runtime": "workspace:*",
+    "@tuai/agent-runtime": "workspace:*",
     "@deepseek-ai/dsh-credentials": "workspace:*",
     "@deepseek-ai/dsh-permission-presets": "workspace:*",
     "@deepseek-ai/dsh-user-questions": "workspace:*",
@@ -78,9 +78,14 @@
     "@deepseek-ai/dsh-session-log-export": "workspace:*",
     "@deepseek-ai/dsh-command-feedback": "workspace:*",
     "@deepseek-ai/dsh-message-feedback": "workspace:*",
-    "@deepseek-ai/dsh-goal": "workspace:*"
+    "@deepseek-ai/dsh-goal": "workspace:*",
+    "@tuai/browser-service": "workspace:*",
+    "@tuai/task-runtime": "workspace:*",
+    "ws": "8.22.0",
+    "@tuai/host-config": "workspace:*"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-tools": "workspace:*"
+    "@deepseek-ai/dsh-tools": "workspace:*",
+    "@types/ws": "8.18.2"
   }
 }

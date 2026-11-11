@@ -2198,8 +2198,8 @@
         },
         {
           "path": "packages/api/session-controller/src/client/sessions/session.ts",
-          "sha256": "6ced8508c7ea643e2e20977922e2fb6932c110ffd6f946fc4654ac9dc29c916a",
-          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验"
+          "sha256": "1cd5a14441d652846ed5cc98f5b8679c9aabe28f14e182e13367047aecde59d8",
+          "reason": "P2 原组件生产组合与受管工作区、持久恢复适配；详见 ADR-015 与 P2 收口核验；P4 追加语义相同的 Session 快照引用缓存，避免归还中的 React 更新循环"
         },
         {
           "path": "packages/api/session-controller/src/commands.ts",
@@ -4061,6 +4061,12 @@
       "sourcePath": "scripts/types/client-build-environment/index.d.ts",
       "sha256": "840ee80b5a2fcdba8a1fcb281c6e1d09ac4882bece77321a8348fabddc30e361",
       "reason": "迁入锁定基线的浏览器编译环境声明，不引入运行时"
+    },
+    {
+      "path": "provenance/dsh-p4-session-snapshot.patch",
+      "sha256": "a8d7b13665c115a5752a03fa48687c48d8a65f2f41fa37f3836d49966846886d",
+      "source": "local",
+      "reason": "P4 Session 快照稳定性补丁；保留原 DSH Session、Loop 和界面交互"
     }
   ],
   "localSourcePatch": {

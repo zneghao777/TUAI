@@ -6,8 +6,8 @@ import { Context } from '@deepseek-ai/cordis'
 import LlmRuntime, { createUserMessage } from '@deepseek-ai/dsh-llm'
 import * as DeepSeek from '@deepseek-ai/dsh-llm-deepseek-api-key'
 import { credentialRef } from '@deepseek-ai/dsh-credentials'
-import { HostCredentials } from '@tianzhiai/agent-runtime'
-import { EnvironmentCredentials, resolveHostPaths } from '@tianzhiai/host-config'
+import { HostCredentials } from '@tuai/agent-runtime'
+import { EnvironmentCredentials, resolveHostPaths } from '@tuai/host-config'
 import {
   mockServer,
   closeMockServers,
@@ -21,7 +21,7 @@ it('TZ-008 Host 引用控制模型凭据，受控 HTTP 请求不携带上游匿�
   const ctx = new Context()
   const home = await mkdtemp(join(tmpdir(), 'tianzhiai-provider-'))
   ctx.provide('tianzhiaiHost', {
-    paths: resolveHostPaths({ env: { TIANZHIAI_HOME: home } }),
+    paths: resolveHostPaths({ env: { TUAI_HOME: home } }),
     settings: {
       version: 1,
       hostId: 'fixture-host',

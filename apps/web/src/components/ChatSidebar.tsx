@@ -84,6 +84,11 @@ const chatCopy = {
     en: 'Awaiting plan review',
     it: 'In attesa di revisione del piano',
   },
+  等待浏览器操作: {
+    zh: '等待浏览器操作',
+    en: 'Browser needs attention',
+    it: 'Il browser richiede attenzione',
+  },
   运行中: {
     zh: '运行中',
     en: 'Running',
@@ -394,17 +399,19 @@ export function ChatSidebar({ client, wide }: { client: AppClient; wide: boolean
               const status = statuses.get(id)
               const pending = status?.pendingInteraction?.kind
               const statusLabel =
-                pending === 'approval'
-                  ? t('等待审批')
-                  : pending === 'question'
-                    ? t('等待回答')
-                    : pending === 'plan-review'
-                      ? t('等待计划审核')
-                      : (status?.running ?? summary.running)
-                        ? t('运行中')
-                        : status?.completionUnread
-                          ? t('回复已完成')
-                          : undefined
+                pending === 'browser'
+                  ? t('等待浏览器操作')
+                  : pending === 'approval'
+                    ? t('等待审批')
+                    : pending === 'question'
+                      ? t('等待回答')
+                      : pending === 'plan-review'
+                        ? t('等待计划审核')
+                        : (status?.running ?? summary.running)
+                          ? t('运行中')
+                          : status?.completionUnread
+                            ? t('回复已完成')
+                            : undefined
               return (
                 <ChatRow
                   key={id}

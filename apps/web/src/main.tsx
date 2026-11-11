@@ -18,19 +18,19 @@ const client = new AppClient()
 const bootLanguage = readBootLanguage()
 const bootCopy = {
   zh: {
-    loading: '正在连接天质 AI…',
+    loading: '正在连接TUAI…',
     failed: '连接未完成',
     unavailable: 'Host 未就绪',
     retry: '重新连接',
   },
   en: {
-    loading: 'Connecting to Tianzhi AI…',
+    loading: 'Connecting to TUAI…',
     failed: 'Connection failed',
     unavailable: 'Host is not ready',
     retry: 'Reconnect',
   },
   it: {
-    loading: 'Connessione a Tianzhi AI…',
+    loading: 'Connessione a TUAI…',
     failed: 'Connessione non riuscita',
     unavailable: 'Host non ancora disponibile',
     retry: 'Riconnetti',

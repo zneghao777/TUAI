@@ -268,8 +268,8 @@ class ScenarioModel extends MockAdapter {
 }
 export async function fixtureHost(options = {}) {
   const home = await mkdtemp(join(tmpdir(), 'tianzhiai-p2-ui-'))
-  const previous = process.env.TIANZHIAI_HOME
-  process.env.TIANZHIAI_HOME = home
+  const previous = process.env.TUAI_HOME
+  process.env.TUAI_HOME = home
   const model = new ScenarioModel(options.composerControls, options.contextUsage)
   try {
     const runtime = await startWebHost(
@@ -347,8 +347,8 @@ export async function fixtureHost(options = {}) {
       async dispose() {
         await runtime.dispose()
         await rm(home, { recursive: true, force: true })
-        if (previous === undefined) delete process.env.TIANZHIAI_HOME
-        else process.env.TIANZHIAI_HOME = previous
+        if (previous === undefined) delete process.env.TUAI_HOME
+        else process.env.TUAI_HOME = previous
       },
     }
   } catch (error) {

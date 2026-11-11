@@ -1,5 +1,5 @@
 {
-  "name": "@tianzhiai/workspace",
+  "name": "@tuai/workspace",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -27,13 +27,15 @@
     "verify:replay": "node scripts/verify-replay.mjs",
     "generate:protocol": "tsx scripts/generate-protocol.ts",
     "start:web": "node --expose-internals apps/cli/lib/web.js",
-    "build:web": "pnpm --filter @tianzhiai/web build",
-    "dev:web": "pnpm --filter @tianzhiai/web dev",
+    "build:web": "pnpm --filter @tuai/web build",
+    "dev:web": "pnpm --filter @tuai/web dev",
     "test:p2": "vitest run --config vitest.p2.config.ts && node --expose-internals --test --test-timeout=30000 tests/p2/*.test.mjs",
     "test:ui": "node --expose-internals node_modules/@playwright/test/cli.js test --config playwright.config.ts",
     "demo:p2": "node --expose-internals tests/p2/demo.mjs",
     "test:skills": "node --expose-internals --test --test-timeout=30000 tests/p3/*.test.mjs",
-    "test:skills:ui": "node --expose-internals node_modules/@playwright/test/cli.js test --config tests/p3/playwright.config.ts"
+    "test:skills:ui": "node --expose-internals node_modules/@playwright/test/cli.js test --config tests/p3/playwright.config.ts",
+    "test:browser": "vitest run --config vitest.p4.config.ts && node --expose-internals --test --test-timeout=30000 tests/p4/*.test.mjs",
+    "test:browser:ui": "node --expose-internals node_modules/@playwright/test/cli.js test --config tests/p4/playwright.config.ts"
   },
   "devDependencies": {
     "@types/js-yaml": "4.0.9",

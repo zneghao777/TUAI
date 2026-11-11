@@ -64,7 +64,8 @@ const forbiddenRoots = [
   root,
   ...Object.values(JSON.parse(read('docs/specs/appendices/上游源码基线.json')).sources)
     .map((source) => source.localReferencePath)
-    .filter(Boolean),
+    .filter(Boolean)
+    .map((path) => resolve(path)),
 ]
 let imports = 0
 for (const pkg of packages) {
@@ -122,7 +123,7 @@ for (const pkg of packages) {
     }
     for (const path of forbiddenRoots)
       assert.ok(!source.includes(path), `${file}: developer source path`)
-    if (pkg.name === '@tianzhiai/platform')
+    if (pkg.name === '@tuai/platform')
       assert.ok(!/from ['"]node:|\bprocess\./.test(source), `${file}: Node in Client`)
   }
   for (const file of globSync(`${pkg.dir}/lib/**/*.js`)) {
@@ -146,7 +147,7 @@ for (const pkg of packages) {
         '@deepseek-ai/dsh-llm',
         '@deepseek-ai/dsh-agent-preset-registry',
         '@deepseek-ai/dsh-subagent',
-        '@tianzhiai/web-host',
+        '@tuai/web-host',
       ].includes(pkg.name)
     )
       continue

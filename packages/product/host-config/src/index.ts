@@ -1,7 +1,8 @@
+import '@deepseek-ai/cordis'
 import { randomUUID } from 'node:crypto'
 import { link, readFile, rm, writeFile } from 'node:fs/promises'
 import { z } from 'zod'
-import type { HostIdentity } from '@tianzhiai/platform'
+import type { HostIdentity } from '@tuai/platform'
 import { ensureHostDirectories, type HostPaths } from './paths.ts'
 
 export * from './paths.ts'
@@ -9,7 +10,7 @@ export { SecretStore } from './secret-store.ts'
 
 const credentialRefSchema = z.strictObject({
   source: z.literal('environment'),
-  name: z.string().regex(/^TIANZHIAI_SECRET_[A-Z0-9_]+$/),
+  name: z.string().regex(/^(?:TUAI|TIANZHIAI)_SECRET_[A-Z0-9_]+$/),
 })
 const hostSettingsSchema = z.strictObject({
   version: z.literal(1),
@@ -22,6 +23,12 @@ const hostSettingsSchema = z.strictObject({
   defaultPermissionPreset: z.enum(['readonly', 'workspace-write', 'full-access']).optional(),
   credentialReferences: z.record(z.string().regex(/^[A-Za-z][A-Za-z0-9_-]*$/), credentialRefSchema),
 })
+
+declare module '@deepseek-ai/cordis' {
+  interface Context {
+    tianzhiaiHost: { paths: HostPaths; settings: HostSettings; credentials: EnvironmentCredentials }
+  }
+}
 
 export type CredentialReference = z.infer<typeof credentialRefSchema>
 export type HostSettings = z.infer<typeof hostSettingsSchema>
@@ -121,7 +128,7 @@ export function redactDiagnostic(
   let output = value
   const names = new Set([
     ...Object.values(settings?.credentialReferences ?? {}).map((reference) => reference.name),
-    ...Object.keys(env).filter((name) => name.startsWith('TIANZHIAI_SECRET_')),
+    ...Object.keys(env).filter((name) => /^(?:TUAI|TIANZHIAI)_SECRET_/.test(name)),
   ])
   for (const name of names) {
     const secret = env[name]

@@ -11,6 +11,9 @@
     },
     {
       "path": "../../util/atomic-write"
+    },
+    {
+      "path": "../../../vendor/cordis"
     }
   ]
 }

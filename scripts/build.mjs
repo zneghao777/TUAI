@@ -12,7 +12,7 @@ execFileSync(process.execPath, ['native/system/scripts/build.ts', '--host-addon-
 
 for (const pkg of workspacePackages()) {
   // The Node-API entry has its own emitted subpath modules and platform binaries.
-  if (pkg.dir.startsWith('native/') || pkg.name === '@tianzhiai/web') continue
+  if (pkg.dir.startsWith('native/') || pkg.name === '@tuai/web') continue
   // Preserve browser module boundaries and CSS imports for Vite. The upstream
   // loader's closure bundles are not used by this product's static ESM build.
   // tsc already rewrites relative TS extensions; its JS is the build input.
@@ -124,7 +124,7 @@ for (const pkg of workspacePackages()) {
   for (const format of dual ? ['esm', 'cjs'] : ['esm']) {
     const result = await build({
       entryPoints:
-        pkg.name === '@tianzhiai/cli'
+        pkg.name === '@tuai/cli'
           ? ['index', 'boot', 'probe', 'web'].map((name) => `${pkg.dir}/src/${name}.ts`)
           : Object.fromEntries(entrySources),
       outdir: `${pkg.dir}/lib`,
@@ -135,7 +135,7 @@ for (const pkg of workspacePackages()) {
       tsconfigRaw: { compilerOptions: {} },
       metafile: true,
       jsx: 'automatic',
-      platform: pkg.name === '@tianzhiai/platform' ? 'browser' : 'node',
+      platform: pkg.name === '@tuai/platform' ? 'browser' : 'node',
       target: 'es2024',
       format,
       splitting: format === 'esm' && exportedEntries.size > 1,
@@ -148,6 +148,8 @@ for (const pkg of workspacePackages()) {
       }
     }
   }
+  if (pkg.name === '@tuai/ego-connector')
+    cpSync(`${pkg.dir}/src/worker.mjs`, `${pkg.dir}/lib/worker.mjs`)
   console.log(`Built ${pkg.name}@${pkg.version}`)
 }
 

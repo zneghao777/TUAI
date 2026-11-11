@@ -4086,7 +4086,7 @@
       "planning": {
         "firstEvaluationPhase": "P4",
         "strategy": "reference_only",
-        "reason": "了解抽象；首版采用 OpenMuse 执行能力"
+        "reason": "2026-11-03 计划更新：了解抽象；首版通过产品连接器接入本机 Ego，替代原 OpenMuse 执行端计划；源码快照基线不变"
       },
       "dependencies": {
         "dependencies": {},

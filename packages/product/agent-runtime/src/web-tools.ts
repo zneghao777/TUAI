@@ -7,7 +7,7 @@ import * as Tools from '@deepseek-ai/dsh-tool-web'
 
 export async function mountWebTools(ctx: Context) {
   await ctx.plugin(Web, {})
-  await ctx.plugin(Fetch, { userAgent: 'TianZhiAI/0.0.1' })
+  await ctx.plugin(Fetch, { userAgent: 'TUAI/0.0.1' })
   await ctx.plugin(Search, { apiKeyEnv: 'deepseek' })
   await ctx.plugin(Tools, {})
 }

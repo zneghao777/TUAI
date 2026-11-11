@@ -12,7 +12,7 @@ import { clientFor, until } from './client.mjs'
 
 test('real authenticated Host, generated codecs, Session objects, accepted identity, durable output and reattach', async () => {
   const home = await mkdtemp(join(tmpdir(), 'tianzhiai-p2-client-'))
-  process.env.TIANZHIAI_HOME = home
+  process.env.TUAI_HOME = home
   let runtime, client, ref
   try {
     runtime = await startWebHost(

@@ -9,16 +9,22 @@ async function showMenu(page) {
     .getByRole('button', { name: /^会话.*的操作/ })
     .click()
 }
-test('TZ-080 sends a draft from the unselected conversation state', async ({ page }) => {
+test('TZ-080 sends a draft from the unselected conversation state', async ({ page }, testInfo) => {
   const host = await fixtureHost()
   try {
     await page.goto(host.login)
+    await expect(page).toHaveTitle('TUAI')
+    const logo = page.locator('.tz-brand-logo img').first()
+    await expect(logo).toBeVisible()
+    await expect(logo).toHaveAttribute('src', /tuai-logo/)
+    expect(await logo.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0)
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', /tuai-logo/)
     const current = page.locator('[data-session-id][aria-current=page]')
     await expect(current).toBeVisible()
     const previousId = await current.getAttribute('data-session-id')
     const beforeBrandClick = host.runtime.ctx.sessions.list().length
     await page.locator('.tz-brand-logo').first().click()
-    await page.getByText('天质 AI', { exact: true }).click()
+    await page.getByText('TUAI', { exact: true }).click()
     expect(host.runtime.ctx.sessions.list()).toHaveLength(beforeBrandClick)
     await expect(current).toHaveAttribute('data-session-id', previousId!)
     await current.hover()
@@ -30,7 +36,7 @@ test('TZ-080 sends a draft from the unselected conversation state', async ({ pag
     await expect(page.getByText('选择一个工作区开始')).toHaveCount(0)
     await expect(page.getByRole('button', { name: /^访问模式，当前：/ })).toBeVisible()
     await expect(page.getByRole('button', { name: /^选择模型，当前：/ })).toBeVisible()
-    await page.screenshot({ path: 'reports/p2/tz080-unselected-desktop.png' })
+    await page.screenshot({ path: testInfo.outputPath('tz080-unselected-desktop.png') })
     const count = host.runtime.ctx.sessions.list().length
     await input.fill('未选择会话时直接发送')
     expect(host.runtime.ctx.sessions.list()).toHaveLength(count)
@@ -181,7 +187,7 @@ test('TZ-080 unselected composer fits a narrow screen and sends', async ({ page 
 })
 test('CHAT-SIMPLE flat chats, retained actions, managed directories and settings', async ({
   page,
-}) => {
+}, testInfo) => {
   const host = await fixtureHost()
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
@@ -189,10 +195,10 @@ test('CHAT-SIMPLE flat chats, retained actions, managed directories and settings
     await page.goto(host.login)
     const input = page.locator('[contenteditable="true"][role="textbox"]')
     await expect(input).toBeVisible()
-    await expect(page.getByText('和天质AI一起对话', { exact: true })).toBeVisible()
+    await expect(page.getByText('与 TUAI 对话', { exact: true })).toBeVisible()
     const greeting = page.getByRole('heading', { name: '今天，想一起完成什么？' })
     await expect(greeting).toBeVisible()
-    await page.screenshot({ path: 'reports/p2/ui-greeting-desktop.png' })
+    await page.screenshot({ path: testInfo.outputPath('ui-greeting-desktop.png') })
     await expect(page.getByRole('navigation', { name: '聊天记录' })).toBeVisible()
     for (const name of ['视图选项', '添加工作区'])
       await expect(page.getByRole('button', { name, exact: true })).toHaveCount(0)
@@ -261,7 +267,7 @@ test('CHAT-SIMPLE flat chats, retained actions, managed directories and settings
     await expect(page.getByLabel('已置顶')).toBeVisible()
     await showMenu(page)
     await expect(page.getByRole('menuitem').locator('svg')).toHaveCount(4)
-    await page.screenshot({ path: 'reports/p2/076-chat-desktop.png' })
+    await page.screenshot({ path: testInfo.outputPath('076-chat-desktop.png') })
     await page.keyboard.press('Escape')
     const archiveButton = page
       .locator(`[data-session-id="${id}"]`)
@@ -288,7 +294,7 @@ test('CHAT-SIMPLE flat chats, retained actions, managed directories and settings
     await expect(page.getByText('用量统计', { exact: false })).toHaveCount(0)
     await page.getByRole('button', { name: '标准', exact: true }).click()
     await expect(page.getByRole('menuitem', { name: '详细', exact: true })).toBeVisible()
-    await page.screenshot({ path: 'reports/p2/064-settings-menu.png' })
+    await page.screenshot({ path: testInfo.outputPath('064-settings-menu.png') })
     await page.keyboard.press('Escape')
     await page.getByRole('button', { name: '关闭', exact: true }).click()
     await page.reload()

@@ -3,8 +3,8 @@ import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { parseArgs } from 'node:util'
 import type { Context } from '@deepseek-ai/cordis'
-import { EnvironmentCredentials, loadHostSettings, resolveHostPaths } from '@tianzhiai/host-config'
-import { mountWebHost, type WebHostOptions } from '@tianzhiai/web-host'
+import { EnvironmentCredentials, loadHostSettings, resolveHostPaths } from '@tuai/host-config'
+import { mountWebHost, type WebHostOptions } from '@tuai/web-host'
 import { bootProfile } from './boot.ts'
 
 /** Start the real P1 profile and P2 Host. Test adapters are supplied only by a separate test launcher. */

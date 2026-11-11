@@ -1,6 +1,6 @@
 import { Context } from '@deepseek-ai/cordis'
 import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
-import type {} from '@tianzhiai/agent-runtime/skills'
+import type {} from '@tuai/agent-runtime/skills'
 import type {} from '@deepseek-ai/dsh-tools'
 import type {
   SkillImport,
@@ -13,7 +13,7 @@ import type {
   SkillPreview,
   SkillCompare,
   SkillFileChange,
-} from '@tianzhiai/agent-runtime/skills'
+} from '@tuai/agent-runtime/skills'
 
 /** Personal library management; admitted by the same authenticated Host Gateway. */
 export class SkillLibraryRemote extends TypertRemoteService {

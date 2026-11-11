@@ -3,7 +3,7 @@
 <html class="h-full" lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>天质 AI — 工具调用展开</title>
+<title>TUAI — 工具调用展开</title>
 <!-- Tailwind CSS v3 with Plugins -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <!-- Tailwind Custom Configuration -->
@@ -71,7 +71,7 @@
       border: 1px solid rgba(49, 61, 80, 0.08);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 24px -2px rgba(40, 50, 70, 0.04);
     }
-    
+
     .glass-card-subtle {
       background: rgba(255, 255, 255, 0.65);
       backdrop-filter: blur(16px);
@@ -137,7 +137,7 @@
 </svg>
 </div>
 <div class="flex flex-col">
-<span class="text-sm font-semibold tracking-tight text-graphite leading-tight">天质 AI</span>
+<span class="text-sm font-semibold tracking-tight text-graphite leading-tight">TUAI</span>
 <span class="text-[11px] text-graphite-secondary">个人工作区 · 已连接</span>
 </div>
 </div>
@@ -645,7 +645,7 @@
     function toggleSubStep(stepIndex) {
       const content = document.getElementById(`substep-content-${stepIndex}`);
       const chevron = document.getElementById(`substep-chevron-${stepIndex}`);
-      
+
       if (content.classList.contains('hidden')) {
         content.classList.remove('hidden');
         chevron.classList.add('rotate-180');
@@ -661,7 +661,7 @@
       const bannerDot = document.getElementById('summary-status-dot');
       const detailBadge = document.getElementById('detail-card-badge');
       const timeLabel = document.getElementById('execution-time-label');
-      
+
       const btnComp = document.getElementById('btn-state-completed');
       const btnRun = document.getElementById('btn-state-running');
       const btnFail = document.getElementById('btn-state-failed');

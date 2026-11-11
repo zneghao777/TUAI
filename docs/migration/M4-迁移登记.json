@@ -3,7 +3,7 @@
   "batchId": "M4",
   "upstreamCommit": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
   "status": "verified-p2-interaction-closure",
-  "scope": "P2 原 DSH 对话工作区与天质主题；TZ-062～069 与 TZ-022 已验；不启用 Skill／轨迹／后续产品能力",
+  "scope": "P2 原 DSH 对话工作区与TUAI主题；TZ-062～069 与 TZ-022 已验；不启用 Skill／轨迹／后续产品能力",
   "rollbackRevision": "6d65d4e0657e6035b6f9442545ed4c250bfdb62e",
   "packages": [
     {
@@ -96,7 +96,7 @@
         {
           "path": "packages/client/ui-session/package.json",
           "sha256": "52fb036b4be9ddb332d709abf0ff501ffce522c41cfd186b3a32b914ad4252b3",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
         }
       ],
       "additionalFiles": [
@@ -289,17 +289,17 @@
         {
           "path": "packages/client/locale/package.json",
           "sha256": "ce1321b1f7aaa2fe9c5f62e594ffc1678521b9c7857d6940bdbef19fe0691356",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/locale/src/client/LanguageRow.tsx",
           "sha256": "a075eb6aaf447e4dff8155582e2615e1a3d77e04418251dd162d0124b18512ac",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/client/locale/src/client/index.ts",
           "sha256": "21c928305898492a416e603af55a4e38f503142f45516cf6790529022db0930c",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         }
       ],
       "additionalFiles": [
@@ -456,32 +456,32 @@
         {
           "path": "packages/client/ui-settings/package.json",
           "sha256": "003508a2e3bd3e29d8892eecff3faca053bd55fa758d5e6b2a35e6a8cff81775",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现；TZ-070 适配 React 19"
         },
         {
           "path": "packages/client/ui-settings/src/client/config-form-types.ts",
           "sha256": "88baf7f382b9ac07db467544f17d65d06c6e3b9d327c840dce2be376ced4bb7b",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/client/ui-settings/src/client/config-form.ts",
           "sha256": "4ffb70e691c128e57d9622e4f749706ee90fdce8f212482e9f61ef2ee12fbf63",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/client/ui-settings/src/client/index.ts",
           "sha256": "88a89cb8de258942bacc36bd20a7ac1bf913b1dc57b37d38b7d6649f9ffc951f",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/client/ui-settings/src/client/settings-mirror.ts",
           "sha256": "5f6e97f74fca3f75b32682e61dedb5bcbfc721cf798ed2aaf22da095203648e9",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/client/ui-settings/tsconfig.client.json",
           "sha256": "066bc67e8b3ff29466eb1d092271b4844459b73622ebd94e48c4ea9973d4ebb6",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         }
       ],
       "additionalFiles": [
@@ -1666,7 +1666,7 @@
         {
           "path": "packages/client/ui-primitives/package.json",
           "sha256": "f7a0ad30e1753edefffb877cdda3bbaed30f5167ba5deb91464588a34d6dee07",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现；TZ-070 适配 React 19；TZ-070～074 HeroUI 适配与原生事件契约兼容"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现；TZ-070 适配 React 19；TZ-070～074 HeroUI 适配与原生事件契约兼容"
         },
         {
           "path": "packages/client/ui-primitives/src/markdown/MarkdownDelegate.tsx",
@@ -1859,7 +1859,7 @@
         {
           "path": "packages/util/file-drag/package.json",
           "sha256": "c8a52bb69d4929b90e2fd4f4742cb5cc622f735c08d9f7d998a94e466a6d77ab",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         }
       ],
       "additionalFiles": [
@@ -2040,7 +2040,7 @@
         {
           "path": "packages/client/shortcuts/package.json",
           "sha256": "895a1727029b3dbddf4385ea598f93b824df0b0395946a863547b01448c67c6f",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/client/shortcuts/src/client/dom.ts",
@@ -2050,12 +2050,12 @@
         {
           "path": "packages/client/shortcuts/src/client/native.ts",
           "sha256": "7a668b830a35db12837f3ad7cb5a0ed82fa6035be6fe3855b9cbc321b3a0b60b",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/client/shortcuts/src/client/storage.ts",
           "sha256": "4942bdc0a19b5c2f242e30bb40aec44fb71c84bc5c2068638110a44cf3a994d0",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/client/shortcuts/tests/dom.client.spec.ts",
@@ -2157,7 +2157,7 @@
         {
           "path": "packages/api/settings-controller/package.json",
           "sha256": "d429498bd64221ce499d978181fb795ba7828a3c344157a7718f7f829af5ffae",
-          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和天质快捷键存储适配；行为保持原实现"
+          "reason": "TZ-062：静态 ESM 与显式子入口、类型契约闭包和TUAI快捷键存储适配；行为保持原实现"
         },
         {
           "path": "packages/api/settings-controller/src/index.ts",
@@ -2953,8 +2953,8 @@
         },
         {
           "path": "packages/client/ui-conversation/src/client/locales.ts",
-          "sha256": "ada6b5ccd93a783d36cc29f08862a2a2b1604772fb2a674a73ba8c6e790c43df",
-          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-conversation-locale.patch"
+          "sha256": "1751fa3a920abe69146f98245e571bdbd3e38c14d66153daf62136a225a728d1",
+          "reason": "TZ-076 简化聊天区、删除准入与文案适配；增量见 provenance/dsh-chat-simplification-local.patch；TZ-087 语言与错误提示适配，见 provenance/dsh-tz087-conversation-locale.patch；TUAI 品牌文案见 provenance/dsh-tuai-brand-locale.patch"
         },
         {
           "path": "packages/client/ui-conversation/src/client/input/editor/ComposerContentEditable.tsx",
@@ -12856,6 +12856,11 @@
     "reason": "M4 独立补丁，不改写 M1/M3 来源和产品适配"
   },
   "snapshots": [
+    {
+      "path": "provenance/dsh-tuai-brand-locale.patch",
+      "sha256": "9bcf19242f6c81669223ba9e6b5f07b832f8b44c3caba42b623ce52072721496",
+      "reason": "TUAI 更名后的对话输入文案增量；保留原有来源记录"
+    },
     {
       "path": "provenance/dsh-m4-ui-foundation.tar.gz",
       "sha256": "e3827e938043b184269e99c5903eba4ba37b1121494a8b0776553e24beb18a93"

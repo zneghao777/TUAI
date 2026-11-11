@@ -21,8 +21,8 @@ async function send(page, text) {
   await page.locator('[contenteditable="true"][role="textbox"]').fill(text)
   await page.getByRole('button', { name: '发送消息', exact: true }).click()
 }
-test('真实发送、流式、草稿、刷新与唯一最终回答', async ({ page }) => {
-  await page.screenshot({ path: 'reports/p2/01-首页.png' })
+test('真实发送、流式、草稿、刷新与唯一最终回答', async ({ page }, testInfo) => {
+  await page.screenshot({ path: testInfo.outputPath('01-首页.png') })
   await send(page, '你好，真实会话')
   await expect(
     page.locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])'),
@@ -35,9 +35,9 @@ test('真实发送、流式、草稿、刷新与唯一最终回答', async ({ pa
   await expect(
     page.locator('[data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"])'),
   ).toHaveCount(1)
-  await page.screenshot({ path: 'reports/p2/02-真实聊天.png' })
+  await page.screenshot({ path: testInfo.outputPath('02-真实聊天.png') })
 })
-test('实际工具执行与错误回执可展开', async ({ page }) => {
+test('实际工具执行与错误回执可展开', async ({ page }, testInfo) => {
   await send(page, '读取工具')
   const tool = page
     .locator('[data-tool="read"][data-state="ok"] [data-disclosure-row][aria-expanded]')
@@ -45,8 +45,8 @@ test('实际工具执行与错误回执可展开', async ({ page }) => {
   await expect(tool).toBeVisible()
   if ((await tool.getAttribute('aria-expanded')) === 'false') await tool.click()
   await expect(tool).toHaveAttribute('aria-expanded', 'true')
-  await expect(page.getByText(/@tianzhiai\/workspace/).first()).toBeVisible()
-  await page.screenshot({ path: 'reports/p2/03-工具详情.png' })
+  await expect(page.getByText(/@tuai\/workspace/).first()).toBeVisible()
+  await page.screenshot({ path: testInfo.outputPath('03-工具详情.png') })
   await send(page, '工具失败')
   await expect(
     page
@@ -144,7 +144,9 @@ test('文件图片上传、会话引用、鉴权下载与跨会话拒绝', async
   await page.screenshot({ path: 'reports/p2/tz084-artifacts-desktop.png' })
   await page.route('**/api/artifact?**', (route) => route.fulfill({ status: 404 }))
   await page.getByRole('button', { name: '预览 资料.txt' }).click()
-  await expect(page.getByRole('dialog', { name: '资料.txt' }).getByRole('alert')).toContainText('无法读取')
+  await expect(page.getByRole('dialog', { name: '资料.txt' }).getByRole('alert')).toContainText(
+    '无法读取',
+  )
   await page.keyboard.press('Escape')
   await page.unroute('**/api/artifact?**')
   await page.getByRole('button', { name: '预览 资料.txt' }).click()

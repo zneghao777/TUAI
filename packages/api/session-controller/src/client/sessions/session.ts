@@ -887,7 +887,7 @@ export class Session implements SessionFace {
 
   private buildSnapshot(): SessionSnapshot {
     const identity = this.projections.values().subagent
-    return {
+    const snapshot: SessionSnapshot = {
       sessionId: this.sessionId,
       pendingSubmissions: this.pendingSubmissions,
       running: this.running,
@@ -910,6 +910,17 @@ export class Session implements SessionFace {
       promptAttempted: this.promptAttempted,
       awaitingFirstTurn: this.firstPromptPendingTurn,
     }
+    // Journal/tool frames may invalidate the Session without changing its
+    // lifecycle. Keep uSES readers stable across those notifications.
+    const previous = this.snapshotCache
+    const a = previous?.subagent, b = snapshot.subagent
+    const sameSubagent = a === b || (a != null && b != null
+      && a.address.parentSessionId === b.address.parentSessionId
+      && a.address.childSessionId === b.address.childSessionId
+      && a.address.mode === b.address.mode && a.parentAvailable === b.parentAvailable)
+    if (previous && sameSubagent && Object.entries(snapshot).every(([key, value]) =>
+      key === 'subagent' || Object.is(value, Reflect.get(previous, key)))) return previous
+    return snapshot
   }
 
   private sessionAddress(): SessionAddress {

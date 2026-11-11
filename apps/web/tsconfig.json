@@ -116,6 +116,12 @@
     },
     {
       "path": "../../packages/session/message-quotes"
+    },
+    {
+      "path": "../../packages/product/browser-service"
+    },
+    {
+      "path": "../../packages/product/ego-connector"
     }
   ]
 }

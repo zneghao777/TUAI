@@ -9,7 +9,7 @@ import { resolveHostPaths } from '../packages/product/host-config/lib/index.js'
 assert.equal(process.argv[2], '--run')
 const original = resolveHostPaths()
 const home = await mkdtemp(join(tmpdir(), 'tianzhiai-web-acceptance-'))
-const previous = process.env.TIANZHIAI_HOME
+const previous = process.env.TUAI_HOME
 const report = { provider: 'deepseek', fetch: null, search: null }
 let runtime, browser
 try {
@@ -19,7 +19,7 @@ try {
     await copyFile(join(original.config, name), path)
     await chmod(path, 0o600)
   }
-  process.env.TIANZHIAI_HOME = home
+  process.env.TUAI_HOME = home
   runtime = await startWebHost({ port: 0 })
   for (const kind of ['fetch', 'search']) {
     try {
@@ -96,7 +96,7 @@ try {
 } finally {
   await browser?.close()
   await runtime?.dispose()
-  if (previous === undefined) delete process.env.TIANZHIAI_HOME
-  else process.env.TIANZHIAI_HOME = previous
+  if (previous === undefined) delete process.env.TUAI_HOME
+  else process.env.TUAI_HOME = previous
   await rm(home, { recursive: true, force: true })
 }

@@ -4,7 +4,7 @@ import type {
   ModelProviderDraft,
   ModelProviderInfo,
   ModelProvidersState,
-} from '@tianzhiai/web-host/types'
+} from '@tuai/web-host/types'
 import { AppClient, describe, unwrap } from '../model/client'
 import { Button, Icon } from './kit'
 import { Select } from './Select'
@@ -206,7 +206,7 @@ const emptyProvider = (): ModelProviderDraft => ({
   baseURL: '',
   models: [{ id: '', name: '' }],
 })
-/** DSH provider-list/add/edit interaction, rendered with Tianzhi's own UI kit. */
+/** DSH provider-list/add/edit interaction, rendered with the TUAI UI kit. */
 export function ModelSettings({
   client,
   busy,

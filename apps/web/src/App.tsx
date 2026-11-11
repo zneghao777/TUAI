@@ -185,7 +185,7 @@ export function App({
           <div className={s.mark}>
             <Icon name="star" />
           </div>
-          <strong>天质 AI</strong>
+          <strong>TUAI</strong>
           <Button className={s.mobileClose} aria-label="收起导航" onClick={() => setSidebar(false)}>
             <Icon name="menu" />
           </Button>

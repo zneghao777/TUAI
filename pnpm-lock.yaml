@@ -104,13 +104,13 @@ importers:
       '@deepseek-ai/dsh-cmdline':
         specifier: workspace:*
         version: link:../../packages/boot/cmdline
-      '@tianzhiai/agent-runtime':
+      '@tuai/agent-runtime':
         specifier: workspace:*
         version: link:../../packages/product/agent-runtime
-      '@tianzhiai/host-config':
+      '@tuai/host-config':
         specifier: workspace:*
         version: link:../../packages/product/host-config
-      '@tianzhiai/web-host':
+      '@tuai/web-host':
         specifier: workspace:*
         version: link:../../packages/product/web-host
       js-yaml:
@@ -320,10 +320,16 @@ importers:
       '@tanstack/react-virtual':
         specifier: 3.14.10
         version: 3.14.10(react-dom@19.2.9(react@19.2.9))(react@19.2.9)
-      '@tianzhiai/platform':
+      '@tuai/browser-service':
+        specifier: workspace:*
+        version: link:../../packages/product/browser-service
+      '@tuai/ego-connector':
+        specifier: workspace:*
+        version: link:../../packages/product/ego-connector
+      '@tuai/platform':
         specifier: workspace:*
         version: link:../../packages/product/platform
-      '@tianzhiai/web-host':
+      '@tuai/web-host':
         specifier: workspace:*
         version: link:../../packages/product/web-host
       react:
@@ -5430,9 +5436,15 @@ importers:
       '@deepseek-ai/dsh-working-directory':
         specifier: workspace:*
         version: link:../../session/working-directory
-      '@tianzhiai/host-config':
+      '@tuai/browser-service':
+        specifier: workspace:*
+        version: link:../browser-service
+      '@tuai/host-config':
         specifier: workspace:*
         version: link:../host-config
+      '@tuai/task-runtime':
+        specifier: workspace:*
+        version: link:../task-runtime
       js-yaml:
         specifier: 4.3.2
         version: 4.3.2
@@ -5444,12 +5456,35 @@ importers:
         specifier: 4.0.9
         version: 4.0.9
 
+  packages/product/browser-service:
+    dependencies:
+      '@deepseek-ai/cordis':
+        specifier: workspace:*
+        version: link:../../../vendor/cordis
+      '@tuai/ego-connector':
+        specifier: workspace:*
+        version: link:../ego-connector
+      '@tuai/host-config':
+        specifier: workspace:*
+        version: link:../host-config
+      '@tuai/task-runtime':
+        specifier: workspace:*
+        version: link:../task-runtime
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+
+  packages/product/ego-connector: {}
+
   packages/product/host-config:
     dependencies:
+      '@deepseek-ai/cordis':
+        specifier: workspace:*
+        version: link:../../../vendor/cordis
       '@deepseek-ai/dsh-atomic-write':
         specifier: workspace:*
         version: link:../../util/atomic-write
-      '@tianzhiai/platform':
+      '@tuai/platform':
         specifier: workspace:*
         version: link:../platform
       zod:
@@ -5457,6 +5492,8 @@ importers:
         version: 4.4.3
 
   packages/product/platform: {}
+
+  packages/product/task-runtime: {}
 
   packages/product/web-host:
     dependencies:
@@ -5607,9 +5644,21 @@ importers:
       '@deepseek-ai/schemastery':
         specifier: workspace:*
         version: link:../../../vendor/schemastery
-      '@tianzhiai/agent-runtime':
+      '@tuai/agent-runtime':
         specifier: workspace:*
         version: link:../agent-runtime
+      '@tuai/browser-service':
+        specifier: workspace:*
+        version: link:../browser-service
+      '@tuai/host-config':
+        specifier: workspace:*
+        version: link:../host-config
+      '@tuai/task-runtime':
+        specifier: workspace:*
+        version: link:../task-runtime
+      ws:
+        specifier: 8.22.0
+        version: 8.22.0
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -5617,6 +5666,9 @@ importers:
       '@deepseek-ai/dsh-tools':
         specifier: workspace:*
         version: link:../../core/tools
+      '@types/ws':
+        specifier: 8.18.2
+        version: 8.18.2
 
   packages/ptc-runtime/ptc-runtime:
     devDependencies:

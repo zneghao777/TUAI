@@ -3,6 +3,6 @@
   "hostId": "example-host",
   "profile": "production",
   "credentialReferences": {
-    "deepseek": { "source": "environment", "name": "TIANZHIAI_SECRET_MODEL" }
+    "deepseek": { "source": "environment", "name": "TUAI_SECRET_MODEL" }
   }
 }

@@ -2,7 +2,7 @@ import { parseArgs } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
-import { registerDemo, runPrompt } from '@tianzhiai/agent-runtime'
+import { registerDemo, runPrompt } from '@tuai/agent-runtime'
 import { bootProfile } from './boot.ts'
 import {
   EnvironmentCredentials,
@@ -12,7 +12,7 @@ import {
   resolveHostPaths,
   type HostPaths,
   type HostSettings,
-} from '@tianzhiai/host-config'
+} from '@tuai/host-config'
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
@@ -39,19 +39,20 @@ async function main() {
     },
   })
   if (values.version) {
-    console.log('TIanZhiAi 0.0.1')
+    console.log('TUAI 0.0.1')
     return
   }
   if (values.help) {
     console.log(
-      'TIanZhiAi [--profile production|development|<manifest.json>] [--check] [--prompt <输入> --session <标识> --resume --model <模型>] [--demo] [--patch <file>]',
+      'TUAI [--profile production|development|<manifest.json>] [--check] [--prompt <输入> --session <标识> --resume --model <模型>] [--demo] [--patch <file>]',
     )
     return
   }
   const paths = resolveHostPaths()
   const settings = await loadHostSettings(paths)
   activeSettings = settings
-  const selected = values.profile ?? process.env.TIANZHIAI_PROFILE ?? settings.profile
+  const selected =
+    values.profile ?? process.env.TUAI_PROFILE ?? process.env.TIANZHIAI_PROFILE ?? settings.profile
   const manifest = ['production', 'development'].includes(selected)
     ? fileURLToPath(new URL(`../../../profiles/${selected}.json`, import.meta.url))
     : resolve(selected)
@@ -98,7 +99,7 @@ async function main() {
   }
   console.log(
     JSON.stringify({
-      product: 'TIanZhiAi',
+      product: 'TUAI',
       profile: runtime.profile,
       host: publicHostIdentity(settings, paths.platform, 'local'),
       configuration: runtime.configuration,
@@ -133,11 +134,11 @@ async function main() {
     void stop().catch(onStopFailure)
   }
   const onFatal = () => {
-    console.error('TIanZhiAi：运行异常，正在清理资源。')
+    console.error('TUAI：运行异常，正在清理资源。')
     void stop(1).catch(onStopFailure)
   }
   const onStopFailure = () => {
-    console.error('TIanZhiAi：资源清理未完成。')
+    console.error('TUAI：资源清理未完成。')
     process.exit(1)
   }
   process.on('SIGINT', onSignal)
@@ -152,7 +153,7 @@ async function main() {
 main().catch((error) => {
   console.error(
     redactDiagnostic(
-      `TIanZhiAi：${error instanceof Error ? error.message : '启动失败'}`,
+      `TUAI：${error instanceof Error ? error.message : '启动失败'}`,
       activeSettings,
     ),
   )

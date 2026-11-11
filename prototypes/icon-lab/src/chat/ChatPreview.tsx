@@ -4,7 +4,7 @@ import { MotionConfig, useReducedMotion } from 'framer-motion'
 import { AnimatedIcon, Playback } from '../AnimatedIcon'
 import { iconById } from '../catalog'
 import { palettes, type PaletteId } from '../palettes'
-import brandLogo from './assets/tianzhi-logo.png'
+import brandLogo from './assets/tuai-logo.png'
 import './chat-preview.css'
 
 type Scene = 'empty' | 'files' | 'running'
@@ -175,7 +175,7 @@ export default function ChatPreview() {
     document.documentElement.dataset.palette = palette
     document.documentElement.dataset.preview = 'chat'
     document.documentElement.classList.remove('dark')
-    document.title = '天质 AI · 轻线聊天模拟'
+    document.title = 'TUAI · 轻线聊天模拟'
     return () => {
       delete document.documentElement.dataset.preview
     }
@@ -264,7 +264,7 @@ export default function ChatPreview() {
           <span className="chat-logo">
             <img src={brandLogo} alt="" />
           </span>
-          {!compact ? <strong>天质 AI</strong> : null}
+          {!compact ? <strong>TUAI</strong> : null}
         </div>
         <IconButton
           id="panel-left-outline"
@@ -704,7 +704,7 @@ export default function ChatPreview() {
                   <TextArea
                     ref={textarea}
                     aria-label="模拟消息输入"
-                    placeholder="和天质AI一起对话"
+                    placeholder="与 TUAI 对话"
                     className="chat-textarea"
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}

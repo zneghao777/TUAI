@@ -17,7 +17,7 @@ import type {
   SkillFileValue,
   SkillPreview,
   SkillFileChange,
-} from '@tianzhiai/web-host/types'
+} from '@tuai/web-host/types'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { unwrap, describe, type AppClient } from '../model/client'
@@ -437,6 +437,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
           <code>{path}</code>
           <Button
             size="sm"
+            variant="outline"
             icon={<IconDownloadOutlineRegular size={15} />}
             disabled={!file}
             onClick={download}
@@ -452,6 +453,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
         {path === 'SKILL.md' && (
           <Button
             size="sm"
+            variant="outline"
             disabled={busy || !file?.text}
             onClick={() => {
               setFileExpanded(false)
@@ -524,9 +526,17 @@ export function SkillsPage({ client }: { client: AppClient }) {
                 <span className="tz-skills-card-icon">
                   <IconSkillOutlineRegular size={23} />
                 </span>
-                <strong>{item.name}</strong>
-                <p>{visibleVersion(item)?.description}</p>
-                <span className="tz-skills-card-status">{tr(status(item))}</span>
+                <span className="tz-skills-card-content">
+                  <span className="tz-skills-card-heading">
+                    <strong>{item.name}</strong>
+                    <span className="tz-skills-card-status" data-status={status(item)}>
+                      {tr(status(item))}
+                    </span>
+                  </span>
+                  <span className="tz-skills-card-description">
+                    {visibleVersion(item)?.description}
+                  </span>
+                </span>
               </ActionButton>
             ))}
           </div>
@@ -552,18 +562,25 @@ export function SkillsPage({ client }: { client: AppClient }) {
               <p role="status">{tr('正在读取详情…')}</p>
             ) : (
               <>
-                <span className="tz-skills-detail-icon">
-                  <IconSkillOutlineRegular size={30} />
-                </span>
-                <h2>{current.name}</h2>
-                <div className="tz-skills-meta">
-                  <span>{tr(status(current))}</span>
-                  <span>
-                    {current.activeVersion
-                      ? `${tr(current.enabled ? '生效版本' : '已停用版本')} v${current.activeVersion}`
-                      : tr('尚未启用')}
+                <div className="tz-skills-identity">
+                  <span className="tz-skills-detail-icon">
+                    <IconSkillOutlineRegular size={30} />
                   </span>
+                  <div className="tz-skills-identity-text">
+                    <h2>{current.name}</h2>
+                    <div className="tz-skills-meta">
+                      <span>{tr(status(current))}</span>
+                      <span>
+                        {current.activeVersion
+                          ? `${tr(current.enabled ? '生效版本' : '已停用版本')} v${current.activeVersion}`
+                          : tr('尚未启用')}
+                      </span>
+                    </div>
+                  </div>
                 </div>
+                <p className="tz-skills-description">
+                  <span>{active?.description ?? meta?.description}</span>
+                </p>
                 <Button
                   variant="primary"
                   className="tz-skills-use"
@@ -580,7 +597,6 @@ export function SkillsPage({ client }: { client: AppClient }) {
           </div>
           {current && (
             <div className="tz-skills-detail-body">
-              <p className="tz-skills-description">{active?.description ?? meta?.description}</p>
               {current.activeVersion !== version && (
                 <p className="tz-skills-note">
                   {tr('正在查看')} v{version} · {tr('非生效版本')}
@@ -602,7 +618,17 @@ export function SkillsPage({ client }: { client: AppClient }) {
               </nav>
               {tab === '概览' && (
                 <div className="tz-skills-overview">
-                  <h3>{tr('技能说明')}</h3>
+                  <div className="tz-skills-section-title">
+                    <h3>{tr('技能说明')}</h3>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={busy || !file?.text}
+                      onClick={() => setEditor(file?.text ?? '')}
+                    >
+                      {tr('编辑新版本')}
+                    </Button>
+                  </div>
                   <p>{meta?.description}</p>
                   <details>
                     <summary>{tr('原始技能说明')}</summary>
@@ -620,20 +646,13 @@ export function SkillsPage({ client }: { client: AppClient }) {
                       </article>
                     )}
                   </details>
-                  <Button
-                    size="sm"
-                    disabled={busy || !file?.text}
-                    onClick={() => setEditor(file?.text ?? '')}
-                  >
-                    {tr('编辑新版本')}
-                  </Button>
                 </div>
               )}
               {tab === '文件' && (
                 <>
                   <div className="tz-skills-section-title">
                     <h3>{tr('技能文件')}</h3>
-                    <Button size="sm" onClick={() => setFileExpanded(true)}>
+                    <Button variant="outline" size="sm" onClick={() => setFileExpanded(true)}>
                       {tr('展开查看')}
                     </Button>
                   </div>
@@ -652,7 +671,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                 <>
                   <div className="tz-skills-section-title">
                     <h3>{tr('版本')}</h3>
-                    <Button size="sm" onClick={() => openImport(current.id)}>
+                    <Button variant="outline" size="sm" onClick={() => openImport(current.id)}>
                       {tr('导入新版本')}
                     </Button>
                   </div>
@@ -691,7 +710,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                         {tr('正在查看')} v{version}
                       </strong>
                       {current.activeVersion && current.activeVersion !== version ? (
-                        <Button size="sm" onClick={showChanges}>
+                        <Button variant="outline" size="sm" onClick={showChanges}>
                           {tr(compareOpen ? '收起差异' : '查看差异')}
                         </Button>
                       ) : null}
@@ -714,6 +733,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                     <div className="tz-skills-version-actions">
                       <Button
                         size="sm"
+                        variant="outline"
                         disabled={busy || !mutation}
                         onClick={() =>
                           void run(async () => update(unwrap(await api.check(mutation!))))
@@ -724,6 +744,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                       {current.enabled && current.activeVersion === version ? (
                         <Button
                           size="sm"
+                          variant="outline"
                           disabled={busy}
                           onClick={() =>
                             void run(async () =>
@@ -761,6 +782,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                   </div>
                   <Button
                     size="sm"
+                    variant="outline"
                     onClick={() => {
                       setPath('SKILL.md')
                       setTab('文件')
@@ -790,6 +812,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
                           {session ? (
                             <Button
                               size="sm"
+                              variant="outline"
                               onClick={() => client.ctx.uiWorkspace.openSession(id)}
                             >
                               {tr('查看聊天')}
@@ -818,7 +841,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
         }}
         footer={
           <>
-            <Button disabled={busy} onClick={() => setImportOpen(false)}>
+            <Button variant="outline" disabled={busy} onClick={() => setImportOpen(false)}>
               {tr('取消')}
             </Button>
             <Button
@@ -859,10 +882,10 @@ export function SkillsPage({ client }: { client: AppClient }) {
         }
       >
         <div className="tz-skills-import">
-          <Button disabled={busy} onClick={() => fileInput.current?.click()}>
+          <Button variant="outline" disabled={busy} onClick={() => fileInput.current?.click()}>
             {tr('选择 SKILL.md')}
           </Button>
-          <Button disabled={busy} onClick={() => directoryInput.current?.click()}>
+          <Button variant="outline" disabled={busy} onClick={() => directoryInput.current?.click()}>
             {tr('选择技能目录')}
           </Button>
           <input
@@ -937,7 +960,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
         }}
         footer={
           <>
-            <Button disabled={busy} onClick={() => setEditor(undefined)}>
+            <Button variant="outline" disabled={busy} onClick={() => setEditor(undefined)}>
               {tr('取消')}
             </Button>
             <Button
@@ -996,7 +1019,7 @@ export function SkillsPage({ client }: { client: AppClient }) {
         }}
         footer={
           <>
-            <Button disabled={busy} onClick={() => setConfirmActivation(false)}>
+            <Button variant="outline" disabled={busy} onClick={() => setConfirmActivation(false)}>
               {tr('取消')}
             </Button>
             <Button

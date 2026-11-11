@@ -47,7 +47,7 @@ class WorkspaceFileSystem extends SandboxedFileSystem {
       realpathSync(root),
     )
     // A Host directory nested inside the workspace remains private. Otherwise
-    // the development TIANZHIAI_HOME override would expose other sessions.
+    // the development TUAI_HOME override would expose other sessions.
     const ownWorkspace = within(root, physical) && within(realpathSync(paths.data), root)
     const mode = this.ctx.sandboxPolicy.resolve(agent ? { session: agent.session } : {}).mode
     if (

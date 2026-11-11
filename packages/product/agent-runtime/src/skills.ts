@@ -101,7 +101,7 @@ function summary(id: string, version: number, store: SkillStore): SkillSummary {
     name: p.name,
     description: p.description,
     source: 'personal',
-    provider: 'tianzhiai',
+    provider: 'tuai',
     invocation: { modelInvocable: p.modelInvocable, userInvocable: p.userInvocable },
     resourceBase: {
       kind: 'opaque',

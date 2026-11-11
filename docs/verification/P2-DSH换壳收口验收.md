@@ -11,7 +11,7 @@ M4 累计 67 包，本批增加 19 包；运行时仍只有原 Session、Agent L
 [客户端组合](../../apps/web/src/model/chat-runtime.ts)直接挂载原 Layout、Workspace、
 Conversation、Lexical Composer、Commands、References、Quotes、Questions、Approval、
 Permission、Goal、文件树和文档预览。原产品 App／Composer／Interactions 退出生产导入链。
-[产品 UI](../../apps/web/src/ui.tsx)只负责天质品牌、主题、设置组合和文件产物入口。
+[产品 UI](../../apps/web/src/ui.tsx)只负责 TUAI 品牌、主题、设置组合和文件产物入口。
 
 | 任务   | 本批实现                                                                                                        | 验证入口                                                              |
 | ------ | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -25,7 +25,7 @@ Permission、Goal、文件树和文档预览。原产品 App／Composer／Intera
 用量 UI 继续隐藏；保留当前已批准的上下文百分比及构成面板、真实日志和整轮耗时。
 新会话由 Host 创建独立目录；分叉留在来源目录，旧历史不搬迁，归档不删除数据。
 界面不提供自定义目录、连接工作区或目录路径标签。左下角设置包含原对话、输入、主题和默认权限偏好，
-已有模型管理及凭据仍由天质自己的配置层管理。
+已有模型管理及凭据仍由 TUAI 自己的配置层管理。
 
 ## 必要适配
 
@@ -83,7 +83,7 @@ npx --yes pnpm@11.28.5 run verify:clean
 此前浏览器失败分别定位到乐观队列尚未准入、原组件控件语义及触屏尺寸，修正后完成上述整轮回归。
 
 受控模型浏览器测试连接真实 Host、JSONL、上传、权限和工具执行；
-不能替代真实 Provider。真实模型脚本使用隔离临时 Profile，复制天质自己的加密配置，退出清理，
+不能替代真实 Provider。真实模型脚本使用隔离临时 Profile，复制 TUAI 自己的加密配置，退出清理，
 不输出或提交凭据。已实测 DeepSeek Flash 的 reasoning、Bash 一次审批、ask_user_question、
 刷新后相同整轮耗时，以及一次真实 Auto 审查请求和执行成功；页面异常为零。
 

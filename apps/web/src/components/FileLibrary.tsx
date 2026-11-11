@@ -12,7 +12,7 @@ import {
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import { brandString } from '@deepseek-ai/dsh-brand'
 import type { MainPanelId } from '@deepseek-ai/dsh-client-ui-layout/client'
-import type { LibraryFile } from '@tianzhiai/web-host/types'
+import type { LibraryFile } from '@tuai/web-host/types'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useSource } from '../bindings'

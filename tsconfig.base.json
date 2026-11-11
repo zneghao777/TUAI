@@ -19,6 +19,12 @@
     "noUnusedParameters": true,
     "types": ["node"],
     "paths": {
+      "@tuai/task-runtime": ["./packages/product/task-runtime/src/index.ts"],
+      "@tuai/task-runtime/types": ["./packages/product/task-runtime/src/index.ts"],
+      "@tuai/ego-connector": ["./packages/product/ego-connector/src/index.ts"],
+      "@tuai/ego-connector/types": ["./packages/product/ego-connector/src/types.ts"],
+      "@tuai/browser-service": ["./packages/product/browser-service/src/index.ts"],
+      "@tuai/browser-service/types": ["./packages/product/browser-service/src/types.ts"],
       "@deepseek-ai/cosmokit": ["./vendor/cosmokit/src/index.ts"],
       "@deepseek-ai/schemastery": ["./vendor/schemastery/src/index.ts"],
       "@deepseek-ai/cordis": ["./vendor/cordis/src/index.ts"],
@@ -28,8 +34,8 @@
       "@deepseek-ai/dsh-brand": ["./packages/util/brand/src/index.ts"],
       "@deepseek-ai/dsh-typert-protocol": ["./packages/typert/protocol/src/index.ts"],
       "@deepseek-ai/dsh-cmdline": ["./packages/boot/cmdline/src/index.ts"],
-      "@tianzhiai/platform": ["./packages/product/platform/src/index.ts"],
-      "@tianzhiai/host-config": ["./packages/product/host-config/src/index.ts"],
+      "@tuai/platform": ["./packages/product/platform/src/index.ts"],
+      "@tuai/host-config": ["./packages/product/host-config/src/index.ts"],
       "@deepseek-ai/dsh-attachment": ["./packages/attachment/attachment/src/index.ts"],
       "@deepseek-ai/dsh-attachment/types": ["./packages/attachment/attachment/src/types.ts"],
       "@deepseek-ai/dsh-attachment/src/*": ["./packages/attachment/attachment/src/*"],
@@ -170,7 +176,7 @@
       "@deepseek-ai/dsh-tool-executor-native/src/*": ["./packages/core/tool-executor-native/src/*"],
       "@deepseek-ai/dsh-tool-testkit": ["./packages/test-support/tool-testkit/src/index.ts"],
       "@deepseek-ai/dsh-tool-testkit/src/*": ["./packages/test-support/tool-testkit/src/*"],
-      "@tianzhiai/agent-runtime": ["./packages/product/agent-runtime/src/index.ts"],
+      "@tuai/agent-runtime": ["./packages/product/agent-runtime/src/index.ts"],
       "@deepseek-ai/dsh-session-format-catalog": [
         "./packages/session/session-format-catalog/src/index.ts"
       ],
@@ -484,11 +490,9 @@
       ],
       "@deepseek-ai/dsh-storage-json": ["./packages/storage/storage-json/src/index.ts"],
       "@deepseek-ai/dsh-storage-json/src/*": ["./packages/storage/storage-json/src/*"],
-      "@tianzhiai/web-host": ["./packages/product/web-host/src/index.ts"],
-      "@tianzhiai/web-host/types": ["./packages/product/web-host/src/types.ts"],
-      "@tianzhiai/agent-runtime/test-fixture": [
-        "./packages/product/agent-runtime/src/fixture-model.ts"
-      ],
+      "@tuai/web-host": ["./packages/product/web-host/src/index.ts"],
+      "@tuai/web-host/types": ["./packages/product/web-host/src/types.ts"],
+      "@tuai/agent-runtime/test-fixture": ["./packages/product/agent-runtime/src/fixture-model.ts"],
       "@deepseek-ai/dsh-session-stats": ["./packages/session/session-stats/src/index.ts"],
       "@deepseek-ai/dsh-session-stats/types": ["./packages/session/session-stats/src/types.ts"],
       "@deepseek-ai/dsh-session-stats/client": ["./packages/session/session-stats/src/client.ts"],
@@ -505,7 +509,7 @@
       "@deepseek-ai/dsh-session-turn-outline/src/*": [
         "./packages/session/session-turn-outline/src/*"
       ],
-      "@tianzhiai/agent-runtime/types": ["./packages/product/agent-runtime/src/model-types.ts"],
+      "@tuai/agent-runtime/types": ["./packages/product/agent-runtime/src/model-types.ts"],
       "@deepseek-ai/dsh-api-settings-controller": [
         "./packages/api/settings-controller/src/index.ts"
       ],
@@ -845,7 +849,7 @@
         "./packages/session/message-quotes/src/client/index.ts"
       ],
       "@deepseek-ai/dsh-tool-skill": ["./packages/skill/tool-skill/src/index.ts"],
-      "@tianzhiai/agent-runtime/skills": ["./packages/product/agent-runtime/src/skills.ts"]
+      "@tuai/agent-runtime/skills": ["./packages/product/agent-runtime/src/skills.ts"]
     }
   }
 }

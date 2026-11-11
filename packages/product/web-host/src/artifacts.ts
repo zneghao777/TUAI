@@ -16,6 +16,7 @@ type Entry = { info: ArtifactInfo } & (
   | { kind: 'file'; ref: FileAttachmentRef }
   | { kind: 'image'; ref: ImageAttachmentRef }
   | { kind: 'spill'; path: string }
+  | { kind: 'browser'; id: string; sessionId: string }
 )
 function record(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -24,6 +25,19 @@ function record(value: unknown): value is Record<string, unknown> {
 export async function entries(ctx: Context, id: SessionId): Promise<Entry[]> {
   using observation = await ctx.sessionQuery.observeSession(id, { projectionMode: 'none' })
   const found = new Map<string, Entry>()
+  for (const artifact of ctx.browsers.artifacts({ ownerId: ctx.browsers.ownerId, sessionId: id })) {
+    found.set(`browser:${artifact.id}`, {
+      kind: 'browser',
+      id: artifact.id,
+      sessionId: id,
+      info: {
+        id: `browser:${artifact.id}`,
+        name: artifact.name,
+        bytes: artifact.bytes,
+        mediaType: artifact.mediaType,
+      },
+    })
+  }
   function content(value: unknown) {
     if (!Array.isArray(value)) return
     for (const block of value) {
@@ -134,6 +148,11 @@ export async function download(ctx: Context, request: Request): Promise<Response
     async function* bytes(): AsyncGenerator<Uint8Array> {
       if (entry!.kind === 'file') yield* ctx.attachments.readFileStream(entry!.ref, request.signal)
       else if (entry!.kind === 'image') yield (await ctx.attachments.readImage(entry!.ref)).data
+      else if (entry!.kind === 'browser')
+        yield await ctx.browsers.artifactBytes(
+          { ownerId: ctx.browsers.ownerId, sessionId: entry!.sessionId },
+          entry!.id,
+        )
       else {
         const file = await open(entry!.path, constants.O_RDONLY | constants.O_NOFOLLOW)
         try {

@@ -6,10 +6,14 @@ export const italianConversation = {
   ...italianConversationExtra,
   'error.createFailed': 'Impossibile creare la sessione. Riprova.',
   'error.sessionNotReady': 'La sessione non è pronta. Riprova.',
-  'error.sendUncertain': 'L’invio non è ancora confermato. Controlla la connessione prima di riprovare; l’identità della richiesta originale è stata conservata.',
-  'error.sendRejected': '{message}. L’Host ha rifiutato la richiesta; modificala prima di inviarla di nuovo.',
-  'error.uploadInterrupted': 'Caricamento incompleto. Rimuovi questo elemento e seleziona di nuovo il file.',
-  'error.pendingLimit': 'Troppe richieste sono in attesa di conferma. Controlla la connessione e la cronologia della sessione.',
+  'error.sendUncertain':
+    'L’invio non è ancora confermato. Controlla la connessione prima di riprovare; l’identità della richiesta originale è stata conservata.',
+  'error.sendRejected':
+    '{message}. L’Host ha rifiutato la richiesta; modificala prima di inviarla di nuovo.',
+  'error.uploadInterrupted':
+    'Caricamento incompleto. Rimuovi questo elemento e seleziona di nuovo il file.',
+  'error.pendingLimit':
+    'Troppe richieste sono in attesa di conferma. Controlla la connessione e la cronologia della sessione.',
 
   'quote.remove': 'Rimuovi citazione',
   'shortcut.newline': 'Vai a capo',
@@ -21,11 +25,11 @@ export const italianConversation = {
   'hint.goal.active':
     'Obiettivo in corso. Usa edit per modificare, pause per sospendere, resume per riprendere o clear per cancellare',
   'placeholder.plan': 'Descrivi l’attività per generare un piano',
-  'placeholder.default': 'Chatta con 天质 AI',
+  'placeholder.default': 'Chatta con TUAI',
   'placeholder.unavailable': 'Sessione non disponibile',
   'placeholder.parentOffline':
     'La sessione principale è offline. Non puoi inviare messaggi, ma puoi interrompere l’esecuzione.',
-  'placeholder.hero': 'Chatta con 天质 AI',
+  'placeholder.hero': 'Chatta con TUAI',
   'placeholder.workspace': 'Scegli un’area di lavoro per iniziare',
   'placeholder.steerQueue': 'Cmd/Ctrl+Invio inserisce tutti i messaggi in coda nel prossimo passo',
   'input.commands': 'Aggiungi file o usa un comando',

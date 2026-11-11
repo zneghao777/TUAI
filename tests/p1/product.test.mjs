@@ -22,7 +22,7 @@ import { sessionDir } from '../../packages/spill/spill-local/lib/index.js'
 import { readdir } from 'node:fs/promises'
 
 async function boot(root) {
-  const paths = resolveHostPaths({ env: { TIANZHIAI_HOME: root } })
+  const paths = resolveHostPaths({ env: { TUAI_HOME: root } })
   // P1 regression fixtures exercise the existing read-only Profile. Fresh P2
   // workspace-write defaults are covered separately by remaining-host.test.mjs.
   const settings = { ...(await loadHostSettings(paths)), defaultPermissionPreset: 'readonly' }
@@ -75,7 +75,7 @@ test('TZ-014 无 Git 的中文空格目录可运行，根与子目录指令继�
   process.chdir(workspace)
   let runtime
   try {
-    const paths = resolveHostPaths({ env: { TIANZHIAI_HOME: join(root, 'host') } })
+    const paths = resolveHostPaths({ env: { TUAI_HOME: join(root, 'host') } })
     const settings = await loadHostSettings(paths)
     runtime = await bootProfile(manifest, {
       prepare(ctx) {
@@ -162,6 +162,9 @@ test('TZ-010 两次独立 CLI 进程从产品日志继续会话', async (t) => {
   const root = await mkdtemp(join(tmpdir(), 'tianzhiai-process-'))
   t.after(() => rm(root, { recursive: true, force: true }))
   for (const resume of [false, true]) {
+    const env = { ...process.env, TIANZHIAI_HOME: root }
+    if (resume) env.TUAI_HOME = root
+    else delete env.TUAI_HOME
     const child = spawnSync(
       process.execPath,
       [
@@ -172,7 +175,7 @@ test('TZ-010 两次独立 CLI 进程从产品日志继续会话', async (t) => {
         'process-core',
         ...(resume ? ['--resume'] : []),
       ],
-      { encoding: 'utf8', timeout: 15000, env: { ...process.env, TIANZHIAI_HOME: root } },
+      { encoding: 'utf8', timeout: 15000, env },
     )
     assert.equal(child.status, 0, child.stderr)
     const result = JSON.parse(child.stdout)

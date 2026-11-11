@@ -32,7 +32,7 @@ export const italianCommon = {
   collapse: 'Comprimi',
   expand: 'Espandi',
   back: 'Indietro',
-  'brand.localBuild': '天质 AI',
+  'brand.localBuild': 'TUAI',
   'workspace.defaultName': 'Area di lavoro predefinita',
   unknown: 'Sconosciuto',
   none: 'Nessuno',

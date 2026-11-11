@@ -83,7 +83,7 @@ async function run(args) {
     env: {
       ...process.env,
       npm_config_cache: join(temporary, 'npm-cache'),
-      TIANZHIAI_HOME: join(temporary, 'host-data'),
+      TUAI_HOME: join(temporary, 'host-data'),
     },
   })
   let stdout = '',
