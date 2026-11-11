@@ -565,11 +565,11 @@
       "sha256": "21b98dbfd5b4f695cfd5bafc2cfa67f1ecb8ff00cf4a8120b126c2486a7af606"
     }
   ],
-  "localOnlySnapshots": [
+  "historicalSnapshots": [
     {
       "path": "provenance/planning-before-p0.tar.gz",
       "sha256": "a5b18b558eab1586107d3df7307edf6ada3b56244c20657ff421e660a552cb5a",
-      "reason": "原始规划归档包含本机路径和系统元数据；仅本地保留，公开仓库不分发。"
+      "reason": "原始规划归档包含本机路径和系统元数据；当前工作树不含此文件，原样恢复的 Git 历史可访问。"
     }
   ],
   "upstreamTree": "98266a99ba0e9bf6bac8ea39434f48605e40b368",
